@@ -105,6 +105,7 @@ public final class DevTools {
                                 new DevTool.Choice(Component.literal("Radius 16"), "16"),
                                 new DevTool.Choice(Component.literal("Radius 32"), "32"))),
                 DevTools::cleanup));
+        RecorderTools.register(registry);
         return registry;
     }
 

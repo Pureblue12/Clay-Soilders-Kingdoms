@@ -162,6 +162,9 @@ public final class DevToolRegistry {
         if (tool.confirm()) {
             argumentNode.then(Commands.literal(CONFIRM).executes(runForReal));
         }
+        if (argument.optional()) {
+            literal.executes(firstRun);
+        }
         return literal.then(argumentNode);
     }
 

@@ -4,13 +4,23 @@ import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugEvent;
 import net.bumblebee.claysoldiers.debug.DebugLog;
+import net.bumblebee.claysoldiers.dev.DevTool;
+import net.bumblebee.claysoldiers.dev.DevToolRegistry;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 import static net.bumblebee.claysoldiers.gametest.ClaySoldierGameTests.PLATFORM;
 
@@ -96,6 +106,59 @@ public class DebugLogGameTests {
         DebugLog.event(DebugCategory.BUILD, null, "no reachable block available");
         helper.assertTrue(DebugLog.size() == 3, "A different message in between should start new lines, got " + DebugLog.size());
         DebugLog.reset();
+        helper.succeed();
+    }
+
+    /**
+     * {@code /csr dev log start} turns on exactly the preset and clears the old log;
+     * {@code /csr dev log stop} turns everything off and writes a file containing the recorded events.
+     */
+    @GameTest(template = PLATFORM, batch = "debuglog_startstop")
+    public static void startAndStopCommands(GameTestHelper helper) throws IOException {
+        DebugLog.reset();
+        MinecraftServer server = helper.getLevel().getServer();
+        CommandSourceStack source = server.createCommandSourceStack().withPermission(4);
+        DebugLog.setEnabled(DebugCategory.TEAM, true, server);
+        DebugLog.event(DebugCategory.TEAM, null, "old event before start");
+
+        server.getCommands().performPrefixedCommand(source, "csr dev log start");
+        helper.assertTrue(DebugLog.enabledCategories().equals(DebugCategory.PRESET),
+                "Start should enable exactly " + DebugCategory.PRESET + ", got " + DebugLog.enabledCategories());
+        helper.assertTrue(DebugLog.size() == 0, "Start should clear the old log, " + DebugLog.size() + " events left");
+
+        DebugLog.event(DebugCategory.BUILD, null, "recorded while on");
+        long before = System.currentTimeMillis() - 1000;
+        server.getCommands().performPrefixedCommand(source, "csr dev log stop");
+        helper.assertTrue(DebugLog.enabledCategories().isEmpty(), "Stop should turn everything off, on: " + DebugLog.enabledCategories());
+
+        Path folder = server.getServerDirectory().resolve(DebugLog.FOLDER);
+        Optional<Path> newest;
+        try (Stream<Path> files = Files.list(folder)) {
+            newest = files.filter(path -> path.getFileName().toString().startsWith("csr-debug-"))
+                    .filter(path -> path.toFile().lastModified() >= before)
+                    .max(Comparator.comparingLong(path -> path.toFile().lastModified()));
+        }
+        helper.assertTrue(newest.isPresent(), "Stop did not write a file in " + folder);
+        String text = Files.readString(newest.get());
+        helper.assertTrue(text.contains("recorded while on"), "Saved file is missing the recorded event: " + newest.get());
+        helper.assertTrue(text.startsWith("# Clay Soldiers Remake debug log"), "Saved file has no header");
+        DebugLog.reset();
+        helper.succeed();
+    }
+
+    /**
+     * The book's per-category on/off buttons are generated from the category list, so a new category gets them automatically.
+     */
+    @GameTest(template = PLATFORM, batch = "debuglog_buttons")
+    public static void categoryButtonsComeFromCategories(GameTestHelper helper) {
+        DevToolRegistry registry = DevToolRegistry.defaults();
+        List<String> categories = DebugCategory.all().stream().map(DebugCategory::id).toList();
+        for (String toolId : List.of("log_on", "log_off")) {
+            DevTool tool = registry.tools().stream().filter(t -> t.id().equals(toolId)).findFirst().orElseThrow();
+            List<String> buttons = registry.buttons(tool, helper.getLevel().registryAccess()).stream()
+                    .map(button -> button.label().getString()).toList();
+            helper.assertTrue(buttons.equals(categories), toolId + " buttons " + buttons + " don't match categories " + categories);
+        }
         helper.succeed();
     }
 }

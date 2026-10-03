@@ -98,9 +98,14 @@ public record DevTool(String id, String category, Component label, String descri
      * @param type        brigadier argument type
      * @param suggestions tab-completion suggestions, or {@code null}
      * @param choices     values to offer in the book; read from registries where possible so new content appears automatically
+     * @param optional    whether the command also runs without the argument (the action must handle it missing)
      */
     public record Argument(String name, ArgumentType<?> type, @Nullable SuggestionProvider<CommandSourceStack> suggestions,
-                           Function<RegistryAccess, List<Choice>> choices) {
+                           Function<RegistryAccess, List<Choice>> choices, boolean optional) {
+        public Argument(String name, ArgumentType<?> type, @Nullable SuggestionProvider<CommandSourceStack> suggestions,
+                        Function<RegistryAccess, List<Choice>> choices) {
+            this(name, type, suggestions, choices, false);
+        }
     }
 
     /**
