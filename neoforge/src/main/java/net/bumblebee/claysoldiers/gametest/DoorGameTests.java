@@ -222,8 +222,8 @@ public class DoorGameTests {
     }
 
     /**
-     * A door the soldier may not open (DoorAccess says no, here from the moment the builder is 3 blocks away, after it
-     * planned its path through the door): the soldier logs "refused door at (x, y, z): (reason)", never opens it, and
+     * A door the soldier may not open once it gets there (DoorAccess says no while the builder carries the slab and is
+     * within 1.6 blocks of the door; from further away it may, so its path is planned through the door): the soldier logs "refused door at (x, y, z): (reason)", never opens it, and
      * gives up instead of pushing against it (never more than {@value #FREEZE_TICKS} ticks in a row at the door while
      * still trying to walk).
      */
@@ -232,17 +232,18 @@ public class DoorGameTests {
         DebugLog.reset();
         DebugLog.setEnabled(DebugCategory.PATHING, true, helper.getLevel().getServer());
         boolean[] refuse = {false};
-        DoorAccess.overrideRuleForTests((soldier, doorPos) -> !refuse[0]);
         hutWithDoor(helper, Blocks.OAK_DOOR, false);
         ClaySoldierEntity builder = slabInsideWithBuilders(helper, 1, INSIDE).getFirst();
         BlockPos door = helper.absolutePos(DOORWAY);
+        DoorAccess.overrideRuleForTests((soldier, doorPos) -> {
+            boolean allowed = soldier.getCarriedStack().isEmpty() || Math.hypot(doorPos.getX() + 0.5 - soldier.getX(), doorPos.getZ() + 0.5 - soldier.getZ()) > 1.6;
+            refuse[0] |= !allowed;
+            return allowed;
+        });
         String refusedEvent = "refused door at (" + door.toShortString() + ")";
         int[] atDoorTicks = {0};
         long[] refusedAt = {-1};
         helper.onEachTick(() -> {
-            if (!refuse[0] && horizontalDistance(builder, door) < 3) {
-                refuse[0] = true;
-            }
             if (refuse[0] && isOpen(helper)) {
                 end(helper, "The refused door was opened");
             }
