@@ -188,14 +188,17 @@ public class EaselBlockEntity extends BlockEntity {
         if (template == null) {
             return null;
         }
-        return new BlueprintTemplateSettings(template.getSize(), mirror, fromDirection(getFacing()));
+        return new BlueprintTemplateSettings(template.getSize(), mirror, rotationFor(getFacing()));
     }
 
     public Direction getFacing() {
         return getBlockState().getValue(EaselBlock.FACING);
     }
 
-    private static Rotation fromDirection(Direction direction) {
+    /**
+     * Returns the rotation of a blueprint on an easel with the given facing.
+     */
+    public static Rotation rotationFor(Direction direction) {
         return switch (direction) {
             case NORTH -> Rotation.NONE;
             case EAST -> Rotation.CLOCKWISE_90;
@@ -219,8 +222,20 @@ public class EaselBlockEntity extends BlockEntity {
     }
 
     private BlockPos getTemplateBase(BlueprintTemplateSettings settings) {
-        return worldPosition.offset(
-                BlockPos.ZERO.relative(getFacing().getOpposite(), 2).relative(getFacing().getClockWise(), settings.getDistanceToCenter())
+        return templateBase(worldPosition, getFacing(), settings);
+    }
+
+    /**
+     * Returns the base position of the blueprint template on an easel: 2 blocks behind the easel
+     * (opposite its facing), centered on it.
+     *
+     * @param easelPos the easel's position
+     * @param facing   the easel's {@link EaselBlock#FACING}
+     * @param settings the template settings, see {@link #getTemplateSettings()}
+     */
+    public static BlockPos templateBase(BlockPos easelPos, Direction facing, BlueprintTemplateSettings settings) {
+        return easelPos.offset(
+                BlockPos.ZERO.relative(facing.getOpposite(), 2).relative(facing.getClockWise(), settings.getDistanceToCenter())
         );
     }
 

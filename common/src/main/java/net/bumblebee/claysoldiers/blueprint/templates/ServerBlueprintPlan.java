@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -122,8 +123,30 @@ public class ServerBlueprintPlan extends BlueprintPlan {
     }
 
     private boolean canPlaceBlock(Level level, BlockPos pos) {
+        return canPlaceAt(level, pos);
+    }
+
+    /**
+     * Returns whether a blueprint block can be placed at the given position (it is air or replaceable).
+     * Blocks that fail this are never requested, so a blueprint with such a spot never finishes.
+     */
+    public static boolean canPlaceAt(LevelReader level, BlockPos pos) {
         var state = level.getBlockState(pos);
         return state.isAir() || state.canBeReplaced();
+    }
+
+    /**
+     * Returns the world positions of the blocks this plan still has to place.
+     *
+     * @param base     the base position of the template, see {@code EaselBlockEntity.templateBase}
+     * @param settings rotation and mirror of the template
+     */
+    public List<BlockPos> targetPositions(BlockPos base, BlueprintTemplateSettings settings) {
+        return blockInfoList.stream().map(blockInfo -> targetPosition(base, settings, blockInfo)).toList();
+    }
+
+    private static BlockPos targetPosition(BlockPos base, BlueprintTemplateSettings settings, BlueprintBlockInfo blockInfo) {
+        return base.offset(adjustForStructureSettings(settings, blockInfo.getPos()));
     }
 
     private static StructureTemplate.StructureBlockInfo processBlockInfos(BlueprintTemplateSettings pSettings, BlueprintBlockInfo pBlockInfo) {
@@ -151,7 +174,7 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         Supplier<BlueprintRequest> fallbackRequest = null;
 
         for (BlueprintBlockInfo blockInfo : blockInfoList) {
-            var infoAbsolutePos = base.offset(adjustForStructureSettings(settings, blockInfo.getPos()));
+            var infoAbsolutePos = targetPosition(base, settings, blockInfo);
             if (canReach.test(infoAbsolutePos) && canPlaceBlock(level, infoAbsolutePos)) {
 
                 if (blockInfo.hasAvailableRequest(level.getGameTime())) {
