@@ -25,9 +25,15 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     private final int searchRange;
     private final int verticalSearchRange;
     protected int verticalSearchStart;
+    /**
+     * A builder that carries a block this long without placing it gives up: it returns the block and
+     * releases the request, so the block can be handed out again (20 seconds).
+     */
+    public static final int MAX_CARRY_TICKS = 400;
     @Nullable
     private BlueprintRequest request = null;
     private boolean bringBack = false;
+    private int carryTicks = 0;
 
     public BuildBlueprintGoal(AbstractClaySoldierEntity soldier, Supplier<WorkSelectorGoal> workSelector, int searchRange) {
         super(soldier, workSelector);
@@ -74,7 +80,9 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             getRequestFromStorage();
         } else if (request.isPlacing()) {
             setStatus(CARRYING_ID);
-            if (moveToRequest()) {
+            if (++carryTicks > MAX_CARRY_TICKS) {
+                giveUpRequest();
+            } else if (moveToRequest()) {
                 placeBlock();
             }
         }
@@ -96,12 +104,23 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                     takeAShortBreak();
                 } else {
                     request.setPlacing();
+                    carryTicks = 0;
                 }
             } else {
                 easelPos = null;
                 request = null;
             }
         }
+    }
+
+    /**
+     * Cancels the current request (so the block can be handed out again) and brings the carried item back.
+     */
+    private void giveUpRequest() {
+        request.cancel();
+        request = null;
+        bringBack = !soldier.getCarriedStack().isEmpty();
+        carryTicks = 0;
     }
 
     private boolean returnCarried() {
