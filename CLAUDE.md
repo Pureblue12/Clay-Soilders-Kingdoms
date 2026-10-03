@@ -20,7 +20,7 @@ Run from the project root. The first run downloads Minecraft/NeoForge and is slo
 ```bash
 ./gradlew :neoforge:runData      # generate recipes/models/lang/loot/data maps (see below)
 ./gradlew :neoforge:build        # build the mod jar -> neoforge/build/libs/
-./gradlew :neoforge:runClient    # launch Minecraft with the mod (game dir: neoforge/runs/client)
+./gradlew :neoforge:runClient    # launch Minecraft with the mod (game dir: neoforge/run, gitignored)
 ./gradlew :neoforge:runServer    # launch a dedicated server
 ```
 
@@ -72,4 +72,21 @@ Optional integrations (JEI, Jade, Accessories, Curios, Create, SmartBrainLib) ar
 - Keep the original authors' credit intact (LICENSE, `mod_author`, `authors` in mods.toml,
   README). Add our credit alongside, never in place of theirs.
 - Put loader-independent code in `common/`; only NeoForge-specific code in `neoforge/`.
-- The user is not using git yet — don't run git commands.
+- Git is set up locally. Commit after each working change with a clear message.
+  Never use force flags or delete history without asking me.
+- Before changing anything, read the relevant existing code and summarize how it works.
+- Put new behavior in new classes. Do not grow `AbstractClaySoldierEntity`; only add
+  minimal hook points there.
+- After each feature, give me an exact in-game test checklist.
+- Do not rename existing misspelled classes/fields (`Manger`, `Sodlier`, `VampiricOnwer`);
+  save files depend on some of them.
+- Fix only bugs I have confirmed in game. Do not fix things on suspicion.
+
+## Milestones
+
+- **M0 — in progress:** test the existing flow and reproduce suspected bugs
+  (guide: `docs/TESTING.md`, background: `docs/ANALYSIS.md`).
+- **M1:** fix confirmed bugs only.
+- **M2:** command that places an easel + blueprint.
+- **M3:** soldiers start a build on their own.
+- **M4:** kingdom object (saved world data) with a founding block.
