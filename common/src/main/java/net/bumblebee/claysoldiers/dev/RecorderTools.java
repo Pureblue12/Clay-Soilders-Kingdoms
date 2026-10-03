@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
  */
 final class RecorderTools {
     static final String RECORDER = "recorder";
+    static final String RECORDER_ADVANCED = "recorder_advanced";
     private static final int NEARBY_RADIUS = 32;
     private static final int DEFAULT_SHOW = 20;
 
@@ -34,47 +35,50 @@ final class RecorderTools {
     }
 
     static void register(DevToolRegistry registry) {
+        // Main page: the three buttons you need, each with its description printed under it.
         registry.addCategory(new DevCategory(RECORDER, "Recorder",
-                "A book can't show on/off: use Status to check.", false));
-
+                "Check Status to see if it's on.", false, true));
         registry.addTool(new DevTool("log_start", RECORDER, Component.literal("Start recording"),
-                "Turns on " + ids(DebugCategory.PRESET) + " for all soldiers and clears the old log.",
+                "Turns on " + ids(DebugCategory.PRESET) + ".",
                 List.of("log", "start"), false, null, RecorderTools::start));
-        registry.addTool(new DevTool("log_stop", RECORDER, Component.literal("Stop + save to file"),
-                "Turns all categories off and saves the log to a file in debuglogs/.",
+        registry.addTool(new DevTool("log_stop", RECORDER, Component.literal("Stop + save"),
+                "Turns it off, saves a file.",
                 List.of("log", "stop"), false, null, RecorderTools::stop));
         registry.addTool(new DevTool("log_status", RECORDER, Component.literal("Status (is it on?)"),
-                "Shows whether recording is on, which categories, how many events and the focus.",
+                "Shows on/off, events, focus.",
                 List.of("log", "status"), false, null, context -> status(context, registry)));
 
-        registry.addTool(new DevTool("log_on", RECORDER, Component.literal("Turn on"),
+        // Advanced page: categories, focus, show/save/clear, log size, snapshot.
+        registry.addCategory(new DevCategory(RECORDER_ADVANCED, "Recorder (advanced)",
+                "Categories (hover a name to see what it records): " + ids(DebugCategory.all()) + ".", false));
+        registry.addTool(new DevTool("log_on", RECORDER_ADVANCED, Component.literal("Turn on"),
                 "Turns one category on without changing the others.",
                 List.of("log", "on"), false, categoryArgument(), context -> setCategory(context, true)));
-        registry.addTool(new DevTool("log_off", RECORDER, Component.literal("Turn off"),
+        registry.addTool(new DevTool("log_off", RECORDER_ADVANCED, Component.literal("Turn off"),
                 "Turns one category off without changing the others.",
                 List.of("log", "off"), false, categoryArgument(), context -> setCategory(context, false)));
 
-        registry.addTool(new DevTool("log_focus", RECORDER, Component.literal("Focus nearest soldier"),
+        registry.addTool(new DevTool("log_focus", RECORDER_ADVANCED, Component.literal("Focus nearest soldier"),
                 "Records only the clay soldier nearest to you.",
                 List.of("log", "focus"), false, null, RecorderTools::focus));
-        registry.addTool(new DevTool("log_unfocus", RECORDER, Component.literal("Clear focus"),
+        registry.addTool(new DevTool("log_unfocus", RECORDER_ADVANCED, Component.literal("Clear focus"),
                 "Records all soldiers again.",
                 List.of("log", "unfocus"), false, null, RecorderTools::unfocus));
 
-        registry.addTool(new DevTool("log_show", RECORDER, Component.literal("Show in chat"),
+        registry.addTool(new DevTool("log_show", RECORDER_ADVANCED, Component.literal("Show in chat"),
                 "Prints the last events in chat, oldest first.",
                 List.of("log", "show"), false,
                 new DevTool.Argument("count", IntegerArgumentType.integer(1, 500), null,
                         access -> List.of(new DevTool.Choice(Component.literal("Last " + DEFAULT_SHOW + " events"), String.valueOf(DEFAULT_SHOW))),
                         true),
                 RecorderTools::show));
-        registry.addTool(new DevTool("log_save", RECORDER, Component.literal("Save log now"),
+        registry.addTool(new DevTool("log_save", RECORDER_ADVANCED, Component.literal("Save log now"),
                 "Saves the log to a file without stopping.",
                 List.of("log", "save"), false, null, RecorderTools::save));
-        registry.addTool(new DevTool("log_clear", RECORDER, Component.literal("Clear log"),
+        registry.addTool(new DevTool("log_clear", RECORDER_ADVANCED, Component.literal("Clear log"),
                 "Deletes all recorded events from memory (saved files stay).",
                 List.of("log", "clear"), false, null, RecorderTools::clear));
-        registry.addTool(new DevTool("log_capacity", RECORDER, Component.literal("Log size"),
+        registry.addTool(new DevTool("log_capacity", RECORDER_ADVANCED, Component.literal("Log size"),
                 "How many events are kept in memory (oldest are dropped).",
                 List.of("log", "capacity"), false,
                 new DevTool.Argument("events", IntegerArgumentType.integer(100, 100_000), null,
@@ -83,7 +87,7 @@ final class RecorderTools {
                                 new DevTool.Choice(Component.literal("20000"), "20000"))),
                 RecorderTools::capacity));
 
-        registry.addTool(new DevTool("snapshot", RECORDER, Component.literal("Snapshot soldiers near me"),
+        registry.addTool(new DevTool("snapshot", RECORDER_ADVANCED, Component.literal("Snapshot soldiers near me"),
                 "One line per soldier within " + NEARBY_RADIUS + " blocks (job, status, carried item, position, health, goal, team), in chat and a file.",
                 List.of("snapshot"), false, null, RecorderTools::snapshot));
     }
@@ -92,7 +96,7 @@ final class RecorderTools {
         return new DevTool.Argument("category", StringArgumentType.word(),
                 (context, builder) -> SharedSuggestionProvider.suggest(DebugCategory.all().stream().map(DebugCategory::id), builder),
                 access -> DebugCategory.all().stream()
-                        .map(category -> new DevTool.Choice(Component.literal(category.id()), category.id()))
+                        .map(category -> new DevTool.Choice(Component.literal(category.id()), category.id(), category.id() + ": " + category.description()))
                         .toList());
     }
 

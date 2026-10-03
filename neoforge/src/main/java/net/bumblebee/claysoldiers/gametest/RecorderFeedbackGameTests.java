@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
+import net.bumblebee.claysoldiers.dev.DevBook;
 import net.bumblebee.claysoldiers.dev.DevTool;
 import net.bumblebee.claysoldiers.dev.DevToolRegistry;
 import net.bumblebee.claysoldiers.entity.soldier.ClaySoldierEntity;
@@ -116,6 +117,34 @@ public class RecorderFeedbackGameTests {
 
         DebugLog.reset();
         helper.assertTrue(RecorderIndicator.message() == null, "Indicator still shown after recording stopped");
+        helper.succeed();
+    }
+
+    /**
+     * The Recorder page starts with Start, Stop + save and Status (in that order, each with its description
+     * under it); the other recorder tools are on "Recorder (advanced)".
+     */
+    @GameTest(template = PLATFORM)
+    public static void recorderPageShowsStartStopStatusFirst(GameTestHelper helper) {
+        DevToolRegistry registry = DevToolRegistry.defaults();
+        DevBook.Layout layout = DevBook.build(registry, helper.getLevel().registryAccess(), "test", "now");
+        Integer recorderPage = layout.categoryStartPages().get("recorder");
+        Integer advancedPage = layout.categoryStartPages().get("recorder_advanced");
+        helper.assertTrue(recorderPage != null && advancedPage != null, "Recorder pages missing: " + layout.categoryStartPages());
+
+        List<String> lines = layout.pages().get(recorderPage - 1).getString().lines().toList();
+        List<String> expected = List.of("▶ Start recording", "▶ Stop + save", "▶ Status (is it on?)");
+        int previous = -1;
+        for (String button : expected) {
+            int index = lines.indexOf(button);
+            helper.assertTrue(index > previous, "'" + button + "' missing or out of order on the Recorder page: " + lines);
+            helper.assertTrue(index + 1 < lines.size() && lines.get(index + 1).startsWith("  "),
+                    "'" + button + "' has no description line under it: " + lines);
+            previous = index;
+        }
+        String advanced = layout.pages().get(advancedPage - 1).getString();
+        helper.assertTrue(advanced.contains("Recorder (advanced)") && advanced.contains("BUILD"),
+                "Advanced page should explain the categories: " + advanced);
         helper.succeed();
     }
 

@@ -87,7 +87,7 @@ public final class DevToolRegistry {
     /**
      * A clickable book button: its text and the full command it runs (starting with {@code /}).
      */
-    public record Button(Component label, String command) {
+    public record Button(Component label, String command, @org.jetbrains.annotations.Nullable String hover) {
     }
 
     /**
@@ -95,11 +95,11 @@ public final class DevToolRegistry {
      */
     public List<Button> buttons(DevTool tool, RegistryAccess access) {
         if (tool.argument() == null) {
-            return List.of(new Button(tool.label(), tool.command()));
+            return List.of(new Button(tool.label(), tool.command(), null));
         }
         List<Button> buttons = new ArrayList<>();
         for (DevTool.Choice choice : tool.argument().choices().apply(access)) {
-            buttons.add(new Button(choice.label(), tool.command() + " " + choice.value()));
+            buttons.add(new Button(choice.label(), tool.command() + " " + choice.value(), choice.hover()));
         }
         return Collections.unmodifiableList(buttons);
     }

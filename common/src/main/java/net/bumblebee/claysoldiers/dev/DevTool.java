@@ -113,7 +113,11 @@ public record DevTool(String id, String category, Component label, String descri
      *
      * @param label button text
      * @param value text appended to the command
+     * @param hover extra text shown when hovering the button, or {@code null}
      */
-    public record Choice(Component label, String value) {
+    public record Choice(Component label, String value, @Nullable String hover) {
+        public Choice(Component label, String value) {
+            this(label, value, null);
+        }
     }
 }

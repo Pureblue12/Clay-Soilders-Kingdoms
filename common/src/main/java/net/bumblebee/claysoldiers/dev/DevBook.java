@@ -68,7 +68,7 @@ public final class DevBook {
                     () -> List.of(categoryTitle(category, true)));
             writer.startPage(categoryHeader(category));
             for (DevTool tool : registry.toolsIn(category)) {
-                writeTool(writer, registry, tool, access);
+                writeTool(writer, registry, tool, access, category.showToolDescriptions());
             }
             List<List<Line>> pages = writer.finish();
             categoryPages.addAll(pages);
@@ -105,7 +105,7 @@ public final class DevBook {
         return new Layout(pages, pageLines, contentsPages, startPages, stamp);
     }
 
-    private static void writeTool(PageWriter writer, DevToolRegistry registry, DevTool tool, RegistryAccess access) {
+    private static void writeTool(PageWriter writer, DevToolRegistry registry, DevTool tool, RegistryAccess access, boolean showDescription) {
         ChatFormatting color = tool.confirm() ? ChatFormatting.DARK_RED : ChatFormatting.DARK_GREEN;
         String warning = tool.confirm() ? "⚠ " : "";
         List<DevToolRegistry.Button> buttons = registry.buttons(tool, access);
@@ -113,10 +113,19 @@ public final class DevBook {
             for (DevToolRegistry.Button button : buttons) {
                 writer.add(Line.of(button(button, "▶ " + warning, color, tool), false));
             }
+            if (showDescription) {
+                writer.add(descriptionLine(tool));
+            }
             return;
         }
-        writer.add(Line.of(BookFormat.withHover(Component.literal(warning).append(tool.label()).append(":"),
-                hoverText(tool, tool.usage())), false));
+        Line header = Line.of(BookFormat.withHover(Component.literal(warning).append(tool.label()).append(":"),
+                hoverText(tool, tool.usage())), false);
+        // Keep the header on the same page as its first button.
+        writer.keepTogether(header.lines() + (buttons.isEmpty() ? 1 : Line.of(button(buttons.getFirst(), "  ▸ ", color, tool), false).lines()));
+        writer.add(header);
+        if (showDescription) {
+            writer.add(descriptionLine(tool));
+        }
         if (buttons.isEmpty()) {
             writer.add(Line.of(Component.literal("  (none available)").withStyle(ChatFormatting.GRAY), false));
         }
@@ -125,9 +134,15 @@ public final class DevBook {
         }
     }
 
+    private static Line descriptionLine(DevTool tool) {
+        return Line.of(Component.literal("  " + tool.description()).withStyle(ChatFormatting.GRAY), false);
+    }
+
     private static MutableComponent button(DevToolRegistry.Button button, String prefix, ChatFormatting color, DevTool tool) {
         MutableComponent label = Component.literal(prefix).append(button.label()).withStyle(color);
-        return BookFormat.runCommand(label, button.command(), hoverText(tool, button.command()));
+        Component hover = button.hover() == null ? hoverText(tool, button.command())
+                : Component.literal(button.hover()).append("\n").append(hoverText(tool, button.command()));
+        return BookFormat.runCommand(label, button.command(), hover);
     }
 
     private static Component hoverText(DevTool tool, String command) {
@@ -205,6 +220,16 @@ public final class DevBook {
             current.add(line);
             used += line.lines();
             onlyHeader = false;
+        }
+
+        /**
+         * Starts a new page now if the next {@code lines} lines would not fit on the current one.
+         */
+        void keepTogether(int lines) {
+            int footerLines = footer == null ? 0 : footer.lines();
+            if (current != null && !onlyHeader && used + lines + footerLines > linesPerPage) {
+                startPage(continuationHeader.get());
+            }
         }
 
         List<List<Line>> finish() {

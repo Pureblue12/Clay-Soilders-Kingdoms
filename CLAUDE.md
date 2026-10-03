@@ -33,7 +33,7 @@ Run from the project root. The first run downloads Minecraft/NeoForge and is slo
 Starts a headless test server, runs every test in
 `neoforge/src/main/java/net/bumblebee/claysoldiers/gametest/` (`ClaySoldierGameTests`,
 `DevToolkitGameTests`, `SuspectedBugGameTests`, `BuildSiteGameTests`, `BuilderReachGameTests`,
-`DebugLogGameTests`), prints
+`DebugLogGameTests`, `RecorderFeedbackGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/make_gametest_platform.py`).
@@ -45,7 +45,7 @@ Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/mak
   Don't use `helper.relativePos` (wrong rotation in 1.21.1); compare absolute positions instead.
 - Use `FakePlayerFactory` for players, not `makeMockServerPlayerInLevel` (Curios crashes on it).
 
-Current status (2026-10-03, after the debug recorder): all 28 required tests pass. `smallTowerFinishes` is marked
+Current status (2026-10-03, after recorder feedback): all 32 required tests pass. `smallTowerFinishes` is marked
 `required = false` (optional) and is EXPECTED TO FAIL until Fix B — the run lists it under "optional
 tests failed"; that is not a regression. `SuspectedBugGameTests` covers the easel right-click:
 non-block item, unneeded block, needed block.
@@ -99,21 +99,25 @@ How it is built (`common/.../dev/`):
 Registered only when `PLATFORM.isDevEnv()` (NeoForge: `!FMLLoader.isProduction()`), so never in a
 normal install. To add a dev command: add a `DevTool` in `DevTools` (new category: add a `DevCategory`).
 
-### Debug recorder (`/csr dev log`, book category "Recorder")
+### Debug recorder (`/csr dev log`, book pages "Recorder" and "Recorder (advanced)")
 
 Records what soldiers and build plans do, to find out WHY something goes wrong.
-1. Book → Recorder → **Start recording** (turns on BUILD, WORK, DAMAGE; clears the old log).
-2. Reproduce the problem. Optional: **Focus nearest soldier**, extra categories via **Turn on**.
-3. **Status (is it on?)** — a book can't show on/off, so this is the way to check.
-4. **Stop + save to file** → `neoforge/run/debuglogs/csr-debug-<time>.txt` (last 20 files kept);
-   **Show in chat** / **Save log now** / **Clear log** / **Snapshot soldiers near me** as needed.
-5. Paste the file. Lines: `[t=tick] CATEGORY team#entityId @(pos) message (xN until t=..)`, oldest first.
+1. Refresh the book first (`/csr dev book`): page 1's `#hash` must match the one **Status** prints.
+2. Book → Recorder → **Start recording** (BUILD, WORK, DAMAGE; clears the old log). While recording, the
+   action bar shows `● REC BUILD WORK DAMAGE · N events` (+ `· focus: red#2`) every second.
+3. Reproduce the problem. Optional (advanced page): **Focus nearest soldier**, **Turn on/off** a category.
+4. **Status (is it on?)** prints the state; every recorder button prints a one-line result in chat and
+   writes it to the game log (Terminal) as `[CSR-DEBUG] ...`.
+5. **Stop + save** prints the event count, duration and file path:
+   `neoforge/run/debuglogs/csr-debug-<time>.txt` (last 20 files kept). Paste the file.
+   Lines: `[t=tick] CATEGORY team#entityId @(pos) message (xN until t=..)`, oldest first.
 
 Code: `common/.../debug/` — `DebugLog.event(category, soldier, "text %s", arg)` is the one-line entry point
 (returns after one field read when the category is off; pass raw objects, not built strings; use a
 `Supplier<String>` for anything expensive). Categories: `DebugCategory` (BUILD, WORK, DAMAGE, PATHING, TEAM;
 add one with `DebugCategory.register` and it gets commands and book buttons automatically).
-Commands/buttons: `common/.../dev/RecorderTools`. Ring buffer default 5000 events (`/csr dev log capacity`).
+Commands/buttons: `common/.../dev/RecorderTools`; action-bar indicator: `neoforge/.../event/RecorderIndicator`
+(registered only in dev). Ring buffer default 5000 events (`/csr dev log capacity`).
 State lives in memory only: it resets when the game restarts (not when you just re-join a world).
 Instrumented so far: `BuildBlueprintGoal`, `ServerBlueprintPlan.getRequest` (summary), `BuilderReach`
 (PATHING), `AbstractClaySoldierEntity.hurt` (DAMAGE), `WorkSelectorGoal.setWorkMode` (WORK).
