@@ -99,6 +99,39 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         return res;
     }
 
+    /**
+     * Places the block of a builder's request exactly at the request's spot. Unlike {@link #tryPlacing}, never uses
+     * another spot: if the request is no longer this plan's open request for its spot (cancelled, taken over, already
+     * filled) or the item doesn't match, nothing is placed.
+     */
+    public PlaceResult tryPlacingRequest(Level level, BlueprintRequest request, ItemStack itemStack, BlockPos base, BlueprintTemplateSettings settings) {
+        if (!(itemStack.getItem() instanceof BlockItem blockItem)) {
+            return PlaceResult.NOT_NEEDED;
+        }
+        var iterator = blockInfoList.iterator();
+        while (iterator.hasNext()) {
+            var blockInfo = iterator.next();
+            if (!blockInfo.isActiveRequest(request)) {
+                continue;
+            }
+            BlockPos pos = targetPosition(base, settings, blockInfo);
+            if (!pos.equals(request.getPos()) || !blockInfo.isFor(blockItem.getBlock())) {
+                return PlaceResult.NOT_NEEDED;
+            }
+            var updatedBlockInfo = processBlockInfos(settings, blockInfo);
+            if (!placeBlock(itemStack, level, pos, updatedBlockInfo.state().mirror(settings.mirror()).rotate(settings.rotation()))) {
+                return PlaceResult.CANT_PLACE;
+            }
+            iterator.remove();
+            blockInfo.markDone();
+            if (!hasItemAndShrink(itemStack.getItem())) {
+                throw new IllegalStateException("Successfully placed a Block which was not needed");
+            }
+            return PlaceResult.SUCCESS;
+        }
+        return PlaceResult.NOT_NEEDED;
+    }
+
     private PlaceResult tryPlacingAll(Block block, ItemStack stack, Level level, BlockPos base, BlueprintTemplateSettings settings) {
         var iterator = blockInfoList.iterator();
         while (iterator.hasNext()) {

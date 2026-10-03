@@ -78,6 +78,13 @@ public class BlueprintBlockInfo {
     }
 
     /**
+     * Returns whether {@code request} is this BlockInfo's current request and is still open (not cancelled or finished).
+     */
+    public boolean isActiveRequest(BlueprintRequest request) {
+        return lastRequest == request && !request.isCancelled() && !request.isFinished();
+    }
+
+    /**
      * Marks this BlockInfo as placed.
      */
     public void markDone() {

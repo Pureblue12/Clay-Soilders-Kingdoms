@@ -239,11 +239,21 @@ public class EaselBlockEntity extends BlockEntity {
         );
     }
 
+    /**
+     * A builder's request: places the block exactly at the request's spot, or nothing (see
+     * {@link ServerBlueprintPlan#tryPlacingRequest}). Players feeding the easel by hand use {@link #tryPlacingSoldier}.
+     */
     private boolean doBlueprintRequest(BlueprintRequest request) {
-        if (request == null) {
+        if (request == null || !(template instanceof ServerBlueprintPlan serverPlan)) {
             return false;
         }
-        return tryPlacingSoldier(request.getItem().getDefaultInstance()).isSuccess();
+        ItemStack item = request.getItem().getDefaultInstance();
+        var settings = getTemplateSettings();
+        var result = serverPlan.tryPlacingRequest(level, request, item, getTemplateBase(settings), settings);
+        if (result.isSuccess()) {
+            onPlaced(item);
+        }
+        return result.isSuccess();
     }
 
     public BlueprintPlan.PlaceResult tryPlacingSoldier(ItemStack item) {
@@ -257,12 +267,16 @@ public class EaselBlockEntity extends BlockEntity {
         );
 
         if (result.isSuccess()) {
-            if (!level.isClientSide()) {
-                ClaySoldiersCommon.NETWORK_MANGER.sendToPlayersTrackingBlockEntity(this, new BlueprintPlacePayload(worldPosition, item.getItem()));
-            }
-            setChanged();
+            onPlaced(item);
         }
         return result;
+    }
+
+    private void onPlaced(ItemStack item) {
+        if (!level.isClientSide()) {
+            ClaySoldiersCommon.NETWORK_MANGER.sendToPlayersTrackingBlockEntity(this, new BlueprintPlacePayload(worldPosition, item.getItem()));
+        }
+        setChanged();
     }
 
     public BlueprintRequestHandler getBlueprintRequestHandler() {

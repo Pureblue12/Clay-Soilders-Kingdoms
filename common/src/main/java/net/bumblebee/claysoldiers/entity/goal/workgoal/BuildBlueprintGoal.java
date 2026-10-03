@@ -180,6 +180,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         var requestHandler = easelPos.getCapability();
         if (requestHandler != null) {
             if (requestHandler.doRequest(request)) {
+                // The easel only fills the request's own spot, so this is the actual position.
                 DebugLog.event(DebugCategory.BUILD, soldier, "placed %s at %s", request.getItem(), request.getPos());
                 soldier.setCarriedStack(ItemStack.EMPTY);
                 request.setFinished();
