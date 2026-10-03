@@ -34,6 +34,13 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     private BlueprintRequest request = null;
     private boolean bringBack = false;
     private int carryTicks = 0;
+    /**
+     * When the easel has no reachable block, the builder waits this many ticks plus up to
+     * {@link #RETRY_COOLDOWN_RANDOM} more before asking again, instead of asking (and pathfinding) every tick.
+     */
+    public static final int RETRY_COOLDOWN_MIN = 20;
+    public static final int RETRY_COOLDOWN_RANDOM = 20;
+    private int retryCooldown = 0;
 
     public BuildBlueprintGoal(AbstractClaySoldierEntity soldier, Supplier<WorkSelectorGoal> workSelector, int searchRange) {
         super(soldier, workSelector);
@@ -69,6 +76,9 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                 if (returnCarried()) {
                     bringBack = false;
                 }
+            } else if (retryCooldown > 0) {
+                retryCooldown--;
+                setStatus(SEARCHING_ID);
             } else {
                 getRequestJob();
                 setStatus(SEARCHING_ID);
@@ -145,6 +155,9 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         var requestHandler = easelPos.getCapability();
         if (requestHandler != null) {
             request = requestHandler.getRequest(this::canReach);
+            if (request == null) {
+                retryCooldown = RETRY_COOLDOWN_MIN + soldier.getRandom().nextInt(RETRY_COOLDOWN_RANDOM + 1);
+            }
         } else {
             easelPos = null;
         }
