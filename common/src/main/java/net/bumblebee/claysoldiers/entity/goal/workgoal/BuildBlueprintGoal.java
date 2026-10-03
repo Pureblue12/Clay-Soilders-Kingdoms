@@ -89,7 +89,13 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                     soldier.dropItemStack(returned);
                 }
                 soldier.setCarriedStack(storage.tryExtracting(stack -> stack.is(request.getItem()), 1));
-                request.setPlacing();
+                if (soldier.getCarriedStack().isEmpty()) {
+                    // The storage does not have the item: don't place anything, ask again after a break.
+                    request.cancel();
+                    takeAShortBreak();
+                } else {
+                    request.setPlacing();
+                }
             } else {
                 easelPos = null;
                 request = null;
