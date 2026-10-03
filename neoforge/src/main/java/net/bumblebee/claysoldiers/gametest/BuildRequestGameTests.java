@@ -209,6 +209,39 @@ public class BuildRequestGameTests {
     public static void unreachableReasonNamesClosedDoor(GameTestHelper helper) {
         DebugLog.reset();
         DebugLog.setEnabled(DebugCategory.BUILD, true, helper.getLevel().getServer());
+        setUpSlabBehindClosedDoor(helper);
+
+        helper.succeedWhen(() -> {
+            helper.assertTrue(DebugLog.contains(DebugCategory.BUILD, "closed door in the way"),
+                    "No 'closed door in the way' reason recorded yet (" + DebugLog.size() + " events)");
+            DebugLog.reset();
+        });
+    }
+
+    /**
+     * Door event: with BUILD recorded, a closed door that blocks the way to a blueprint block gets its own event naming
+     * the door and the first block behind it.
+     */
+    @GameTest(template = PLATFORM, batch = "build_request_door_blocks", timeoutTicks = 300)
+    public static void closedDoorBlockingABlockIsLogged(GameTestHelper helper) {
+        DebugLog.reset();
+        DebugLog.setEnabled(DebugCategory.BUILD, true, helper.getLevel().getServer());
+        BlockPos[] doorAndSlab = setUpSlabBehindClosedDoor(helper);
+        String expected = "closed door at (%s) blocks the way to 1 blueprint block(s), first at (%s)"
+                .formatted(helper.absolutePos(doorAndSlab[0]).toShortString(), helper.absolutePos(doorAndSlab[1]).toShortString());
+
+        helper.succeedWhen(() -> {
+            helper.assertTrue(DebugLog.contains(DebugCategory.BUILD, expected),
+                    "No '" + expected + "' event recorded yet (" + DebugLog.size() + " events)");
+            DebugLog.reset();
+        });
+    }
+
+    /**
+     * A standing 5x5 hut with a closed door in the doorway, a blueprint that only wants a slab inside, and one builder
+     * with the slab. Returns the door and slab positions (relative).
+     */
+    private static BlockPos[] setUpSlabBehindClosedDoor(GameTestHelper helper) {
         buildHutWalls(helper);
         BlockPos door = EASEL.offset(0, 0, 2);
         helper.setBlock(door, Blocks.OAK_DOOR.defaultBlockState());
@@ -216,12 +249,61 @@ public class BuildRequestGameTests {
 
         BlueprintData blueprint = blueprint(helper, "slab_inside", 5, 2, 5, Map.of(new BlockPos(2, 0, 2), Blocks.COBBLESTONE_SLAB.defaultBlockState()));
         ClaySoldierGameTests.setUpBuilder(helper, blueprint, List.of(new ItemStack(Items.COBBLESTONE_SLAB)));
+        return new BlockPos[]{door, EASEL.offset(0, 0, 4)};
+    }
 
-        helper.succeedWhen(() -> {
-            helper.assertTrue(DebugLog.contains(DebugCategory.BUILD, "closed door in the way"),
-                    "No 'closed door in the way' reason recorded yet (" + DebugLog.size() + " events)");
-            DebugLog.reset();
-        });
+    /**
+     * BUG TEST (door race): a hut whose walls stand; the blueprint wants the door and a slab inside. The slab has been
+     * handed out and is still being carried, so asking again must NOT hand out the door: doors wait until no other
+     * placeable block remains (clay soldiers can't open doors, so an early door can lock a builder out). Once the slab
+     * is placed, the door is handed out.
+     */
+    @GameTest(template = PLATFORM)
+    public static void doorWaitsForBlocksInProgress(GameTestHelper helper) {
+        buildHutWalls(helper);
+        Map<BlockPos, BlockState> blocks = new LinkedHashMap<>();
+        blocks.put(new BlockPos(2, 0, 0), Blocks.OAK_DOOR.defaultBlockState());
+        blocks.put(new BlockPos(2, 0, 2), Blocks.COBBLESTONE_SLAB.defaultBlockState());
+        EaselBlockEntity easel = DevScenarios.placeEasel(helper.getLevel(), helper.absolutePos(EASEL), Direction.NORTH,
+                blueprint(helper, "door_race", 5, 2, 5, blocks));
+        BlueprintRequestHandler handler = easel.getBlueprintRequestHandler();
+        BlockPos doorSpot = helper.absolutePos(EASEL.offset(0, 0, 2));
+        BlockPos slabSpot = helper.absolutePos(EASEL.offset(0, 0, 4));
+
+        BlueprintRequest slab = handler.getRequest(pos -> true);
+        helper.assertTrue(slab != null && slab.getPos().equals(slabSpot), "Setup: the slab should be handed out first, got " + slab);
+        BlueprintRequest early = handler.getRequest(pos -> true);
+        helper.assertTrue(early == null, "BUG (door race): the door was handed out while the slab inside is still being carried: " + early);
+
+        slab.setPlacing();
+        helper.assertTrue(handler.doRequest(slab), "Setup: placing the slab failed");
+        BlueprintRequest door = handler.getRequest(pos -> true);
+        helper.assertTrue(door != null && door.getPos().equals(doorSpot), "The door should be handed out once the slab is placed, got " + door);
+        helper.succeed();
+    }
+
+    /**
+     * Doors only wait for other blocks that can still be placed: two doors don't wait for each other, and a block whose
+     * spot is obstructed doesn't hold them back (otherwise they would never be handed out).
+     */
+    @GameTest(template = PLATFORM)
+    public static void doorsDoNotWaitForEachOtherOrObstructedSpots(GameTestHelper helper) {
+        Map<BlockPos, BlockState> blocks = new LinkedHashMap<>();
+        blocks.put(new BlockPos(0, 0, 0), Blocks.OAK_DOOR.defaultBlockState());
+        blocks.put(new BlockPos(4, 0, 0), Blocks.OAK_DOOR.defaultBlockState());
+        blocks.put(new BlockPos(2, 0, 2), Blocks.COBBLESTONE_SLAB.defaultBlockState());
+        helper.setBlock(EASEL.offset(0, 0, 4), Blocks.STONE); // the slab's spot is taken
+        EaselBlockEntity easel = DevScenarios.placeEasel(helper.getLevel(), helper.absolutePos(EASEL), Direction.NORTH,
+                blueprint(helper, "two_doors", 5, 2, 5, blocks));
+        BlueprintRequestHandler handler = easel.getBlueprintRequestHandler();
+        List<BlockPos> doorSpots = List.of(helper.absolutePos(EASEL.offset(-2, 0, 2)), helper.absolutePos(EASEL.offset(2, 0, 2)));
+
+        BlueprintRequest first = handler.getRequest(pos -> true);
+        BlueprintRequest second = handler.getRequest(pos -> true);
+        helper.assertTrue(first != null && doorSpots.contains(first.getPos()), "The first door was not handed out, got " + first);
+        helper.assertTrue(second != null && doorSpots.contains(second.getPos()) && !second.getPos().equals(first.getPos()),
+                "The second door was not handed out while the first is in progress, got " + second);
+        helper.succeed();
     }
 
     /**
