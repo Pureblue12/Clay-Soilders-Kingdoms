@@ -29,6 +29,11 @@ public class DigHoleGoal extends AbstractWorkGoal {
     private BlockPos lastPoiPos;
     @Nullable
     private StairPosMap stairPosMap;
+    /**
+     * The POI whose hole reached the first unbreakable layer (e.g. bedrock) and is finished.
+     */
+    @Nullable
+    private BlockPos finishedPoi;
     private final DigBreakManger digBreakManger;
 
     public DigHoleGoal(AbstractClaySoldierEntity soldier, Supplier<WorkSelectorGoal> workSelector) {
@@ -54,6 +59,10 @@ public class DigHoleGoal extends AbstractWorkGoal {
             return;
         }
 
+        if (isFinished(lastPoiPos)) {
+            return;
+        }
+
         if (stairPosMap == null || currentPos == null) {
             setDigging();
             return;
@@ -65,6 +74,15 @@ public class DigHoleGoal extends AbstractWorkGoal {
             return;
         }
 
+
+        if (level.getBlockState(currentPos).getDestroySpeed(level, currentPos) < 0) {
+            // Reached the first unbreakable layer (e.g. bedrock): the hole is finished.
+            // currentPos was never registered for breaking, so clear it instead of unregistering.
+            finishedPoi = lastPoiPos.immutable();
+            currentPos = null;
+            setStatus(UNBREAKABLE_ID);
+            return;
+        }
 
         boolean requiresStair = stairPosMap.requiresStair(currentPos);
         if (isBlockConsideredBroken(currentPos, requiresStair)) {
@@ -109,8 +127,19 @@ public class DigHoleGoal extends AbstractWorkGoal {
             setStatus(REQUIRES_POI_ID);
             return false;
         }
+        if (isFinished(getPoiPos())) {
+            setStatus(UNBREAKABLE_ID);
+            return false;
+        }
         setStatus(SEARCHING_ID);
         return true;
+    }
+
+    /**
+     * Returns whether the hole at the given POI already reached an unbreakable layer.
+     */
+    private boolean isFinished(BlockPos poi) {
+        return poi.equals(finishedPoi);
     }
 
     @Override
