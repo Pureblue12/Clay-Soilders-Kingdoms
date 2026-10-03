@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.NodeEvaluator;
 import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -155,14 +156,17 @@ public final class BuilderReach {
     }
 
     /**
-     * If the block would be reachable when the builder could open doors, returns the first door on that path.
-     * The navigation's door setting is restored afterwards, so this doesn't change behavior.
+     * If the block would be reachable when the builder could open every door (wooden ones it may not use, and iron
+     * ones, which no soldier can open), returns the first door on that path. The navigation's door setting and the
+     * builder's iron door path cost are restored afterwards, so this doesn't change behavior.
      */
     @Nullable
     private static BlockPos closedDoorInTheWay(PathfinderMob builder, BlockPos target) {
         NodeEvaluator evaluator = builder.getNavigation().getNodeEvaluator();
         boolean couldOpen = evaluator.canOpenDoors();
+        float ironDoorMalus = builder.getPathfindingMalus(PathType.DOOR_IRON_CLOSED);
         evaluator.setCanOpenDoors(true);
+        builder.setPathfindingMalus(PathType.DOOR_IRON_CLOSED, 0);
         try {
             Path path = find(builder, target).path();
             if (path == null) {
@@ -177,6 +181,7 @@ public final class BuilderReach {
             return null;
         } finally {
             evaluator.setCanOpenDoors(couldOpen);
+            builder.setPathfindingMalus(PathType.DOOR_IRON_CLOSED, ironDoorMalus);
         }
     }
 

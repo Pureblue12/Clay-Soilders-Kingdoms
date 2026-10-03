@@ -54,6 +54,15 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     public static final int RETRY_COOLDOWN_MIN = 20;
     public static final int RETRY_COOLDOWN_RANDOM = 20;
     private int retryCooldown = 0;
+    /**
+     * Tiny soldiers count a path as walked when they are within 0.675 blocks of its last block's center, which is often
+     * still the block before it; placing is measured from the block they stand in. So after the path, the builder
+     * takes the last step into the path's end block directly, for at most this many ticks.
+     */
+    private static final int MAX_LAST_STEP_TICKS = 20;
+    @Nullable
+    private BlockPos pathEnd;
+    private int lastStepTicks;
 
     public BuildBlueprintGoal(AbstractClaySoldierEntity soldier, Supplier<WorkSelectorGoal> workSelector, int searchRange) {
         super(soldier, workSelector);
@@ -179,6 +188,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             unreachableReasons = DebugLog.isOn(DebugCategory.BUILD) ? new LinkedHashMap<>() : null;
             blockedByDoor = unreachableReasons == null ? null : new LinkedHashMap<>();
             request = requestHandler.getRequest(this::canReach);
+            pathEnd = null;
             logUnreachableReasons();
             if (request != null) DebugLog.event(DebugCategory.BUILD, soldier, "got request: %s at %s", request.getItem(), request.getPos());
             carryTicks = 0;
@@ -274,11 +284,18 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     protected boolean moveToRequest() {
         if (BuilderReach.canPlaceFrom(soldier, request.getPos())) {
             this.soldier.getNavigation().stop();
+            pathEnd = null;
             return true;
         }
         if (this.soldier.getNavigation().isDone()) {
+            if (pathEnd != null && !soldier.blockPosition().equals(pathEnd) && lastStepTicks++ < MAX_LAST_STEP_TICKS) {
+                this.soldier.getMoveControl().setWantedPosition(pathEnd.getX() + 0.5, pathEnd.getY(), pathEnd.getZ() + 0.5, 1);
+                return false;
+            }
             // Walk the same kind of path the reachable check accepted: it ends where the block can be placed.
             Path path = BuilderReach.pathToPlace(soldier, request.getPos());
+            pathEnd = path == null || path.getEndNode() == null ? null : path.getEndNode().asBlockPos();
+            lastStepTicks = 0;
             if (path != null) {
                 this.soldier.getNavigation().moveTo(path, 1);
             }

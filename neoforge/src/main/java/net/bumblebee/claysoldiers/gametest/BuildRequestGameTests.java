@@ -204,6 +204,7 @@ public class BuildRequestGameTests {
     /**
      * Recorder check for the door theory: a hut with a closed door is already standing and the blueprint only wants a
      * slab inside. With BUILD recording on, the builder's search must name the closed door as the reason.
+     * (Since soldiers use wooden doors, the door here is an iron one: the only kind that still blocks them.)
      */
     @GameTest(template = PLATFORM, batch = "build_request_door_reason", timeoutTicks = 300)
     public static void unreachableReasonNamesClosedDoor(GameTestHelper helper) {
@@ -238,14 +239,15 @@ public class BuildRequestGameTests {
     }
 
     /**
-     * A standing 5x5 hut with a closed door in the doorway, a blueprint that only wants a slab inside, and one builder
-     * with the slab. Returns the door and slab positions (relative).
+     * A standing 5x5 hut with a closed IRON door in the doorway (soldiers open wooden doors, so only an iron door still
+     * locks them out), a blueprint that only wants a slab inside, and one builder with the slab. Returns the door and
+     * slab positions (relative).
      */
     private static BlockPos[] setUpSlabBehindClosedDoor(GameTestHelper helper) {
         buildHutWalls(helper);
         BlockPos door = EASEL.offset(0, 0, 2);
-        helper.setBlock(door, Blocks.OAK_DOOR.defaultBlockState());
-        helper.setBlock(door.above(), Blocks.OAK_DOOR.defaultBlockState().setValue(DoorBlock.HALF, DoubleBlockHalf.UPPER));
+        helper.setBlock(door, Blocks.IRON_DOOR.defaultBlockState());
+        helper.setBlock(door.above(), Blocks.IRON_DOOR.defaultBlockState().setValue(DoorBlock.HALF, DoubleBlockHalf.UPPER));
 
         BlueprintData blueprint = blueprint(helper, "slab_inside", 5, 2, 5, Map.of(new BlockPos(2, 0, 2), Blocks.COBBLESTONE_SLAB.defaultBlockState()));
         ClaySoldierGameTests.setUpBuilder(helper, blueprint, List.of(new ItemStack(Items.COBBLESTONE_SLAB)));
