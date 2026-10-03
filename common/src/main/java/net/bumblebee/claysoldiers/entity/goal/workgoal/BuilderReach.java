@@ -3,41 +3,66 @@ package net.bumblebee.claysoldiers.entity.goal.workgoal;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.NodeEvaluator;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * The one rule for where a builder can place a blueprint block from, shared by the "is it reachable?"
  * check and the actual placing, so a builder is never handed a block it cannot place.
+ * <p>
+ * Builders have "long arms" (Fix B): a block can be placed when its center is less than {@link #HORIZONTAL_REACH}
+ * blocks sideways from the builder's feet (up to 2 blocks away), from {@link #MAX_PLACE_DEPTH} below up to
+ * {@link #MAX_PLACE_HEIGHT} above the feet. This includes everything the old rule (less than 2 blocks
+ * straight-line) allowed.
  */
 public final class BuilderReach {
-    /**
-     * A block can be placed when its center is less than this far (straight line) from the builder's feet.
-     */
-    public static final double PLACE_DISTANCE = 2.0;
+    /** A block's center must be less than this far sideways from the builder's feet (so up to 2 blocks away). */
+    public static final double HORIZONTAL_REACH = 2.5;
+    /** How many blocks above its feet a builder can place a block (enough for all built-in blueprints). */
+    public static final int MAX_PLACE_HEIGHT = 8;
+    /** How many blocks below its feet a builder can place a block. */
+    public static final int MAX_PLACE_DEPTH = 2;
 
     private BuilderReach() {
+    }
+
+    /**
+     * Returns whether {@code builder} can place a block at {@code target} from where it stands now. Measured from the
+     * center of the block it stands in, exactly like the end of a path is checked, so arriving at the end of an
+     * accepted path always counts as "in reach".
+     */
+    public static boolean canPlaceFrom(Entity builder, BlockPos target) {
+        return canPlaceFrom(Vec3.atBottomCenterOf(builder.blockPosition()), target);
     }
 
     /**
      * Returns whether a builder standing with its feet at {@code feet} can place a block at {@code target}.
      */
     public static boolean canPlaceFrom(Vec3 feet, BlockPos target) {
-        return target.closerToCenterThan(feet, PLACE_DISTANCE);
+        double dx = target.getX() + 0.5 - feet.x;
+        double dz = target.getZ() + 0.5 - feet.z;
+        int dy = target.getY() - Mth.floor(feet.y);
+        return dx * dx + dz * dz < HORIZONTAL_REACH * HORIZONTAL_REACH && dy >= -MAX_PLACE_DEPTH && dy <= MAX_PLACE_HEIGHT;
     }
 
     /**
      * Returns a path to a spot from which {@code builder} can place a block at {@code target}, or {@code null}.
      * <p>
-     * Vanilla pathfinding stops at the first spot within N steps (counting sideways and up/down steps together)
-     * of the target, which can still be too far to place from (e.g. 2 blocks straight sideways or 2 below).
-     * So the path's end is checked with {@link #canPlaceFrom}; if it fails, a path ending within 1 step is tried,
-     * which is always close enough.
+     * First a path towards the block itself is tried (vanilla pathfinding stops at the first spot within N steps,
+     * counting sideways and up/down steps together; the end is checked with {@link #canPlaceFrom}). If that fails,
+     * e.g. for a block high above the ground, one path to the nearest standing spot within reach is tried.
      */
     @Nullable
     public static Path pathToPlace(PathfinderMob builder, BlockPos target) {
@@ -63,29 +88,65 @@ public final class BuilderReach {
      *                     in the way. This costs one extra path search, so only use it while debugging.
      */
     public static Reach check(PathfinderMob builder, BlockPos target, boolean explainDoors) {
-        String whyWithin2 = "";
-        String whyWithin1 = "";
+        Reach reach = find(builder, target);
+        if (reach.reachable()) {
+            return reach;
+        }
+        DebugLog.event(DebugCategory.PATHING, builder, "can't place at %s: %s", target, reach.whyNot());
+        if (explainDoors) {
+            BlockPos door = closedDoorInTheWay(builder, target);
+            if (door != null) {
+                return new Reach(null, "closed door in the way at (" + door.toShortString() + ")");
+            }
+        }
+        return reach;
+    }
+
+    private static Reach find(PathfinderMob builder, BlockPos target) {
         for (int accuracy = 2; accuracy >= 1; accuracy--) {
             Path path = builder.getNavigation().createPath(target, accuracy);
             if (path != null && path.canReach() && endsWithinReach(path, target)) {
                 return new Reach(path, "");
             }
-            String why = path == null ? "no path at all" : !path.canReach() ? "no path gets close enough" : "path ends too far away to place from";
-            if (accuracy == 2) {
-                whyWithin2 = why;
-            } else {
-                whyWithin1 = why;
+        }
+        Set<BlockPos> spots = standingSpots(builder.level(), target);
+        if (spots.isEmpty()) {
+            return new Reach(null, "no standing spot within reach");
+        }
+        Path path = builder.getNavigation().createPath(spots, 0);
+        if (path != null && path.canReach() && endsWithinReach(path, target)) {
+            return new Reach(path, "");
+        }
+        return new Reach(null, path == null ? "no path at all" : "can't walk to a standing spot within reach");
+    }
+
+    /**
+     * Spots a builder could stand on to place a block at {@code target}: an empty block (feet) with something solid
+     * under it, in the columns within {@link #HORIZONTAL_REACH} around the target, between {@link #MAX_PLACE_DEPTH} above and
+     * {@link #MAX_PLACE_HEIGHT} below the target. The target itself is excluded.
+     */
+    private static Set<BlockPos> standingSpots(Level level, BlockPos target) {
+        Set<BlockPos> spots = new HashSet<>();
+        int range = Mth.floor(HORIZONTAL_REACH);
+        for (int dx = -range; dx <= range; dx++) {
+            for (int dz = -range; dz <= range; dz++) {
+                for (int below = -MAX_PLACE_DEPTH; below <= MAX_PLACE_HEIGHT; below++) {
+                    BlockPos feet = target.offset(dx, -below, dz);
+                    if (!feet.equals(target) && level.isLoaded(feet) && canStandAt(level, feet)
+                            && canPlaceFrom(new Vec3(feet.getX() + 0.5, feet.getY(), feet.getZ() + 0.5), target)) {
+                        spots.add(feet);
+                    }
+                }
             }
         }
-        DebugLog.event(DebugCategory.PATHING, builder, "can't place at %s: within 2 steps: %s; within 1 step: %s", target, whyWithin2, whyWithin1);
-        String why = whyWithin1;
-        if (explainDoors) {
-            BlockPos door = closedDoorInTheWay(builder, target);
-            if (door != null) {
-                why = "closed door in the way at (" + door.toShortString() + ")";
-            }
-        }
-        return new Reach(null, why);
+        return spots;
+    }
+
+    private static boolean canStandAt(Level level, BlockPos feet) {
+        BlockState feetState = level.getBlockState(feet);
+        BlockState ground = level.getBlockState(feet.below());
+        return feetState.getCollisionShape(level, feet).isEmpty() && feetState.getFluidState().isEmpty()
+                && !ground.getCollisionShape(level, feet.below()).isEmpty();
     }
 
     /**
@@ -98,8 +159,8 @@ public final class BuilderReach {
         boolean couldOpen = evaluator.canOpenDoors();
         evaluator.setCanOpenDoors(true);
         try {
-            Path path = builder.getNavigation().createPath(target, 1);
-            if (path == null || !path.canReach() || !endsWithinReach(path, target)) {
+            Path path = find(builder, target).path();
+            if (path == null) {
                 return null;
             }
             for (int i = 0; i < path.getNodeCount(); i++) {

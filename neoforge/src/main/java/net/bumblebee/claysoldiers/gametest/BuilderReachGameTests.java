@@ -29,10 +29,11 @@ public class BuilderReachGameTests {
     private static final int STUCK_CARRY_TICKS = 600;
 
     /**
-     * BUG TEST (builders freeze while "Carrying"): one block floating 2 above open ground. The "reachable" check
-     * (path ends within 2 steps) accepts it, but the soldier can only place within 2 blocks straight-line of its
-     * feet, so it can never place it. Correct: the block is placed, or the soldier never takes it / gives up and
-     * returns it to the chest. Fails if the soldier carries it for more than {@value #STUCK_CARRY_TICKS} ticks.
+     * BUG TEST (builders freeze while "Carrying"): one block floating 2 above open ground. Before Fix A the
+     * "reachable" check (path ends within 2 steps) accepted it while placing needed the feet within 2 blocks
+     * straight-line, so the soldier carried it forever. (Since Fix B it is simply placed from below.) Correct: the
+     * block is placed, or the soldier never takes it / gives up and returns it to the chest. Fails if the soldier
+     * carries it for more than {@value #STUCK_CARRY_TICKS} ticks.
      */
     @GameTest(template = PLATFORM, timeoutTicks = 800)
     public static void builderNeverStuckCarrying(GameTestHelper helper) {
@@ -95,14 +96,12 @@ public class BuilderReachGameTests {
     }
 
     /**
-     * EXPECTED TO FAIL until Fix B (longer builder reach). Marked {@code required = false}, so the GameTest
-     * server reports it but it does not fail the run; do not count its failure as a regression.
-     * <p>
-     * A small tower: a 3x3 floor, two 3x3 wall rings (hollow middle) and a 3x3 roof, 34 blocks, one worker
-     * with a stocked chest. Correct behavior: the blueprint finishes. Today builders can only place about
-     * 1 block above their feet, so the upper layers stay unbuilt.
+     * Fix B test (required since Fix B): a small tower, a 3x3 floor, two 3x3 wall rings (sealed hollow middle) and a
+     * 3x3 roof, 34 blocks, one worker with a stocked chest. The blueprint must finish. Before Fix B builders could only
+     * place about 1 block above their feet and stopped at 17 of 34; the roof's center over the sealed hollow needs the
+     * 2-blocks-sideways reach.
      */
-    @GameTest(template = PLATFORM, timeoutTicks = 2000, required = false)
+    @GameTest(template = PLATFORM, timeoutTicks = 2000)
     public static void smallTowerFinishes(GameTestHelper helper) {
         List<BlockPos> blocks = new ArrayList<>();
         for (int y = 0; y < 4; y++) {

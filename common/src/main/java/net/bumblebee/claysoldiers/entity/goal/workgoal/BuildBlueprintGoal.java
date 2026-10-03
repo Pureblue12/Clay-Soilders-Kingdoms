@@ -258,7 +258,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     }
 
     protected boolean moveToRequest() {
-        if (BuilderReach.canPlaceFrom(soldier.position(), request.getPos())) {
+        if (BuilderReach.canPlaceFrom(soldier, request.getPos())) {
             this.soldier.getNavigation().stop();
             return true;
         }
