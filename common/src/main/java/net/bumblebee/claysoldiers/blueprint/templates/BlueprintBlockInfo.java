@@ -5,7 +5,7 @@ import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.blueprint.BlueprintRequest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jetbrains.annotations.Nullable;
@@ -37,8 +37,13 @@ public class BlueprintBlockInfo {
         return new BlueprintBlockInfo(info.pos(), info.state(), info.nbt() != null ? info.nbt().copy() : null);
     }
 
-    public boolean isFor(Block block) {
-        return state.is(block);
+    /**
+     * Returns whether this block is built from {@code item}. Compared by item, not by block, because some items place
+     * a different block than their own: a torch item places a wall torch on walls, a sign item a wall sign, a banner
+     * item a wall banner. The item is the same one the plan asks for ({@code getRequest}, the needed-items list).
+     */
+    public boolean isFor(Item item) {
+        return state.getBlock().asItem() == item;
     }
 
     /**

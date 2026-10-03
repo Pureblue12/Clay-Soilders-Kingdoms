@@ -33,7 +33,7 @@ Run from the project root. The first run downloads Minecraft/NeoForge and is slo
 Starts a headless test server, runs every test in
 `neoforge/src/main/java/net/bumblebee/claysoldiers/gametest/` (`ClaySoldierGameTests`,
 `DevToolkitGameTests`, `SuspectedBugGameTests`, `BuildSiteGameTests`, `BuilderReachGameTests`,
-`DebugLogGameTests`, `RecorderFeedbackGameTests`, `BuildRequestGameTests`), prints
+`DebugLogGameTests`, `RecorderFeedbackGameTests`, `BuildRequestGameTests`, `PlacingGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/make_gametest_platform.py`).
@@ -45,23 +45,22 @@ Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/mak
   Don't use `helper.relativePos` (wrong rotation in 1.21.1); compare absolute positions instead.
 - Use `FakePlayerFactory` for players, not `makeMockServerPlayerInLevel` (Curios crashes on it).
 
-Current status (2026-10-03, after Fix B): all 41 required tests pass (`smallTowerFinishes` is required
-again since Fix B). `SuspectedBugGameTests` covers the easel right-click:
+Current status (2026-10-03, after the wall-mounted blocks fix): all 44 required tests pass. `SuspectedBugGameTests` covers the easel right-click:
 non-block item, unneeded block, needed block.
 
 ### Known bugs (confirmed)
 
 Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
 
-- Wall-mounted blocks are never placed by builders (found while measuring Fix B): a blueprint's wall torch
-  is requested with its item (torch), but `ServerBlueprintPlan.tryPlacingRequest` (and `tryPlacing` for hand
-  placing) checks the item's BLOCK (standing torch) against the spot's block (wall torch), so placing fails.
-  The torch is then handed out again forever and blocks everything after it in the order: the Small House
-  stops at 98 of 151. A temporary experiment matching by item finished it 151/151. Same for wall signs,
-  banners and skulls. Not fixed yet; no GameTest yet.
 - Door race: a door can be handed out while other blocks are still being carried (doors-last only orders
   the list); one glass pane got locked out in the 08:03 recording. Not fixed yet.
 - Fixed: easel `ClassCastException` with non-block items (`easelIgnoresNonBlockItems`).
+- Fixed: wall-mounted blocks were never placed (found while measuring Fix B). A wall torch is requested with
+  its item (torch), but placing compared the item's own BLOCK (standing torch) with the spot's block (wall
+  torch), so the builder returned the torch, got it again, forever; the Small House stopped at 98 of 151.
+  Placing now matches by ITEM (`BlueprintBlockInfo.isFor(Item)`) for builders (`tryPlacingRequest`) and by
+  hand (`tryPlacing`). Same for wall signs, banners, skulls (`builderPlacesWallTorch`, `builderPlacesWallSign`,
+  `handPlacesWallTorchAndSign`).
 - Fixed (Fix A): builders froze while "Carrying" a block they could never place, because the reachable
   check (path ends within 2 steps) disagreed with placing (feet < 2 blocks straight-line); idle builders
   also asked the easel every tick. Now one shared rule (`BuilderReach`), a 400-tick give-up timer

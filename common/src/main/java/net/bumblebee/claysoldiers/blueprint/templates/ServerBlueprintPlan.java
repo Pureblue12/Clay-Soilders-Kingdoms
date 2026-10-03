@@ -13,10 +13,10 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jetbrains.annotations.Nullable;
@@ -84,11 +84,11 @@ public class ServerBlueprintPlan extends BlueprintPlan {
 
     @Override
     public PlaceResult tryPlacing(Level level, ItemStack itemStack, BlockPos base, BlueprintTemplateSettings settings) {
-        if (!(itemStack.getItem() instanceof BlockItem blockItem)) {
+        if (!(itemStack.getItem() instanceof BlockItem)) {
             // Items that aren't blocks (e.g. a stick, or AIR for block states without an item) can never be placed.
             return PlaceResult.NOT_NEEDED;
         }
-        var res = tryPlacingAll(blockItem.getBlock(), itemStack, level, base, settings);
+        var res = tryPlacingAll(itemStack.getItem(), itemStack, level, base, settings);
         if (res == PlaceResult.SUCCESS) {
             if (!hasItemAndShrink(itemStack.getItem())) {
                 throw new IllegalStateException("Successfully placed a Block which was not needed");
@@ -104,7 +104,7 @@ public class ServerBlueprintPlan extends BlueprintPlan {
      * filled) or the item doesn't match, nothing is placed.
      */
     public PlaceResult tryPlacingRequest(Level level, BlueprintRequest request, ItemStack itemStack, BlockPos base, BlueprintTemplateSettings settings) {
-        if (!(itemStack.getItem() instanceof BlockItem blockItem)) {
+        if (!(itemStack.getItem() instanceof BlockItem)) {
             return PlaceResult.NOT_NEEDED;
         }
         var iterator = blockInfoList.iterator();
@@ -114,7 +114,7 @@ public class ServerBlueprintPlan extends BlueprintPlan {
                 continue;
             }
             BlockPos pos = targetPosition(base, settings, blockInfo);
-            if (!pos.equals(request.getPos()) || !blockInfo.isFor(blockItem.getBlock())) {
+            if (!pos.equals(request.getPos()) || !blockInfo.isFor(itemStack.getItem())) {
                 return PlaceResult.NOT_NEEDED;
             }
             var updatedBlockInfo = processBlockInfos(settings, blockInfo);
@@ -131,11 +131,11 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         return PlaceResult.NOT_NEEDED;
     }
 
-    private PlaceResult tryPlacingAll(Block block, ItemStack stack, Level level, BlockPos base, BlueprintTemplateSettings settings) {
+    private PlaceResult tryPlacingAll(Item item, ItemStack stack, Level level, BlockPos base, BlueprintTemplateSettings settings) {
         var iterator = blockInfoList.iterator();
         while (iterator.hasNext()) {
             var blockInfo = iterator.next();
-            if (!blockInfo.isFor(block)) {
+            if (!blockInfo.isFor(item)) {
                 continue;
             }
             var updatedBlockInfo = processBlockInfos(settings, blockInfo);
