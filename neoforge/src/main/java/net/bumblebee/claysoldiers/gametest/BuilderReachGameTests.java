@@ -61,6 +61,40 @@ public class BuilderReachGameTests {
     }
 
     /**
+     * FIX B TEST: a block 5 above open ground, one worker, a chest with the block. Builders must be able to place blocks
+     * well above their feet (planned reach: up to 8 above), so it must get placed.
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 600)
+    public static void builderPlacesHighBlockFromTheGround(GameTestHelper helper) {
+        BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "high_block", 1, 6, 1, new BlockPos(0, 5, 0));
+        ClaySoldierGameTests.setUpBuilder(helper, blueprint, List.of(new ItemStack(Items.COBBLESTONE, 1)));
+        BlockPos target = EASEL.offset(0, 5, 2);
+        helper.succeedWhen(() -> helper.assertBlockPresent(Blocks.COBBLESTONE, target));
+    }
+
+    /**
+     * FIX B LIMIT TEST: a block 10 above open ground is beyond the planned reach (8 above the feet). It must not be
+     * taken at all: nothing placed, the soldier never carries it, and the block stays in the chest.
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 500)
+    public static void blockAboveMaxReachIsNotTaken(GameTestHelper helper) {
+        BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "too_high_block", 1, 11, 1, new BlockPos(0, 10, 0));
+        ClaySoldierGameTests.Builder builder = ClaySoldierGameTests.setUpBuilder(helper, blueprint,
+                List.of(new ItemStack(Items.COBBLESTONE, 1)));
+        BlockPos target = EASEL.offset(0, 10, 2);
+        helper.onEachTick(() -> {
+            if (!builder.soldier().getCarriedStack().isEmpty()) {
+                helper.fail("The soldier took a block that is out of reach", builder.soldier());
+            }
+        });
+        helper.runAtTickTime(400, () -> {
+            helper.assertBlockPresent(Blocks.AIR, target);
+            helper.assertTrue(builder.chest().countItem(Items.COBBLESTONE) == 1, "The block left the chest");
+            helper.succeed();
+        });
+    }
+
+    /**
      * EXPECTED TO FAIL until Fix B (longer builder reach). Marked {@code required = false}, so the GameTest
      * server reports it but it does not fail the run; do not count its failure as a regression.
      * <p>
