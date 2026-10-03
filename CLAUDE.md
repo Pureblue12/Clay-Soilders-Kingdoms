@@ -32,7 +32,7 @@ Run from the project root. The first run downloads Minecraft/NeoForge and is slo
 
 Starts a headless test server, runs every test in
 `neoforge/src/main/java/net/bumblebee/claysoldiers/gametest/` (`ClaySoldierGameTests`,
-`DevToolkitGameTests`), prints
+`DevToolkitGameTests`, `SuspectedBugGameTests`, `BuildSiteGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/make_gametest_platform.py`).
@@ -44,7 +44,7 @@ Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/mak
   Don't use `helper.relativePos` (wrong rotation in 1.21.1); compare absolute positions instead.
 - Use `FakePlayerFactory` for players, not `makeMockServerPlayerInLevel` (Curios crashes on it).
 
-Current status (2026-10-03): 10 pass; `easelIgnoresNonBlockItems` fails (confirmed bug, see below).
+Current status (2026-10-03, after M2): 17 pass; `easelIgnoresNonBlockItems` fails (confirmed bug, see below).
 
 ### Known bugs (confirmed)
 
@@ -74,6 +74,7 @@ the time it was made; a different hash means the registry changed.
 | `/csr dev team claim <team>` | makes the team loyal to you |
 | `/csr dev materials <blueprint>` | gives the materials from the blueprint's own item list |
 | `/csr dev cleanup <radius>` | removes clay soldiers and easels in range (asks to confirm in chat) |
+| `/csr build <blueprint>` (book link) | see "Starting a build" below |
 
 How it is built (`common/.../dev/`):
 - `DevToolRegistry` — single source of truth: generates the `/csr dev` commands AND the book buttons.
@@ -84,6 +85,22 @@ How it is built (`common/.../dev/`):
 - `DevScenarios` — scenario setup helpers, also used by GameTests.
 Registered only when `PLATFORM.isDevEnv()` (NeoForge: `!FMLLoader.isProduction()`), so never in a
 normal install. To add a dev command: add a `DevTool` in `DevTools` (new category: add a `DevCategory`).
+
+### Starting a build (M2)
+
+```
+/csr build <blueprint> [<x y z>] [north|east|south|west]
+```
+
+Permission level 2, registered in every install (not dev-only). Places an easel with the blueprint at
+the position (default: the block you stand in); the building goes in the given direction (default: the
+way you face) and starts 2 blocks behind the easel, centered on it. Refuses with a reason if the
+blueprint is unknown, blueprints are disabled, the site is outside the build height or not loaded,
+the easel spot is taken or unsupported, any blueprint block is obstructed, there is no solid ground
+under the building, or another easel is within 8 blocks. It never clears terrain.
+Code: `common/.../blueprint/site/BuildSitePlanner` (`check`, `place`, `checkAndPlace`; reusable by AI),
+`BuildSite`, `SiteCheck`; command in `common/.../commands/BuildCommand`. The book's Build category has
+a "Build here" button per blueprint (a `DevTool.link`).
 
 **Generated resources are not in the repo.** `common/src/generated/resources` is
 gitignored upstream. It is produced by `runData` from the datagen classes in
@@ -121,6 +138,7 @@ Main package: `net.bumblebee.claysoldiers` (in `common/src/main/java`):
 - `soldierpoi/`, `claypoifunction/` — points of interest soldiers can work at.
 - `dev/` — dev-only toolkit: `DevToolRegistry`, `DevTools`, `DevBook`, `BookFormat`, `DevScenarios`
   (see "Dev toolkit book" above).
+- `blueprint/site/` — `BuildSitePlanner`: checks build sites and places easels (M2).
 - `neoforge/.../event/SoldierWorkCleanup` — stops a soldier's work goal when it leaves the level
   (saving no longer does this).
 - `mixin/` — mixins (config: `common/src/main/resources/csr.mixins.json`).
@@ -156,6 +174,6 @@ Optional integrations (JEI, Jade, Accessories, Curios, Create, SmartBrainLib) ar
   (guide: `docs/TESTING.md`, background: `docs/ANALYSIS.md`, GameTests).
 - **M1 — done:** fixed the 3 confirmed bugs (free blueprint blocks from an empty chest,
   dig not stopping at bedrock, saving cancelling work).
-- **M2 — next:** command that places an easel + blueprint.
-- **M3:** soldiers start a build on their own.
+- **M2 — done:** `/csr build` + `BuildSitePlanner` (site checks, easel placement), book link, tests.
+- **M3 — next:** soldiers start a build on their own (should call `BuildSitePlanner`).
 - **M4:** kingdom object (saved world data) with a founding block.
