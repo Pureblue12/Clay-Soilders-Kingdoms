@@ -8,6 +8,7 @@ import net.bumblebee.claysoldiers.claysoldierpredicate.ClayPredicateSerializer;
 import net.bumblebee.claysoldiers.commands.BuildCommand;
 import net.bumblebee.claysoldiers.commands.ClaySoldierCommands;
 import net.bumblebee.claysoldiers.dev.DevCommands;
+import net.bumblebee.claysoldiers.event.RecorderIndicator;
 import net.bumblebee.claysoldiers.commands.ColorHelperArgumentType;
 import net.bumblebee.claysoldiers.commands.DefaultedResourceLocationArgument;
 import net.bumblebee.claysoldiers.datagen.DataGenerators;
@@ -143,6 +144,9 @@ public class ClaySoldiersNeoForge {
         NeoForge.EVENT_BUS.addListener(this::onDataPackSync);
         NeoForge.EVENT_BUS.addListener(this::onTagLoad);
         NeoForge.EVENT_BUS.addListener(this::afterDataMapLoad);
+        if (ClaySoldiersCommon.PLATFORM.isDevEnv()) {
+            NeoForge.EVENT_BUS.addListener(RecorderIndicator::onServerTick);
+        }
 
         modContainer.registerConfig(ModConfig.Type.SERVER, ConfigNeoForge.SPEC);
         ClaySoldiersCommon.init();

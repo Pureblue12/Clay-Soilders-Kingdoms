@@ -238,7 +238,27 @@ public final class DebugLog {
     }
 
     public static boolean isRecording() {
-        return !enabledCategories().isEmpty();
+        for (DebugCategory category : DebugCategory.all()) {
+            if (category.enabled) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Text for the live action-bar indicator, e.g. {@code ● REC BUILD WORK DAMAGE · 312 events · focus: red#2},
+     * or {@code null} when recording is off.
+     */
+    @Nullable
+    public static String indicatorText() {
+        if (!isRecording()) {
+            return null;
+        }
+        synchronized (DebugLog.class) {
+            String categories = String.join(" ", enabledCategories().stream().map(DebugCategory::id).toList());
+            return "● REC " + categories + " · " + BUFFER.size() + " events" + (focusName.isEmpty() ? "" : " · focus: " + focusName);
+        }
     }
 
     public static synchronized void focus(@Nullable Entity soldier) {

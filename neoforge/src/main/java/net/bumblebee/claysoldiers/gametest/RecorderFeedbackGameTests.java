@@ -2,9 +2,14 @@ package net.bumblebee.claysoldiers.gametest;
 
 import com.mojang.authlib.GameProfile;
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
+import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.dev.DevTool;
 import net.bumblebee.claysoldiers.dev.DevToolRegistry;
+import net.bumblebee.claysoldiers.entity.soldier.ClaySoldierEntity;
+import net.bumblebee.claysoldiers.event.RecorderIndicator;
+import net.bumblebee.claysoldiers.init.ModEntityTypes;
+import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
@@ -76,7 +81,7 @@ public class RecorderFeedbackGameTests {
                 "Unexpected start feedback: " + player.chatMessages());
 
         for (int i = 0; i < 3; i++) {
-            DebugLog.event(net.bumblebee.claysoldiers.debug.DebugCategory.BUILD, null, "test event %s", i);
+            DebugLog.event(DebugCategory.BUILD, null, "test event %s", i);
         }
         player.messages.clear();
         server.getCommands().performPrefixedCommand(player.createCommandSourceStack().withPermission(4), "csr dev log stop");
@@ -86,6 +91,31 @@ public class RecorderFeedbackGameTests {
         helper.assertTrue(stop.startsWith("Recording is now OFF") && stop.contains("saved 3 events")
                         && stop.contains("recorded for") && stop.contains(DebugLog.FOLDER),
                 "Stop line must have OFF, the count, the duration and the path: " + stop);
+        helper.succeed();
+    }
+
+    /**
+     * The action-bar indicator exists only while recording: categories and event count, plus the focus when set.
+     */
+    @GameTest(template = PLATFORM, batch = "recorder_indicator")
+    public static void indicatorOnlyWhileRecording(GameTestHelper helper) {
+        DebugLog.reset();
+        MinecraftServer server = helper.getLevel().getServer();
+        helper.assertTrue(RecorderIndicator.message() == null, "Indicator shown while recording is off");
+
+        DebugLog.start(server);
+        DebugLog.event(DebugCategory.BUILD, null, "one");
+        DebugLog.event(DebugCategory.WORK, null, "two");
+        String text = RecorderIndicator.message() == null ? "" : RecorderIndicator.message().getString();
+        helper.assertTrue(text.equals("● REC BUILD WORK DAMAGE · 2 events"), "Unexpected indicator: '" + text + "'");
+
+        ClaySoldierEntity soldier = helper.spawn(ModEntityTypes.CLAY_SOLDIER_ENTITY.get(), new BlockPos(7, ClaySoldierGameTests.GROUND_Y, 7));
+        DebugLog.focus(soldier);
+        text = RecorderIndicator.message() == null ? "" : RecorderIndicator.message().getString();
+        helper.assertTrue(text.endsWith("· focus: " + DebugLog.shortName(soldier)), "Indicator should show the focus: '" + text + "'");
+
+        DebugLog.reset();
+        helper.assertTrue(RecorderIndicator.message() == null, "Indicator still shown after recording stopped");
         helper.succeed();
     }
 
