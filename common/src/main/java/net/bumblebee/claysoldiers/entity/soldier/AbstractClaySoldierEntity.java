@@ -302,7 +302,6 @@ public class AbstractClaySoldierEntity extends ClayMobTeamOwnerEntity implements
         }
         pCompound.putInt(SKIN_VARIANT_ID_TAG, skinVariantId);
         workSelector.saveToTag(pCompound);
-        workSelector.resetGoal();
         if (!carriedStack.isEmpty()) {
             pCompound.put(CARRIED_ITEM_TAG, carriedStack.save(registryAccess()));
         }
