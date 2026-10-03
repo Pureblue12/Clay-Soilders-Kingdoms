@@ -18,6 +18,16 @@ public class BlueprintBlockInfo {
      */
     public static final int STALE_REQUEST_TICKS = 600;
     /**
+     * After a block fails to place, it isn't handed out again for this many ticks (5 seconds), so one block that keeps
+     * failing can't starve the blocks after it. Each further failure doubles the wait, up to
+     * {@link #MAX_PLACE_FAIL_COOLDOWN_TICKS}. Not saved: a reload starts over.
+     */
+    public static final int PLACE_FAIL_COOLDOWN_TICKS = 100;
+    /**
+     * The longest wait after repeated failed placements (1 minute).
+     */
+    public static final int MAX_PLACE_FAIL_COOLDOWN_TICKS = 1200;
+    /**
      * The Relative position to the Structures Base.
      */
     private final BlockPos pos;
@@ -26,6 +36,8 @@ public class BlueprintBlockInfo {
     private final CompoundTag nbt;
     @Nullable
     private BlueprintRequest lastRequest;
+    private int placeFailures = 0;
+    private long cooldownUntil = 0;
 
     public BlueprintBlockInfo(BlockPos pos, BlockState state, @Nullable CompoundTag nbt) {
         this.pos = pos;
@@ -98,6 +110,38 @@ public class BlueprintBlockInfo {
      */
     public boolean isActiveRequest(BlueprintRequest request) {
         return lastRequest == request && !request.isCancelled() && !request.isFinished();
+    }
+
+    /**
+     * Records that placing this block (at {@code worldPos}) failed: it isn't handed out again for
+     * {@link #placeFailCooldown} ticks, longer after each failure. Logs a BUILD event.
+     *
+     * @return the cooldown in ticks
+     */
+    public int placementFailed(long gameTime, BlockPos worldPos) {
+        placeFailures++;
+        int failures = placeFailures;
+        int cooldown = placeFailCooldown(failures);
+        cooldownUntil = gameTime + cooldown;
+        DebugLog.event(DebugCategory.BUILD, null, () -> "placement cooldown: %s at (%s) failed to place %d time(s), not handed out for %d ticks"
+                .formatted(state.getBlock().asItem(), worldPos.toShortString(), failures, cooldown));
+        return cooldown;
+    }
+
+    /**
+     * The wait after the given number of failed placements: {@value #PLACE_FAIL_COOLDOWN_TICKS} ticks, doubled for each
+     * further failure, at most {@value #MAX_PLACE_FAIL_COOLDOWN_TICKS}.
+     */
+    public static int placeFailCooldown(int failures) {
+        int doublings = Math.min(Math.max(failures - 1, 0), 16);
+        return (int) Math.min((long) PLACE_FAIL_COOLDOWN_TICKS << doublings, MAX_PLACE_FAIL_COOLDOWN_TICKS);
+    }
+
+    /**
+     * Returns whether this block is still waiting after a failed placement, so it must not be handed out yet.
+     */
+    public boolean isCoolingDown(long gameTime) {
+        return gameTime < cooldownUntil;
     }
 
     /**

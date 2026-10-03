@@ -101,7 +101,8 @@ public class ServerBlueprintPlan extends BlueprintPlan {
     /**
      * Places the block of a builder's request exactly at the request's spot. Unlike {@link #tryPlacing}, never uses
      * another spot: if the request is no longer this plan's open request for its spot (cancelled, taken over, already
-     * filled) or the item doesn't match, nothing is placed.
+     * filled) or the item doesn't match, nothing is placed. When the open request's block fails to place, the block
+     * gets a cooldown ({@link BlueprintBlockInfo#placementFailed}).
      */
     public PlaceResult tryPlacingRequest(Level level, BlueprintRequest request, ItemStack itemStack, BlockPos base, BlueprintTemplateSettings settings) {
         if (!(itemStack.getItem() instanceof BlockItem)) {
@@ -115,10 +116,12 @@ public class ServerBlueprintPlan extends BlueprintPlan {
             }
             BlockPos pos = targetPosition(base, settings, blockInfo);
             if (!pos.equals(request.getPos()) || !blockInfo.isFor(itemStack.getItem())) {
+                blockInfo.placementFailed(level.getGameTime(), pos);
                 return PlaceResult.NOT_NEEDED;
             }
             var updatedBlockInfo = processBlockInfos(settings, blockInfo);
             if (!placeBlock(itemStack, level, pos, updatedBlockInfo.state().mirror(settings.mirror()).rotate(settings.rotation()))) {
+                blockInfo.placementFailed(level.getGameTime(), pos);
                 return PlaceResult.CANT_PLACE;
             }
             iterator.remove();
@@ -210,14 +213,20 @@ public class ServerBlueprintPlan extends BlueprintPlan {
      */
     public @Nullable BlueprintRequest getRequest(ServerLevel level, BlockPos base, BlueprintTemplateSettings settings, Predicate<BlockPos> canReach) {
         // Blocks another builder has are skipped (no taking over); they become free when cancelled, finished or stale.
-        // Counters for the debug summary only (same checks, same order as before).
+        // Blocks that recently failed to place are skipped until their cooldown ends (checked first: it's cheap and
+        // saves a path search). Counters for the debug summary only.
         int checked = 0;
+        int coolingDown = 0;
         int unreachable = 0;
         int notPlaceable = 0;
         int assigned = 0;
 
         for (BlueprintBlockInfo blockInfo : blockInfoList) {
             checked++;
+            if (blockInfo.isCoolingDown(level.getGameTime())) {
+                coolingDown++;
+                continue;
+            }
             var infoAbsolutePos = targetPosition(base, settings, blockInfo);
             if (!canReach.test(infoAbsolutePos)) {
                 unreachable++;
@@ -228,21 +237,21 @@ public class ServerBlueprintPlan extends BlueprintPlan {
                 continue;
             }
             if (blockInfo.hasAvailableRequest(level.getGameTime())) {
-                logRequestSearch(checked, unreachable, notPlaceable, assigned, "handing out a free block");
+                logRequestSearch(checked, coolingDown, unreachable, notPlaceable, assigned, "handing out a free block");
                 return blockInfo.getRequest(level.getGameTime(), infoAbsolutePos);
             }
             assigned++;
         }
-        logRequestSearch(checked, unreachable, notPlaceable, assigned, "nothing to hand out");
+        logRequestSearch(checked, coolingDown, unreachable, notPlaceable, assigned, "nothing to hand out");
         return null;
     }
 
-    private void logRequestSearch(int checked, int unreachable, int notPlaceable, int assigned, String result) {
+    private void logRequestSearch(int checked, int coolingDown, int unreachable, int notPlaceable, int assigned, String result) {
         if (!DebugLog.isOn(DebugCategory.BUILD)) {
             return;
         }
-        DebugLog.event(DebugCategory.BUILD, null, () -> "request search: checked %d of %d remaining blocks (%d not reachable, %d not placeable, %d already assigned): %s"
-                .formatted(checked, blockInfoList.size(), unreachable, notPlaceable, assigned, result));
+        DebugLog.event(DebugCategory.BUILD, null, () -> "request search: checked %d of %d remaining blocks (%d cooling down after failed placing, %d not reachable, %d not placeable, %d already assigned): %s"
+                .formatted(checked, blockInfoList.size(), coolingDown, unreachable, notPlaceable, assigned, result));
     }
 
     @Override

@@ -45,7 +45,7 @@ Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/mak
   Don't use `helper.relativePos` (wrong rotation in 1.21.1); compare absolute positions instead.
 - Use `FakePlayerFactory` for players, not `makeMockServerPlayerInLevel` (Curios crashes on it).
 
-Current status (2026-10-03, after the wall-mounted blocks fix): all 44 required tests pass. `SuspectedBugGameTests` covers the easel right-click:
+Current status (2026-10-03, after the failed-placement cooldown): all 47 required tests pass. `SuspectedBugGameTests` covers the easel right-click:
 non-block item, unneeded block, needed block.
 
 ### Known bugs (confirmed)
@@ -61,6 +61,11 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
   Placing now matches by ITEM (`BlueprintBlockInfo.isFor(Item)`) for builders (`tryPlacingRequest`) and by
   hand (`tryPlacing`). Same for wall signs, banners, skulls (`builderPlacesWallTorch`, `builderPlacesWallSign`,
   `handPlacesWallTorchAndSign`).
+- Safety net (failed-placement cooldown): a block whose placing fails is not handed out again for
+  `BlueprintBlockInfo.PLACE_FAIL_COOLDOWN_TICKS` (100), doubling after each further failure up to
+  `MAX_PLACE_FAIL_COOLDOWN_TICKS` (1200); per block, not per soldier; not saved. Each time it fires, a BUILD
+  event "placement cooldown: …" is recorded, and the request search summary counts blocks cooling down
+  (`unplaceableBlockDoesNotStarveOthers`, `failedPlacementLogsCooldown`, `placementCooldownBacksOff`).
 - Fixed (Fix A): builders froze while "Carrying" a block they could never place, because the reachable
   check (path ends within 2 steps) disagreed with placing (feet < 2 blocks straight-line); idle builders
   also asked the easel every tick. Now one shared rule (`BuilderReach`), a 400-tick give-up timer
@@ -87,6 +92,9 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
 
 Pending (not started):
 - Blocks more than 8 above any reachable standing spot stay unbuilt (by design of `MAX_PLACE_HEIGHT`).
+- A blueprint block that is already there and replaceable (e.g. short grass where short grass grows) counts
+  as free but can never be placed (placing the same block fails), so the blueprint never finishes; the
+  cooldown only stops it from starving the rest. Not confirmed in game; not fixed.
 - Layer-by-layer ordering: blocks are handed out as all full cubes (bottom to top, roof included), then
   non-cube blocks, then blocks with data (beds), then doors.
 
@@ -143,7 +151,8 @@ add one with `DebugCategory.register` and it gets commands and book buttons auto
 Commands/buttons: `common/.../dev/RecorderTools`; action-bar indicator: `neoforge/.../event/RecorderIndicator`
 (registered only in dev). Ring buffer default 5000 events (`/csr dev log capacity`).
 State lives in memory only: it resets when the game restarts (not when you just re-join a world).
-Instrumented so far: `BuildBlueprintGoal`, `ServerBlueprintPlan.getRequest` (summary), `BuilderReach`
+Instrumented so far: `BuildBlueprintGoal`, `ServerBlueprintPlan.getRequest` (summary),
+`BlueprintBlockInfo` (stale requests, placement cooldown), `BuilderReach`
 (PATHING), `AbstractClaySoldierEntity.hurt` (DAMAGE), `WorkSelectorGoal.setWorkMode` (WORK).
 TEAM has no events yet.
 

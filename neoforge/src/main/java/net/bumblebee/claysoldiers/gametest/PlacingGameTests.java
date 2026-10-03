@@ -3,6 +3,7 @@ package net.bumblebee.claysoldiers.gametest;
 import com.mojang.authlib.GameProfile;
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.blueprint.BlueprintData;
+import net.bumblebee.claysoldiers.blueprint.templates.BlueprintBlockInfo;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugEvent;
 import net.bumblebee.claysoldiers.debug.DebugLog;
@@ -141,6 +142,34 @@ public class PlacingGameTests {
                     "Expected one 'placement cooldown' event per failed placement, got %d for %d failures".formatted(cooldowns, failed));
             DebugLog.reset();
         });
+    }
+
+    /**
+     * The failed-placement cooldown backs off: {@link BlueprintBlockInfo#PLACE_FAIL_COOLDOWN_TICKS} after the first
+     * failure, longer after each further one, never more than {@link BlueprintBlockInfo#MAX_PLACE_FAIL_COOLDOWN_TICKS},
+     * and the block counts as cooling down for exactly that long.
+     */
+    @GameTest(template = PLATFORM)
+    public static void placementCooldownBacksOff(GameTestHelper helper) {
+        BlueprintBlockInfo info = new BlueprintBlockInfo(BlockPos.ZERO, Blocks.COBBLESTONE.defaultBlockState(), null);
+        long now = 1000;
+        int previous = 0;
+        for (int failure = 1; failure <= 10; failure++) {
+            int cooldown = info.placementFailed(now, BlockPos.ZERO);
+            if (failure == 1) {
+                helper.assertTrue(cooldown == BlueprintBlockInfo.PLACE_FAIL_COOLDOWN_TICKS, "First cooldown was " + cooldown);
+            } else {
+                helper.assertTrue(cooldown > previous || cooldown == BlueprintBlockInfo.MAX_PLACE_FAIL_COOLDOWN_TICKS,
+                        "Cooldown after failure %d (%d) is not longer than before (%d)".formatted(failure, cooldown, previous));
+            }
+            helper.assertTrue(cooldown <= BlueprintBlockInfo.MAX_PLACE_FAIL_COOLDOWN_TICKS, "Cooldown above the maximum: " + cooldown);
+            helper.assertTrue(info.isCoolingDown(now + cooldown - 1) && !info.isCoolingDown(now + cooldown),
+                    "Cooldown after failure %d doesn't last exactly %d ticks".formatted(failure, cooldown));
+            now += cooldown;
+            previous = cooldown;
+        }
+        helper.assertTrue(previous == BlueprintBlockInfo.MAX_PLACE_FAIL_COOLDOWN_TICKS, "Never reached the maximum cooldown: " + previous);
+        helper.succeed();
     }
 
     /**
