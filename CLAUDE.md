@@ -44,7 +44,14 @@ Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/mak
   Don't use `helper.relativePos` (wrong rotation in 1.21.1); compare absolute positions instead.
 - Use `FakePlayerFactory` for players, not `makeMockServerPlayerInLevel` (Curios crashes on it).
 
-Current status (2026-10-03, after M1 + dev toolkit): all 10 tests pass.
+Current status (2026-10-03): 10 pass; `easelIgnoresNonBlockItems` fails (confirmed bug, see below).
+
+### Known bugs (confirmed)
+
+Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
+
+- `easelIgnoresNonBlockItems` (`SuspectedBugGameTests`): right-clicking an easel that has a blueprint
+  with a non-block item (e.g. a stick) throws `ClassCastException` in `ServerBlueprintPlan.tryPlacing`.
 
 Known, unfixed (reported, not confirmed in game): `DigHoleGoal.resetBreakProgress` unregisters
 `currentPos` even when this soldier never registered it; in dev runs `ErrorHandler` throws
