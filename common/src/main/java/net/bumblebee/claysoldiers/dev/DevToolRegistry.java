@@ -58,7 +58,12 @@ public final class DevToolRegistry {
         if (!categories.containsKey(tool.category())) {
             throw new IllegalArgumentException("Dev tool " + tool.id() + " uses unknown category " + tool.category());
         }
-        if (tools.values().stream().anyMatch(other -> other.path().equals(tool.path()))) {
+        if (tool.isLink() == (tool.command() + " ").startsWith(DevTool.ROOT_COMMAND + " ")) {
+            throw new IllegalArgumentException(tool.isLink()
+                    ? "Link " + tool.id() + " points into " + DevTool.ROOT_COMMAND + "; add a generated tool instead"
+                    : "Dev tool " + tool.id() + " must live under " + DevTool.ROOT_COMMAND);
+        }
+        if (tools.values().stream().anyMatch(other -> other.command().equals(tool.command()))) {
             throw new IllegalArgumentException("Dev tool " + tool.id() + " reuses the command " + tool.command());
         }
         if (tools.putIfAbsent(tool.id(), tool) != null) {
@@ -117,9 +122,13 @@ public final class DevToolRegistry {
 
     /**
      * Registers every tool as {@code /csr dev <path> [argument] [confirm]}, requiring permission level 2.
+     * {@link DevTool#isLink() Links} are skipped: their commands are registered elsewhere.
      */
     public void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
         for (DevTool tool : tools.values()) {
+            if (tool.isLink()) {
+                continue;
+            }
             List<String> path = tool.path();
             ArgumentBuilder<CommandSourceStack, ?> node = buildLeaf(tool, path.getLast());
             for (int i = path.size() - 2; i >= 0; i--) {

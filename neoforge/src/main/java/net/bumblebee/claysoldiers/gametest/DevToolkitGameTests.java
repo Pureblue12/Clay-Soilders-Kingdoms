@@ -77,12 +77,28 @@ public class DevToolkitGameTests {
         Set<String> registered = new TreeSet<>();
         collectCommandPaths(csr.getChild("dev"), "", registered);
         Set<String> inRegistry = DevToolRegistry.defaults().tools().stream()
+                .filter(tool -> !tool.isLink())
                 .map(tool -> String.join(" ", tool.path()))
                 .collect(Collectors.toCollection(TreeSet::new));
 
         Set<String> withoutEntry = new TreeSet<>(registered);
         withoutEntry.removeAll(inRegistry);
         helper.assertTrue(withoutEntry.isEmpty(), "/csr dev commands without a DevToolRegistry entry: " + withoutEntry);
+        helper.succeed();
+    }
+
+    /**
+     * Reverse coverage for commands registered outside {@code /csr dev}: {@code /csr build} (M2) exists
+     * and has a book link, so it can't lose its button.
+     */
+    @GameTest(template = ClaySoldierGameTests.PLATFORM)
+    public static void buildCommandHasBookEntry(GameTestHelper helper) {
+        CommandDispatcher<CommandSourceStack> dispatcher = helper.getLevel().getServer().getCommands().getDispatcher();
+        CommandNode<CommandSourceStack> csr = dispatcher.getRoot().getChild(ClaySoldiersCommon.MOD_ID);
+        helper.assertTrue(csr != null && csr.getChild("build") != null, "/csr build is not registered");
+        boolean linked = DevToolRegistry.defaults().tools().stream()
+                .anyMatch(tool -> tool.isLink() && tool.command().equals("/csr build"));
+        helper.assertTrue(linked, "/csr build has no DevToolRegistry link, so it has no book button");
         helper.succeed();
     }
 

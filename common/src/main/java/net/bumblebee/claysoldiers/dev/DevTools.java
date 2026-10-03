@@ -84,6 +84,10 @@ public final class DevTools {
                         DevTools::teamChoices),
                 DevTools::claimTeam));
 
+        registry.addTool(DevTool.link("build_here", BUILD, Component.literal("Build here"),
+                "Places an easel with the blueprint where you stand; the building goes the way you face. Refuses blocked sites.",
+                "/csr build",
+                new DevTool.Argument("blueprint", ResourceLocationArgument.id(), null, DevTools::blueprintChoices)));
         registry.addTool(new DevTool("materials", BUILD, Component.literal("Materials for"),
                 "Gives the materials a blueprint needs, read from the blueprint itself.",
                 List.of("materials"), false,
