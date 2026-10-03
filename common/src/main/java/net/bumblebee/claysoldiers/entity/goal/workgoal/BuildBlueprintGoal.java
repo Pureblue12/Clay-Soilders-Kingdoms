@@ -4,6 +4,8 @@ import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.blueprint.BlueprintRequest;
 import net.bumblebee.claysoldiers.capability.BlueprintRequestHandler;
 import net.bumblebee.claysoldiers.capability.IBlockCache;
+import net.bumblebee.claysoldiers.debug.DebugCategory;
+import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
 import net.bumblebee.claysoldiers.init.ModBlocks;
 import net.minecraft.core.BlockPos;
@@ -84,12 +86,14 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                 setStatus(SEARCHING_ID);
             }
         } else if (request.isCancelled() || request.isFinished()) {
+            if (request.isCancelled()) DebugLog.event(DebugCategory.BUILD, soldier, "request released (cancelled): %s at %s", request.getItem(), request.getPos());
             bringBack = !soldier.getCarriedStack().isEmpty();
             request = null;
         } else if (request.hasStarted()) {
             getRequestFromStorage();
         } else if (request.isPlacing()) {
             setStatus(CARRYING_ID);
+            if (carryTicks == MAX_CARRY_TICKS / 2) DebugLog.event(DebugCategory.BUILD, soldier, "still carrying %s to %s after %s ticks", request.getItem(), request.getPos(), carryTicks);
             if (++carryTicks > MAX_CARRY_TICKS) {
                 giveUpRequest();
             } else if (moveToRequest()) {
@@ -110,6 +114,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                 soldier.setCarriedStack(storage.tryExtracting(stack -> stack.is(request.getItem()), 1));
                 if (soldier.getCarriedStack().isEmpty()) {
                     // The storage does not have the item: don't place anything, ask again after a break.
+                    DebugLog.event(DebugCategory.BUILD, soldier, "storage has no %s for %s, request cancelled", request.getItem(), request.getPos());
                     request.cancel();
                     takeAShortBreak();
                 } else {
@@ -127,6 +132,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
      * Cancels the current request (so the block can be handed out again) and brings the carried item back.
      */
     private void giveUpRequest() {
+        DebugLog.event(DebugCategory.BUILD, soldier, "gave up %s at %s after %s ticks of carrying, returning it", request.getItem(), request.getPos(), carryTicks);
         request.cancel();
         request = null;
         bringBack = !soldier.getCarriedStack().isEmpty();
@@ -155,7 +161,9 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         var requestHandler = easelPos.getCapability();
         if (requestHandler != null) {
             request = requestHandler.getRequest(this::canReach);
+            if (request != null) DebugLog.event(DebugCategory.BUILD, soldier, "got request: %s at %s", request.getItem(), request.getPos());
             if (request == null) {
+                DebugLog.event(DebugCategory.BUILD, soldier, "no reachable block available, waiting");
                 retryCooldown = RETRY_COOLDOWN_MIN + soldier.getRandom().nextInt(RETRY_COOLDOWN_RANDOM + 1);
             }
         } else {
@@ -172,9 +180,11 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         var requestHandler = easelPos.getCapability();
         if (requestHandler != null) {
             if (requestHandler.doRequest(request)) {
+                DebugLog.event(DebugCategory.BUILD, soldier, "placed %s at %s", request.getItem(), request.getPos());
                 soldier.setCarriedStack(ItemStack.EMPTY);
                 request.setFinished();
             } else {
+                DebugLog.event(DebugCategory.BUILD, soldier, "could not place %s at %s (spot not free?), returning it", request.getItem(), request.getPos());
                 bringBack = true;
                 request.cancel();
             }

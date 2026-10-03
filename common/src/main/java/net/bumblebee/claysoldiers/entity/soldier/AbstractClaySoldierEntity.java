@@ -3,6 +3,8 @@ package net.bumblebee.claysoldiers.entity.soldier;
 import com.google.common.collect.Iterables;
 import com.mojang.logging.LogUtils;
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
+import net.bumblebee.claysoldiers.debug.DebugCategory;
+import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.capability.AssignablePoiCapability;
 import net.bumblebee.claysoldiers.capability.ThrowableItemCapability;
 import net.bumblebee.claysoldiers.clayremovalcondition.RemovalCondition;
@@ -860,6 +862,7 @@ public class AbstractClaySoldierEntity extends ClayMobTeamOwnerEntity implements
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
+        DebugLog.event(DebugCategory.DAMAGE, this, "hurt for %s by %s, attacker %s", amount, source.getMsgId(), source.getEntity());
         if (!(source.getEntity() instanceof Player) && source.is(ModTags.DamageTypes.CLAY_SOLDIER_DAMAGE)) {
             if (getHealth() * 3 < getMaxHealth()) {
                 if (allProperties().hasEvacuationProperty()) {

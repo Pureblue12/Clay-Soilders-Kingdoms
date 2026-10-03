@@ -1,6 +1,8 @@
 package net.bumblebee.claysoldiers.entity.goal.workgoal;
 
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
+import net.bumblebee.claysoldiers.debug.DebugCategory;
+import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
 import net.bumblebee.claysoldiers.entity.soldier.status.SoldierStatusHolder;
 import net.bumblebee.claysoldiers.util.ErrorHandler;
@@ -56,6 +58,7 @@ public class WorkSelectorGoal extends Goal implements SoldierStatusHolder {
         } else {
             activeGoal = null;
         }
+        DebugLog.event(DebugCategory.WORK, soldier, "job set to %s", getWorkDisplayName());
     }
 
     /**

@@ -1,5 +1,7 @@
 package net.bumblebee.claysoldiers.entity.goal.workgoal;
 
+import net.bumblebee.claysoldiers.debug.DebugCategory;
+import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.pathfinder.Node;
@@ -37,12 +39,21 @@ public final class BuilderReach {
      */
     @Nullable
     public static Path pathToPlace(PathfinderMob builder, BlockPos target) {
+        String whyWithin2 = "";
+        String whyWithin1 = "";
         for (int accuracy = 2; accuracy >= 1; accuracy--) {
             Path path = builder.getNavigation().createPath(target, accuracy);
             if (path != null && path.canReach() && endsWithinReach(path, target)) {
                 return path;
             }
+            String why = path == null ? "no path at all" : !path.canReach() ? "no path gets close enough" : "path ends too far away to place from";
+            if (accuracy == 2) {
+                whyWithin2 = why;
+            } else {
+                whyWithin1 = why;
+            }
         }
+        DebugLog.event(DebugCategory.PATHING, builder, "can't place at %s: within 2 steps: %s; within 1 step: %s", target, whyWithin2, whyWithin1);
         return null;
     }
 

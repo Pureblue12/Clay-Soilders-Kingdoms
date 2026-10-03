@@ -2,6 +2,8 @@ package net.bumblebee.claysoldiers.blueprint.templates;
 
 import net.bumblebee.claysoldiers.blueprint.BlueprintRequest;
 import net.bumblebee.claysoldiers.blueprint.BlueprintTemplateSettings;
+import net.bumblebee.claysoldiers.debug.DebugCategory;
+import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
@@ -176,20 +178,43 @@ public class ServerBlueprintPlan extends BlueprintPlan {
      */
     public @Nullable BlueprintRequest getRequest(ServerLevel level, BlockPos base, BlueprintTemplateSettings settings, Predicate<BlockPos> canReach) {
         Supplier<BlueprintRequest> fallbackRequest = null;
+        // Counters for the debug summary only (same checks, same order as before).
+        int checked = 0;
+        int unreachable = 0;
+        int notPlaceable = 0;
+        int assigned = 0;
 
         for (BlueprintBlockInfo blockInfo : blockInfoList) {
+            checked++;
             var infoAbsolutePos = targetPosition(base, settings, blockInfo);
-            if (canReach.test(infoAbsolutePos) && canPlaceBlock(level, infoAbsolutePos)) {
-
-                if (blockInfo.hasAvailableRequest(level.getGameTime())) {
-                    return blockInfo.getRequest(level.getGameTime(), infoAbsolutePos);
-                }
-                if (fallbackRequest == null) {
-                    fallbackRequest = () -> blockInfo.getRequest(level.getGameTime(), infoAbsolutePos);
-                }
+            if (!canReach.test(infoAbsolutePos)) {
+                unreachable++;
+                continue;
+            }
+            if (!canPlaceBlock(level, infoAbsolutePos)) {
+                notPlaceable++;
+                continue;
+            }
+            if (blockInfo.hasAvailableRequest(level.getGameTime())) {
+                logRequestSearch(checked, unreachable, notPlaceable, assigned, "handing out a free block");
+                return blockInfo.getRequest(level.getGameTime(), infoAbsolutePos);
+            }
+            assigned++;
+            if (fallbackRequest == null) {
+                fallbackRequest = () -> blockInfo.getRequest(level.getGameTime(), infoAbsolutePos);
             }
         }
+        logRequestSearch(checked, unreachable, notPlaceable, assigned,
+                fallbackRequest != null ? "taking over a block another builder has" : "nothing to hand out");
         return fallbackRequest != null ? fallbackRequest.get() : null;
+    }
+
+    private void logRequestSearch(int checked, int unreachable, int notPlaceable, int assigned, String result) {
+        if (!DebugLog.isOn(DebugCategory.BUILD)) {
+            return;
+        }
+        DebugLog.event(DebugCategory.BUILD, null, () -> "request search: checked %d of %d remaining blocks (%d not reachable, %d not placeable, %d already assigned): %s"
+                .formatted(checked, blockInfoList.size(), unreachable, notPlaceable, assigned, result));
     }
 
     @Override

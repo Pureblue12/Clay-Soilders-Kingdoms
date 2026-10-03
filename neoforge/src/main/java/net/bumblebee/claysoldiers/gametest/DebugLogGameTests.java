@@ -1,5 +1,6 @@
 package net.bumblebee.claysoldiers.gametest;
 
+import com.mojang.authlib.GameProfile;
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugEvent;
@@ -7,9 +8,13 @@ import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.dev.DevTool;
 import net.bumblebee.claysoldiers.dev.DevToolRegistry;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
@@ -19,6 +24,7 @@ import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
@@ -144,6 +150,29 @@ public class DebugLogGameTests {
         helper.assertTrue(text.startsWith("# Clay Soldiers Remake debug log"), "Saved file has no header");
         DebugLog.reset();
         helper.succeed();
+    }
+
+    /**
+     * Integration: runs the {@code build_test} scenario with only BUILD recording on, and passes once a
+     * "placed" event has been recorded. Prints the first lines of the log to the console as a sample.
+     */
+    @GameTest(template = PLATFORM, batch = "debuglog_scenario", timeoutTicks = 600)
+    public static void buildScenarioRecordsBlockPlaced(GameTestHelper helper) {
+        DebugLog.reset();
+        ServerLevel level = helper.getLevel();
+        DebugLog.setEnabled(DebugCategory.BUILD, true, level.getServer());
+        ServerPlayer player = FakePlayerFactory.get(level, new GameProfile(UUID.randomUUID(), "csr-recorder-tester"));
+        BlockPos standAt = helper.absolutePos(new BlockPos(8, ClaySoldierGameTests.GROUND_Y, 2));
+        player.moveTo(standAt.getX() + 0.5, standAt.getY(), standAt.getZ() + 0.5, 0f, 0f);
+        level.getServer().getCommands().performPrefixedCommand(player.createCommandSourceStack().withPermission(4),
+                "csr dev scenario build_test");
+
+        helper.succeedWhen(() -> {
+            helper.assertTrue(DebugLog.contains(DebugCategory.BUILD, "placed "), "No 'placed' event recorded yet (" + DebugLog.size() + " events)");
+            DebugLog.lastEvents(Integer.MAX_VALUE).stream().limit(15)
+                    .forEach(event -> ClaySoldiersCommon.LOGGER.info("RECORDER SAMPLE {}", event.toLine()));
+            DebugLog.reset();
+        });
     }
 
     /**
