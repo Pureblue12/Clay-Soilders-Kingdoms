@@ -43,8 +43,12 @@ Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/mak
   Don't use `helper.relativePos` (wrong rotation in 1.21.1); compare absolute positions instead.
 - Use `FakePlayerFactory` for players, not `makeMockServerPlayerInLevel` (Curios crashes on it).
 
-Current status (2026-10-03): `emptyChestBuildsNothing`, `saveDoesNotCancelCarriedBlock`,
-`digStopsAtBedrock` FAIL (confirmed bugs); the other 3 pass.
+Current status (2026-10-03, after M1): all 6 tests pass.
+
+Known, unfixed (reported, not confirmed in game): `DigHoleGoal.resetBreakProgress` unregisters
+`currentPos` even when this soldier never registered it; in dev runs `ErrorHandler` throws
+("Trying to unregister an Entity for a Empty BreakData"), e.g. when a digger is unloaded or its job
+changes while walking. In a normal install it is only a debug log.
 
 ### Dev scenario commands (development runs only)
 
@@ -95,6 +99,9 @@ Main package: `net.bumblebee.claysoldiers` (in `common/src/main/java`):
 - `soldierproperties/`, `soldieritemtypes/`, `datamap/` — data-driven item effects on soldiers.
 - `blueprint/`, `block/blueprint/`, `item/blueprint/` — blueprint building system.
 - `soldierpoi/`, `claypoifunction/` — points of interest soldiers can work at.
+- `dev/` — dev-only scenario setup (`DevScenarios`) and `/csr dev` commands (`DevCommands`).
+- `neoforge/.../event/SoldierWorkCleanup` — stops a soldier's work goal when it leaves the level
+  (saving no longer does this).
 - `mixin/` — mixins (config: `common/src/main/resources/csr.mixins.json`).
 - Client rendering/models: `entity/client/`.
 
@@ -121,9 +128,10 @@ Optional integrations (JEI, Jade, Accessories, Curios, Create, SmartBrainLib) ar
 
 ## Milestones
 
-- **M0 — in progress:** test the existing flow and reproduce suspected bugs
-  (guide: `docs/TESTING.md`, background: `docs/ANALYSIS.md`).
-- **M1:** fix confirmed bugs only.
-- **M2:** command that places an easel + blueprint.
+- **M0 — done:** test the existing flow and reproduce suspected bugs
+  (guide: `docs/TESTING.md`, background: `docs/ANALYSIS.md`, GameTests).
+- **M1 — done:** fixed the 3 confirmed bugs (free blueprint blocks from an empty chest,
+  dig not stopping at bedrock, saving cancelling work).
+- **M2 — next:** command that places an easel + blueprint.
 - **M3:** soldiers start a build on their own.
 - **M4:** kingdom object (saved world data) with a founding block.
