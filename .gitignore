@@ -1,0 +1,37 @@
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea/*
+!.idea/scopes
+
+# gradle
+build
+.gradle
+
+# other
+eclipse
+run
+runs
+/common/src/generated/
+/neoforge/src/generated/
+/fabric/src/generated/
+
+# local additions (not in upstream)
+# macOS Finder metadata
+.DS_Store
+# VS Code
+.vscode/
+# logs and JVM crash/heap dumps
+*.log
+hs_err_pid*
+*.hprof
