@@ -18,6 +18,7 @@ import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -222,7 +223,7 @@ public class DoorGameTests {
 
     /**
      * A door the soldier may not open (DoorAccess says no, here from the moment the builder is 3 blocks away, after it
-     * planned its path through the door): the soldier logs "refused door at (x, y, z): <why>", never opens it, and
+     * planned its path through the door): the soldier logs "refused door at (x, y, z): (reason)", never opens it, and
      * gives up instead of pushing against it (never more than {@value #FREEZE_TICKS} ticks in a row at the door while
      * still trying to walk).
      */
@@ -262,24 +263,19 @@ public class DoorGameTests {
     }
 
     /**
-     * A soldier that can't get through an opened door (blocks appear right behind it once it is open) logs
-     * "stuck at door at (x, y, z)" and gives up instead of freezing there.
+     * A soldier that can't get through an opened door logs "stuck at door at (x, y, z)" and gives up instead of
+     * freezing there. The obstacle is a motionless shulker right behind the door: the pathfinder ignores creatures, but
+     * a shulker can't be walked through or pushed. (Blocks appearing behind the door don't make a soldier stuck: it
+     * plans again, turns back and closes the door.)
      */
     @GameTest(template = PLATFORM, batch = "door_stuck", timeoutTicks = 800)
     public static void soldierStuckAtDoorGivesUp(GameTestHelper helper) {
         DebugLog.reset();
         DebugLog.setEnabled(DebugCategory.PATHING, true, helper.getLevel().getServer());
         hutWithDoor(helper, Blocks.OAK_DOOR, false);
+        helper.spawn(EntityType.SHULKER, DOORWAY.offset(0, 0, 1)).setNoAi(true);
         slabInsideWithBuilders(helper, 1, INSIDE);
         String stuckEvent = "stuck at door at (" + helper.absolutePos(DOORWAY).toShortString() + ")";
-        boolean[] blocked = {false};
-        helper.onEachTick(() -> {
-            if (!blocked[0] && isOpen(helper)) {
-                blocked[0] = true;
-                helper.setBlock(DOORWAY.offset(0, 0, 1), Blocks.COBBLESTONE);
-                helper.setBlock(DOORWAY.offset(0, 1, 1), Blocks.COBBLESTONE);
-            }
-        });
         helper.succeedWhen(() -> {
             helper.assertTrue(DebugLog.contains(DebugCategory.PATHING, stuckEvent), "No '" + stuckEvent + "' event");
             DebugLog.reset();
