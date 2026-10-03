@@ -74,6 +74,12 @@ neoForge {
         server {
             server()
         }
+        // Runs all GameTests (neoforge/src/main/java/.../gametest/) on a headless server, then exits.
+        // Usage: ./gradlew :neoforge:runGameTestServer
+        gameTestServer {
+            type = "gameTestServer"
+            gameDirectory = project.file('runs/gametest')
+        }
     }
     mods {
         "${mod_id}" {
