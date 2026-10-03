@@ -72,10 +72,15 @@ public final class BuilderReach {
     /**
      * Result of {@link #check}: a path to a spot the block can be placed from, or why there is none.
      *
-     * @param path   the path, or {@code null} when unreachable
-     * @param whyNot short reason when unreachable (e.g. "no path gets close enough", "closed door in the way at (x, y, z)")
+     * @param path       the path, or {@code null} when unreachable
+     * @param whyNot     short reason when unreachable (e.g. "no path gets close enough", "closed door in the way at (x, y, z)")
+     * @param closedDoor the closed door in the way, when that is why (only looked for with {@code explainDoors})
      */
-    public record Reach(@Nullable Path path, String whyNot) {
+    public record Reach(@Nullable Path path, String whyNot, @Nullable BlockPos closedDoor) {
+        public Reach(@Nullable Path path, String whyNot) {
+            this(path, whyNot, null);
+        }
+
         public boolean reachable() {
             return path != null;
         }
@@ -96,7 +101,7 @@ public final class BuilderReach {
         if (explainDoors) {
             BlockPos door = closedDoorInTheWay(builder, target);
             if (door != null) {
-                return new Reach(null, "closed door in the way at (" + door.toShortString() + ")");
+                return new Reach(null, "closed door in the way at (" + door.toShortString() + ")", door);
             }
         }
         return reach;

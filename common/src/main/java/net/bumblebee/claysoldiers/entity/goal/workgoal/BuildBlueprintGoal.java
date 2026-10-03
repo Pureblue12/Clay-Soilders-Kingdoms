@@ -16,7 +16,9 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.pathfinder.Path;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -42,6 +44,9 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     private int carryTicks = 0;
     @Nullable
     private Map<String, Integer> unreachableReasons;
+    /** While BUILD is recorded: closed doors found in the way during one search, and the blocks behind each. */
+    @Nullable
+    private Map<BlockPos, List<BlockPos>> blockedByDoor;
     /**
      * When the easel has no reachable block, the builder waits this many ticks plus up to
      * {@link #RETRY_COOLDOWN_RANDOM} more before asking again, instead of asking (and pathfinding) every tick.
@@ -172,6 +177,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         if (requestHandler != null) {
             // While BUILD is recorded, collect why blocks are unreachable (one summary line per search).
             unreachableReasons = DebugLog.isOn(DebugCategory.BUILD) ? new LinkedHashMap<>() : null;
+            blockedByDoor = unreachableReasons == null ? null : new LinkedHashMap<>();
             request = requestHandler.getRequest(this::canReach);
             logUnreachableReasons();
             if (request != null) DebugLog.event(DebugCategory.BUILD, soldier, "got request: %s at %s", request.getItem(), request.getPos());
@@ -192,6 +198,9 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         BuilderReach.Reach reach = BuilderReach.check(soldier, pos, true);
         if (!reach.reachable()) {
             unreachableReasons.merge(reach.whyNot(), 1, Integer::sum);
+            if (reach.closedDoor() != null && blockedByDoor != null) {
+                blockedByDoor.computeIfAbsent(reach.closedDoor(), door -> new ArrayList<>()).add(pos);
+            }
         }
         return reach.reachable();
     }
@@ -203,7 +212,12 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                     .map(entry -> entry.getValue() + " " + entry.getKey()).collect(Collectors.joining(", "));
             DebugLog.event(DebugCategory.BUILD, soldier, "skipped %s unreachable blocks: %s", total, reasons);
         }
+        if (blockedByDoor != null) {
+            blockedByDoor.forEach((door, blocked) -> DebugLog.event(DebugCategory.BUILD, soldier,
+                    "closed door at %s blocks the way to %s blueprint block(s), first at %s", door, blocked.size(), blocked.get(0)));
+        }
         unreachableReasons = null;
+        blockedByDoor = null;
     }
 
 

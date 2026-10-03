@@ -213,19 +213,31 @@ public class ServerBlueprintPlan extends BlueprintPlan {
      */
     public @Nullable BlueprintRequest getRequest(ServerLevel level, BlockPos base, BlueprintTemplateSettings settings, Predicate<BlockPos> canReach) {
         // Blocks another builder has are skipped (no taking over); they become free when cancelled, finished or stale.
-        // Blocks that recently failed to place are skipped until their cooldown ends (checked first: it's cheap and
-        // saves a path search). Counters for the debug summary only.
+        // Blocks that recently failed to place are skipped until their cooldown ends, and doors wait while any other
+        // block can still be placed (both checked first: they're cheap and save a path search).
+        // Counters for the debug summary only.
         int checked = 0;
         int coolingDown = 0;
+        int doorsWaiting = 0;
         int unreachable = 0;
         int notPlaceable = 0;
         int assigned = 0;
+        Boolean doorsMustWait = null; // computed once, at the first door
 
         for (BlueprintBlockInfo blockInfo : blockInfoList) {
             checked++;
             if (blockInfo.isCoolingDown(level.getGameTime())) {
                 coolingDown++;
                 continue;
+            }
+            if (blockInfo.isDoor()) {
+                if (doorsMustWait == null) {
+                    doorsMustWait = nonDoorBlockStillPlaceable(level, base, settings);
+                }
+                if (doorsMustWait) {
+                    doorsWaiting++;
+                    continue;
+                }
             }
             var infoAbsolutePos = targetPosition(base, settings, blockInfo);
             if (!canReach.test(infoAbsolutePos)) {
@@ -237,21 +249,31 @@ public class ServerBlueprintPlan extends BlueprintPlan {
                 continue;
             }
             if (blockInfo.hasAvailableRequest(level.getGameTime())) {
-                logRequestSearch(checked, coolingDown, unreachable, notPlaceable, assigned, "handing out a free block");
+                logRequestSearch(checked, coolingDown, doorsWaiting, unreachable, notPlaceable, assigned, "handing out a free block");
                 return blockInfo.getRequest(level.getGameTime(), infoAbsolutePos);
             }
             assigned++;
         }
-        logRequestSearch(checked, coolingDown, unreachable, notPlaceable, assigned, "nothing to hand out");
+        logRequestSearch(checked, coolingDown, doorsWaiting, unreachable, notPlaceable, assigned, "nothing to hand out");
         return null;
     }
 
-    private void logRequestSearch(int checked, int coolingDown, int unreachable, int notPlaceable, int assigned, String result) {
+    /**
+     * Returns whether a block that isn't a door still has to be placed and its spot is free (it may be carried by a
+     * builder right now, unreachable at the moment, or cooling down). Doors wait until there is none: clay soldiers
+     * can't open doors, so a door placed while others still work inside can lock them out. Doors don't wait for each
+     * other, and blocks whose spot is taken don't hold them back.
+     */
+    private boolean nonDoorBlockStillPlaceable(LevelReader level, BlockPos base, BlueprintTemplateSettings settings) {
+        return blockInfoList.stream().anyMatch(info -> !info.isDoor() && canPlaceAt(level, targetPosition(base, settings, info)));
+    }
+
+    private void logRequestSearch(int checked, int coolingDown, int doorsWaiting, int unreachable, int notPlaceable, int assigned, String result) {
         if (!DebugLog.isOn(DebugCategory.BUILD)) {
             return;
         }
-        DebugLog.event(DebugCategory.BUILD, null, () -> "request search: checked %d of %d remaining blocks (%d cooling down after failed placing, %d not reachable, %d not placeable, %d already assigned): %s"
-                .formatted(checked, blockInfoList.size(), coolingDown, unreachable, notPlaceable, assigned, result));
+        DebugLog.event(DebugCategory.BUILD, null, () -> "request search: checked %d of %d remaining blocks (%d cooling down after failed placing, %d doors waiting for other blocks, %d not reachable, %d not placeable, %d already assigned): %s"
+                .formatted(checked, blockInfoList.size(), coolingDown, doorsWaiting, unreachable, notPlaceable, assigned, result));
     }
 
     @Override

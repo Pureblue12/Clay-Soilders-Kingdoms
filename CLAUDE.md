@@ -45,15 +45,13 @@ Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/mak
   Don't use `helper.relativePos` (wrong rotation in 1.21.1); compare absolute positions instead.
 - Use `FakePlayerFactory` for players, not `makeMockServerPlayerInLevel` (Curios crashes on it).
 
-Current status (2026-10-03, after the failed-placement cooldown): all 47 required tests pass. `SuspectedBugGameTests` covers the easel right-click:
+Current status (2026-10-03, after the door race fix): all 50 required tests pass. `SuspectedBugGameTests` covers the easel right-click:
 non-block item, unneeded block, needed block.
 
 ### Known bugs (confirmed)
 
 Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
 
-- Door race: a door can be handed out while other blocks are still being carried (doors-last only orders
-  the list); one glass pane got locked out in the 08:03 recording. Not fixed yet.
 - Fixed: easel `ClassCastException` with non-block items (`easelIgnoresNonBlockItems`).
 - Fixed: wall-mounted blocks were never placed (found while measuring Fix B). A wall torch is requested with
   its item (torch), but placing compared the item's own BLOCK (standing torch) with the spot's block (wall
@@ -81,6 +79,15 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
     instead of #149 (`jigsawBlocksSortWithTheirGroup`).
   - Door locked builders out: doors are handed out last (`doorDoesNotLockOutBuilders`); while BUILD is
     recorded, builders log why blocks are unreachable, incl. "closed door in the way at (x, y, z)".
+- Fixed (door race): doors-last only ordered the list, so a door could be handed out while other blocks were
+  still being carried (a glass pane got locked out in the 08:03 recording). Now `ServerBlueprintPlan.getRequest`
+  hands out a door only when no other (non-door) block with a free spot remains; doors don't wait for each
+  other or for blocks whose spot is taken. Trade-off: a non-door block that can never be placed (too high,
+  keeps failing) keeps the doors from being handed out (`doorWaitsForBlocksInProgress`,
+  `doorsDoNotWaitForEachOtherOrObstructedSpots`). Clay soldiers can't path through closed doors: vanilla
+  ground navigation walks through open doors but treats closed ones as walls, and soldiers never open doors.
+  While BUILD is recorded, each search logs "closed door at (x, y, z) blocks the way to N blueprint block(s),
+  first at (x, y, z)" (`closedDoorBlockingABlockIsLogged`).
 
 ### Known limitations
 

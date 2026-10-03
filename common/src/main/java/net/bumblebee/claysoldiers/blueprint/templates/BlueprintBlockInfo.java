@@ -6,6 +6,7 @@ import net.bumblebee.claysoldiers.blueprint.BlueprintRequest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jetbrains.annotations.Nullable;
@@ -56,6 +57,14 @@ public class BlueprintBlockInfo {
      */
     public boolean isFor(Item item) {
         return state.getBlock().asItem() == item;
+    }
+
+    /**
+     * Returns whether this block is a door. Clay soldiers can't open doors, so doors are handed out last
+     * (see {@code ServerBlueprintPlan.getRequest}).
+     */
+    public boolean isDoor() {
+        return state.getBlock() instanceof DoorBlock;
     }
 
     /**
