@@ -31,7 +31,8 @@ Run from the project root. The first run downloads Minecraft/NeoForge and is slo
 ```
 
 Starts a headless test server, runs every test in
-`neoforge/src/main/java/net/bumblebee/claysoldiers/gametest/ClaySoldierGameTests.java`, prints
+`neoforge/src/main/java/net/bumblebee/claysoldiers/gametest/` (`ClaySoldierGameTests`,
+`DevToolkitGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/make_gametest_platform.py`).
@@ -43,27 +44,39 @@ Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/mak
   Don't use `helper.relativePos` (wrong rotation in 1.21.1); compare absolute positions instead.
 - Use `FakePlayerFactory` for players, not `makeMockServerPlayerInLevel` (Curios crashes on it).
 
-Current status (2026-10-03, after M1): all 6 tests pass.
+Current status (2026-10-03, after M1 + dev toolkit): all 10 tests pass.
 
 Known, unfixed (reported, not confirmed in game): `DigHoleGoal.resetBreakProgress` unregisters
 `currentPos` even when this soldier never registered it; in dev runs `ErrorHandler` throws
 ("Trying to unregister an Entity for a Empty BreakData"), e.g. when a digger is unloaded or its job
 changes while walking. In a normal install it is only a debug log.
 
-### Dev scenario commands (development runs only)
+### Dev toolkit book and `/csr dev` commands (development runs only)
 
-In a `runClient` world with the blueprint experiment enabled, type in chat:
+In a `runClient` world (blueprint experiment on), type once: `/csr dev book`. The book has
+clickable buttons for every dev command; its "Refresh this book" button (or `/csr dev book`
+again) updates the copies you carry. Page 1 shows a version stamp `v<mod version> #<hash>` and
+the time it was made; a different hash means the registry changed.
 
-```
-/csr dev scenario build_test
-/csr dev scenario build_test_empty
-```
+| Command | Does |
+|---|---|
+| `/csr dev setup` | doMobSpawning false, doDaylightCycle false, time day |
+| `/csr dev book` | gives / refreshes the toolkit book |
+| `/csr dev kit` | brush, 3 red soldiers, 3 wheat, chest, easel, goggles, debug item, every blueprint |
+| `/csr dev scenario build_test` / `build_test_empty` | 3 red builders + stocked / empty chest + easel with Small House |
+| `/csr dev team claim <team>` | makes the team loyal to you |
+| `/csr dev materials <blueprint>` | gives the materials from the blueprint's own item list |
+| `/csr dev cleanup <radius>` | removes clay soldiers and easels in range (asks to confirm in chat) |
 
-Places (relative to where you stand and face): a chest stocked with the Small House materials
-(or empty), an easel with the Small House blueprint 3 blocks ahead (the house is built beyond it),
-and 3 red pacifist soldiers set to Building with the chest as their POI; team red becomes loyal to you.
-Code: `common/.../dev/DevScenarios.java`, `DevCommands.java`. Registered only when
-`PLATFORM.isDevEnv()` (NeoForge: `!FMLLoader.isProduction()`), so never in a normal install.
+How it is built (`common/.../dev/`):
+- `DevToolRegistry` — single source of truth: generates the `/csr dev` commands AND the book buttons.
+- `DevTools` — the built-in categories (`DevCategory`, plain data) and tools (`DevTool`).
+  Argument buttons (teams, blueprints) are read from registries.
+- `DevBook` — builds the book with automatic pagination and contents links.
+- `BookFormat` — the ONLY class with Minecraft-version-specific book/click/hover code and page limits.
+- `DevScenarios` — scenario setup helpers, also used by GameTests.
+Registered only when `PLATFORM.isDevEnv()` (NeoForge: `!FMLLoader.isProduction()`), so never in a
+normal install. To add a dev command: add a `DevTool` in `DevTools` (new category: add a `DevCategory`).
 
 **Generated resources are not in the repo.** `common/src/generated/resources` is
 gitignored upstream. It is produced by `runData` from the datagen classes in
@@ -99,7 +112,8 @@ Main package: `net.bumblebee.claysoldiers` (in `common/src/main/java`):
 - `soldierproperties/`, `soldieritemtypes/`, `datamap/` — data-driven item effects on soldiers.
 - `blueprint/`, `block/blueprint/`, `item/blueprint/` — blueprint building system.
 - `soldierpoi/`, `claypoifunction/` — points of interest soldiers can work at.
-- `dev/` — dev-only scenario setup (`DevScenarios`) and `/csr dev` commands (`DevCommands`).
+- `dev/` — dev-only toolkit: `DevToolRegistry`, `DevTools`, `DevBook`, `BookFormat`, `DevScenarios`
+  (see "Dev toolkit book" above).
 - `neoforge/.../event/SoldierWorkCleanup` — stops a soldier's work goal when it leaves the level
   (saving no longer does this).
 - `mixin/` — mixins (config: `common/src/main/resources/csr.mixins.json`).
@@ -125,6 +139,9 @@ Optional integrations (JEI, Jade, Accessories, Curios, Create, SmartBrainLib) ar
 - Do not rename existing misspelled classes/fields (`Manger`, `Sodlier`, `VampiricOnwer`);
   save files depend on some of them.
 - Fix only bugs I have confirmed in game. Do not fix things on suspicion.
+- Every dev command, scenario, or test helper is defined through `DevToolRegistry` and gets a
+  book button. The coverage test (`DevToolkitGameTests.everyDevCommandHasARegistryEntry`) enforces it.
+- Milestone work isn't done until its commands are in the book.
 
 ## Milestones
 
