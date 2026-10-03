@@ -5,6 +5,7 @@ import net.bumblebee.claysoldiers.block.blueprint.EaselBlockEntity;
 import net.bumblebee.claysoldiers.blueprint.BlueprintData;
 import net.bumblebee.claysoldiers.blueprint.BlueprintRequest;
 import net.bumblebee.claysoldiers.blueprint.BlueprintTemplateSettings;
+import net.bumblebee.claysoldiers.blueprint.templates.BlueprintBlockInfo;
 import net.bumblebee.claysoldiers.blueprint.templates.ImmutableTemplate;
 import net.bumblebee.claysoldiers.blueprint.templates.ServerBlueprintPlan;
 import net.bumblebee.claysoldiers.capability.BlueprintRequestHandler;
@@ -107,6 +108,18 @@ public class BuildRequestGameTests {
             helper.assertBlockPresent(Blocks.COBBLESTONE, target);
             DebugLog.reset();
         });
+    }
+
+    /**
+     * A builder must always give up (and release) its request before the plan treats the request as stale,
+     * otherwise a block could be handed out twice while its builder is still working on it.
+     */
+    @GameTest(template = PLATFORM)
+    public static void staleTimeoutLongerThanGiveUpTimer(GameTestHelper helper) {
+        helper.assertTrue(BlueprintBlockInfo.STALE_REQUEST_TICKS > BuildBlueprintGoal.MAX_CARRY_TICKS,
+                "STALE_REQUEST_TICKS (%d) must be longer than MAX_CARRY_TICKS (%d)"
+                        .formatted(BlueprintBlockInfo.STALE_REQUEST_TICKS, BuildBlueprintGoal.MAX_CARRY_TICKS));
+        helper.succeed();
     }
 
     private static int takeovers() {

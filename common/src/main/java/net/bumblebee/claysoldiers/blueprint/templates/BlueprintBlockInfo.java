@@ -1,5 +1,7 @@
 package net.bumblebee.claysoldiers.blueprint.templates;
 
+import net.bumblebee.claysoldiers.debug.DebugCategory;
+import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.blueprint.BlueprintRequest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -9,7 +11,12 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import org.jetbrains.annotations.Nullable;
 
 public class BlueprintBlockInfo {
-    private static final int MIN_ATTEMPT_TIME = 24000;
+    /**
+     * An open request older than this (30 seconds) is considered abandoned and its block is free again.
+     * Must stay longer than {@code BuildBlueprintGoal.MAX_CARRY_TICKS}, so a working builder always gives up first
+     * (checked by the GameTest {@code staleTimeoutLongerThanGiveUpTimer}).
+     */
+    public static final int STALE_REQUEST_TICKS = 600;
     /**
      * The Relative position to the Structures Base.
      */
@@ -52,12 +59,12 @@ public class BlueprintBlockInfo {
     /**
      * Returns whether this BlockInfo has an available {@code BlueprintRequest}.
      * A {@code BlueprintRequest} is available, when no previous {@code BlueprintRequest} was created
-     * or the last {@code BlueprintRequest} got cancelled or was not fulfilled with in {@value #MIN_ATTEMPT_TIME} ticks.
+     * or the last {@code BlueprintRequest} got cancelled or was not fulfilled with in {@value #STALE_REQUEST_TICKS} ticks.
      * @param gameTime the current game time.
      * @return whether this BlockInfo has an available {@code BlueprintRequest}
      */
     public boolean hasAvailableRequest(long gameTime) {
-        return lastRequest == null || lastRequest.isCancelled() || lastRequest.getStart() + MIN_ATTEMPT_TIME < gameTime;
+        return lastRequest == null || lastRequest.isCancelled() || lastRequest.getStart() + STALE_REQUEST_TICKS < gameTime;
     }
 
     /**
@@ -70,6 +77,10 @@ public class BlueprintBlockInfo {
         var req = new BlueprintRequest(state.getBlock().asItem(), destinationPos, gameTime);
 
         if (lastRequest != null) {
+            if (!lastRequest.isCancelled() && !lastRequest.isFinished()) {
+                DebugLog.event(DebugCategory.BUILD, null, "request %s went stale after %s ticks, freeing its block",
+                        lastRequest, gameTime - lastRequest.getStart());
+            }
             lastRequest.cancel();
         }
         lastRequest = req;

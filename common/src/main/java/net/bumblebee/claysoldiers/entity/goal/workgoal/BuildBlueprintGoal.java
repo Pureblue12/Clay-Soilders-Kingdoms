@@ -28,8 +28,9 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     private final int verticalSearchRange;
     protected int verticalSearchStart;
     /**
-     * A builder that carries a block this long without placing it gives up: it returns the block and
-     * releases the request, so the block can be handed out again (20 seconds).
+     * A builder that has had a request this long (fetching from storage + carrying) without placing it gives up:
+     * it returns the block and releases the request, so the block can be handed out again (20 seconds).
+     * Must stay shorter than {@code BlueprintBlockInfo.STALE_REQUEST_TICKS}.
      */
     public static final int MAX_CARRY_TICKS = 400;
     @Nullable
@@ -90,10 +91,15 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             bringBack = !soldier.getCarriedStack().isEmpty();
             request = null;
         } else if (request.hasStarted()) {
-            getRequestFromStorage();
+            // The give-up timer also runs while fetching the item from storage.
+            if (++carryTicks > MAX_CARRY_TICKS) {
+                giveUpRequest();
+            } else {
+                getRequestFromStorage();
+            }
         } else if (request.isPlacing()) {
             setStatus(CARRYING_ID);
-            if (carryTicks == MAX_CARRY_TICKS / 2) DebugLog.event(DebugCategory.BUILD, soldier, "still carrying %s to %s after %s ticks", request.getItem(), request.getPos(), carryTicks);
+            if (carryTicks == MAX_CARRY_TICKS / 2) DebugLog.event(DebugCategory.BUILD, soldier, "still working on %s at %s after %s ticks", request.getItem(), request.getPos(), carryTicks);
             if (++carryTicks > MAX_CARRY_TICKS) {
                 giveUpRequest();
             } else if (moveToRequest()) {
@@ -119,7 +125,6 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                     takeAShortBreak();
                 } else {
                     request.setPlacing();
-                    carryTicks = 0;
                 }
             } else {
                 easelPos = null;
@@ -132,7 +137,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
      * Cancels the current request (so the block can be handed out again) and brings the carried item back.
      */
     private void giveUpRequest() {
-        DebugLog.event(DebugCategory.BUILD, soldier, "gave up %s at %s after %s ticks of carrying, returning it", request.getItem(), request.getPos(), carryTicks);
+        DebugLog.event(DebugCategory.BUILD, soldier, "gave up %s at %s after %s ticks (fetching + carrying), releasing it", request.getItem(), request.getPos(), carryTicks);
         request.cancel();
         request = null;
         bringBack = !soldier.getCarriedStack().isEmpty();
@@ -162,6 +167,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         if (requestHandler != null) {
             request = requestHandler.getRequest(this::canReach);
             if (request != null) DebugLog.event(DebugCategory.BUILD, soldier, "got request: %s at %s", request.getItem(), request.getPos());
+            carryTicks = 0;
             if (request == null) {
                 DebugLog.event(DebugCategory.BUILD, soldier, "no reachable block available, waiting");
                 retryCooldown = RETRY_COOLDOWN_MIN + soldier.getRandom().nextInt(RETRY_COOLDOWN_RANDOM + 1);

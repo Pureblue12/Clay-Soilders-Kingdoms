@@ -24,7 +24,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class ServerBlueprintPlan extends BlueprintPlan {
@@ -210,7 +209,7 @@ public class ServerBlueprintPlan extends BlueprintPlan {
      * @param base the base position from which this structure is build
      */
     public @Nullable BlueprintRequest getRequest(ServerLevel level, BlockPos base, BlueprintTemplateSettings settings, Predicate<BlockPos> canReach) {
-        Supplier<BlueprintRequest> fallbackRequest = null;
+        // Blocks another builder has are skipped (no taking over); they become free when cancelled, finished or stale.
         // Counters for the debug summary only (same checks, same order as before).
         int checked = 0;
         int unreachable = 0;
@@ -233,13 +232,9 @@ public class ServerBlueprintPlan extends BlueprintPlan {
                 return blockInfo.getRequest(level.getGameTime(), infoAbsolutePos);
             }
             assigned++;
-            if (fallbackRequest == null) {
-                fallbackRequest = () -> blockInfo.getRequest(level.getGameTime(), infoAbsolutePos);
-            }
         }
-        logRequestSearch(checked, unreachable, notPlaceable, assigned,
-                fallbackRequest != null ? "taking over a block another builder has" : "nothing to hand out");
-        return fallbackRequest != null ? fallbackRequest.get() : null;
+        logRequestSearch(checked, unreachable, notPlaceable, assigned, "nothing to hand out");
+        return null;
     }
 
     private void logRequestSearch(int checked, int unreachable, int notPlaceable, int assigned, String result) {
