@@ -38,17 +38,18 @@ import static net.bumblebee.claysoldiers.gametest.ClaySoldierGameTests.PLATFORM;
  * Tests for clay soldiers using doors: opening a closed wooden door in their path, walking through, closing it
  * behind them. Iron doors stay closed. Each asserts the CORRECT behavior.
  * <p>
- * Layout: a square room with 2-high walls and an open top, its doorway at {@link #DOORWAY}. Builders can place blocks
- * up to 2 blocks sideways over a wall (Fix B), so only spots at least 3 blocks from every outside spot need the
- * door: the middle of a 5x5 room, or the middle 3x3 of a 7x7 room.
+ * Layout: a 7x7 room with 2-high walls and an open top, its doorway at {@link #DOORWAY}. Builders can place blocks up
+ * to 2 blocks sideways from where they stand (Fix B), also over a wall or from inside the doorway itself (next to a
+ * closed door's thin panel), so test blocks are at least 3 blocks from every spot outside and from the doorway.
  */
 @GameTestHolder(ClaySoldiersCommon.MOD_ID)
 @PrefixGameTestTemplate(false)
 public class DoorGameTests {
     /** The room's doorway (front wall middle). */
     static final BlockPos DOORWAY = EASEL.offset(0, 0, 2);
-    /** The middle of the 5x5 room's floor. */
-    static final BlockPos INSIDE = EASEL.offset(0, 0, 4);
+    /** The middle of the 7x7 room's floor, 3 blocks from the doorway. */
+    static final BlockPos INSIDE = EASEL.offset(0, 0, 5);
+    static final int ROOM = 7;
     private static final ResourceLocation BLUE_TEAM = ResourceLocation.fromNamespaceAndPath("csr", "blue");
 
     /**
@@ -113,16 +114,16 @@ public class DoorGameTests {
     }
 
     /**
-     * Two builders use the same closed door at about the same time (a 7x7 room with two slabs that can only be placed
-     * from inside, both builders start together). Neither may get stuck: both slabs get placed and the door ends up
+     * Two builders use the same closed door at about the same time (two slabs that can only be placed from inside,
+     * both builders start together). Neither may get stuck: both slabs get placed and the door ends up
      * closed.
      */
     @GameTest(template = PLATFORM, timeoutTicks = 1600)
     public static void twoBuildersShareADoorWithoutDeadlock(GameTestHelper helper) {
-        roomWithDoor(helper, 7, Blocks.OAK_DOOR, false);
-        BlockPos left = EASEL.offset(-1, 0, 5);
-        BlockPos right = EASEL.offset(1, 0, 5);
-        List<ClaySoldierEntity> builders = slabsInRoomWithBuilders(helper, 7, 2, left, right);
+        hutWithDoor(helper, Blocks.OAK_DOOR, false);
+        BlockPos left = INSIDE.offset(-1, 0, 0);
+        BlockPos right = INSIDE.offset(1, 0, 0);
+        List<ClaySoldierEntity> builders = slabInsideWithBuilders(helper, 2, left, right);
         helper.succeedWhen(() -> {
             helper.assertBlockPresent(Blocks.COBBLESTONE_SLAB, left);
             helper.assertBlockPresent(Blocks.COBBLESTONE_SLAB, right);
@@ -198,10 +199,10 @@ public class DoorGameTests {
     }
 
     /**
-     * Builds the 5x5 hut walls with a door of the given type in the doorway, closed or open.
+     * Builds the 7x7 room with a door of the given type in the doorway, closed or open.
      */
     static void hutWithDoor(GameTestHelper helper, Block doorType, boolean open) {
-        roomWithDoor(helper, 5, doorType, open);
+        roomWithDoor(helper, ROOM, doorType, open);
     }
 
     /**
@@ -226,11 +227,11 @@ public class DoorGameTests {
     }
 
     /**
-     * A blueprint with a cobblestone slab at each given spot inside the 5x5 hut, a chest with the slabs and
+     * A blueprint with a cobblestone slab at each given spot inside the 7x7 room, a chest with the slabs and
      * {@code builderCount} builders at the chest. Returns the builders.
      */
     static List<ClaySoldierEntity> slabInsideWithBuilders(GameTestHelper helper, int builderCount, BlockPos... spots) {
-        return slabsInRoomWithBuilders(helper, 5, builderCount, spots);
+        return slabsInRoomWithBuilders(helper, ROOM, builderCount, spots);
     }
 
     /**
