@@ -3,6 +3,9 @@ package net.bumblebee.claysoldiers.gametest;
 import com.mojang.authlib.GameProfile;
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.blueprint.BlueprintData;
+import net.bumblebee.claysoldiers.debug.DebugCategory;
+import net.bumblebee.claysoldiers.debug.DebugEvent;
+import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.dev.DevScenarios;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,6 +27,7 @@ import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +37,9 @@ import static net.bumblebee.claysoldiers.gametest.ClaySoldierGameTests.EASEL;
 import static net.bumblebee.claysoldiers.gametest.ClaySoldierGameTests.PLATFORM;
 
 /**
- * Tests for placing blueprint blocks whose item places a different block (a torch item places a WALL torch,
- * an oak sign item places an oak WALL sign), by builders and by hand. Each asserts the CORRECT behavior.
+ * Tests for placing blueprint blocks: blocks whose item places a different block (a torch item places a WALL torch,
+ * an oak sign item places an oak WALL sign), by builders and by hand; and blocks that fail to place, which must not
+ * starve the rest of the build. Each asserts the CORRECT behavior.
  */
 @GameTestHolder(ClaySoldiersCommon.MOD_ID)
 @PrefixGameTestTemplate(false)
@@ -106,5 +111,62 @@ public class PlacingGameTests {
         helper.assertBlockState(SPOT, WALL_TORCH::equals, () -> "Expected the wall torch, got " + helper.getBlockState(SPOT));
         helper.assertBlockState(SPOT.above(), WALL_SIGN::equals, () -> "Expected the wall sign, got " + helper.getBlockState(SPOT.above()));
         helper.succeed();
+    }
+
+    /**
+     * Failed-placement cooldown: the blueprint wants short grass where short grass already grows (the spot counts as
+     * free because grass is replaceable, but placing the same block again fails every time), then 3 slabs that can be
+     * placed. One worker, a chest with all 4 items. All 3 slabs must get placed: a block that keeps failing must not be
+     * handed out again right away and starve the blocks after it (like the wall torches did before their fix).
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 1200)
+    public static void unplaceableBlockDoesNotStarveOthers(GameTestHelper helper) {
+        List<BlockPos> slabs = setUpGrassAlreadyThereAndSlabs(helper);
+        helper.succeedWhen(() -> slabs.forEach(slab -> helper.assertBlockPresent(Blocks.COBBLESTONE_SLAB, slab)));
+    }
+
+    /**
+     * Recorder check for the cooldown: with BUILD recorded, every failed placement (the builder's "could not place")
+     * must come with a "placement cooldown" BUILD event.
+     */
+    @GameTest(template = PLATFORM, batch = "placing_cooldown_log", timeoutTicks = 600)
+    public static void failedPlacementLogsCooldown(GameTestHelper helper) {
+        DebugLog.reset();
+        DebugLog.setEnabled(DebugCategory.BUILD, true, helper.getLevel().getServer());
+        setUpGrassAlreadyThereAndSlabs(helper);
+        helper.succeedWhen(() -> {
+            int failed = countBuildEvents("could not place");
+            int cooldowns = countBuildEvents("placement cooldown");
+            helper.assertTrue(failed > 0 && cooldowns == failed,
+                    "Expected one 'placement cooldown' event per failed placement, got %d for %d failures".formatted(cooldowns, failed));
+            DebugLog.reset();
+        });
+    }
+
+    /**
+     * Short grass already growing at {@link #SPOT} (on a grass block), a blueprint wanting short grass there and
+     * cobblestone slabs at the 3 spots behind it, and one builder with a chest holding all 4 items.
+     * Grass and slabs are both non-cube blocks, so the grass is handed out first. Returns the slab positions.
+     */
+    private static List<BlockPos> setUpGrassAlreadyThereAndSlabs(GameTestHelper helper) {
+        helper.setBlock(SPOT.below(), Blocks.GRASS_BLOCK);
+        helper.setBlock(SPOT, Blocks.SHORT_GRASS);
+        Map<BlockPos, BlockState> blocks = new LinkedHashMap<>();
+        blocks.put(BlockPos.ZERO, Blocks.SHORT_GRASS.defaultBlockState());
+        List<BlockPos> slabs = new ArrayList<>();
+        for (int z = 1; z <= 3; z++) {
+            blocks.put(new BlockPos(0, 0, z), Blocks.COBBLESTONE_SLAB.defaultBlockState());
+            slabs.add(SPOT.offset(0, 0, z));
+        }
+        BlueprintData blueprint = BuildRequestGameTests.blueprint(helper, "grass_already_there", 1, 1, 4, blocks);
+        ClaySoldierGameTests.setUpBuilder(helper, blueprint,
+                List.of(new ItemStack(Items.SHORT_GRASS), new ItemStack(Items.COBBLESTONE_SLAB, slabs.size())));
+        return slabs;
+    }
+
+    private static int countBuildEvents(String text) {
+        return DebugLog.events().stream()
+                .filter(event -> event.category() == DebugCategory.BUILD && event.message().contains(text))
+                .mapToInt(DebugEvent::count).sum();
     }
 }
