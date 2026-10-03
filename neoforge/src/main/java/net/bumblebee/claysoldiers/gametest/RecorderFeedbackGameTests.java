@@ -62,6 +62,34 @@ public class RecorderFeedbackGameTests {
     }
 
     /**
+     * Start prints "Recording is now ON (...)"; Stop + save prints one line with OFF, the event count, the duration
+     * and the file path.
+     */
+    @GameTest(template = PLATFORM, batch = "recorder_stop_message")
+    public static void startAndStopPrintStateLines(GameTestHelper helper) {
+        DebugLog.reset();
+        MinecraftServer server = helper.getLevel().getServer();
+        ChatCapturingPlayer player = new ChatCapturingPlayer(helper.getLevel());
+
+        server.getCommands().performPrefixedCommand(player.createCommandSourceStack().withPermission(4), "csr dev log start");
+        helper.assertTrue(player.chatMessages().size() == 1 && player.chatMessages().getFirst().startsWith("Recording is now ON (BUILD, WORK, DAMAGE)"),
+                "Unexpected start feedback: " + player.chatMessages());
+
+        for (int i = 0; i < 3; i++) {
+            DebugLog.event(net.bumblebee.claysoldiers.debug.DebugCategory.BUILD, null, "test event %s", i);
+        }
+        player.messages.clear();
+        server.getCommands().performPrefixedCommand(player.createCommandSourceStack().withPermission(4), "csr dev log stop");
+        String stop = player.chatMessages().isEmpty() ? "" : player.chatMessages().getFirst();
+        DebugLog.reset();
+        helper.assertTrue(player.chatMessages().size() == 1 && !stop.contains("\n"), "Stop should print exactly one line: " + player.chatMessages());
+        helper.assertTrue(stop.startsWith("Recording is now OFF") && stop.contains("saved 3 events")
+                        && stop.contains("recorded for") && stop.contains(DebugLog.FOLDER),
+                "Stop line must have OFF, the count, the duration and the path: " + stop);
+        helper.succeed();
+    }
+
+    /**
      * A {@link FakePlayer} that keeps the chat and action-bar messages it is sent.
      */
     static final class ChatCapturingPlayer extends FakePlayer {

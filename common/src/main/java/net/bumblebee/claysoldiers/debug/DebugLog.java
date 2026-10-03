@@ -59,6 +59,8 @@ public final class DebugLog {
     private static String focusName = "";
     @Nullable
     private static MinecraftServer server;
+    /** Wall-clock time recording was last turned on, or -1 while off. */
+    private static long recordingSince = -1;
 
     private DebugLog() {
     }
@@ -179,6 +181,7 @@ public final class DebugLog {
         focus = null;
         focusName = "";
         clear();
+        recordingSince = System.currentTimeMillis();
     }
 
     /**
@@ -189,12 +192,45 @@ public final class DebugLog {
     public static synchronized Path stop(MinecraftServer server) throws IOException {
         attach(server);
         DebugCategory.all().forEach(category -> category.enabled = false);
+        recordingSince = -1;
         return save(server);
     }
 
     public static synchronized void setEnabled(DebugCategory category, boolean enabled, @Nullable MinecraftServer server) {
         attach(server);
+        boolean wasRecording = isRecording();
         category.enabled = enabled;
+        if (!wasRecording && isRecording()) {
+            recordingSince = System.currentTimeMillis();
+        } else if (!isRecording()) {
+            recordingSince = -1;
+        }
+    }
+
+    /**
+     * How long recording has been on, e.g. {@code 2m 05s}, or {@code -} when off.
+     */
+    public static synchronized String recordingDuration() {
+        if (recordingSince < 0) {
+            return "-";
+        }
+        long seconds = (System.currentTimeMillis() - recordingSince) / 1000;
+        return seconds >= 60 ? "%dm %02ds".formatted(seconds / 60, seconds % 60) : seconds + "s";
+    }
+
+    /**
+     * One line describing the recorder state, e.g.
+     * {@code Recording is ON (BUILD, WORK, DAMAGE) · 312 events · focus: all soldiers}.
+     */
+    public static synchronized String stateLine() {
+        List<DebugCategory> on = enabledCategories();
+        String events = BUFFER.size() + " events";
+        if (on.isEmpty()) {
+            return "Recording is OFF · " + events + " in the log";
+        }
+        return "Recording is ON (%s) · %s · focus: %s".formatted(
+                String.join(", ", on.stream().map(DebugCategory::id).toList()), events,
+                focusName.isEmpty() ? "all soldiers" : focusName);
     }
 
     public static List<DebugCategory> enabledCategories() {
@@ -257,6 +293,7 @@ public final class DebugLog {
      */
     public static synchronized void reset() {
         DebugCategory.all().forEach(category -> category.enabled = false);
+        recordingSince = -1;
         focus = null;
         focusName = "";
         capacity = DEFAULT_CAPACITY;

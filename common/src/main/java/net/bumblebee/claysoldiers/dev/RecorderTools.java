@@ -45,7 +45,7 @@ final class RecorderTools {
                 List.of("log", "stop"), false, null, RecorderTools::stop));
         registry.addTool(new DevTool("log_status", RECORDER, Component.literal("Status (is it on?)"),
                 "Shows whether recording is on, which categories, how many events and the focus.",
-                List.of("log", "status"), false, null, RecorderTools::status));
+                List.of("log", "status"), false, null, context -> status(context, registry)));
 
         registry.addTool(new DevTool("log_on", RECORDER, Component.literal("Turn on"),
                 "Turns one category on without changing the others.",
@@ -96,63 +96,61 @@ final class RecorderTools {
                         .toList());
     }
 
-    // Actions
+    // Actions. Each prints one line with the result and the recorder state, and logs it with [CSR-DEBUG].
 
     private static int start(CommandContext<CommandSourceStack> context) {
         DebugLog.start(context.getSource().getServer());
-        context.getSource().sendSuccess(() -> Component.literal("Recording started: " + ids(DebugLog.enabledCategories())
-                + " (all soldiers, log cleared)."), false);
+        report(context, "Recording is now ON (" + ids(DebugLog.enabledCategories()) + ") · old log cleared · all soldiers");
         return 1;
     }
 
     private static int stop(CommandContext<CommandSourceStack> context) {
         int events = DebugLog.size();
+        String duration = DebugLog.recordingDuration();
         try {
             Path file = DebugLog.stop(context.getSource().getServer());
-            context.getSource().sendSuccess(() -> Component.literal("Recording stopped. Saved " + events + " events to " + file.toAbsolutePath()), false);
+            report(context, "Recording is now OFF · saved %d events (recorded for %s) to %s".formatted(events, duration, file.toAbsolutePath()));
             return 1;
         } catch (IOException e) {
             ClaySoldiersCommon.LOGGER.error("Could not save the debug log", e);
-            context.getSource().sendFailure(Component.literal("Recording stopped, but saving failed: " + e.getMessage()));
+            fail(context, "Recording is now OFF, but saving %d events failed: %s".formatted(events, e.getMessage()));
             return 0;
         }
     }
 
-    private static int status(CommandContext<CommandSourceStack> context) {
-        List<DebugCategory> on = DebugLog.enabledCategories();
-        String focus = DebugLog.focusName().isEmpty() ? "all soldiers" : DebugLog.focusName();
-        context.getSource().sendSuccess(() -> Component.literal("Recorder: %s | categories on: %s | events: %d of %d | focus: %s"
-                .formatted(on.isEmpty() ? "OFF" : "ON", on.isEmpty() ? "none" : ids(on), DebugLog.size(), DebugLog.capacity(), focus)), false);
-        return on.size();
+    private static int status(CommandContext<CommandSourceStack> context, DevToolRegistry registry) {
+        String book = registry.fingerprint(context.getSource().registryAccess());
+        report(context, "%s · log size %d · current book #%s (compare with page 1 of your book)"
+                .formatted(DebugLog.stateLine(), DebugLog.capacity(), book));
+        return DebugLog.enabledCategories().size();
     }
 
     private static int setCategory(CommandContext<CommandSourceStack> context, boolean enabled) {
         String id = StringArgumentType.getString(context, "category");
         Optional<DebugCategory> category = DebugCategory.byId(id);
         if (category.isEmpty()) {
-            context.getSource().sendFailure(Component.literal("Unknown category " + id + ". Known: " + ids(DebugCategory.all())));
+            fail(context, "Unknown category %s (known: %s) · %s".formatted(id, ids(DebugCategory.all()), DebugLog.stateLine()));
             return 0;
         }
         DebugLog.setEnabled(category.get(), enabled, context.getSource().getServer());
-        context.getSource().sendSuccess(() -> Component.literal(category.get().id() + " is now " + (enabled ? "ON" : "OFF")
-                + ". Categories on: " + (DebugLog.enabledCategories().isEmpty() ? "none" : ids(DebugLog.enabledCategories()))), false);
+        report(context, category.get().id() + " is now " + (enabled ? "ON" : "OFF") + " · " + DebugLog.stateLine());
         return 1;
     }
 
     private static int focus(CommandContext<CommandSourceStack> context) {
         List<AbstractClaySoldierEntity> nearby = soldiersNear(context.getSource());
         if (nearby.isEmpty()) {
-            context.getSource().sendFailure(Component.literal("No clay soldier within " + NEARBY_RADIUS + " blocks."));
+            fail(context, "No clay soldier within %d blocks, focus unchanged · %s".formatted(NEARBY_RADIUS, DebugLog.stateLine()));
             return 0;
         }
         DebugLog.focus(nearby.getFirst());
-        context.getSource().sendSuccess(() -> Component.literal("Recording only " + DebugLog.focusName() + "."), false);
+        report(context, "Focus is now " + DebugLog.focusName() + " · " + DebugLog.stateLine());
         return 1;
     }
 
     private static int unfocus(CommandContext<CommandSourceStack> context) {
         DebugLog.focus(null);
-        context.getSource().sendSuccess(() -> Component.literal("Recording all soldiers."), false);
+        report(context, "Focus cleared · " + DebugLog.stateLine());
         return 1;
     }
 
@@ -166,46 +164,63 @@ final class RecorderTools {
         List<DebugEvent> events = DebugLog.lastEvents(count);
         String text = events.isEmpty() ? "(no events recorded)"
                 : events.stream().map(DebugEvent::toLine).collect(Collectors.joining("\n"));
-        context.getSource().sendSuccess(() -> Component.literal("Last " + events.size() + " events (oldest first):\n" + text), false);
+        context.getSource().sendSuccess(() -> Component.literal("Last %d events (oldest first) · %s\n%s"
+                .formatted(events.size(), DebugLog.stateLine(), text)), false);
         return events.size();
     }
 
     private static int save(CommandContext<CommandSourceStack> context) {
         try {
             Path file = DebugLog.save(context.getSource().getServer());
-            context.getSource().sendSuccess(() -> Component.literal("Saved " + DebugLog.size() + " events to " + file.toAbsolutePath()), false);
+            report(context, "Saved %d events to %s · %s".formatted(DebugLog.size(), file.toAbsolutePath(), DebugLog.stateLine()));
             return 1;
         } catch (IOException e) {
             ClaySoldiersCommon.LOGGER.error("Could not save the debug log", e);
-            context.getSource().sendFailure(Component.literal("Saving failed: " + e.getMessage()));
+            fail(context, "Saving failed: " + e.getMessage() + " · " + DebugLog.stateLine());
             return 0;
         }
     }
 
     private static int clear(CommandContext<CommandSourceStack> context) {
         DebugLog.clear();
-        context.getSource().sendSuccess(() -> Component.literal("Debug log cleared."), false);
+        report(context, "Log cleared · " + DebugLog.stateLine());
         return 1;
     }
 
     private static int capacity(CommandContext<CommandSourceStack> context) {
         DebugLog.setCapacity(IntegerArgumentType.getInteger(context, "events"));
-        context.getSource().sendSuccess(() -> Component.literal("The log now keeps the last " + DebugLog.capacity() + " events."), false);
+        report(context, "The log now keeps the last %d events · %s".formatted(DebugLog.capacity(), DebugLog.stateLine()));
         return 1;
     }
 
     private static int snapshot(CommandContext<CommandSourceStack> context) {
         List<AbstractClaySoldierEntity> nearby = soldiersNear(context.getSource());
         List<String> lines = DebugLog.snapshot(nearby);
-        context.getSource().sendSuccess(() -> Component.literal("Snapshot of " + nearby.size() + " soldiers:\n" + String.join("\n", lines)), false);
+        String saved;
         try {
-            Path file = DebugLog.writeFile(context.getSource().getServer(), "csr-snapshot", DebugLog.snapshotText(nearby));
-            context.getSource().sendSuccess(() -> Component.literal("Saved to " + file.toAbsolutePath()), false);
+            saved = "saved to " + DebugLog.writeFile(context.getSource().getServer(), "csr-snapshot", DebugLog.snapshotText(nearby)).toAbsolutePath();
         } catch (IOException e) {
             ClaySoldiersCommon.LOGGER.error("Could not save the snapshot", e);
-            context.getSource().sendFailure(Component.literal("Saving the snapshot failed: " + e.getMessage()));
+            saved = "saving failed: " + e.getMessage();
+        }
+        report(context, "Snapshot of %d soldiers within %d blocks · %s".formatted(nearby.size(), NEARBY_RADIUS, saved));
+        if (!lines.isEmpty()) {
+            context.getSource().sendSuccess(() -> Component.literal(String.join("\n", lines)), false);
         }
         return nearby.size();
+    }
+
+    /**
+     * Sends a one-line result to the command source and writes it to the game log with a [CSR-DEBUG] prefix.
+     */
+    private static void report(CommandContext<CommandSourceStack> context, String line) {
+        context.getSource().sendSuccess(() -> Component.literal(line), false);
+        ClaySoldiersCommon.LOGGER.info("[CSR-DEBUG] {}", line);
+    }
+
+    private static void fail(CommandContext<CommandSourceStack> context, String line) {
+        context.getSource().sendFailure(Component.literal(line));
+        ClaySoldiersCommon.LOGGER.info("[CSR-DEBUG] {}", line);
     }
 
     // Helpers
