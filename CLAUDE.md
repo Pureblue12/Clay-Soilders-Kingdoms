@@ -24,6 +24,21 @@ Run from the project root. The first run downloads Minecraft/NeoForge and is slo
 ./gradlew :neoforge:runServer    # launch a dedicated server
 ```
 
+### Dev scenario commands (development runs only)
+
+In a `runClient` world with the blueprint experiment enabled, type in chat:
+
+```
+/csr dev scenario build_test
+/csr dev scenario build_test_empty
+```
+
+Places (relative to where you stand and face): a chest stocked with the Small House materials
+(or empty), an easel with the Small House blueprint 3 blocks ahead (the house is built beyond it),
+and 3 red pacifist soldiers set to Building with the chest as their POI; team red becomes loyal to you.
+Code: `common/.../dev/DevScenarios.java`, `DevCommands.java`. Registered only when
+`PLATFORM.isDevEnv()` (NeoForge: `!FMLLoader.isProduction()`), so never in a normal install.
+
 **Generated resources are not in the repo.** `common/src/generated/resources` is
 gitignored upstream. It is produced by `runData` from the datagen classes in
 `neoforge/src/main/java/net/bumblebee/claysoldiers/datagen/`. Without it the game runs

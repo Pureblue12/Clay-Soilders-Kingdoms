@@ -6,6 +6,7 @@ import net.bumblebee.claysoldiers.blueprint.BlueprintManger;
 import net.bumblebee.claysoldiers.claypoifunction.ClayPoiFunctionSerializer;
 import net.bumblebee.claysoldiers.claysoldierpredicate.ClayPredicateSerializer;
 import net.bumblebee.claysoldiers.commands.ClaySoldierCommands;
+import net.bumblebee.claysoldiers.dev.DevCommands;
 import net.bumblebee.claysoldiers.commands.ColorHelperArgumentType;
 import net.bumblebee.claysoldiers.commands.DefaultedResourceLocationArgument;
 import net.bumblebee.claysoldiers.datagen.DataGenerators;
@@ -202,6 +203,9 @@ public class ClaySoldiersNeoForge {
 
     private void commandRegister(final RegisterCommandsEvent event) {
         ClaySoldierCommands.register(event.getDispatcher(), event.getBuildContext());
+        if (ClaySoldiersCommon.PLATFORM.isDevEnv()) {
+            DevCommands.register(event.getDispatcher());
+        }
     }
 
     private void addFeaturePacks(final AddPackFindersEvent event) {

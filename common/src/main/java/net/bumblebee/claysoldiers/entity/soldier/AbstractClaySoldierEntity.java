@@ -249,6 +249,10 @@ public class AbstractClaySoldierEntity extends ClayMobTeamOwnerEntity implements
     }
 
 
+    public WorkSelectorGoal getWorkSelector() {
+        return workSelector;
+    }
+
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new ClaySodlierBreathAirGoal(this));

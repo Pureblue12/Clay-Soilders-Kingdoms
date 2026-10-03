@@ -86,6 +86,23 @@ public class WorkSelectorGoal extends Goal implements SoldierStatusHolder {
     }
 
     /**
+     * Selects the first available work goal of the given type, like {@link #cycleWorkMode()} does for the next one.
+     *
+     * @return whether a work goal of that type is available and was selected.
+     */
+    public boolean selectWork(Class<? extends Goal> workType) {
+        for (int i = 0; i < availableWorkGoals.length; i++) {
+            if (workType.isInstance(availableWorkGoals[i])) {
+                resetGoal();
+                setWorkMode(i);
+                onWorkStatusChange();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Returns the display name of the currently active goal
      */
     public Component getWorkDisplayName() {
