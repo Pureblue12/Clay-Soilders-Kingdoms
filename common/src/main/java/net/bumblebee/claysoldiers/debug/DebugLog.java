@@ -52,6 +52,8 @@ public final class DebugLog {
 
     private static final ArrayDeque<DebugEvent> BUFFER = new ArrayDeque<>();
     private static final Map<UUID, DebugEvent> LAST_BY_SOLDIER = new HashMap<>();
+    /** Categories that were on at some point since the log was last started or cleared (for the saved header). */
+    private static final Set<DebugCategory> RECORDED = new HashSet<>();
     private static int capacity = DEFAULT_CAPACITY;
     private static long sequence = 0;
     @Nullable
@@ -200,6 +202,9 @@ public final class DebugLog {
         attach(server);
         boolean wasRecording = isRecording();
         category.enabled = enabled;
+        if (enabled) {
+            RECORDED.add(category);
+        }
         if (!wasRecording && isRecording()) {
             recordingSince = System.currentTimeMillis();
         } else if (!isRecording()) {
@@ -276,6 +281,8 @@ public final class DebugLog {
     public static synchronized void clear() {
         BUFFER.clear();
         LAST_BY_SOLDIER.clear();
+        RECORDED.clear();
+        RECORDED.addAll(enabledCategories());
     }
 
     public static synchronized void setCapacity(int newCapacity) {
@@ -345,10 +352,12 @@ public final class DebugLog {
             }
         });
         List<String> enabled = enabledCategories().stream().map(DebugCategory::id).toList();
+        List<String> recorded = DebugCategory.all().stream().filter(RECORDED::contains).map(DebugCategory::id).toList();
         return List.of(
                 "# " + title,
                 "# saved: " + LocalDateTime.now().format(HEADER_TIME),
-                "# categories on: " + (enabled.isEmpty() ? "none" : String.join(", ", enabled)),
+                "# categories recorded: " + (recorded.isEmpty() ? "none" : String.join(", ", recorded)),
+                "# categories on now: " + (enabled.isEmpty() ? "none" : String.join(", ", enabled)),
                 "# focus: " + (focusName.isEmpty() ? "all soldiers" : focusName),
                 "# events: %d (oldest first, capacity %d), soldiers: %d".formatted(BUFFER.size(), capacity, soldiers.size()),
                 "# line format: [t=game tick] CATEGORY team#entityId @(position) message (xN = repeated N times)");

@@ -176,6 +176,25 @@ public class DebugLogGameTests {
     }
 
     /**
+     * Stop turns everything off before saving, so the saved header must list the categories that were RECORDED.
+     */
+    @GameTest(template = PLATFORM, batch = "debuglog_header")
+    public static void savedHeaderListsRecordedCategories(GameTestHelper helper) throws IOException {
+        DebugLog.reset();
+        MinecraftServer server = helper.getLevel().getServer();
+        DebugLog.start(server);
+        DebugLog.setEnabled(DebugCategory.PATHING, true, server);
+        DebugLog.event(DebugCategory.BUILD, null, "something");
+        Path file = DebugLog.stop(server);
+        String text = Files.readString(file);
+        DebugLog.reset();
+        helper.assertTrue(text.contains("# categories recorded: BUILD, WORK, DAMAGE, PATHING"),
+                "Header should list the recorded categories:\n" + text.lines().limit(6).reduce("", (a, b) -> a + b + "\n"));
+        helper.assertTrue(text.contains("# categories on now: none"), "Header should say nothing is on after Stop");
+        helper.succeed();
+    }
+
+    /**
      * The book's per-category on/off buttons are generated from the category list, so a new category gets them automatically.
      */
     @GameTest(template = PLATFORM, batch = "debuglog_buttons")
