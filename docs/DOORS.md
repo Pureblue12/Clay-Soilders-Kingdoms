@@ -48,3 +48,21 @@ Clay soldiers are 0.15 wide and 0.49 tall (0.6 x 1.95 times `DEFAULT_SCALE` 0.25
   BOTH navigations (and the constructor's one), or swimming soldiers would plan through doors they can't open.
 - Vanilla `OpenDoorGoal` would not run at all for swimming soldiers (wrong navigation type). Whether it works for
   tiny soldiers on ground navigation is tested by trying it first (see the GameTests in `DoorGameTests`).
+
+## Outcome (after building it)
+
+- A trial with vanilla `OpenDoorGoal` + `canOpenDoors` let builders through doors in the middle of a path, but the
+  locked-out Small House test failed (recorded): the builder's path ENDED at the door block, the soldier counted
+  it as reached 0.575 blocks from its center (tolerance 0.675) while still on the doorstep, stopped, never bumped
+  into the panel, and the door never opened. So `UseDoorGoal` opens doors by distance (1.5 blocks ahead on the
+  path, including a finished path's last block), not by bumping.
+- The same tolerance means tiny soldiers often stop in the block BEFORE their path's end. Builders now take the
+  last step into the end block directly (`BuildBlueprintGoal.moveToRequest`), and "is the soldier still trying to
+  move" means "has a path and isn't in its last block yet", not "the path isn't finished".
+- A builder walking back to its easel stopped "within 2 blocks" of it, which can be a doorway; it then held the
+  door open. Builders now don't wait for work in a doorway, and a soldier standing still at a door for 2 s
+  lets it be closed.
+- The pathfinder asks `DoorAccess` too (`DoorPathing`), so a refused door is a wall and a refused soldier doesn't
+  re-plan the same path through it every tick.
+- Cost (30 soldiers wandering around a room with 2 doors, 1200 ticks): the door goal took 3-5 µs per server tick
+  in total (about 110-160 ns per soldier), under 2% of a ~220-280 µs tick.

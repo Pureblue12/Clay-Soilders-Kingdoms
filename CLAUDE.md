@@ -33,7 +33,8 @@ Run from the project root. The first run downloads Minecraft/NeoForge and is slo
 Starts a headless test server, runs every test in
 `neoforge/src/main/java/net/bumblebee/claysoldiers/gametest/` (`ClaySoldierGameTests`,
 `DevToolkitGameTests`, `SuspectedBugGameTests`, `BuildSiteGameTests`, `BuilderReachGameTests`,
-`DebugLogGameTests`, `RecorderFeedbackGameTests`, `BuildRequestGameTests`, `PlacingGameTests`), prints
+`DebugLogGameTests`, `RecorderFeedbackGameTests`, `BuildRequestGameTests`, `PlacingGameTests`,
+`DoorGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/make_gametest_platform.py`).
@@ -44,8 +45,13 @@ Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/mak
 - Test coordinates are relative to the structure block one below the template: floor y=1, ground y=2.
   Don't use `helper.relativePos` (wrong rotation in 1.21.1); compare absolute positions instead.
 - Use `FakePlayerFactory` for players, not `makeMockServerPlayerInLevel` (Curios crashes on it).
+- Builders place up to 2 blocks sideways from where they stand (Fix B), also over 2-high walls and from inside a
+  doorway: a test block that must only be reachable through a door has to be 3+ blocks from every outside spot
+  and from the doorway (see `DoorGameTests`).
+- Tests that change global state (recorder, `DoorAccess.overrideRuleForTests`) get their own `batch` and reset it
+  (`@AfterBatch` for the door rule).
 
-Current status (2026-10-03, after the door race fix): all 50 required tests pass. `SuspectedBugGameTests` covers the easel right-click:
+Current status (2026-10-03, after door use): all 60 required tests pass. `SuspectedBugGameTests` covers the easel right-click:
 non-block item, unneeded block, needed block.
 
 ### Known bugs (confirmed)
@@ -89,6 +95,29 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
   While BUILD is recorded, each search logs "closed door at (x, y, z) blocks the way to N blueprint block(s),
   first at (x, y, z)" (`closedDoorBlockingABlockIsLogged`).
 
+### Doors (soldiers open, pass and close wooden doors)
+
+Background: `docs/DOORS.md`. Code: `common/.../entity/door/`.
+- `DoorAccess.canUse(soldier, doorPos)` — THE one decision whether a soldier may open a door. Returns true for
+  every soldier and every wooden door today. **Known future change (war milestone): restrict it by team or
+  territory.** Both the pathfinder and the door goal already ask it, so a refused door counts as a wall.
+  (`overrideRuleForTests` is for GameTests only.)
+- `DoorPathing` — the soldiers' walking and swimming navigations (vanilla + the `DoorAccess` check);
+  `UseDoorGoal.allowDoors` turns on vanilla's "plan through wooden doors" option for both.
+- `UseDoorGoal` (all clay soldiers: builders, workers, fighters, wanderers) — opens a closed wooden door within
+  1.5 blocks ahead on the path, closes it once the soldier is through (or turned back, or stood still 2 s) and
+  nobody is walking in the doorway. Only doors soldiers opened get closed (`OpenedDoors`, memory only); the last
+  soldier through closes it. Gives up (stops walking, so goals plan again) on a refused door or after 100 ticks
+  of trying without getting through. Not vanilla `OpenDoorGoal` (why: `docs/DOORS.md`).
+- Iron doors stay closed to everyone. Fence gates are not opened (vanilla pathing treats closed gates as walls;
+  not trivial). Trapdoors: out of scope.
+- Builders don't wait for work standing in a doorway, and take the last step into their path's end block.
+- Recorder (PATHING): "opened door at", "closed door at ... behind it", "refused door at ...: <why>",
+  "stuck at door at ... for N ticks, giving up", "left door at ... open: doorway not clear".
+- "Doors are handed out last" in the build order stays as a safety net.
+- Tests: `DoorGameTests` (closed room, door closed again, iron door, open door, two builders, the locked-out
+  Small House roof, combat chase, door events, refused door, stuck at a door).
+
 ### Known limitations
 
 - Fixed (Fix B): builders reach higher. `BuilderReach`: a block's center less than 2.5 sideways (up to 2
@@ -98,6 +127,9 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
   `smallTowerFinishes` 34/34).
 
 Pending (not started):
+- Doors: soldiers wander into player houses now (they open wooden doors on any path); restricting that is the
+  `DoorAccess` war-milestone change. Fence gates aren't opened. Doors opened by soldiers are remembered in
+  memory only (after a restart a door a soldier left open counts as opened by a player and stays open).
 - Blocks more than 8 above any reachable standing spot stay unbuilt (by design of `MAX_PLACE_HEIGHT`).
 - A blueprint block that is already there and replaceable (e.g. short grass where short grass grows) counts
   as free but can never be placed (placing the same block fails), so the blueprint never finishes; the
@@ -159,7 +191,7 @@ Commands/buttons: `common/.../dev/RecorderTools`; action-bar indicator: `neoforg
 (registered only in dev). Ring buffer default 5000 events (`/csr dev log capacity`).
 State lives in memory only: it resets when the game restarts (not when you just re-join a world).
 Instrumented so far: `BuildBlueprintGoal`, `ServerBlueprintPlan.getRequest` (summary),
-`BlueprintBlockInfo` (stale requests, placement cooldown), `BuilderReach`
+`BlueprintBlockInfo` (stale requests, placement cooldown), `BuilderReach` and `UseDoorGoal`
 (PATHING), `AbstractClaySoldierEntity.hurt` (DAMAGE), `WorkSelectorGoal.setWorkMode` (WORK).
 TEAM has no events yet.
 
@@ -217,6 +249,7 @@ Main package: `net.bumblebee.claysoldiers` (in `common/src/main/java`):
   (see "Dev toolkit book" above).
 - `blueprint/site/` — `BuildSitePlanner`: checks build sites and places easels (M2).
 - `debug/` — `DebugLog` recorder and `DebugCategory` (dev debugging; see "Debug recorder").
+- `entity/door/` — door use: `DoorAccess` (who may open which door), `UseDoorGoal`, `DoorPathing`, `OpenedDoors`.
 - `neoforge/.../event/SoldierWorkCleanup` — stops a soldier's work goal when it leaves the level
   (saving no longer does this).
 - `mixin/` — mixins (config: `common/src/main/resources/csr.mixins.json`).

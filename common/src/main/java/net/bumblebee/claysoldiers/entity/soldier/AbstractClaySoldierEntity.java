@@ -89,7 +89,6 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
-import net.minecraft.world.entity.ai.navigation.AmphibiousPathNavigation;
 import net.bumblebee.claysoldiers.entity.door.DoorPathing;
 import net.bumblebee.claysoldiers.entity.door.UseDoorGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
