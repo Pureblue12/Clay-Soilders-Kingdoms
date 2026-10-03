@@ -1,0 +1,88 @@
+package net.bumblebee.claysoldiers.gametest;
+
+import com.mojang.authlib.GameProfile;
+import net.bumblebee.claysoldiers.ClaySoldiersCommon;
+import net.bumblebee.claysoldiers.debug.DebugLog;
+import net.bumblebee.claysoldiers.dev.DevTool;
+import net.bumblebee.claysoldiers.dev.DevToolRegistry;
+import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.gametest.GameTestHolder;
+import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static net.bumblebee.claysoldiers.gametest.ClaySoldierGameTests.PLATFORM;
+
+/**
+ * Checks that recorder commands give the player visible feedback. Commands run as a player through the same
+ * path as a typed command or a book click on the server ({@code sendSuccess} -> {@code acceptsSuccess} ->
+ * {@code sendSystemMessage}); the player captures the chat messages it receives.
+ * Each test runs in its own batch because the recorder is global state.
+ */
+@GameTestHolder(ClaySoldiersCommon.MOD_ID)
+@PrefixGameTestTemplate(false)
+public class RecorderFeedbackGameTests {
+
+    /**
+     * Every book button of every recorder tool, run as a player, sends that player at least one chat message.
+     */
+    @GameTest(template = PLATFORM, batch = "recorder_feedback")
+    public static void everyRecorderCommandGivesFeedback(GameTestHelper helper) {
+        DebugLog.reset();
+        MinecraftServer server = helper.getLevel().getServer();
+        ChatCapturingPlayer player = new ChatCapturingPlayer(helper.getLevel());
+        DevToolRegistry registry = DevToolRegistry.defaults();
+
+        List<String> silent = new ArrayList<>();
+        int checked = 0;
+        for (DevTool tool : registry.tools()) {
+            if (!tool.category().startsWith("recorder")) {
+                continue;
+            }
+            for (DevToolRegistry.Button button : registry.buttons(tool, helper.getLevel().registryAccess())) {
+                player.messages.clear();
+                server.getCommands().performPrefixedCommand(player.createCommandSourceStack().withPermission(4), button.command().substring(1));
+                checked++;
+                if (player.chatMessages().isEmpty()) {
+                    silent.add(button.command());
+                }
+            }
+        }
+        DebugLog.reset();
+        helper.assertTrue(checked > 0, "No recorder buttons found");
+        helper.assertTrue(silent.isEmpty(), "Recorder commands that gave the player no chat feedback: " + silent);
+        helper.succeed();
+    }
+
+    /**
+     * A {@link FakePlayer} that keeps the chat and action-bar messages it is sent.
+     */
+    static final class ChatCapturingPlayer extends FakePlayer {
+        final List<String> messages = new ArrayList<>();
+
+        ChatCapturingPlayer(ServerLevel level) {
+            super(level, new GameProfile(UUID.randomUUID(), "csr-chat-capture"));
+        }
+
+        @Override
+        public void sendSystemMessage(Component component, boolean overlay) {
+            messages.add((overlay ? "[action bar] " : "") + component.getString());
+        }
+
+        @Override
+        public void displayClientMessage(Component component, boolean actionBar) {
+            messages.add((actionBar ? "[action bar] " : "") + component.getString());
+        }
+
+        List<String> chatMessages() {
+            return messages.stream().filter(message -> !message.startsWith("[action bar] ")).toList();
+        }
+    }
+}
