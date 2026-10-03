@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.pathfinder.Path;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -131,8 +132,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     }
 
     private boolean canReach(BlockPos pos) {
-        var path = soldier.getNavigation().createPath(pos, 2);
-        return path != null && path.canReach();
+        return BuilderReach.canReachToPlace(soldier, pos);
     }
 
 
@@ -184,11 +184,17 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     }
 
     protected boolean moveToRequest() {
-        if (request.getPos().closerToCenterThan(soldier.position(), 2f)) {
+        if (BuilderReach.canPlaceFrom(soldier.position(), request.getPos())) {
             this.soldier.getNavigation().stop();
             return true;
         }
-        this.soldier.getNavigation().moveTo(this.request.getPos().getX() + 0.5, (this.request.getPos().getY() + 1), this.request.getPos().getZ() + 0.5, 1);
+        if (this.soldier.getNavigation().isDone()) {
+            // Walk the same kind of path the reachable check accepted: it ends where the block can be placed.
+            Path path = BuilderReach.pathToPlace(soldier, request.getPos());
+            if (path != null) {
+                this.soldier.getNavigation().moveTo(path, 1);
+            }
+        }
         return false;
     }
 
