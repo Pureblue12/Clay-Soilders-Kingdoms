@@ -6,6 +6,7 @@ import net.bumblebee.claysoldiers.capability.BlueprintRequestHandler;
 import net.bumblebee.claysoldiers.capability.IBlockCache;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
+import net.bumblebee.claysoldiers.entity.door.UseDoorGoal;
 import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
 import net.bumblebee.claysoldiers.init.ModBlocks;
 import net.minecraft.core.BlockPos;
@@ -273,7 +274,8 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         if (easelPos == null) {
             return false;
         }
-        if (easelPos.pos().closerToCenterThan(soldier.position(), 2f)) {
+        // Don't wait for work in a doorway (an easel can be 2 blocks from a door): keep walking towards the easel.
+        if (easelPos.pos().closerToCenterThan(soldier.position(), 2f) && !UseDoorGoal.isInDoorway(soldier)) {
             this.soldier.getNavigation().stop();
             return true;
         }

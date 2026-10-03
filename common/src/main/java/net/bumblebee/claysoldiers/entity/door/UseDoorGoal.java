@@ -37,8 +37,17 @@ public class UseDoorGoal extends Goal {
     private static final double LEAVE_DISTANCE = 3.0;
     /** After going through, the soldier waits at most this long for the doorway to be clear, then leaves it open. */
     public static final int CLOSE_WAIT_TICKS = 60;
-    /** A soldier that hasn't got through a door this long after reaching it gives up (5 seconds). */
+    /**
+     * A soldier that has been trying to walk through a door this long without getting through gives up (5 seconds).
+     * Only ticks where it {@link #isTryingToMove is trying to move} count, added up over retries at the same door.
+     */
     public static final int STUCK_TICKS = 100;
+    /**
+     * A soldier not trying to move at or in a doorway this long is done with the door: it gets closed, also with the
+     * soldier standing in it (a soldier waiting next to its easel isn't stuck, and it opens the door again when it
+     * walks on).
+     */
+    public static final int IDLE_TICKS = 40;
     /** How many path nodes past the next one are checked for a door. */
     private static final int LOOK_AHEAD = 2;
 
@@ -56,8 +65,12 @@ public class UseDoorGoal extends Goal {
     private boolean entered;
     private boolean passed;
     private boolean done;
-    private int ticks;
+    private int idleTicks;
     private int closeWait;
+    /** Walking ticks at {@link #stuckDoor} without getting through, kept across retries; see {@link #STUCK_TICKS}. */
+    @Nullable
+    private BlockPos stuckDoor;
+    private int walkingTicks;
 
     public UseDoorGoal(AbstractClaySoldierEntity soldier) {
         this.soldier = soldier;
@@ -135,8 +148,12 @@ public class UseDoorGoal extends Goal {
         passed = false;
         done = false;
         joined = false;
-        ticks = 0;
+        idleTicks = 0;
         closeWait = 0;
+        if (!door.equals(stuckDoor)) {
+            stuckDoor = door;
+            walkingTicks = 0;
+        }
         handledPath = soldier.getNavigation().getPath();
         handledDoor = door;
         int side = side();
@@ -189,10 +206,16 @@ public class UseDoorGoal extends Goal {
             if (side == 0) {
                 entered = true;
             }
-            if (side == -startSide || (entered && side == startSide) || !isClose(door, LEAVE_DISTANCE)) {
-                passed = true; // went through, turned back, or went elsewhere
-            } else if (++ticks > STUCK_TICKS) {
-                DebugLog.event(DebugCategory.PATHING, soldier, "stuck at door at %s for %s ticks, giving up", door, ticks);
+            boolean walking = isTryingToMove(soldier);
+            idleTicks = walking ? 0 : idleTicks + 1;
+            if (side == -startSide || !isClose(door, LEAVE_DISTANCE)) {
+                passed = true; // went through, or went elsewhere
+                walkingTicks = 0;
+            } else if ((entered && side == startSide) || idleTicks > IDLE_TICKS) {
+                passed = true; // turned back, or is standing still
+            } else if (walking && ++walkingTicks > STUCK_TICKS) {
+                DebugLog.event(DebugCategory.PATHING, soldier, "stuck at door at %s for %s ticks, giving up", door, walkingTicks);
+                walkingTicks = 0;
                 soldier.getNavigation().stop();
                 passed = true;
             } else if (!isOpen()) {
@@ -239,14 +262,15 @@ public class UseDoorGoal extends Goal {
     }
 
     /**
-     * Closes the door once nobody is in the doorway, unless other soldiers are still going through it (the last one
-     * closes it) or it was already closed. Gives up after {@link #CLOSE_WAIT_TICKS}, leaving the door open.
+     * Closes the door once nobody is walking through the doorway (clay soldiers standing still in it don't count),
+     * unless other soldiers are still going through it (the last one closes it) or it was already closed. Gives up after
+     * {@link #CLOSE_WAIT_TICKS}, leaving the door open.
      */
     private void tryClose() {
         Level level = soldier.level();
         if (!isOpen() || OpenedDoors.otherUsers(level, door, soldier) > 0) {
             done = true;
-        } else if (level.getEntitiesOfClass(LivingEntity.class, doorway()).isEmpty()) {
+        } else if (level.getEntitiesOfClass(LivingEntity.class, doorway(), UseDoorGoal::blocksClosing).isEmpty()) {
             setOpen(false);
             OpenedDoors.closed(level, door);
             DebugLog.event(DebugCategory.PATHING, soldier, "closed door at %s behind it", door);
@@ -264,6 +288,35 @@ public class UseDoorGoal extends Goal {
         }
         joined = false;
         door = null;
+    }
+
+    /**
+     * Whether an entity in the doorway keeps the door from being closed: anything except a clay soldier that isn't
+     * trying to move.
+     */
+    private static boolean blocksClosing(LivingEntity entity) {
+        return !(entity instanceof AbstractClaySoldierEntity standing && !isTryingToMove(standing));
+    }
+
+    /**
+     * Whether the soldier is trying to get somewhere: it has a path and isn't standing in the path's last block yet.
+     * (Not just "is the path finished": a tiny soldier counts a path as finished up to 0.675 blocks before the last
+     * block's center, also when something blocks it there.)
+     */
+    private static boolean isTryingToMove(AbstractClaySoldierEntity soldier) {
+        Path path = soldier.getNavigation().getPath();
+        if (path == null) {
+            return false;
+        }
+        return !path.isDone() || (path.getEndNode() != null && !soldier.blockPosition().equals(path.getEndNode().asBlockPos()));
+    }
+
+    /**
+     * Returns whether {@code entity} stands in a doorway (its block is a door). Soldiers waiting for work shouldn't
+     * stand there.
+     */
+    public static boolean isInDoorway(net.minecraft.world.entity.Entity entity) {
+        return entity.level().getBlockState(entity.blockPosition()).getBlock() instanceof DoorBlock;
     }
 
     private AABB doorway() {
