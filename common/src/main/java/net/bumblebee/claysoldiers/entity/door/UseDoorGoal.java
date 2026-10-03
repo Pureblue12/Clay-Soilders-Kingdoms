@@ -1,7 +1,10 @@
 package net.bumblebee.claysoldiers.entity.door;
 
+import net.bumblebee.claysoldiers.debug.DebugCategory;
+import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -22,7 +25,10 @@ import org.jetbrains.annotations.Nullable;
  * what. A soldier is so small that it counts the door block as "reached" (within 0.675 blocks of its center) before
  * it touches the panel, so when the door is the last block of its path it never bumps into it.
  * This goal opens a door as soon as it is close ahead on the path, and closes it once the soldier has gone through
- * and the doorway is clear. Only doors soldiers opened get closed (see {@link OpenedDoors}).
+ * (or turned back) and the doorway is clear. Only doors soldiers opened get closed (see {@link OpenedDoors}).
+ * It never lets a soldier freeze at a door: a refused door ({@link DoorAccess}) or a door the soldier doesn't get
+ * through within {@link #STUCK_TICKS} makes it stop walking (its goals then plan again). Every step is recorded in
+ * the PATHING category.
  */
 public class UseDoorGoal extends Goal {
     /** A door on the path is opened when its block's center is this close (sideways). */
@@ -31,6 +37,8 @@ public class UseDoorGoal extends Goal {
     private static final double LEAVE_DISTANCE = 3.0;
     /** After going through, the soldier waits at most this long for the doorway to be clear, then leaves it open. */
     public static final int CLOSE_WAIT_TICKS = 60;
+    /** A soldier that hasn't got through a door this long after reaching it gives up (5 seconds). */
+    public static final int STUCK_TICKS = 100;
     /** How many path nodes past the next one are checked for a door. */
     private static final int LOOK_AHEAD = 2;
 
@@ -43,9 +51,12 @@ public class UseDoorGoal extends Goal {
     @Nullable
     private BlockPos handledDoor;
     private boolean joined;
+    /** Which side of the door the soldier came from: -1 or +1 along the door's walking axis. */
+    private int startSide;
     private boolean entered;
     private boolean passed;
     private boolean done;
+    private int ticks;
     private int closeWait;
 
     public UseDoorGoal(AbstractClaySoldierEntity soldier) {
@@ -124,20 +135,34 @@ public class UseDoorGoal extends Goal {
         passed = false;
         done = false;
         joined = false;
+        ticks = 0;
         closeWait = 0;
         handledPath = soldier.getNavigation().getPath();
         handledDoor = door;
+        int side = side();
+        startSide = side != 0 ? side : (centerAlongAxis() < 0.5 ? -1 : 1);
         Level level = soldier.level();
         if (!isOpen()) {
             if (!DoorAccess.canUse(soldier, door)) {
-                done = true;
+                refuse();
                 return;
             }
             setOpen(true);
             OpenedDoors.opened(level, door);
+            DebugLog.event(DebugCategory.PATHING, soldier, "opened door at %s", door);
         }
         OpenedDoors.join(level, door, soldier);
         joined = true;
+    }
+
+    /**
+     * The soldier may not open the door (it was allowed when the path was planned): stop walking, so its goals plan
+     * again; the pathfinder now treats the door as a wall.
+     */
+    private void refuse() {
+        DebugLog.event(DebugCategory.PATHING, soldier, "refused door at %s: %s", door, DoorAccess.whyNot(soldier, door));
+        soldier.getNavigation().stop();
+        done = true;
     }
 
     @Override
@@ -160,17 +185,57 @@ public class UseDoorGoal extends Goal {
             return;
         }
         if (!passed) {
-            if (soldier.getBoundingBox().intersects(doorway())) {
+            int side = side();
+            if (side == 0) {
                 entered = true;
-            } else if (entered || !isClose(door, LEAVE_DISTANCE)) {
+            }
+            if (side == -startSide || (entered && side == startSide) || !isClose(door, LEAVE_DISTANCE)) {
+                passed = true; // went through, turned back, or went elsewhere
+            } else if (++ticks > STUCK_TICKS) {
+                DebugLog.event(DebugCategory.PATHING, soldier, "stuck at door at %s for %s ticks, giving up", door, ticks);
+                soldier.getNavigation().stop();
                 passed = true;
             } else if (!isOpen()) {
-                setOpen(true); // someone closed it before we got through
+                // Someone closed it before we got through.
+                if (!DoorAccess.canUse(soldier, door)) {
+                    refuse();
+                    return;
+                }
+                setOpen(true);
+                OpenedDoors.opened(soldier.level(), door);
+                DebugLog.event(DebugCategory.PATHING, soldier, "opened door at %s", door);
             }
         }
         if (passed) {
             tryClose();
         }
+    }
+
+    /**
+     * Which side of the door the soldier is on along the door's walking axis: -1 or +1 when it is completely out of the
+     * door's block, 0 while any part of it is inside.
+     */
+    private int side() {
+        Direction.Axis axis = walkingAxis();
+        AABB box = soldier.getBoundingBox();
+        int doorMin = door.get(axis);
+        if (box.max(axis) <= doorMin) {
+            return -1;
+        }
+        return box.min(axis) >= doorMin + 1 ? 1 : 0;
+    }
+
+    private double centerAlongAxis() {
+        Direction.Axis axis = walkingAxis();
+        return (axis == Direction.Axis.X ? soldier.getX() : soldier.getZ()) - door.get(axis);
+    }
+
+    /**
+     * The axis you walk along to go through the door (a door facing north is walked through north-south).
+     */
+    private Direction.Axis walkingAxis() {
+        BlockState state = soldier.level().getBlockState(door);
+        return state.getBlock() instanceof DoorBlock ? state.getValue(DoorBlock.FACING).getAxis() : Direction.Axis.Z;
     }
 
     /**
@@ -184,8 +249,10 @@ public class UseDoorGoal extends Goal {
         } else if (level.getEntitiesOfClass(LivingEntity.class, doorway()).isEmpty()) {
             setOpen(false);
             OpenedDoors.closed(level, door);
+            DebugLog.event(DebugCategory.PATHING, soldier, "closed door at %s behind it", door);
             done = true;
         } else if (++closeWait > CLOSE_WAIT_TICKS) {
+            DebugLog.event(DebugCategory.PATHING, soldier, "left door at %s open: doorway not clear after %s ticks", door, CLOSE_WAIT_TICKS);
             done = true;
         }
     }

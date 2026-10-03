@@ -90,6 +90,7 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.ai.navigation.AmphibiousPathNavigation;
+import net.bumblebee.claysoldiers.entity.door.DoorPathing;
 import net.bumblebee.claysoldiers.entity.door.UseDoorGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -205,7 +206,7 @@ public class AbstractClaySoldierEntity extends ClayMobTeamOwnerEntity implements
         this.skinVariantId = getRandom().nextInt(2) == 1 ? 1 : 0;
         this.statusManger = statusManger.apply(this);
         this.colorGetter = new EntityDataColorWrapper(DATA_OFFSET_COLOR, DATA_IS_JEB, this::getEntityData);
-        this.waterNavigation = UseDoorGoal.allowDoors(new AmphibiousPathNavigation(this, pLevel));
+        this.waterNavigation = UseDoorGoal.allowDoors(new DoorPathing.Water(this, pLevel));
         this.groundNavigation = createNavigation(pLevel);
 
         this.moveControl = new ClaySoldierMoveControl(this, this::canSwim, 85, 10, false);
@@ -258,7 +259,7 @@ public class AbstractClaySoldierEntity extends ClayMobTeamOwnerEntity implements
 
     @Override
     protected PathNavigation createNavigation(Level level) {
-        return UseDoorGoal.allowDoors(super.createNavigation(level));
+        return UseDoorGoal.allowDoors(new DoorPathing.Ground(this, level));
     }
 
     @Override
