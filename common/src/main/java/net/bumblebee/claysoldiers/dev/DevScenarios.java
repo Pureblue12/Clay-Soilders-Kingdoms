@@ -1,12 +1,11 @@
 package net.bumblebee.claysoldiers.dev;
 
-import net.bumblebee.claysoldiers.block.blueprint.EaselBlock;
 import net.bumblebee.claysoldiers.block.blueprint.EaselBlockEntity;
 import net.bumblebee.claysoldiers.blueprint.BlueprintData;
+import net.bumblebee.claysoldiers.blueprint.site.BuildSitePlanner;
 import net.bumblebee.claysoldiers.entity.goal.workgoal.BuildBlueprintGoal;
 import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
 import net.bumblebee.claysoldiers.entity.soldier.ClaySoldierEntity;
-import net.bumblebee.claysoldiers.init.ModBlocks;
 import net.bumblebee.claysoldiers.init.ModEntityTypes;
 import net.bumblebee.claysoldiers.init.ModRegistries;
 import net.bumblebee.claysoldiers.team.TeamLoyaltyManger;
@@ -96,10 +95,7 @@ public final class DevScenarios {
      * Places an easel facing the given direction and puts the blueprint on it.
      */
     public static EaselBlockEntity placeEasel(ServerLevel level, BlockPos pos, Direction facing, BlueprintData blueprint) {
-        level.setBlockAndUpdate(pos, ModBlocks.EASEL_BLOCK.get().defaultBlockState().setValue(EaselBlock.FACING, facing));
-        EaselBlockEntity easel = (EaselBlockEntity) level.getBlockEntity(pos);
-        easel.setBlueprintData(blueprint);
-        return easel;
+        return BuildSitePlanner.placeEasel(level, pos, facing, blueprint);
     }
 
     /**

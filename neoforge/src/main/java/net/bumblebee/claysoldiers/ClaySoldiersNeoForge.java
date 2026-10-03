@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import net.bumblebee.claysoldiers.blueprint.BlueprintManger;
 import net.bumblebee.claysoldiers.claypoifunction.ClayPoiFunctionSerializer;
 import net.bumblebee.claysoldiers.claysoldierpredicate.ClayPredicateSerializer;
+import net.bumblebee.claysoldiers.commands.BuildCommand;
 import net.bumblebee.claysoldiers.commands.ClaySoldierCommands;
 import net.bumblebee.claysoldiers.dev.DevCommands;
 import net.bumblebee.claysoldiers.commands.ColorHelperArgumentType;
@@ -203,6 +204,7 @@ public class ClaySoldiersNeoForge {
 
     private void commandRegister(final RegisterCommandsEvent event) {
         ClaySoldierCommands.register(event.getDispatcher(), event.getBuildContext());
+        BuildCommand.register(event.getDispatcher());
         if (ClaySoldiersCommon.PLATFORM.isDevEnv()) {
             DevCommands.register(event.getDispatcher());
         }
