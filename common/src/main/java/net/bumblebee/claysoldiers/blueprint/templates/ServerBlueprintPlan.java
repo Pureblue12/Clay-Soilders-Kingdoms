@@ -83,7 +83,11 @@ public class ServerBlueprintPlan extends BlueprintPlan {
 
     @Override
     public PlaceResult tryPlacing(Level level, ItemStack itemStack, BlockPos base, BlueprintTemplateSettings settings) {
-        var res = tryPlacingAll(((BlockItem) itemStack.getItem()).getBlock(), itemStack, level, base, settings);
+        if (!(itemStack.getItem() instanceof BlockItem blockItem)) {
+            // Items that aren't blocks (e.g. a stick, or AIR for block states without an item) can never be placed.
+            return PlaceResult.NOT_NEEDED;
+        }
+        var res = tryPlacingAll(blockItem.getBlock(), itemStack, level, base, settings);
         if (res == PlaceResult.SUCCESS) {
             if (!hasItemAndShrink(itemStack.getItem())) {
                 throw new IllegalStateException("Successfully placed a Block which was not needed");
