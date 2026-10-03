@@ -32,7 +32,8 @@ Run from the project root. The first run downloads Minecraft/NeoForge and is slo
 
 Starts a headless test server, runs every test in
 `neoforge/src/main/java/net/bumblebee/claysoldiers/gametest/` (`ClaySoldierGameTests`,
-`DevToolkitGameTests`, `SuspectedBugGameTests`, `BuildSiteGameTests`, `BuilderReachGameTests`), prints
+`DevToolkitGameTests`, `SuspectedBugGameTests`, `BuildSiteGameTests`, `BuilderReachGameTests`,
+`DebugLogGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/make_gametest_platform.py`).
@@ -44,7 +45,7 @@ Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/mak
   Don't use `helper.relativePos` (wrong rotation in 1.21.1); compare absolute positions instead.
 - Use `FakePlayerFactory` for players, not `makeMockServerPlayerInLevel` (Curios crashes on it).
 
-Current status (2026-10-03, after Fix A): all 22 required tests pass. `smallTowerFinishes` is marked
+Current status (2026-10-03, after the debug recorder): all 28 required tests pass. `smallTowerFinishes` is marked
 `required = false` (optional) and is EXPECTED TO FAIL until Fix B — the run lists it under "optional
 tests failed"; that is not a regression. `SuspectedBugGameTests` covers the easel right-click:
 non-block item, unneeded block, needed block.
@@ -97,6 +98,26 @@ How it is built (`common/.../dev/`):
 - `DevScenarios` — scenario setup helpers, also used by GameTests.
 Registered only when `PLATFORM.isDevEnv()` (NeoForge: `!FMLLoader.isProduction()`), so never in a
 normal install. To add a dev command: add a `DevTool` in `DevTools` (new category: add a `DevCategory`).
+
+### Debug recorder (`/csr dev log`, book category "Recorder")
+
+Records what soldiers and build plans do, to find out WHY something goes wrong.
+1. Book → Recorder → **Start recording** (turns on BUILD, WORK, DAMAGE; clears the old log).
+2. Reproduce the problem. Optional: **Focus nearest soldier**, extra categories via **Turn on**.
+3. **Status (is it on?)** — a book can't show on/off, so this is the way to check.
+4. **Stop + save to file** → `neoforge/run/debuglogs/csr-debug-<time>.txt` (last 20 files kept);
+   **Show in chat** / **Save log now** / **Clear log** / **Snapshot soldiers near me** as needed.
+5. Paste the file. Lines: `[t=tick] CATEGORY team#entityId @(pos) message (xN until t=..)`, oldest first.
+
+Code: `common/.../debug/` — `DebugLog.event(category, soldier, "text %s", arg)` is the one-line entry point
+(returns after one field read when the category is off; pass raw objects, not built strings; use a
+`Supplier<String>` for anything expensive). Categories: `DebugCategory` (BUILD, WORK, DAMAGE, PATHING, TEAM;
+add one with `DebugCategory.register` and it gets commands and book buttons automatically).
+Commands/buttons: `common/.../dev/RecorderTools`. Ring buffer default 5000 events (`/csr dev log capacity`).
+State lives in memory only: it resets when the game restarts (not when you just re-join a world).
+Instrumented so far: `BuildBlueprintGoal`, `ServerBlueprintPlan.getRequest` (summary), `BuilderReach`
+(PATHING), `AbstractClaySoldierEntity.hurt` (DAMAGE), `WorkSelectorGoal.setWorkMode` (WORK).
+TEAM has no events yet.
 
 ### Starting a build (M2)
 
@@ -151,6 +172,7 @@ Main package: `net.bumblebee.claysoldiers` (in `common/src/main/java`):
 - `dev/` — dev-only toolkit: `DevToolRegistry`, `DevTools`, `DevBook`, `BookFormat`, `DevScenarios`
   (see "Dev toolkit book" above).
 - `blueprint/site/` — `BuildSitePlanner`: checks build sites and places easels (M2).
+- `debug/` — `DebugLog` recorder and `DebugCategory` (dev debugging; see "Debug recorder").
 - `neoforge/.../event/SoldierWorkCleanup` — stops a soldier's work goal when it leaves the level
   (saving no longer does this).
 - `mixin/` — mixins (config: `common/src/main/resources/csr.mixins.json`).
@@ -179,6 +201,11 @@ Optional integrations (JEI, Jade, Accessories, Curios, Create, SmartBrainLib) ar
 - Every dev command, scenario, or test helper is defined through `DevToolRegistry` and gets a
   book button. The coverage test (`DevToolkitGameTests.everyDevCommandHasARegistryEntry`) enforces it.
 - Milestone work isn't done until its commands are in the book.
+- A gameplay change that adds a decision point (a goal giving up, a request released, a job change)
+  must log it through `DebugLog`.
+- When investigating a bug, record first (`/csr dev log start` … `stop`) and read the log; do not guess.
+- New recorder categories get book buttons through the registry (they do automatically via
+  `DebugCategory.register` + `RecorderTools`).
 
 ## Milestones
 
