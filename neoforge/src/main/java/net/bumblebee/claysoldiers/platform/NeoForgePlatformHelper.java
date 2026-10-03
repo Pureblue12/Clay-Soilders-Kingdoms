@@ -1,5 +1,6 @@
 package net.bumblebee.claysoldiers.platform;
 
+import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.ClaySoldiersNeoForge;
 import net.bumblebee.claysoldiers.claypoifunction.ClayPoiFunction;
 import net.bumblebee.claysoldiers.claypoifunction.ClayPoiFunctionSerializer;
@@ -70,6 +71,13 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     @Override
     public boolean isDevEnv() {
         return !FMLLoader.isProduction();
+    }
+
+    @Override
+    public String getModVersion() {
+        return ModList.get().getModContainerById(ClaySoldiersCommon.MOD_ID)
+                .map(container -> container.getModInfo().getVersion().toString())
+                .orElse("unknown");
     }
 
     @Override

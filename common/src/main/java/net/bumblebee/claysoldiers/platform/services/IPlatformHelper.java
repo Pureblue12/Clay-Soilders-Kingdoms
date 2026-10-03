@@ -56,6 +56,13 @@ public interface IPlatformHelper {
 
     boolean isDevEnv();
 
+    /**
+     * Returns this mod's version, e.g. for the dev toolkit book's version stamp.
+     */
+    default String getModVersion() {
+        return "unknown";
+    }
+
     boolean isClient();
 
     String getEnergyUnitName();
