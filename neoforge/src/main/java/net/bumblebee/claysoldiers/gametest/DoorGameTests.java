@@ -3,13 +3,17 @@ package net.bumblebee.claysoldiers.gametest;
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.block.blueprint.EaselBlockEntity;
 import net.bumblebee.claysoldiers.blueprint.BlueprintData;
+import net.bumblebee.claysoldiers.debug.DebugCategory;
+import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.dev.DevScenarios;
+import net.bumblebee.claysoldiers.entity.door.DoorAccess;
 import net.bumblebee.claysoldiers.entity.goal.workgoal.BuildBlueprintGoal;
 import net.bumblebee.claysoldiers.entity.soldier.ClaySoldierEntity;
 import net.bumblebee.claysoldiers.init.ModEntityTypes;
 import net.bumblebee.claysoldiers.init.ModRegistries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.gametest.framework.AfterBatch;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceLocation;
@@ -196,6 +200,111 @@ public class DoorGameTests {
         });
         helper.succeedWhen(() -> helper.assertTrue(!target.isAlive() || target.getHealth() < startHealth,
                 "The target inside the closed hut was not hurt (attacker at %s)".formatted(attacker.blockPosition().toShortString())));
+    }
+
+    /**
+     * Recorder: with PATHING recorded, a soldier going through a closed wooden door logs "opened door at (x, y, z)"
+     * and, once through, "closed door at (x, y, z) behind it".
+     */
+    @GameTest(template = PLATFORM, batch = "door_log_open_close", timeoutTicks = 1000)
+    public static void doorOpenedAndClosedAreLogged(GameTestHelper helper) {
+        DebugLog.reset();
+        DebugLog.setEnabled(DebugCategory.PATHING, true, helper.getLevel().getServer());
+        hutWithDoor(helper, Blocks.OAK_DOOR, false);
+        slabInsideWithBuilders(helper, 1, INSIDE);
+        String door = "(" + helper.absolutePos(DOORWAY).toShortString() + ")";
+        helper.succeedWhen(() -> {
+            helper.assertTrue(DebugLog.contains(DebugCategory.PATHING, "opened door at " + door), "No 'opened door at " + door + "' event");
+            helper.assertTrue(DebugLog.contains(DebugCategory.PATHING, "closed door at " + door + " behind it"), "No 'closed door at " + door + " behind it' event");
+            DebugLog.reset();
+        });
+    }
+
+    /**
+     * A door the soldier may not open (DoorAccess says no, here from the moment the builder is 3 blocks away, after it
+     * planned its path through the door): the soldier logs "refused door at (x, y, z): <why>", never opens it, and
+     * gives up instead of pushing against it (never more than {@value #FREEZE_TICKS} ticks in a row at the door while
+     * still trying to walk).
+     */
+    @GameTest(template = PLATFORM, batch = "door_refused", timeoutTicks = 800)
+    public static void refusedDoorIsLoggedAndSoldierGivesUp(GameTestHelper helper) {
+        DebugLog.reset();
+        DebugLog.setEnabled(DebugCategory.PATHING, true, helper.getLevel().getServer());
+        boolean[] refuse = {false};
+        DoorAccess.overrideRuleForTests((soldier, doorPos) -> !refuse[0]);
+        hutWithDoor(helper, Blocks.OAK_DOOR, false);
+        ClaySoldierEntity builder = slabInsideWithBuilders(helper, 1, INSIDE).getFirst();
+        BlockPos door = helper.absolutePos(DOORWAY);
+        String refusedEvent = "refused door at (" + door.toShortString() + ")";
+        int[] atDoorTicks = {0};
+        long[] refusedAt = {-1};
+        helper.onEachTick(() -> {
+            if (!refuse[0] && horizontalDistance(builder, door) < 3) {
+                refuse[0] = true;
+            }
+            if (refuse[0] && isOpen(helper)) {
+                end(helper, "The refused door was opened");
+            }
+            boolean pushing = horizontalDistance(builder, door) < 1.0 && !builder.getNavigation().isDone();
+            atDoorTicks[0] = pushing ? atDoorTicks[0] + 1 : 0;
+            if (atDoorTicks[0] > FREEZE_TICKS) {
+                end(helper, "The soldier kept walking into the refused door for " + atDoorTicks[0] + " ticks");
+            }
+            if (refusedAt[0] < 0 && DebugLog.contains(DebugCategory.PATHING, refusedEvent)) {
+                refusedAt[0] = helper.getTick();
+            }
+            if (refusedAt[0] >= 0 && helper.getTick() > refusedAt[0] + FREEZE_TICKS + 50) {
+                DebugLog.reset();
+                DoorAccess.overrideRuleForTests(null);
+                helper.succeed();
+            }
+        });
+    }
+
+    /**
+     * A soldier that can't get through an opened door (blocks appear right behind it once it is open) logs
+     * "stuck at door at (x, y, z)" and gives up instead of freezing there.
+     */
+    @GameTest(template = PLATFORM, batch = "door_stuck", timeoutTicks = 800)
+    public static void soldierStuckAtDoorGivesUp(GameTestHelper helper) {
+        DebugLog.reset();
+        DebugLog.setEnabled(DebugCategory.PATHING, true, helper.getLevel().getServer());
+        hutWithDoor(helper, Blocks.OAK_DOOR, false);
+        slabInsideWithBuilders(helper, 1, INSIDE);
+        String stuckEvent = "stuck at door at (" + helper.absolutePos(DOORWAY).toShortString() + ")";
+        boolean[] blocked = {false};
+        helper.onEachTick(() -> {
+            if (!blocked[0] && isOpen(helper)) {
+                blocked[0] = true;
+                helper.setBlock(DOORWAY.offset(0, 0, 1), Blocks.COBBLESTONE);
+                helper.setBlock(DOORWAY.offset(0, 1, 1), Blocks.COBBLESTONE);
+            }
+        });
+        helper.succeedWhen(() -> {
+            helper.assertTrue(DebugLog.contains(DebugCategory.PATHING, stuckEvent), "No '" + stuckEvent + "' event");
+            DebugLog.reset();
+        });
+    }
+
+    /** A soldier walking into a door it may not open for longer than this counts as frozen. */
+    private static final int FREEZE_TICKS = 120;
+
+    @AfterBatch(batch = "door_refused")
+    public static void restoreDoorRule(ServerLevel level) {
+        DoorAccess.overrideRuleForTests(null);
+        DebugLog.reset();
+    }
+
+    private static void end(GameTestHelper helper, String failure) {
+        DoorAccess.overrideRuleForTests(null);
+        DebugLog.reset();
+        helper.fail(failure);
+    }
+
+    private static double horizontalDistance(ClaySoldierEntity soldier, BlockPos block) {
+        double dx = block.getX() + 0.5 - soldier.getX();
+        double dz = block.getZ() + 0.5 - soldier.getZ();
+        return Math.sqrt(dx * dx + dz * dz);
     }
 
     /**
