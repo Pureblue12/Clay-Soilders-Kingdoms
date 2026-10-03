@@ -107,10 +107,10 @@ public class ImmutableTemplate extends BaseImmutableTemplate {
                     } catch (CommandSyntaxException e) {
                         LOGGER.error("Error while parsing BlockState {} in Blueprint, has an invalid final state of {}. ", blockState, finalState);
                     }
-                    nbt.remove(JigsawBlockEntity.FINAL_STATE);
-                    if (nbt.isEmpty()) {
-                        nbt = null;
-                    }
+                    // The rest of the data (name, target, pool, joint) belongs to the jigsaw connector, not to the final
+                    // block. Blueprints only place the block state, so drop it; otherwise the block would be sorted with
+                    // the "blocks with data" group, which is handed out last.
+                    nbt = null;
                 }
             }
 
