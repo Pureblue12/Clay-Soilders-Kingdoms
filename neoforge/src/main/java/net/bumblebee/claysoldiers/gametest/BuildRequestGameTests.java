@@ -28,9 +28,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.neoforged.neoforge.gametest.GameTestHolder;
@@ -163,36 +165,63 @@ public class BuildRequestGameTests {
     }
 
     /**
-     * BUG TEST (door locks builders out): a 5x5 hut with 2-high cobblestone walls, a door in the front wall and a slab
-     * inside, one worker. Clay soldiers can't open doors, so the inside slab must be handed out before the door; it must
-     * get placed. (One worker, so the hand-out order decides; with two, one could get the slab while the other fetches the door.)
+     * BUG TEST (door locks builders out): a 5x5 hut whose 2-high walls already stand, and a blueprint with only the
+     * door in the front wall and a slab inside, one worker. Clay soldiers can't open doors, so the inside slab must be
+     * handed out before the door; it must get placed.
+     * (The walls are pre-built so the test only exercises the door/slab order and finishes quickly.)
      */
-    @GameTest(template = PLATFORM, timeoutTicks = 2400)
+    @GameTest(template = PLATFORM, timeoutTicks = 600)
     public static void doorDoesNotLockOutBuilders(GameTestHelper helper) {
+        buildHutWalls(helper);
         Map<BlockPos, BlockState> blocks = new LinkedHashMap<>();
-        for (int y = 0; y < 2; y++) {
-            for (int x = 0; x < 5; x++) {
-                for (int z = 0; z < 5; z++) {
-                    boolean wall = x == 0 || x == 4 || z == 0 || z == 4;
-                    boolean doorway = x == 2 && z == 0;
-                    if (wall && !doorway) {
-                        blocks.put(new BlockPos(x, y, z), Blocks.COBBLESTONE.defaultBlockState());
-                    }
-                }
-            }
-        }
         blocks.put(new BlockPos(2, 0, 0), Blocks.OAK_DOOR.defaultBlockState());
         BlockPos insideLocal = new BlockPos(2, 0, 2);
         blocks.put(insideLocal, Blocks.COBBLESTONE_SLAB.defaultBlockState());
         BlueprintData blueprint = blueprint(helper, "door_hut", 5, 2, 5, blocks);
-
-        int walls = blocks.size() - 2;
-        ClaySoldierGameTests.setUpBuilder(helper, blueprint, List.of(new ItemStack(Items.COBBLESTONE, walls),
-                new ItemStack(Items.COBBLESTONE_SLAB), new ItemStack(Items.OAK_DOOR)));
-        // The easel faces north, so local (x, y, z) is built at EASEL + (x - 2, y, 2 + z).
+        ClaySoldierGameTests.setUpBuilder(helper, blueprint, List.of(new ItemStack(Items.COBBLESTONE_SLAB), new ItemStack(Items.OAK_DOOR)));
         BlockPos inside = EASEL.offset(insideLocal.getX() - 2, 0, 2 + insideLocal.getZ());
 
         helper.succeedWhen(() -> helper.assertBlockPresent(Blocks.COBBLESTONE_SLAB, inside));
+    }
+
+    /**
+     * Builds the walls of a 5x5 hut (2 high, doorway at the front middle) where a 5x2x5 blueprint on the test easel
+     * goes: local (x, y, z) is EASEL + (x - 2, y, 2 + z).
+     */
+    private static void buildHutWalls(GameTestHelper helper) {
+        for (int y = 0; y < 2; y++) {
+            for (int x = 0; x < 5; x++) {
+                for (int z = 0; z < 5; z++) {
+                    boolean wall = x == 0 || x == 4 || z == 0 || z == 4;
+                    if (wall && !(x == 2 && z == 0)) {
+                        helper.setBlock(EASEL.offset(x - 2, y, 2 + z), Blocks.COBBLESTONE);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Recorder check for the door theory: a hut with a closed door is already standing and the blueprint only wants a
+     * slab inside. With BUILD recording on, the builder's search must name the closed door as the reason.
+     */
+    @GameTest(template = PLATFORM, batch = "build_request_door_reason", timeoutTicks = 300)
+    public static void unreachableReasonNamesClosedDoor(GameTestHelper helper) {
+        DebugLog.reset();
+        DebugLog.setEnabled(DebugCategory.BUILD, true, helper.getLevel().getServer());
+        buildHutWalls(helper);
+        BlockPos door = EASEL.offset(0, 0, 2);
+        helper.setBlock(door, Blocks.OAK_DOOR.defaultBlockState());
+        helper.setBlock(door.above(), Blocks.OAK_DOOR.defaultBlockState().setValue(DoorBlock.HALF, DoubleBlockHalf.UPPER));
+
+        BlueprintData blueprint = blueprint(helper, "slab_inside", 5, 2, 5, Map.of(new BlockPos(2, 0, 2), Blocks.COBBLESTONE_SLAB.defaultBlockState()));
+        ClaySoldierGameTests.setUpBuilder(helper, blueprint, List.of(new ItemStack(Items.COBBLESTONE_SLAB)));
+
+        helper.succeedWhen(() -> {
+            helper.assertTrue(DebugLog.contains(DebugCategory.BUILD, "closed door in the way"),
+                    "No 'closed door in the way' reason recorded yet (" + DebugLog.size() + " events)");
+            DebugLog.reset();
+        });
     }
 
     /**

@@ -4,7 +4,9 @@ import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.pathfinder.Node;
+import net.minecraft.world.level.pathfinder.NodeEvaluator;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -39,12 +41,34 @@ public final class BuilderReach {
      */
     @Nullable
     public static Path pathToPlace(PathfinderMob builder, BlockPos target) {
+        return check(builder, target, false).path();
+    }
+
+    /**
+     * Result of {@link #check}: a path to a spot the block can be placed from, or why there is none.
+     *
+     * @param path   the path, or {@code null} when unreachable
+     * @param whyNot short reason when unreachable (e.g. "no path gets close enough", "closed door in the way at (x, y, z)")
+     */
+    public record Reach(@Nullable Path path, String whyNot) {
+        public boolean reachable() {
+            return path != null;
+        }
+    }
+
+    /**
+     * Like {@link #pathToPlace}, but also says why a block is unreachable.
+     *
+     * @param explainDoors when unreachable, also try a path as if the builder could open doors, to detect a closed door
+     *                     in the way. This costs one extra path search, so only use it while debugging.
+     */
+    public static Reach check(PathfinderMob builder, BlockPos target, boolean explainDoors) {
         String whyWithin2 = "";
         String whyWithin1 = "";
         for (int accuracy = 2; accuracy >= 1; accuracy--) {
             Path path = builder.getNavigation().createPath(target, accuracy);
             if (path != null && path.canReach() && endsWithinReach(path, target)) {
-                return path;
+                return new Reach(path, "");
             }
             String why = path == null ? "no path at all" : !path.canReach() ? "no path gets close enough" : "path ends too far away to place from";
             if (accuracy == 2) {
@@ -54,7 +78,40 @@ public final class BuilderReach {
             }
         }
         DebugLog.event(DebugCategory.PATHING, builder, "can't place at %s: within 2 steps: %s; within 1 step: %s", target, whyWithin2, whyWithin1);
-        return null;
+        String why = whyWithin1;
+        if (explainDoors) {
+            BlockPos door = closedDoorInTheWay(builder, target);
+            if (door != null) {
+                why = "closed door in the way at (" + door.toShortString() + ")";
+            }
+        }
+        return new Reach(null, why);
+    }
+
+    /**
+     * If the block would be reachable when the builder could open doors, returns the first door on that path.
+     * The navigation's door setting is restored afterwards, so this doesn't change behavior.
+     */
+    @Nullable
+    private static BlockPos closedDoorInTheWay(PathfinderMob builder, BlockPos target) {
+        NodeEvaluator evaluator = builder.getNavigation().getNodeEvaluator();
+        boolean couldOpen = evaluator.canOpenDoors();
+        evaluator.setCanOpenDoors(true);
+        try {
+            Path path = builder.getNavigation().createPath(target, 1);
+            if (path == null || !path.canReach() || !endsWithinReach(path, target)) {
+                return null;
+            }
+            for (int i = 0; i < path.getNodeCount(); i++) {
+                BlockPos pos = path.getNode(i).asBlockPos();
+                if (builder.level().getBlockState(pos).getBlock() instanceof DoorBlock) {
+                    return pos;
+                }
+            }
+            return null;
+        } finally {
+            evaluator.setCanOpenDoors(couldOpen);
+        }
     }
 
     /**

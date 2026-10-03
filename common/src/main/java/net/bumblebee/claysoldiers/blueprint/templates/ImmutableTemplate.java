@@ -14,6 +14,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.entity.JigsawBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
@@ -179,6 +180,10 @@ public class ImmutableTemplate extends BaseImmutableTemplate {
         }
     }
 
+    private static boolean isDoor(StructureTemplate.StructureBlockInfo info) {
+        return info.state().getBlock() instanceof DoorBlock;
+    }
+
     private static VoxelShape buildShape(List<StructureTemplate.StructureBlockInfo> list) {
         return list.stream().map(ImmutableTemplate::shapeFromBlockInfo).reduce(Shapes.empty(), ((voxelShape1, voxelShape2) -> Shapes.joinUnoptimized(voxelShape1, voxelShape2, BooleanOp.OR))).optimize();
     }
@@ -236,6 +241,9 @@ public class ImmutableTemplate extends BaseImmutableTemplate {
         list.addAll(pBlocksWithSpecialShape);
         list.addAll(pBlocksWithNbt);
         list = list.stream().filter(blockInfo -> !blockInfo.state().isAir()).toList();
-        return list;
+        // Doors last: clay soldiers can't open doors, so a door placed early locks builders out of the rooms behind it.
+        List<StructureTemplate.StructureBlockInfo> doorsLast = new ArrayList<>(list.stream().filter(info -> !isDoor(info)).toList());
+        doorsLast.addAll(list.stream().filter(ImmutableTemplate::isDoor).toList());
+        return List.copyOf(doorsLast);
     }
 }

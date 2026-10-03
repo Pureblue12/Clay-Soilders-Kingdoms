@@ -16,8 +16,11 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.pathfinder.Path;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class BuildBlueprintGoal extends AbstractWorkGoal {
     public static final String BUILDING_LANG = JOB_LANG_KEY.formatted(ClaySoldiersCommon.MOD_ID, "building");
@@ -37,6 +40,8 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     private BlueprintRequest request = null;
     private boolean bringBack = false;
     private int carryTicks = 0;
+    @Nullable
+    private Map<String, Integer> unreachableReasons;
     /**
      * When the easel has no reachable block, the builder waits this many ticks plus up to
      * {@link #RETRY_COOLDOWN_RANDOM} more before asking again, instead of asking (and pathfinding) every tick.
@@ -165,7 +170,10 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         }
         var requestHandler = easelPos.getCapability();
         if (requestHandler != null) {
+            // While BUILD is recorded, collect why blocks are unreachable (one summary line per search).
+            unreachableReasons = DebugLog.isOn(DebugCategory.BUILD) ? new LinkedHashMap<>() : null;
             request = requestHandler.getRequest(this::canReach);
+            logUnreachableReasons();
             if (request != null) DebugLog.event(DebugCategory.BUILD, soldier, "got request: %s at %s", request.getItem(), request.getPos());
             carryTicks = 0;
             if (request == null) {
@@ -178,7 +186,24 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     }
 
     private boolean canReach(BlockPos pos) {
-        return BuilderReach.canReachToPlace(soldier, pos);
+        if (unreachableReasons == null) {
+            return BuilderReach.canReachToPlace(soldier, pos);
+        }
+        BuilderReach.Reach reach = BuilderReach.check(soldier, pos, true);
+        if (!reach.reachable()) {
+            unreachableReasons.merge(reach.whyNot(), 1, Integer::sum);
+        }
+        return reach.reachable();
+    }
+
+    private void logUnreachableReasons() {
+        if (unreachableReasons != null && !unreachableReasons.isEmpty()) {
+            int total = unreachableReasons.values().stream().mapToInt(Integer::intValue).sum();
+            String reasons = unreachableReasons.entrySet().stream()
+                    .map(entry -> entry.getValue() + " " + entry.getKey()).collect(Collectors.joining(", "));
+            DebugLog.event(DebugCategory.BUILD, soldier, "skipped %s unreachable blocks: %s", total, reasons);
+        }
+        unreachableReasons = null;
     }
 
 
