@@ -24,6 +24,28 @@ Run from the project root. The first run downloads Minecraft/NeoForge and is slo
 ./gradlew :neoforge:runServer    # launch a dedicated server
 ```
 
+### Automated GameTests
+
+```bash
+./gradlew :neoforge:runGameTestServer
+```
+
+Starts a headless test server, runs every test in
+`neoforge/src/main/java/net/bumblebee/claysoldiers/gametest/ClaySoldierGameTests.java`, prints
+`All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
+BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
+Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/make_gametest_platform.py`).
+
+- Bug tests assert the CORRECT behavior; a failing bug test = a confirmed bug (fix in M1).
+  Don't change gameplay code just to make a test pass.
+- Characterization tests pin current behavior on purpose (known limitations); update them deliberately.
+- Test coordinates are relative to the structure block one below the template: floor y=1, ground y=2.
+  Don't use `helper.relativePos` (wrong rotation in 1.21.1); compare absolute positions instead.
+- Use `FakePlayerFactory` for players, not `makeMockServerPlayerInLevel` (Curios crashes on it).
+
+Current status (2026-10-03): `emptyChestBuildsNothing`, `saveDoesNotCancelCarriedBlock`,
+`digStopsAtBedrock` FAIL (confirmed bugs); the other 3 pass.
+
 ### Dev scenario commands (development runs only)
 
 In a `runClient` world with the blueprint experiment enabled, type in chat:
