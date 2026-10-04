@@ -9,6 +9,8 @@ import net.bumblebee.claysoldiers.commands.BuildCommand;
 import net.bumblebee.claysoldiers.commands.ClaySoldierCommands;
 import net.bumblebee.claysoldiers.dev.DevCommands;
 import net.bumblebee.claysoldiers.tuning.TuningReloadListener;
+import net.bumblebee.claysoldiers.event.KingdomEvents;
+import net.neoforged.bus.api.EventPriority;
 import net.bumblebee.claysoldiers.structure.StructureReloadListener;
 import net.bumblebee.claysoldiers.event.RecorderIndicator;
 import net.bumblebee.claysoldiers.commands.ColorHelperArgumentType;
@@ -146,6 +148,9 @@ public class ClaySoldiersNeoForge {
         NeoForge.EVENT_BUS.addListener(this::onDataPackSync);
         NeoForge.EVENT_BUS.addListener(this::onTagLoad);
         NeoForge.EVENT_BUS.addListener(this::afterDataMapLoad);
+        NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, KingdomEvents::onLivingDeath);
+        NeoForge.EVENT_BUS.addListener(KingdomEvents::onServerTick);
+        NeoForge.EVENT_BUS.addListener(KingdomEvents::onEntityInteract);
         if (ClaySoldiersCommon.PLATFORM.isDevEnv()) {
             NeoForge.EVENT_BUS.addListener(RecorderIndicator::onServerTick);
         }
