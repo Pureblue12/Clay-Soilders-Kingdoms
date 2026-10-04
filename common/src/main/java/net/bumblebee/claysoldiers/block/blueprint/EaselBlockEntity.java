@@ -4,6 +4,8 @@ import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.blueprint.BlueprintData;
 import net.bumblebee.claysoldiers.blueprint.BlueprintManger;
 import net.bumblebee.claysoldiers.blueprint.BlueprintRequest;
+import net.bumblebee.claysoldiers.scaffold.ScaffoldRequest;
+import net.bumblebee.claysoldiers.scaffold.Scaffolds;
 import net.bumblebee.claysoldiers.blueprint.BlueprintTemplateSettings;
 import net.bumblebee.claysoldiers.blueprint.templates.BlueprintPlan;
 import net.bumblebee.claysoldiers.blueprint.templates.ClientBlueprintPlan;
@@ -69,6 +71,7 @@ public class EaselBlockEntity extends BlockEntity {
     }
 
     public void setBlueprintData(@NotNull BlueprintData data) {
+        cleanUpScaffold("the blueprint was replaced");
         this.data = data;
         if (!level.isClientSide()) {
             this.template = data.createServerPlan().orElseThrow(IllegalArgumentException::new);
@@ -79,9 +82,17 @@ public class EaselBlockEntity extends BlockEntity {
     }
 
     public void clearBlueprintData() {
+        cleanUpScaffold("the blueprint was taken off");
         data = null;
         template = null;
         setChanged();
+    }
+
+    /** An interrupted build: its scaffold is removed at once. */
+    private void cleanUpScaffold(String why) {
+        if (level instanceof ServerLevel serverLevel) {
+            Scaffolds.cleanup(serverLevel, worldPosition, why);
+        }
     }
 
     public ItemStack getBlueprintItem() {
@@ -209,16 +220,35 @@ public class EaselBlockEntity extends BlockEntity {
     }
 
     private @Nullable BlueprintRequest getBlueprintRequest(Predicate<BlockPos> canReachDestination) {
-        if (template == null || template.isFinished()) {
+        if (!(template instanceof ServerBlueprintPlan plan) || !(level instanceof ServerLevel serverLevel)) {
             return null;
         }
+        if (plan.isFinished()) {
+            // Scaffolding (if any) comes down after the structure is finished.
+            return Scaffolds.removeRequest(serverLevel, worldPosition, canReachDestination);
+        }
         var settings = getTemplateSettings();
-        var request = ((ServerBlueprintPlan) template).getRequest((ServerLevel) level, getTemplateBase(settings), getTemplateSettings(), canReachDestination);
+        var request = plan.getRequest(serverLevel, getTemplateBase(settings), settings, canReachDestination);
         if (request != null && !canReachDestination.test(request.getPos())) {
             request.cancel();
             return null;
         }
+        if (request == null) {
+            // Nothing reachable: scaffolding, if the rest is out of reach (never for structures within reach).
+            return Scaffolds.placeRequest(serverLevel, worldPosition, plan, getTemplateBase(settings), settings, canReachDestination);
+        }
         return request;
+    }
+
+    /** The server's plan of the blueprint on this easel (what is left to place), or null. */
+    @Nullable
+    public BlueprintPlan getPlan() {
+        return template;
+    }
+
+    /** Whether this easel has a plan to build (the blueprint may have been taken off). */
+    public boolean hasPlan() {
+        return template != null;
     }
 
     private BlockPos getTemplateBase(BlueprintTemplateSettings settings) {
@@ -244,6 +274,9 @@ public class EaselBlockEntity extends BlockEntity {
      * {@link ServerBlueprintPlan#tryPlacingRequest}). Players feeding the easel by hand use {@link #tryPlacingSoldier}.
      */
     private boolean doBlueprintRequest(BlueprintRequest request) {
+        if (request instanceof ScaffoldRequest scaffold) {
+            return level instanceof ServerLevel serverLevel && Scaffolds.complete(serverLevel, worldPosition, scaffold);
+        }
         if (request == null || !(template instanceof ServerBlueprintPlan serverPlan)) {
             return false;
         }

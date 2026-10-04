@@ -1,5 +1,14 @@
 package net.bumblebee.claysoldiers.entity.goal.workgoal;
 
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.bumblebee.claysoldiers.tuning.Tuning;
+import net.bumblebee.claysoldiers.scaffold.Scaffolds;
+import net.bumblebee.claysoldiers.scaffold.ScaffoldClimber;
+import net.bumblebee.claysoldiers.scaffold.ScaffoldHome;
+import net.bumblebee.claysoldiers.scaffold.ScaffoldRequest;
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.blueprint.BlueprintRequest;
 import net.bumblebee.claysoldiers.capability.BlueprintRequestHandler;
@@ -55,6 +64,32 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     public static final int RETRY_COOLDOWN_MIN = 20;
     public static final int RETRY_COOLDOWN_RANDOM = 20;
     private int retryCooldown = 0;
+    /** The follow range bonus while working for a build with scaffolding (see {@link #updatePathSearch}). */
+    private static final ResourceLocation SCAFFOLD_PATH_RANGE = ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, "scaffold_path_range");
+    /**
+     * The reachability test handed to the easel; it also tells scaffold planning where this builder comes from (its
+     * storage), since walking distances are measured from there.
+     */
+    private final ReachTest reachTest = new ReachTest();
+
+    private final class ReachTest implements java.util.function.Predicate<BlockPos>, ScaffoldHome {
+        @Override
+        public boolean test(BlockPos pos) {
+            return canReach(pos);
+        }
+
+        @Override
+        public BlockPos scaffoldHome() {
+            return getPoiPos();
+        }
+    }
+
+    /** Climbs scaffolding columns (stage 3, approach e); idle otherwise. */
+    private final ScaffoldClimber climber;
+    /** Ticks since the route to the request was last planned (builds with scaffolding only). */
+    private int repathTicks;
+    /** The path search multiplier this goal last set (1 = normal). */
+    private float pathSearchMultiplier = 1.0F;
     /**
      * Tiny soldiers count a path as walked when they are within 0.675 blocks of its last block's center, which is often
      * still the block before it; placing is measured from the block they stand in. So after the path, the builder
@@ -67,6 +102,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
 
     public BuildBlueprintGoal(AbstractClaySoldierEntity soldier, Supplier<WorkSelectorGoal> workSelector, int searchRange) {
         super(soldier, workSelector);
+        this.climber = new ScaffoldClimber(soldier);
         this.searchRange = searchRange;
         this.verticalSearchRange = 2;
     }
@@ -87,6 +123,11 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
 
     @Override
     public void tick() {
+        updatePathSearch();
+        if (climber.isDescending()) {
+            climber.tick(); // come down a scaffolding column first
+            return;
+        }
         if (easelPos == null) {
             setStatus(REQUIRES_POI_ID);
             easelPos = findNearestBlock().map(this::getBlueprintCache).orElse(null);
@@ -109,6 +150,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         } else if (request.isCancelled() || request.isFinished()) {
             if (request.isCancelled()) DebugLog.event(DebugCategory.BUILD, soldier, "request released (cancelled): %s at %s", request.getItem(), request.getPos());
             bringBack = !soldier.getCarriedStack().isEmpty();
+            climber.descend();
             request = null;
         } else if (request.hasStarted()) {
             // The give-up timer also runs while fetching the item from storage.
@@ -124,6 +166,31 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                 giveUpRequest();
             } else if (moveToRequest()) {
                 placeBlock();
+            }
+        }
+    }
+
+    /**
+     * Routes up a scaffold are long and wind around, and vanilla only accepts paths whose walked length is under the
+     * follow range (16; each step up counts about 1.4). So while this builder's easel has scaffolding, its paths may
+     * be {@code scaffold.path_range_bonus} blocks longer and its search may look at
+     * {@code scaffold.path_nodes_multiplier} times more steps. Builds without scaffolding keep the normal search.
+     */
+    private void updatePathSearch() {
+        boolean scaffold = easelPos != null && soldier.level() instanceof ServerLevel level && Scaffolds.hasJob(level, easelPos.pos());
+        float multiplier = scaffold ? Tuning.SCAFFOLD_PATH_NODES_MULTIPLIER.get() : 1.0F;
+        if (multiplier != pathSearchMultiplier) {
+            pathSearchMultiplier = multiplier;
+            soldier.getNavigation().setMaxVisitedNodesMultiplier(multiplier);
+        }
+        AttributeInstance range = soldier.getAttribute(Attributes.FOLLOW_RANGE);
+        if (range != null) {
+            boolean has = range.hasModifier(SCAFFOLD_PATH_RANGE);
+            int bonus = Tuning.SCAFFOLD_PATH_RANGE_BONUS.get();
+            if (scaffold && bonus > 0 && !has) {
+                range.addTransientModifier(new AttributeModifier(SCAFFOLD_PATH_RANGE, bonus, AttributeModifier.Operation.ADD_VALUE));
+            } else if ((!scaffold || bonus == 0) && has) {
+                range.removeModifier(SCAFFOLD_PATH_RANGE);
             }
         }
     }
@@ -157,6 +224,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
      * Cancels the current request (so the block can be handed out again) and brings the carried item back.
      */
     private void giveUpRequest() {
+        climber.descend();
         DebugLog.event(DebugCategory.BUILD, soldier, "gave up %s at %s after %s ticks (fetching + carrying), releasing it", request.getItem(), request.getPos(), carryTicks);
         request.cancel();
         request = null;
@@ -188,7 +256,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             // While BUILD is recorded, collect why blocks are unreachable (one summary line per search).
             unreachableReasons = DebugLog.isOn(DebugCategory.BUILD) ? new LinkedHashMap<>() : null;
             blockedByDoor = unreachableReasons == null ? null : new LinkedHashMap<>();
-            request = requestHandler.getRequest(this::canReach);
+            request = requestHandler.getRequest(reachTest);
             pathEnd = null;
             logUnreachableReasons();
             if (request != null) DebugLog.event(DebugCategory.BUILD, soldier, "got request: %s at %s", request.getItem(), request.getPos());
@@ -204,7 +272,10 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
 
     private boolean canReach(BlockPos pos) {
         if (unreachableReasons == null) {
-            return BuilderReach.canReachToPlace(soldier, pos);
+            return BuilderReach.canReachToPlace(soldier, pos) || canClimbTo(pos);
+        }
+        if (canClimbTo(pos) && !BuilderReach.canReachToPlace(soldier, pos)) {
+            return true;
         }
         BuilderReach.Reach reach = BuilderReach.check(soldier, pos, true);
         if (!reach.reachable()) {
@@ -214,6 +285,11 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             }
         }
         return reach.reachable();
+    }
+
+    /** Whether this builder could reach {@code pos} by climbing a scaffolding column of its easel (approach e). */
+    private boolean canClimbTo(BlockPos pos) {
+        return easelPos != null && soldier.level() instanceof ServerLevel level && climber.canReach(level, easelPos.pos(), pos);
     }
 
     private void logUnreachableReasons() {
@@ -233,12 +309,18 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
 
 
     private void placeBlock() {
+        climber.descend();
         var requestHandler = easelPos.getCapability();
         if (requestHandler != null) {
             if (requestHandler.doRequest(request)) {
                 // The easel only fills the request's own spot, so this is the actual position.
                 DebugLog.event(DebugCategory.BUILD, soldier, "placed %s at %s", request.getItem(), request.getPos());
                 soldier.setCarriedStack(ItemStack.EMPTY);
+                if (request instanceof ScaffoldRequest scaffold && scaffold.isRemoval() && scaffold.refund() && scaffold.removedCount() > 0) {
+                    // The scaffold taken down goes back to storage (a whole column for climbed columns).
+                    soldier.setCarriedStack(new ItemStack(scaffold.getItem(), scaffold.removedCount()));
+                    bringBack = true;
+                }
                 request.setFinished();
             } else {
                 DebugLog.event(DebugCategory.BUILD, soldier, "could not place %s at %s (spot not free?), returning it", request.getItem(), request.getPos());
@@ -289,13 +371,23 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             pathEnd = null;
             return true;
         }
-        if (this.soldier.getNavigation().isDone()) {
-            if (pathEnd != null && !soldier.blockPosition().equals(pathEnd) && lastStepTicks++ < MAX_LAST_STEP_TICKS) {
+        if (climber.isActive()) {
+            climber.tick(); // walking to a scaffolding column, or climbing it
+            return false;
+        }
+        // With scaffolding, plan the route again every scaffold.repath_ticks: tiny soldiers climb floating steps better with fresh routes.
+        boolean repath = pathSearchMultiplier != 1.0F && ++repathTicks >= Tuning.SCAFFOLD_REPATH_TICKS.get();
+        if (this.soldier.getNavigation().isDone() || repath) {
+            repathTicks = 0;
+            if (!repath && pathEnd != null && !soldier.blockPosition().equals(pathEnd) && lastStepTicks++ < MAX_LAST_STEP_TICKS) {
                 this.soldier.getMoveControl().setWantedPosition(pathEnd.getX() + 0.5, pathEnd.getY(), pathEnd.getZ() + 0.5, 1);
                 return false;
             }
             // Walk the same kind of path the reachable check accepted: it ends where the block can be placed.
             Path path = BuilderReach.pathToPlace(soldier, request.getPos());
+            if (path == null && easelPos != null && soldier.level() instanceof ServerLevel level && climber.start(level, easelPos.pos(), request.getPos())) {
+                return false; // out of reach from the ground: climb a scaffolding column
+            }
             pathEnd = path == null || path.getEndNode() == null ? null : path.getEndNode().asBlockPos();
             lastStepTicks = 0;
             if (path != null) {
@@ -337,6 +429,15 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     public void stop() {
         if (request != null) {
             request.cancel();
+        }
+        climber.reset();
+        if (pathSearchMultiplier != 1.0F) {
+            pathSearchMultiplier = 1.0F;
+            soldier.getNavigation().setMaxVisitedNodesMultiplier(1.0F);
+        }
+        AttributeInstance range = soldier.getAttribute(Attributes.FOLLOW_RANGE);
+        if (range != null) {
+            range.removeModifier(SCAFFOLD_PATH_RANGE);
         }
     }
 

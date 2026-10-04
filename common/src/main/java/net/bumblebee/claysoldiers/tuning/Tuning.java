@@ -108,12 +108,12 @@ public final class Tuning {
     public static final TuningKey.IntKey TERRAIN_GRADE_CLEAR_TREES_BUDGET = register(new TuningKey.IntKey("terrain.grade.clear_trees_budget",
             "Most tree blocks (logs and leaves) clearing a keep site may remove.", 500, 0, 100000));
     public static final TuningKey.BlockKey SCAFFOLD_MATERIAL = register(new TuningKey.BlockKey("scaffold.material",
-            "The block builders put up as temporary scaffolding (they fetch it from their storage like any block).",
-            ResourceLocation.withDefaultNamespace("oak_planks")));
+            "The block builders put up as temporary scaffolding (they fetch it from their storage like any block). Climbed columns (approach 4) need a block soldiers can be inside, like scaffolding; with another block, step pillars are used.",
+            ResourceLocation.withDefaultNamespace("scaffolding")));
     public static final TuningKey.IntKey SCAFFOLD_REFUND = register(new TuningKey.IntKey("scaffold.refund",
             "1: builders carry each scaffold block back to their storage when they tear it down (and cleanup drops it); 0: it is used up.", 1, 0, 1));
     public static final TuningKey.IntKey SCAFFOLD_APPROACH = register(new TuningKey.IntKey("scaffold.approach",
-            "How builders put up scaffolding: 1 a ramp up the outside, 2 step pillars beside the structure, 3 the structure's own tops plus step pillars where needed.", 2, 1, 3));
+            "How builders put up scaffolding: 1 a ramp up the outside, 2 step pillars beside the structure, 3 the structure's own tops plus step pillars where needed, 4 scaffolding columns they climb.", 4, 1, 4));
     public static final TuningKey.IntKey SCAFFOLD_MAX_BLOCKS = register(new TuningKey.IntKey("scaffold.max_blocks",
             "Most scaffold blocks one build may plan; a structure needing more is left unfinished (and recorded as stuck).", 200, 0, 10_000));
     public static final TuningKey.IntKey SCAFFOLD_REPLAN_TICKS = register(new TuningKey.IntKey("scaffold.replan_ticks",
@@ -122,6 +122,14 @@ public final class Tuning {
             "How often scaffold of builds whose easel is gone or has no plan is cleaned up, in ticks.", 100, 20, 12_000));
     public static final TuningKey.IntKey SCAFFOLD_STALE_TICKS = register(new TuningKey.IntKey("scaffold.request_stale_ticks",
             "A scaffold request a builder has had this long without finishing it can be handed to another builder, in ticks.", 600, 100, 12_000));
+    public static final TuningKey.IntKey SCAFFOLD_PATH_NODES_MULTIPLIER = register(new TuningKey.IntKey("scaffold.path_nodes_multiplier",
+            "While a builder works for a build with scaffolding, its path search may look at this many times more steps (routes up a scaffold wind around).", 4, 1, 16));
+    public static final TuningKey.IntKey SCAFFOLD_PATH_RANGE_BONUS = register(new TuningKey.IntKey("scaffold.path_range_bonus",
+            "While a builder works for a build with scaffolding, its paths may be this many blocks longer (vanilla limits a path's walked length to the follow range, 16; each step up a scaffold counts about 1.4).", 16, 0, 64));
+    public static final TuningKey.IntKey SCAFFOLD_REPATH_TICKS = register(new TuningKey.IntKey("scaffold.repath_ticks",
+            "While a builder walks to a block of a build with scaffolding, it plans its route again this often (tiny soldiers climb floating steps better with fresh routes), in ticks.", 20, 5, 200));
+    public static final TuningKey.IntKey SCAFFOLD_STEP_PRECISION = register(new TuningKey.IntKey("scaffold.step_precision_hundredths",
+            "On scaffold blocks soldiers follow their path precisely: a step counts as reached within this many hundredths of a block of its center, and they don't cut corners (vanilla: 67 for tiny soldiers, plus corner cutting).", 30, 5, 67));
     public static final TuningKey.IntKey SCAFFOLD_TEARDOWN_STUCK_TICKS = register(new TuningKey.IntKey("scaffold.teardown_stuck_ticks",
             "When builders can't take the scaffold down for this long after the structure is finished, it is removed at once, in ticks.", 1200, 100, 72_000));
     public static final TuningKey.IntKey DEV_PASTE_UNDO_DEPTH = register(new TuningKey.IntKey("dev.paste_undo_depth",

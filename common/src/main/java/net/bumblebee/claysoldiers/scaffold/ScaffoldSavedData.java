@@ -62,6 +62,16 @@ public class ScaffoldSavedData extends SavedData {
         }
     }
 
+    /** Whether a placed scaffold block of any job is at {@code pos}. */
+    public boolean isScaffold(BlockPos pos) {
+        for (ScaffoldJob job : jobs.values()) {
+            if (job.placed().contains(pos)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean isNewerFormat() {
         return newerFormat != null;
     }
@@ -79,6 +89,7 @@ public class ScaffoldSavedData extends SavedData {
             entry.putString("material", job.material().toString());
             entry.put("planned", positions(job.planned()));
             entry.put("placed", positions(job.placed()));
+            entry.putBoolean("columns", job.columns());
             list.add(entry);
         }
         tag.put(JOBS_TAG, list);
@@ -104,7 +115,7 @@ public class ScaffoldSavedData extends SavedData {
             BlockPos easel = BlockPos.of(entry.getLong("easel"));
             List<BlockPos> planned = new ArrayList<>(readPositions(entry.getLongArray("planned")));
             Set<BlockPos> placed = new LinkedHashSet<>(readPositions(entry.getLongArray("placed")));
-            data.jobs.put(easel, new ScaffoldJob(easel, material, planned, placed));
+            data.jobs.put(easel, new ScaffoldJob(easel, material, planned, placed, entry.getBoolean("columns")));
         }
         return data;
     }

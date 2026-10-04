@@ -1,5 +1,10 @@
 package net.bumblebee.claysoldiers.entity.door;
 
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Vec3i;
+import net.minecraft.server.level.ServerLevel;
+import net.bumblebee.claysoldiers.tuning.Tuning;
+import net.bumblebee.claysoldiers.scaffold.ScaffoldSavedData;
 import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Mob;
@@ -19,7 +24,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The soldiers' two navigations (walking, and swimming for soldiers that can swim), identical to vanilla's except that
  * the pathfinder asks {@link DoorAccess} about every closed wooden door: a door the soldier may not open counts as a
- * wall, like an iron door. So soldiers never plan a path through a door they would be refused at.
+ * wall, like an iron door. So soldiers never plan a path through a door they would be refused at. On scaffold blocks
+ * the walking navigation also follows its path precisely (stage 3).
  */
 public final class DoorPathing {
     private DoorPathing() {
@@ -46,6 +52,39 @@ public final class DoorPathing {
     public static class Ground extends GroundPathNavigation {
         public Ground(Mob mob, Level level) {
             super(mob, level);
+        }
+
+        /**
+         * On scaffold (standing on a scaffold block, or the next step is one), the path is followed precisely: a step
+         * counts as reached only near its center, and no corners are cut. Tiny soldiers otherwise count a step as
+         * reached 0.675 blocks early and skip ahead, which walks them off 1-block floating steps. Elsewhere vanilla.
+         */
+        @Override
+        protected void followThePath() {
+            if (!(mob.level() instanceof ServerLevel serverLevel) || !onScaffold(serverLevel)) {
+                super.followThePath();
+                return;
+            }
+            Vec3 position = this.getTempMobPos();
+            double precision = Tuning.SCAFFOLD_STEP_PRECISION.get() / 100.0;
+            this.maxDistanceToWaypoint = (float) precision;
+            Vec3i next = this.path.getNextNodePos();
+            double dx = Math.abs(mob.getX() - (next.getX() + 0.5));
+            double dy = Math.abs(mob.getY() - next.getY());
+            double dz = Math.abs(mob.getZ() - (next.getZ() + 0.5));
+            if (dx <= precision && dz <= precision && dy < 1.0) {
+                this.path.advance();
+            }
+            this.doStuckDetection(position);
+        }
+
+        private boolean onScaffold(ServerLevel level) {
+            if (this.path == null || this.path.isDone()) {
+                return false;
+            }
+            ScaffoldSavedData scaffold = ScaffoldSavedData.get(level);
+            return !scaffold.jobs().isEmpty() && (scaffold.isScaffold(mob.blockPosition().below())
+                    || scaffold.isScaffold(BlockPos.containing(this.path.getNextNodePos().getX(), this.path.getNextNodePos().getY() - 1, this.path.getNextNodePos().getZ())));
         }
 
         @Override

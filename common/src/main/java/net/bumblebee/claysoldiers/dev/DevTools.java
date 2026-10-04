@@ -110,6 +110,7 @@ public final class DevTools {
         StructureTools.register(registry);
         KingdomTools.register(registry);
         TerrainTools.register(registry);
+        ScaffoldTools.register(registry);
         return registry;
     }
 

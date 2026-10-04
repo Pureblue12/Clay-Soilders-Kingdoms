@@ -20,12 +20,19 @@ public final class ScaffoldJob {
     private final ResourceLocation material;
     private final List<BlockPos> planned;
     private final Set<BlockPos> placed;
+    /** Scaffolding columns builders climb inside (approach e), rather than steps they stand on. */
+    private final boolean columns;
     /** Not saved: scaffold requests builders are working on, by position. */
     private final Map<BlockPos, ScaffoldRequest> active = new HashMap<>();
     /** Not saved: game time the teardown last made progress (-1 before it starts). */
     private long lastProgress = -1;
 
     public ScaffoldJob(BlockPos easel, ResourceLocation material, List<BlockPos> planned, Set<BlockPos> placed) {
+        this(easel, material, planned, placed, false);
+    }
+
+    public ScaffoldJob(BlockPos easel, ResourceLocation material, List<BlockPos> planned, Set<BlockPos> placed, boolean columns) {
+        this.columns = columns;
         this.easel = easel.immutable();
         this.material = material;
         this.planned = new ArrayList<>(planned);
@@ -39,6 +46,17 @@ public final class ScaffoldJob {
     /** The scaffold block's id (from {@code scaffold.material} when the job was planned). */
     public ResourceLocation material() {
         return material;
+    }
+
+    /** Whether the scaffold is columns builders climb inside (taken down a whole column at a time from its base). */
+    public boolean columns() {
+        return columns;
+    }
+
+    /** The placed cells of the column at {@code cell}'s x and z, lowest first. */
+    public List<BlockPos> column(BlockPos cell) {
+        return placed.stream().filter(pos -> pos.getX() == cell.getX() && pos.getZ() == cell.getZ())
+                .sorted(java.util.Comparator.comparingInt(BlockPos::getY)).toList();
     }
 
     public List<BlockPos> planned() {

@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
 
 public class ServerBlueprintPlan extends BlueprintPlan {
     private final List<BlueprintBlockInfo> blockInfoList;
+    /** Whether the last request search that handed out nothing skipped blocks out of reach (for scaffolding). */
+    private boolean lastSearchFoundUnreachable;
 
     public ServerBlueprintPlan(Vec3i size, List<StructureTemplate.StructureBlockInfo> blockInfoList) {
         super(BlueprintUtil.getNeededItemsFromInfo(blockInfoList, StructureTemplate.StructureBlockInfo::state), size);
@@ -249,13 +251,23 @@ public class ServerBlueprintPlan extends BlueprintPlan {
                 continue;
             }
             if (blockInfo.hasAvailableRequest(level.getGameTime())) {
+                lastSearchFoundUnreachable = false;
                 logRequestSearch(checked, coolingDown, doorsWaiting, unreachable, notPlaceable, assigned, "handing out a free block");
                 return blockInfo.getRequest(level.getGameTime(), infoAbsolutePos);
             }
             assigned++;
         }
         logRequestSearch(checked, coolingDown, doorsWaiting, unreachable, notPlaceable, assigned, "nothing to hand out");
+        lastSearchFoundUnreachable = unreachable > 0;
         return null;
+    }
+
+    /**
+     * Whether the last request search handed out nothing while some remaining blocks were out of reach. The easel then
+     * asks for scaffolding ({@code Scaffolds}).
+     */
+    public boolean lastSearchFoundUnreachable() {
+        return lastSearchFoundUnreachable;
     }
 
     /**

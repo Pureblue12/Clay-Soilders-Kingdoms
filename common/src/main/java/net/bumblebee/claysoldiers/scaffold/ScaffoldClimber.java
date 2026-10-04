@@ -1,0 +1,218 @@
+package net.bumblebee.claysoldiers.scaffold;
+
+import net.bumblebee.claysoldiers.debug.DebugCategory;
+import net.bumblebee.claysoldiers.debug.DebugLog;
+import net.bumblebee.claysoldiers.entity.goal.workgoal.BuilderReach;
+import net.bumblebee.claysoldiers.tuning.Tuning;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+/**
+ * A builder's climbing behavior for scaffolding columns (approach e). Vanilla mobs never plan climbing, so builders
+ * walk to a column's base on the ground (an ordinary path, which tiny soldiers follow reliably), then rise inside the
+ * column to the height they need, hold there while placing, and come back down. Moving inside the column is done
+ * directly (a smooth climb of {@link #SPEED} blocks per tick, no gravity), so they can't fall off anything.
+ * One per builder goal; {@link #reset} restores gravity.
+ */
+public final class ScaffoldClimber {
+    /** Blocks per tick climbed or descended. */
+    private static final double SPEED = 0.2;
+    /** How long walking to a column's base may take before giving up, in ticks. */
+    private static final int MAX_WALK_TICKS = 200;
+
+    private enum State { IDLE, WALKING, CLIMBING, HOLDING, DESCENDING }
+
+    private final PathfinderMob soldier;
+    private State state = State.IDLE;
+    @Nullable
+    private BlockPos base;
+    private int standY;
+    private int walkTicks;
+    /** Per game tick: whether a column base could be walked to (path searches are expensive). */
+    private final Map<BlockPos, Boolean> baseReachable = new HashMap<>();
+    private long cacheTick = -1;
+
+    public ScaffoldClimber(PathfinderMob soldier) {
+        this.soldier = soldier;
+    }
+
+    /**
+     * The column cell (lowest first) a builder inside it could work on {@code target} from, if the job is climbed
+     * columns and that column stands from its base up to the cell.
+     */
+    @Nullable
+    static BlockPos standingCell(ServerLevel level, ScaffoldJob job, BlockPos target) {
+        if (!job.columns()) {
+            return null;
+        }
+        Block material = Scaffolds.materialOf(job);
+        BlockPos best = null;
+        for (BlockPos cell : job.placed()) {
+            if (cell.equals(target) || best != null && cell.getY() >= best.getY()
+                    || !BuilderReach.canPlaceFrom(new Vec3(cell.getX() + 0.5, cell.getY(), cell.getZ() + 0.5), target)) {
+                continue;
+            }
+            List<BlockPos> column = job.column(cell);
+            boolean standing = true;
+            for (BlockPos below : column) {
+                if (below.getY() <= cell.getY() && !level.getBlockState(below).is(material)) {
+                    standing = false;
+                }
+            }
+            if (standing && column.getFirst().getY() + column.size() > cell.getY()) {
+                best = cell;
+            }
+        }
+        return best;
+    }
+
+    /**
+     * Whether this builder could work on {@code target} by climbing a column of the easel's scaffold.
+     */
+    public boolean canReach(ServerLevel level, BlockPos easel, BlockPos target) {
+        Optional<ScaffoldJob> job = ScaffoldSavedData.get(level).job(easel);
+        if (job.isEmpty() || !job.get().columns()) {
+            return false;
+        }
+        BlockPos cell = standingCell(level, job.get(), target);
+        if (cell == null) {
+            return false;
+        }
+        BlockPos columnBase = job.get().column(cell).getFirst();
+        if (cacheTick != level.getGameTime()) {
+            baseReachable.clear();
+            cacheTick = level.getGameTime();
+        }
+        return baseReachable.computeIfAbsent(columnBase, pos -> pathToBase(pos) != null);
+    }
+
+    /**
+     * Starts climbing to work on {@code target}: walks to the base of the column with the lowest cell in reach.
+     *
+     * @return false when no column helps
+     */
+    public boolean start(ServerLevel level, BlockPos easel, BlockPos target) {
+        Optional<ScaffoldJob> job = ScaffoldSavedData.get(level).job(easel);
+        BlockPos cell = job.map(j -> standingCell(level, j, target)).orElse(null);
+        if (cell == null) {
+            return false;
+        }
+        base = job.get().column(cell).getFirst();
+        standY = cell.getY();
+        state = State.WALKING;
+        walkTicks = 0;
+        Path path = pathToBase(base);
+        if (path != null) {
+            soldier.getNavigation().moveTo(path, 1);
+        }
+        DebugLog.event(DebugCategory.SCAFFOLD, soldier, "climbing the column at %s to y=%s for %s", base, standY, target);
+        return true;
+    }
+
+    /**
+     * Moves the climb on by one tick.
+     *
+     * @return true while holding at the working height (the builder can place now)
+     */
+    public boolean tick() {
+        if (base == null) {
+            return false;
+        }
+        double x = base.getX() + 0.5;
+        double z = base.getZ() + 0.5;
+        switch (state) {
+            case WALKING -> {
+                BlockPos at = soldier.blockPosition();
+                if (at.getX() == base.getX() && at.getZ() == base.getZ() && Math.abs(at.getY() - base.getY()) <= 1) {
+                    soldier.getNavigation().stop();
+                    soldier.setNoGravity(true);
+                    state = State.CLIMBING;
+                } else if (++walkTicks > MAX_WALK_TICKS) {
+                    DebugLog.event(DebugCategory.SCAFFOLD, soldier, "stuck: couldn't walk to the column at %s", base);
+                    reset();
+                } else if (soldier.getNavigation().isDone() || walkTicks % Tuning.SCAFFOLD_REPATH_TICKS.get() == 0) {
+                    if (soldier.position().distanceToSqr(x, base.getY(), z) < 2.5 * 2.5) {
+                        soldier.getMoveControl().setWantedPosition(x, base.getY(), z, 1);
+                    } else {
+                        Path path = pathToBase(base);
+                        if (path != null) {
+                            soldier.getNavigation().moveTo(path, 1);
+                        }
+                    }
+                }
+            }
+            case CLIMBING -> {
+                double y = Math.min(soldier.getY() + SPEED, standY);
+                hold(x, y, z);
+                if (y >= standY) {
+                    state = State.HOLDING;
+                }
+            }
+            case HOLDING -> hold(x, standY, z);
+            case DESCENDING -> {
+                double y = Math.max(soldier.getY() - SPEED, base.getY());
+                hold(x, y, z);
+                if (y <= base.getY()) {
+                    reset();
+                }
+            }
+            case IDLE -> {
+            }
+        }
+        return state == State.HOLDING;
+    }
+
+    private void hold(double x, double y, double z) {
+        soldier.setPos(x, y, z);
+        soldier.setDeltaMovement(Vec3.ZERO);
+        soldier.resetFallDistance();
+    }
+
+    /** After working up there: climbs back down (call {@link #tick} until {@link #isDescending} is false). */
+    public void descend() {
+        if (state == State.CLIMBING || state == State.HOLDING) {
+            state = State.DESCENDING;
+        } else if (state == State.WALKING) {
+            reset();
+        }
+    }
+
+    /** Stops at once and gives the builder its gravity back (inside scaffolding it slides down gently). */
+    public void reset() {
+        if (state != State.IDLE) {
+            soldier.setNoGravity(false);
+            soldier.resetFallDistance();
+        }
+        state = State.IDLE;
+        base = null;
+    }
+
+    public boolean isActive() {
+        return state != State.IDLE;
+    }
+
+    public boolean isDescending() {
+        return state == State.DESCENDING;
+    }
+
+    @Nullable
+    private Path pathToBase(BlockPos columnBase) {
+        for (int accuracy = 0; accuracy <= 1; accuracy++) {
+            Path path = soldier.getNavigation().createPath(columnBase, accuracy);
+            if (path != null && path.canReach()) {
+                return path;
+            }
+        }
+        return null;
+    }
+}

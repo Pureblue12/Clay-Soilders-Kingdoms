@@ -11,6 +11,8 @@ import net.minecraft.world.item.Item;
 public class ScaffoldRequest extends BlueprintRequest {
     private final boolean removal;
     private final boolean refund;
+    /** For a removal: how many scaffold blocks came down (a whole column for climbed columns). */
+    private int removedCount;
 
     public ScaffoldRequest(Item item, BlockPos pos, long start, boolean removal, boolean refund) {
         super(item, pos, start);
@@ -27,6 +29,14 @@ public class ScaffoldRequest extends BlueprintRequest {
 
     public boolean refund() {
         return refund;
+    }
+
+    public int removedCount() {
+        return removedCount;
+    }
+
+    void setRemovedCount(int removedCount) {
+        this.removedCount = removedCount;
     }
 
     @Override

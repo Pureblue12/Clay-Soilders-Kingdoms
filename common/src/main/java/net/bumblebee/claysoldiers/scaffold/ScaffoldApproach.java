@@ -13,7 +13,12 @@ public enum ScaffoldApproach implements StringRepresentable {
     /** (c) The structure's own tops and floors as platforms; step pillars only where they don't reach. */
     PLATFORMS("platforms", true),
     /** (d) Vanilla scaffolding columns. Soldiers' walking navigation can't plan climbing, so they can't use them. */
-    VANILLA_SCAFFOLDING("vanilla_scaffolding", false);
+    VANILLA_SCAFFOLDING("vanilla_scaffolding", false),
+    /**
+     * (e) Scaffolding columns beside the structure, climbed with the builders' own climbing behavior
+     * ({@link ScaffoldClimber}): they walk to a column's base on the ground and rise inside it.
+     */
+    CLIMBED_COLUMNS("climbed_columns", true);
 
     private final String id;
     private final boolean usableBySoldiers;
@@ -32,12 +37,18 @@ public enum ScaffoldApproach implements StringRepresentable {
         return usableBySoldiers;
     }
 
-    /** The approach builders use in game, by its number in the tuning file (1 to 3: a, b, c). */
+    /** The approach builders use in game, by its number in the tuning file (1 a, 2 b, 3 c, 4 e). */
     public static ScaffoldApproach inGame(int number) {
         return switch (number) {
             case 1 -> OUTSIDE_RAMP;
+            case 2 -> STEP_PILLARS;
             case 3 -> PLATFORMS;
-            default -> STEP_PILLARS;
+            default -> CLIMBED_COLUMNS;
         };
+    }
+
+    /** Whether the scaffold is columns soldiers are inside (climbed), rather than steps they stand on. */
+    public boolean columns() {
+        return this == CLIMBED_COLUMNS || this == VANILLA_SCAFFOLDING;
     }
 }

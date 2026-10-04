@@ -10,6 +10,7 @@ import net.bumblebee.claysoldiers.commands.ClaySoldierCommands;
 import net.bumblebee.claysoldiers.dev.DevCommands;
 import net.bumblebee.claysoldiers.tuning.TuningReloadListener;
 import net.bumblebee.claysoldiers.event.KingdomEvents;
+import net.bumblebee.claysoldiers.scaffold.Scaffolds;
 import net.bumblebee.claysoldiers.commands.KingdomCommand;
 import net.neoforged.bus.api.EventPriority;
 import net.bumblebee.claysoldiers.structure.StructureReloadListener;
@@ -151,6 +152,7 @@ public class ClaySoldiersNeoForge {
         NeoForge.EVENT_BUS.addListener(this::afterDataMapLoad);
         NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, KingdomEvents::onLivingDeath);
         NeoForge.EVENT_BUS.addListener(KingdomEvents::onServerTick);
+        NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.tick.ServerTickEvent.Post event) -> Scaffolds.tick(event.getServer()));
         NeoForge.EVENT_BUS.addListener(KingdomEvents::onEntityInteract);
         NeoForge.EVENT_BUS.addListener(KingdomEvents::onRightClickItem);
         NeoForge.EVENT_BUS.addListener(KingdomEvents::onRightClickBlock);

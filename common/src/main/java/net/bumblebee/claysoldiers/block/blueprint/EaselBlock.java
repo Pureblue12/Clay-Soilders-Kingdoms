@@ -1,5 +1,7 @@
 package net.bumblebee.claysoldiers.block.blueprint;
 
+import net.minecraft.server.level.ServerLevel;
+import net.bumblebee.claysoldiers.scaffold.Scaffolds;
 import com.mojang.serialization.MapCodec;
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.blueprint.BlueprintData;
@@ -113,6 +115,17 @@ public class EaselBlock extends BaseEntityBlock {
         }
 
         return InteractionResult.sidedSuccess(pLevel.isClientSide());
+    }
+
+    /**
+     * Breaking (or replacing) the easel interrupts its build: its scaffold is removed at once.
+     */
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!state.is(newState.getBlock()) && level instanceof ServerLevel serverLevel) {
+            Scaffolds.cleanup(serverLevel, pos, "the easel was removed");
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
     @Override
