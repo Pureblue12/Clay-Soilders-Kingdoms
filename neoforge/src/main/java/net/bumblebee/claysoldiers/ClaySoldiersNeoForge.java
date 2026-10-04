@@ -8,6 +8,7 @@ import net.bumblebee.claysoldiers.claysoldierpredicate.ClayPredicateSerializer;
 import net.bumblebee.claysoldiers.commands.BuildCommand;
 import net.bumblebee.claysoldiers.commands.ClaySoldierCommands;
 import net.bumblebee.claysoldiers.dev.DevCommands;
+import net.bumblebee.claysoldiers.tuning.TuningReloadListener;
 import net.bumblebee.claysoldiers.event.RecorderIndicator;
 import net.bumblebee.claysoldiers.commands.ColorHelperArgumentType;
 import net.bumblebee.claysoldiers.commands.DefaultedResourceLocationArgument;
@@ -176,6 +177,7 @@ public class ClaySoldiersNeoForge {
 
     private void reloadEvent(AddReloadListenerEvent event) {
         event.addListener(new NeoForgeCapabilityManger());
+        event.addListener(new TuningReloadListener());
         event.addListener(new BlueprintManger(
                 event.getRegistryAccess().registryOrThrow(Registries.BLOCK).asLookup(),
                 event.getRegistryAccess().lookupOrThrow(ModRegistries.BLUEPRINTS),

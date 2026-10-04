@@ -1,12 +1,21 @@
 package net.bumblebee.claysoldiers.tuning;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,6 +36,7 @@ public final class Tuning {
     public static final int TIERS = 10;
 
     private static final Map<String, TuningKey<?>> KEYS = new LinkedHashMap<>();
+    private static volatile Values current;
 
     public static final TuningKey.IntKey KINGDOM_MAX_LOADED = register(new TuningKey.IntKey("kingdom.max_loaded",
             "How many kingdoms are kept loaded (simulated) at once (D1).", 4, 1, 64));
@@ -45,6 +55,8 @@ public final class Tuning {
             List.of(8, 12, 16, 20, 26, 32, 40, 48, 56, 64), 1, 1000));
     public static final TuningKey.IntKey EVENTS_WARNING_TIME = register(new TuningKey.IntKey("events.warning_time_ticks",
             "How long before a raid or event the kingdom is warned, in ticks (20 ticks = 1 second).", 1200, 0, 72_000));
+    public static final TuningKey.IntKey DEV_PASTE_UNDO_DEPTH = register(new TuningKey.IntKey("dev.paste_undo_depth",
+            "How many structure pastes /csr dev structure undo can undo (dev tool).", 10, 1, 100));
 
     private Tuning() {
     }
@@ -69,14 +81,26 @@ public final class Tuning {
      * The current value of {@code key}.
      */
     public static <T> T get(TuningKey<T> key) {
-        throw new UnsupportedOperationException("Stage 0: not built yet");
+        return current().get(key);
     }
 
     /**
      * Problems found the last time the file was read (empty when it was fine).
      */
     public static List<String> problems() {
-        return Collections.emptyList();
+        return current().problems();
+    }
+
+    /**
+     * The current values (all defaults until the file has been read).
+     */
+    public static Values current() {
+        Values values = current;
+        if (values == null) {
+            values = parse(new JsonObject());
+            current = values;
+        }
+        return values;
     }
 
     /**
@@ -84,8 +108,10 @@ public final class Tuning {
      * set (with a good value), and the problems found.
      */
     public record Values(Map<String, Object> values, Set<String> setInFile, List<String> problems) {
+        @SuppressWarnings("unchecked")
         public <T> T get(TuningKey<T> key) {
-            throw new UnsupportedOperationException("Stage 0: not built yet");
+            Object value = values.get(key.id());
+            return value == null ? key.defaultValue() : (T) value;
         }
     }
 
@@ -93,7 +119,30 @@ public final class Tuning {
      * Reads tuning values from a parsed file, without changing the current values.
      */
     public static Values parse(JsonObject json) {
-        throw new UnsupportedOperationException("Stage 0: not built yet");
+        Map<String, Object> values = new LinkedHashMap<>();
+        Set<String> setInFile = new LinkedHashSet<>();
+        List<String> problems = new ArrayList<>();
+        for (TuningKey<?> key : KEYS.values()) {
+            values.put(key.id(), key.defaultValue());
+        }
+        for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
+            TuningKey<?> key = KEYS.get(entry.getKey());
+            if (key == null) {
+                problems.add("unknown key \"" + entry.getKey() + "\" (a typo?), ignored");
+                continue;
+            }
+            try {
+                values.put(key.id(), key.parse(entry.getValue()));
+                setInFile.add(key.id());
+            } catch (IllegalArgumentException e) {
+                problems.add(key.id() + ": " + e.getMessage() + "; using the default " + formatDefault(key));
+            }
+        }
+        return new Values(Collections.unmodifiableMap(values), Collections.unmodifiableSet(setInFile), List.copyOf(problems));
+    }
+
+    private static <T> String formatDefault(TuningKey<T> key) {
+        return key.format(key.defaultValue());
     }
 
     /**
@@ -103,6 +152,27 @@ public final class Tuning {
      * @return the values now current
      */
     public static Values reload(ResourceManager resourceManager) {
-        throw new UnsupportedOperationException("Stage 0: not built yet");
+        Values values;
+        Optional<Resource> resource = resourceManager.getResource(FILE);
+        if (resource.isEmpty()) {
+            values = withProblem(parse(new JsonObject()), "tuning file " + FILE + " not found; using all defaults");
+        } else {
+            try (Reader reader = resource.get().openAsReader()) {
+                JsonElement json = JsonParser.parseReader(reader);
+                values = json.isJsonObject() ? parse(json.getAsJsonObject())
+                        : withProblem(parse(new JsonObject()), "tuning file " + FILE + " is not a JSON object; using all defaults");
+            } catch (IOException | JsonParseException e) {
+                values = withProblem(parse(new JsonObject()), "tuning file " + FILE + " could not be read (" + e.getMessage() + "); using all defaults");
+            }
+        }
+        current = values;
+        values.problems().forEach(problem -> ClaySoldiersCommon.LOGGER.warn("CSR tuning: {}", problem));
+        return values;
+    }
+
+    private static Values withProblem(Values values, String problem) {
+        List<String> problems = new ArrayList<>(values.problems());
+        problems.add(problem);
+        return new Values(values.values(), values.setInFile(), List.copyOf(problems));
     }
 }

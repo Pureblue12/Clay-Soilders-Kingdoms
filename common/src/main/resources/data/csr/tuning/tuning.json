@@ -1,0 +1,11 @@
+{
+  "kingdom.max_loaded": 4,
+  "kingdom.tier_unlock_renown": [0, 100, 250, 500, 900, 1400, 2100, 3000, 4200, 6000],
+  "kingdom.zone.keep_radius": [6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+  "kingdom.zone.inner_radius": [16, 20, 24, 28, 32, 36, 40, 44, 48, 52],
+  "kingdom.zone.wall_radius": [20, 24, 28, 32, 36, 40, 44, 48, 52, 56],
+  "kingdom.zone.outer_radius": [32, 38, 44, 50, 56, 62, 68, 74, 80, 86],
+  "performance.soldier_cap_per_tier": [8, 12, 16, 20, 26, 32, 40, 48, 56, 64],
+  "events.warning_time_ticks": 1200,
+  "dev.paste_undo_depth": 10
+}

@@ -1,7 +1,9 @@
 package net.bumblebee.claysoldiers.tuning;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,6 +54,25 @@ public abstract sealed class TuningKey<T> permits TuningKey.IntKey, TuningKey.In
     public abstract String format(T value);
 
     /**
+     * The allowed values, as shown in commands and docs.
+     */
+    public abstract String range();
+
+    static int parseInt(JsonElement json, int min, int max) {
+        if (!json.isJsonPrimitive() || !json.getAsJsonPrimitive().isNumber()) {
+            throw new IllegalArgumentException("expected a whole number, got " + json);
+        }
+        double number = json.getAsDouble();
+        if (number != Math.rint(number)) {
+            throw new IllegalArgumentException("expected a whole number, got " + json);
+        }
+        if (number < min || number > max) {
+            throw new IllegalArgumentException(json + " is outside " + min + " to " + max);
+        }
+        return (int) number;
+    }
+
+    /**
      * A whole number between {@code min} and {@code max} (inclusive).
      */
     public static final class IntKey extends TuningKey<Integer> {
@@ -66,7 +87,12 @@ public abstract sealed class TuningKey<T> permits TuningKey.IntKey, TuningKey.In
 
         @Override
         Integer parse(JsonElement json) {
-            throw new UnsupportedOperationException("Stage 0: not built yet");
+            return parseInt(json, min, max);
+        }
+
+        @Override
+        public String range() {
+            return min + " to " + max;
         }
 
         @Override
@@ -90,7 +116,27 @@ public abstract sealed class TuningKey<T> permits TuningKey.IntKey, TuningKey.In
 
         @Override
         List<Integer> parse(JsonElement json) {
-            throw new UnsupportedOperationException("Stage 0: not built yet");
+            if (!json.isJsonArray()) {
+                throw new IllegalArgumentException("expected a list of " + Tuning.TIERS + " whole numbers (one per tier), got " + json);
+            }
+            JsonArray array = json.getAsJsonArray();
+            if (array.size() != Tuning.TIERS) {
+                throw new IllegalArgumentException("expected " + Tuning.TIERS + " numbers (one per tier), got " + array.size());
+            }
+            List<Integer> values = new ArrayList<>(array.size());
+            for (int i = 0; i < array.size(); i++) {
+                try {
+                    values.add(parseInt(array.get(i), min, max));
+                } catch (IllegalArgumentException e) {
+                    throw new IllegalArgumentException("tier " + (i + 1) + ": " + e.getMessage());
+                }
+            }
+            return List.copyOf(values);
+        }
+
+        @Override
+        public String range() {
+            return Tuning.TIERS + " numbers (tier 1 to " + Tuning.TIERS + "), each " + min + " to " + max;
         }
 
         @Override
