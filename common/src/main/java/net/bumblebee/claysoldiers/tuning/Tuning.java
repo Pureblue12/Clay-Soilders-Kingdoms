@@ -108,9 +108,9 @@ public final class Tuning {
     public static final TuningKey.IntKey TERRAIN_GRADE_CLEAR_TREES_BUDGET = register(new TuningKey.IntKey("terrain.grade.clear_trees_budget",
             "Most tree blocks (logs and leaves) clearing a keep site may remove.", 500, 0, 100000));
     public static final TuningKey.IntKey BUILD_UNREACHABLE_RECHECK_TICKS = register(new TuningKey.IntKey("build.unreachable_recheck_ticks",
-            "A blueprint block builders found out of reach isn't checked again (an expensive path search) for this many ticks, unless a block of the build is placed or removed first. 0: always check.", 100, 0, 1200));
+            "A blueprint block builders found out of reach isn't checked again (an expensive path search) for this many ticks, unless a block of the build is placed or removed near it first. 0: always check.", 200, 0, 1200));
     public static final TuningKey.IntKey SCAFFOLD_COLUMNS_FIRST = register(new TuningKey.IntKey("scaffold.columns_first",
-            "1: once a build's scaffolding is planned, builders put all of it up before working above reach; 0: they raise it a level at a time, only when nothing else is in reach.", 1, 0, 1));
+            "1: once builders start putting up a build's scaffolding (nothing else in reach), they put all of it up before working above reach; 0: they raise it a level at a time, whenever nothing else is in reach.", 1, 0, 1));
     public static final TuningKey.BlockKey SCAFFOLD_MATERIAL = register(new TuningKey.BlockKey("scaffold.material",
             "The block builders put up as temporary scaffolding (they fetch it from their storage like any block). Climbed columns (approach 4) need a block soldiers can be inside, like scaffolding; with another block, step pillars are used.",
             ResourceLocation.withDefaultNamespace("scaffolding")));
@@ -134,6 +134,10 @@ public final class Tuning {
             "While a builder walks to a block of a build with scaffolding, it plans its route again this often (tiny soldiers climb floating steps better with fresh routes), in ticks.", 20, 5, 200));
     public static final TuningKey.IntKey SCAFFOLD_STEP_PRECISION = register(new TuningKey.IntKey("scaffold.step_precision_hundredths",
             "On scaffold blocks soldiers follow their path precisely: a step counts as reached within this many hundredths of a block of its center, and they don't cut corners (vanilla: 67 for tiny soldiers, plus corner cutting).", 30, 5, 67));
+    public static final TuningKey.IntKey SCAFFOLD_START_AFTER_STUCK_TICKS = register(new TuningKey.IntKey("scaffold.start_after_stuck_ticks",
+            "Builders start putting up a build's scaffolding only after finding nothing in reach for this long with no block placed in between (one builder boxed in for a moment doesn't start it), in ticks.", 100, 0, 6000));
+    public static final TuningKey.IntKey SCAFFOLD_CLIMB_SPEED = register(new TuningKey.IntKey("scaffold.climb_speed_hundredths",
+            "How fast builders climb up and down scaffolding columns, in hundredths of a block per tick.", 30, 5, 100));
     public static final TuningKey.IntKey SCAFFOLD_TEARDOWN_STUCK_TICKS = register(new TuningKey.IntKey("scaffold.teardown_stuck_ticks",
             "When builders can't take the scaffold down for this long after the structure is finished, it is removed at once, in ticks.", 1200, 100, 72_000));
     public static final TuningKey.IntKey DEV_PASTE_UNDO_DEPTH = register(new TuningKey.IntKey("dev.paste_undo_depth",

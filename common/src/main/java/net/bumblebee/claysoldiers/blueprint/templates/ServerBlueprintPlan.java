@@ -4,6 +4,7 @@ import net.bumblebee.claysoldiers.blueprint.BlueprintRequest;
 import net.bumblebee.claysoldiers.blueprint.BlueprintTemplateSettings;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
+import net.bumblebee.claysoldiers.tuning.Tuning;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
@@ -21,8 +22,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -30,6 +34,12 @@ public class ServerBlueprintPlan extends BlueprintPlan {
     private final List<BlueprintBlockInfo> blockInfoList;
     /** Whether the last request search that handed out nothing skipped blocks out of reach (for scaffolding). */
     private boolean lastSearchFoundUnreachable;
+    /**
+     * Per builder (keyed by its reach test, which each builder keeps): blocks it found out of reach recently, skipped
+     * by its request searches until the time stored or until the build changes ({@link #forgetUnreachable}). Per
+     * builder, because one standing somewhere awkward must not make the others skip blocks they can reach.
+     */
+    private final Map<Predicate<BlockPos>, Map<BlueprintBlockInfo, Long>> unreachableByBuilder = new WeakHashMap<>();
 
     public ServerBlueprintPlan(Vec3i size, List<StructureTemplate.StructureBlockInfo> blockInfoList) {
         super(BlueprintUtil.getNeededItemsFromInfo(blockInfoList, StructureTemplate.StructureBlockInfo::state), size);
@@ -216,7 +226,8 @@ public class ServerBlueprintPlan extends BlueprintPlan {
     public @Nullable BlueprintRequest getRequest(ServerLevel level, BlockPos base, BlueprintTemplateSettings settings, Predicate<BlockPos> canReach) {
         // Blocks another builder has are skipped (no taking over); they become free when cancelled, finished or stale.
         // Blocks that recently failed to place are skipped until their cooldown ends, and doors wait while any other
-        // block can still be placed (both checked first: they're cheap and save a path search).
+        // block can still be placed (both checked first: they're cheap and save a path search). Blocks found out of
+        // reach recently by this builder count as out of reach without a new path search (build.unreachable_recheck_ticks).
         // Counters for the debug summary only.
         int checked = 0;
         int coolingDown = 0;
@@ -225,6 +236,7 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         int notPlaceable = 0;
         int assigned = 0;
         Boolean doorsMustWait = null; // computed once, at the first door
+        Map<BlueprintBlockInfo, Long> unreachableFor = unreachable(canReach);
 
         for (BlueprintBlockInfo blockInfo : blockInfoList) {
             checked++;
@@ -241,8 +253,17 @@ public class ServerBlueprintPlan extends BlueprintPlan {
                     continue;
                 }
             }
+            Long knownUnreachable = unreachableFor.get(blockInfo);
+            if (knownUnreachable != null && level.getGameTime() < knownUnreachable) {
+                unreachable++;
+                continue;
+            }
             var infoAbsolutePos = targetPosition(base, settings, blockInfo);
             if (!canReach.test(infoAbsolutePos)) {
+                // Path searches are expensive: this builder doesn't search again for a while, unless the build changes.
+                if (Tuning.BUILD_UNREACHABLE_RECHECK_TICKS.get() > 0) {
+                    unreachableFor.put(blockInfo, level.getGameTime() + Tuning.BUILD_UNREACHABLE_RECHECK_TICKS.get());
+                }
                 unreachable++;
                 continue;
             }
@@ -267,6 +288,26 @@ public class ServerBlueprintPlan extends BlueprintPlan {
      * around the build changed, e.g. a block of the build was placed or removed).
      */
     public void forgetUnreachable() {
+        unreachableByBuilder.clear();
+    }
+
+    /**
+     * Forgets which blocks within {@code radius} blocks sideways of {@code changed} were found out of reach: a block placed
+     * or removed there can make them reachable (a new floor to stand on, a scaffolding column). Blocks farther away are
+     * checked again when their wait ({@code build.unreachable_recheck_ticks}) is up.
+     */
+    public void forgetUnreachableNear(BlockPos changed, int radius, BlockPos base, BlueprintTemplateSettings settings) {
+        for (Map<BlueprintBlockInfo, Long> blocks : unreachableByBuilder.values()) {
+            blocks.keySet().removeIf(info -> {
+                BlockPos pos = targetPosition(base, settings, info);
+                return Math.abs(pos.getX() - changed.getX()) <= radius && Math.abs(pos.getZ() - changed.getZ()) <= radius;
+            });
+        }
+    }
+
+    /** The blocks one builder (its reach test) found out of reach recently, and until when they count as such. */
+    private Map<BlueprintBlockInfo, Long> unreachable(Predicate<BlockPos> canReach) {
+        return unreachableByBuilder.computeIfAbsent(canReach, builder -> new HashMap<>());
     }
 
     /**

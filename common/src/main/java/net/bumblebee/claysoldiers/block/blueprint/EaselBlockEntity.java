@@ -13,6 +13,7 @@ import net.bumblebee.claysoldiers.blueprint.templates.ServerBlueprintPlan;
 import net.bumblebee.claysoldiers.capability.BlueprintRequestHandler;
 import net.bumblebee.claysoldiers.init.ModBlockEntities;
 import net.bumblebee.claysoldiers.networking.BlueprintPlacePayload;
+import net.bumblebee.claysoldiers.tuning.Tuning;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -34,6 +35,8 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class EaselBlockEntity extends BlockEntity {
+    /** How far sideways a placed block (or scaffold) can make blocks reachable: builder reach (2) plus a step. */
+    private static final int REACH_CHANGE_RADIUS = 3;
     private static final String INDICATE_TAG_ON_CLIENT = "Client";
     private static final String MIRROR_TAG = "mirror";
     private static final String TEMPLATE_TAG = "template";
@@ -228,6 +231,16 @@ public class EaselBlockEntity extends BlockEntity {
             return Scaffolds.removeRequest(serverLevel, worldPosition, canReachDestination);
         }
         var settings = getTemplateSettings();
+        if (Tuning.SCAFFOLD_COLUMNS_FIRST.get() == 1 && Scaffolds.isGoingUp(serverLevel, worldPosition)) {
+            // Scaffolding has started going up: put it all up first, so the work above reach doesn't stall at every level.
+            var scaffold = Scaffolds.placeRequest(serverLevel, worldPosition, plan, getTemplateBase(settings), settings, canReachDestination);
+            if (scaffold != null) {
+                return scaffold;
+            }
+            if (Scaffolds.isScaffoldBeingCarried(serverLevel, worldPosition)) {
+                return null; // the last scaffold blocks are on their way: wait for them, then work above reach
+            }
+        }
         var request = plan.getRequest(serverLevel, getTemplateBase(settings), settings, canReachDestination);
         if (request != null && !canReachDestination.test(request.getPos())) {
             request.cancel();
@@ -275,7 +288,12 @@ public class EaselBlockEntity extends BlockEntity {
      */
     private boolean doBlueprintRequest(BlueprintRequest request) {
         if (request instanceof ScaffoldRequest scaffold) {
-            return level instanceof ServerLevel serverLevel && Scaffolds.complete(serverLevel, worldPosition, scaffold);
+            boolean done = level instanceof ServerLevel serverLevel && Scaffolds.complete(serverLevel, worldPosition, scaffold);
+            if (done && template instanceof ServerBlueprintPlan serverPlan) {
+                var settings = getTemplateSettings(); // new scaffold: blocks near it may be reachable now
+                serverPlan.forgetUnreachableNear(scaffold.getPos(), REACH_CHANGE_RADIUS, getTemplateBase(settings), settings);
+            }
+            return done;
         }
         if (request == null || !(template instanceof ServerBlueprintPlan serverPlan)) {
             return false;
@@ -284,6 +302,11 @@ public class EaselBlockEntity extends BlockEntity {
         var settings = getTemplateSettings();
         var result = serverPlan.tryPlacingRequest(level, request, item, getTemplateBase(settings), settings);
         if (result.isSuccess()) {
+            // A new block can be a floor to stand on: blocks near it may be reachable now.
+            serverPlan.forgetUnreachableNear(request.getPos(), REACH_CHANGE_RADIUS, getTemplateBase(settings), settings);
+            if (level instanceof ServerLevel serverLevel) {
+                Scaffolds.structurePlaced(serverLevel, worldPosition);
+            }
             onPlaced(item);
         }
         return result.isSuccess();

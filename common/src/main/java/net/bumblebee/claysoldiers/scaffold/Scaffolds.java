@@ -15,6 +15,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ScaffoldingBlock;
@@ -50,6 +51,8 @@ import java.util.function.Predicate;
 public final class Scaffolds {
     /** Next game time each easel may (re)plan, so a stuck build doesn't plan every tick. Memory only. */
     private static final Map<String, Long> NEXT_PLAN = new HashMap<>();
+    /** Per easel (same key): since when no structure block was placed while builders found nothing in reach. */
+    private static final Map<String, Long> STUCK_SINCE = new HashMap<>();
     private static long lastSweep = Long.MIN_VALUE;
     /** Clay soldiers' follow range (their attribute), which limits how long a path they follow. */
     private static final int BUILDER_FOLLOW_RANGE = 16;
@@ -73,7 +76,7 @@ public final class Scaffolds {
         ScaffoldSavedData data = ScaffoldSavedData.get(level);
         Optional<ScaffoldJob> job = data.job(easel);
         if ((job.isEmpty() || nothingLeftToPlace(level, job.get())) && plan.lastSearchFoundUnreachable()) {
-            String key = level.dimension().location() + "|" + easel.asLong();
+            String key = key(level, easel);
             if (level.getGameTime() >= NEXT_PLAN.getOrDefault(key, Long.MIN_VALUE)) {
                 NEXT_PLAN.put(key, level.getGameTime() + Tuning.SCAFFOLD_REPLAN_TICKS.get());
                 BlockPos home = canReach instanceof ScaffoldHome builder && builder.scaffoldHome() != null ? builder.scaffoldHome() : easel;
@@ -84,9 +87,19 @@ public final class Scaffolds {
             return null;
         }
         ScaffoldJob current = job.get();
+        if (current.placed().isEmpty() && !stuckLongEnough(level, easel)) {
+            return null; // maybe only one builder is boxed in for a moment: start the scaffold once the whole build is stuck
+        }
         Block material = material(current);
+        Set<Long> columnsWaiting = new HashSet<>(); // columns: only the lowest missing cell can go up next
         for (BlockPos pos : current.planned()) {
-            if (current.placed().contains(pos) || busy(level, current, pos) || !ServerBlueprintPlan.canPlaceAt(level, pos)) {
+            if (current.placed().contains(pos)) {
+                continue;
+            }
+            if (current.columns() && !columnsWaiting.add(ChunkPos.asLong(pos.getX(), pos.getZ()))) {
+                continue;
+            }
+            if (busy(level, current, pos) || !ServerBlueprintPlan.canPlaceAt(level, pos)) {
                 continue;
             }
             if (canReach.test(pos)) {
@@ -96,6 +109,24 @@ public final class Scaffolds {
             }
         }
         return null;
+    }
+
+    /**
+     * Whether builders have found nothing in reach for {@code scaffold.start_after_stuck_ticks} without any structure
+     * block being placed in between ({@link #structurePlaced} resets it).
+     */
+    private static boolean stuckLongEnough(ServerLevel level, BlockPos easel) {
+        long since = STUCK_SINCE.computeIfAbsent(key(level, easel), k -> level.getGameTime());
+        return level.getGameTime() - since >= Tuning.SCAFFOLD_START_AFTER_STUCK_TICKS.get();
+    }
+
+    /** A structure block of the easel's build was placed: builders aren't stuck. */
+    public static void structurePlaced(ServerLevel level, BlockPos easel) {
+        STUCK_SINCE.remove(key(level, easel));
+    }
+
+    private static String key(ServerLevel level, BlockPos easel) {
+        return level.dimension().location() + "|" + easel.asLong();
     }
 
     /**
@@ -218,7 +249,8 @@ public final class Scaffolds {
 
     private static Optional<ScaffoldJob> plan(ServerLevel level, BlockPos easel, BlockPos home, ServerBlueprintPlan plan, BlockPos base,
                                               BlueprintTemplateSettings settings, @Nullable ScaffoldJob existing) {
-        ScaffoldInput input = input(level, easel, home, plan.targetPositions(base, settings));
+        long start = System.nanoTime();
+        ScaffoldInput input = input(level, easel, home, plan.targetPositions(base, settings), existing == null ? Set.of() : existing.placed());
         if (input.structure().isEmpty() || ScaffoldPlanner.aboveReach(input).isEmpty()) {
             return Optional.ofNullable(existing);
         }
@@ -229,6 +261,13 @@ public final class Scaffolds {
         }
         if (existing != null && existing.columns() != approach.columns()) {
             approach = existing.columns() ? ScaffoldApproach.CLIMBED_COLUMNS : ScaffoldApproach.STEP_PILLARS;
+        }
+        if (existing != null && !existing.planned().isEmpty()
+                && ScaffoldPlanner.simulate(input, existing.planned(), existing.columns()).stuck().isEmpty()) {
+            // The scaffold already planned still reaches every block left: builders were only briefly stuck. Planning
+            // from scratch would pick other spots and add columns needlessly.
+            DebugLog.event(DebugCategory.SCAFFOLD, null, "easel %s: the planned scaffold still reaches every block left, nothing added", easel);
+            return Optional.of(existing);
         }
         ScaffoldPlan scaffold = ScaffoldPlanner.plan(input, approach);
         List<BlockPos> more = new ArrayList<>(scaffold.scaffold());
@@ -248,16 +287,18 @@ public final class Scaffolds {
         ScaffoldJob job = existing != null ? existing : new ScaffoldJob(easel, Tuning.SCAFFOLD_MATERIAL.get(), List.of(), Set.of(), approach.columns());
         job.addPlanned(more);
         ScaffoldSavedData.get(level).put(job);
-        DebugLog.event(DebugCategory.SCAFFOLD, null, () -> "planned %d scaffold blocks at easel %s (%s)".formatted(more.size(), easel.toShortString(),
-                scaffold.describe()));
+        long millis = (System.nanoTime() - start) / 1_000_000;
+        DebugLog.event(DebugCategory.SCAFFOLD, null, () -> "planned %d scaffold blocks at easel %s in %d ms (%s)".formatted(more.size(), easel.toShortString(),
+                millis, scaffold.describe()));
         return Optional.of(job);
     }
 
     /**
      * What the planner needs from the world: the region around the structure, its solid cells, the cells scaffold can't
-     * use, and the structure blocks still to place.
+     * use, and the structure blocks still to place. The build's own placed {@code scaffold} counts as free (a re-plan
+     * simulates it as scaffold again).
      */
-    static ScaffoldInput input(ServerLevel level, BlockPos easel, BlockPos home, List<BlockPos> targets) {
+    static ScaffoldInput input(ServerLevel level, BlockPos easel, BlockPos home, List<BlockPos> targets, Set<BlockPos> scaffold) {
         BoundingBox box = BoundingBox.encapsulatingPositions(targets).orElseThrow();
         // The plan only lists blocks still to place, so the region reaches down to the easel's ground (the site's base),
         // and it includes where the builders come from.
@@ -268,6 +309,9 @@ public final class Scaffolds {
         Set<BlockPos> solid = new HashSet<>();
         Set<BlockPos> blocked = new HashSet<>(targets);
         BlockPos.betweenClosedStream(region).forEach(pos -> {
+            if (scaffold.contains(pos)) {
+                return; // the build's own scaffold: the planner puts it in again (climbable), it isn't in the way
+            }
             BlockState state = level.getBlockState(pos);
             if (!state.getCollisionShape(level, pos).isEmpty()) {
                 solid.add(pos.immutable());
@@ -285,6 +329,22 @@ public final class Scaffolds {
         // gives up on long winding routes before the limit).
         int maxPath = BUILDER_FOLLOW_RANGE + Tuning.SCAFFOLD_PATH_RANGE_BONUS.get() - PATH_MARGIN;
         return new ScaffoldInput(region, solid, blocked, remaining, home, maxPath);
+    }
+
+    /**
+     * Whether the easel's scaffolding has started going up (builders ran out of reachable blocks) and isn't all up yet.
+     * Planning can happen earlier; the work within reach comes first.
+     */
+    public static boolean isGoingUp(ServerLevel level, BlockPos easel) {
+        return ScaffoldSavedData.get(level).job(easel)
+                .filter(job -> !job.placed().isEmpty() && job.placed().size() < job.planned().size()).isPresent();
+    }
+
+    /** Whether a builder is carrying one of the easel's scaffold blocks up right now (not yet placed). */
+    public static boolean isScaffoldBeingCarried(ServerLevel level, BlockPos easel) {
+        return ScaffoldSavedData.get(level).job(easel)
+                .filter(job -> List.copyOf(job.active().keySet()).stream().anyMatch(pos -> !job.placed().contains(pos) && busy(level, job, pos)))
+                .isPresent();
     }
 
     /** Whether the easel's build has scaffolding (builders working for it get a bigger path search). */

@@ -86,6 +86,8 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
 
     /** Climbs scaffolding columns (stage 3, approach e); idle otherwise. */
     private final ScaffoldClimber climber;
+    /** Request searches taking this long or longer are recorded (BUILD). */
+    private static final int SLOW_SEARCH_MILLIS = 20;
     /** Ticks since the route to the request was last planned (builds with scaffolding only). */
     private int repathTicks;
     /** The path search multiplier this goal last set (1 = normal). */
@@ -259,7 +261,10 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             // While BUILD is recorded, collect why blocks are unreachable (one summary line per search).
             unreachableReasons = DebugLog.isOn(DebugCategory.BUILD) ? new LinkedHashMap<>() : null;
             blockedByDoor = unreachableReasons == null ? null : new LinkedHashMap<>();
+            long start = System.nanoTime();
             request = requestHandler.getRequest(reachTest);
+            long millis = (System.nanoTime() - start) / 1_000_000;
+            if (millis >= SLOW_SEARCH_MILLIS) DebugLog.event(DebugCategory.BUILD, soldier, "slow request search: %s ms", millis);
             pathEnd = null;
             logUnreachableReasons();
             if (request != null) DebugLog.event(DebugCategory.BUILD, soldier, "got request: %s at %s", request.getItem(), request.getPos());

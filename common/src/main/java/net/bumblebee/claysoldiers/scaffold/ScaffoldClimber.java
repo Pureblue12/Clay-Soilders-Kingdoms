@@ -21,12 +21,10 @@ import java.util.Optional;
  * A builder's climbing behavior for scaffolding columns (approach e). Vanilla mobs never plan climbing, so builders
  * walk to a column's base on the ground (an ordinary path, which tiny soldiers follow reliably), then rise inside the
  * column to the height they need, hold there while placing, and come back down. Moving inside the column is done
- * directly (a smooth climb of {@link #SPEED} blocks per tick, no gravity), so they can't fall off anything.
+ * directly (a smooth climb of {@code scaffold.climb_speed_hundredths} per tick, no gravity), so they can't fall off anything.
  * One per builder goal; {@link #reset} restores gravity.
  */
 public final class ScaffoldClimber {
-    /** Blocks per tick climbed or descended. */
-    private static final double SPEED = 0.2;
     /** How long walking to a column's base may take before giving up, in ticks. */
     private static final int MAX_WALK_TICKS = 200;
     /** How many levels up a column a builder standing there (not climbing) counts as stranded. */
@@ -189,7 +187,7 @@ public final class ScaffoldClimber {
                 }
             }
             case CLIMBING -> {
-                double y = Math.min(soldier.getY() + SPEED, standY);
+                double y = Math.min(soldier.getY() + speed(), standY);
                 hold(x, y, z);
                 if (y >= standY) {
                     state = State.HOLDING;
@@ -197,7 +195,7 @@ public final class ScaffoldClimber {
             }
             case HOLDING -> hold(x, standY, z);
             case DESCENDING -> {
-                double y = Math.max(soldier.getY() - SPEED, base.getY());
+                double y = Math.max(soldier.getY() - speed(), base.getY());
                 hold(x, y, z);
                 if (y <= base.getY()) {
                     reset();
@@ -207,6 +205,11 @@ public final class ScaffoldClimber {
             }
         }
         return state == State.HOLDING;
+    }
+
+    /** Blocks per tick climbed or descended ({@code scaffold.climb_speed_hundredths}). */
+    private static double speed() {
+        return Tuning.SCAFFOLD_CLIMB_SPEED.get() / 100.0;
     }
 
     private void hold(double x, double y, double z) {

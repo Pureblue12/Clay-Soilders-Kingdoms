@@ -33,7 +33,7 @@
   "terrain.grade.foundation_max_height": 6,
   "terrain.grade.pillar_spacing": 4,
   "terrain.grade.clear_trees_budget": 500,
-  "build.unreachable_recheck_ticks": 100,
+  "build.unreachable_recheck_ticks": 200,
   "scaffold.columns_first": 1,
   "scaffold.material": "minecraft:scaffolding",
   "scaffold.refund": 1,
@@ -46,6 +46,8 @@
   "scaffold.path_range_bonus": 16,
   "scaffold.repath_ticks": 20,
   "scaffold.step_precision_hundredths": 30,
+  "scaffold.start_after_stuck_ticks": 100,
+  "scaffold.climb_speed_hundredths": 30,
   "scaffold.teardown_stuck_ticks": 1200,
   "dev.paste_undo_depth": 10
 }
