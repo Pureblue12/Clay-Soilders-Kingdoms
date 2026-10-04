@@ -38,6 +38,19 @@
   scaffolding is needed ([`SCAFFOLDING.md`](SCAFFOLDING.md)).
 - Built in stage 4 (tier-1 keep built autonomously).
 
+## Structures and scale (draft)
+
+- **Miniature scale with a few larger landmarks (D43, the owner's decision):** soldiers are 0.25 scale, so the
+  town is a tiny world.
+  - Common buildings are roughly half-scale: a cottage about 5 by 7, walls 3 to 4, roofs +2 to 3, detail from small
+    blocks.
+  - Landmarks (the keep from tier 4, church and cathedral, town hall, main gate, a few towers) may be larger, up to
+    28 blocks tall.
+- **Detail grows:** each structure has shell, fittings and flourish layers. Flourish is an upgrade (levels 2 and 3),
+  so early builds finish fast and kingdoms visibly get richer (D44).
+- **Master list and design briefs:** every structure, the tier and perk tables, town styles and the buildability
+  checklist are in [`STRUCTURES.md`](STRUCTURES.md) (draft; no structure files yet).
+
 ## DESIGN DECISION PROTOCOL
 
 1. **Decide gaps yourself.** The design is a draft with many gaps. When a feature needs a decision the design
