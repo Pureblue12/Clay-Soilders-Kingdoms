@@ -10,8 +10,8 @@ Earlier work (M0–M2: testing, bug fixes, `/csr build`, builder fixes, doors) i
 | 0 | Foundations | M | **done** (in-game checklist pending) |
 | 1 | Kingdom core | M | **done** (in-game checklist pending) |
 | 2 | Terrain spike | L | **done** (in-game checklist pending) |
-| 3 | Tall construction spike | L | **next** |
-| 4 | Tier-1 keep built autonomously | L | not started |
+| 3 | Tall construction spike | L | **done** (in-game checklist pending) |
+| 4 | Tier-1 keep built autonomously | L | **next** |
 | 5 | Economy loop v1 | L | not started |
 | 6 | Layout and growth | XL | not started |
 | 7 | Performance checkpoint | M | not started |
@@ -103,7 +103,18 @@ Stages are ordered by dependency and risk. Every stage ends playable.
 - **Acceptance test:** a 20-block tower is built and its scaffolding disappears.
 - **Depends on:** existing builder reach and doors · **Size:** L
 - **Risks:** pathing on scaffolding for tiny soldiers.
-- **Decisions:** — · **Status:** not started · **Results:** —
+- **Decisions:** D34–D40 · **Status:** done (2026-10-04), waiting for the in-game checklist · **Results:**
+  - **Research:** `docs/RESEARCH-scaffolding.md`.
+  - **Planner:** pure; simulates the build like builders work; plans 5 approaches.
+  - **In game:** climbed scaffolding columns (builders walk to a column's base and rise inside it). Measured: tiny
+    soldiers can't reliably use floating steps (falls at turns, vanilla's 16-block path limit).
+  - **Acceptance:** a 20-block tower is built and its scaffolding disappears; also a 16-long, 12-high wall and a
+    14-high corner tower on 10-high walls.
+  - **Unchanged:** the Small House still gets 151 of 151 with no scaffold.
+  - **Tracking:** saved jobs, cleanup when interrupted, player blocks kept; dev tools and a SCAFFOLD recorder
+    category.
+  - **Height rules and recommendation:** `docs/SCAFFOLDING.md` (tier-1 keep at most 9 high: needs the owner's OK).
+  - **Tests:** 163 required (145 before), all pass.
 
 ### 4 Tier-1 keep built autonomously
 - **Goal:**

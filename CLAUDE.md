@@ -36,7 +36,8 @@ Starts a headless test server, runs every test in
 `DebugLogGameTests`, `RecorderFeedbackGameTests`, `BuildRequestGameTests`, `PlacingGameTests`,
 `DoorGameTests`, `TuningGameTests`, `StructureRegistryGameTests`, `StructurePasteGameTests`,
 `LayoutCheckerGameTests`, `KingdomDataGameTests`, `KingdomGameTests`, `KingdomBookGameTests`, `KingdomBookRefreshGameTests`, `TerrainScoreGameTests`, `TerrainScanGameTests`,
-`TerrainGradingGameTests`, `TerrainFoundingGameTests`), prints
+`TerrainGradingGameTests`, `TerrainFoundingGameTests`, `ScaffoldPlannerGameTests`, `ScaffoldBuildGameTests`,
+`ScaffoldCleanupGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Templates: `data/csr/structure/gametest/platform.nbt` (16x8x16) and `terrain.nbt` (32x16x32, for test terrains);
@@ -58,8 +59,12 @@ world first, so every run starts fresh.
   site around the king, so a king closer than 6 blocks to the platform's edge sees the wall as a cliff: tests that
   aren't about terrain found with `Kingdoms.found(..., true)` (force) there (D32).
 - Grading and test-terrain undo share the structure paste's global undo history: tests that undo get their own batch.
+- The framework also puts a barrier roof at the top of a test area (16 high for `terrain`): tests that build higher
+  use `skyAccess = true`. Builders only follow paths up to their follow range (16): keep a test's chest within about
+  14 blocks of every block.
 
-Current status (2026-10-04, after stage 2 Terrain spike): all 145 required tests pass. `SuspectedBugGameTests` covers the easel right-click:
+Current status (2026-10-04, after stage 3 Tall construction spike): all 163 required tests pass (the suite takes a few
+minutes: the scaffold tests build whole towers and the Small House). `SuspectedBugGameTests` covers the easel right-click:
 non-block item, unneeded block, needed block.
 
 ### Known bugs (confirmed)
@@ -171,6 +176,30 @@ Code: `common/.../terrain/`; background, comparison and recommendation: `docs/TE
   - `/csr kingdom found force` (permission 2) skips it, recorded in KINGDOM and TERRAIN.
 - Recorder TERRAIN: scans (with cost), site scores, searches, refusals, gradings and their block counts.
 
+### Scaffolding (stage 3 spike: tall builds)
+
+Code: `common/.../scaffold/`; comparison, recommendation and height rules: `docs/SCAFFOLDING.md`; prior art:
+`docs/RESEARCH-scaffolding.md`; decisions D34–D40; numbers `scaffold.*`.
+- **Reach:** builders place up to 8 above their feet (`BuilderReach`), so structures up to 9 tall never get scaffold
+  and build exactly as before (Small House 151/151).
+- `ScaffoldPlanner` (pure) simulates the build like builders work and plans scaffold. Approaches: (a) outside ramp,
+  (b) step pillars, (c) structure tops + pillars, (d) vanilla scaffolding (counted, not usable), (e) climbed
+  columns. Reachability is measured from the builders' storage with vanilla's path-length limit.
+- **In game (`scaffold.approach` 4):** 1x1 scaffolding columns.
+  - The easel hands out scaffold requests (`Scaffolds.placeRequest`) only when nothing is reachable and some block is
+    above reach.
+  - Builders walk to a column's base and rise inside it (`ScaffoldClimber`, called from `BuildBlueprintGoal`).
+  - After the structure is finished, builders take each column down from its base (`Scaffolds.removeRequest`;
+    refund carries it back).
+  - Tiny soldiers can't reliably climb floating steps with vanilla navigation (measured), hence columns.
+- **Jobs:** `ScaffoldSavedData` (`csr_scaffold.dat` per dimension, version 1).
+  - Removed at once when the easel is broken (`EaselBlock.onRemove`), its blueprint is replaced or taken off, or by
+    the sweep (easel gone or no plan, every `scaffold.sweep_ticks`, `Scaffolds.tick`).
+  - A position a player changed is never removed: recorded (SCAFFOLD "kept") and nearby players are told.
+- **While a build has scaffold, its builders** get a longer follow range, a bigger path search, a fresh route every
+  20 ticks and precise steps on scaffold blocks (`DoorPathing.Ground.followThePath`); other builds are unchanged.
+- **Recorder SCAFFOLD:** planned, placed, removed, climbing, stuck, cleanup, kept.
+
 ### Known limitations
 
 - Fixed (Fix B): builders reach higher. `BuilderReach`: a block's center less than 2.5 sideways (up to 2
@@ -218,6 +247,8 @@ the time it was made; a different hash means the registry changed.
 | `/csr dev kingdom stock_add` / `stock_remove <resource> [amount]`, `stock_show` | test the stockpile of the kingdom you stand in (book: Kingdom, which also links `/csr kingdom found/book/status/disband`) |
 | `/csr dev terrain scan` / `site` | scan the ground around you / score the keep site where you stand and show the best nearby (book: Terrain) |
 | `/csr dev terrain make <shape>` | build a test terrain 16 blocks ahead: slope, hill, cliff, lake_edge, forest, lava_pool, plateau |
+| `/csr dev scaffold build <shape> [height]` | test tower, wall or wall_tower (default 20 high) ahead of you: easel, stocked chest (cobblestone + 128 scaffolding), 3 builders (book: Scaffolding) |
+| `/csr dev scaffold plan <shape> [height]` / `status` / `cleanup` / `undo` | print every approach's scaffold plan / list jobs nearby / remove scaffold nearby at once / undo the test build's blocks |
 | `/csr dev terrain grade <method>` / `undo` | apply flattest, cut_fill, foundation, clear_trees or avoid_trees to the keep site where you stand / undo the last terrain change or paste |
 
 How it is built (`common/.../dev/`):
@@ -245,7 +276,7 @@ Records what soldiers and build plans do, to find out WHY something goes wrong.
 
 Code: `common/.../debug/` — `DebugLog.event(category, soldier, "text %s", arg)` is the one-line entry point
 (returns after one field read when the category is off; pass raw objects, not built strings; use a
-`Supplier<String>` for anything expensive). Categories: `DebugCategory` (BUILD, WORK, DAMAGE, PATHING, TEAM, STRUCTURE, KINGDOM, TERRAIN;
+`Supplier<String>` for anything expensive). Categories: `DebugCategory` (BUILD, WORK, DAMAGE, PATHING, TEAM, STRUCTURE, KINGDOM, TERRAIN, SCAFFOLD;
 add one with `DebugCategory.register` and it gets commands and book buttons automatically).
 Commands/buttons: `common/.../dev/RecorderTools`; action-bar indicator: `neoforge/.../event/RecorderIndicator`
 (registered only in dev). Ring buffer default 5000 events (`/csr dev log capacity`).
@@ -317,6 +348,8 @@ Main package: `net.bumblebee.claysoldiers` (in `common/src/main/java`):
   `KingdomBook` (observer book); commands in `commands/KingdomCommand`.
 - `terrain/` — terrain spike (stage 2): `TerrainScanner`, `TerrainScan`, `SiteRules`, `SiteScorer`, `SiteSearch`,
   `GradingPlanner`, `Terrain` (world side), `TestTerrain` (test terrains); dev tools in `dev/TerrainTools`.
+- `scaffold/` — tall builds (stage 3): `ScaffoldPlanner` + `ScaffoldGrid` (pure), `Scaffolds` (world side, requests,
+  cleanup), `ScaffoldClimber`, `ScaffoldSavedData`/`ScaffoldJob`, `TestStructures`; dev tools in `dev/ScaffoldTools`.
 - `kingdom/layout/` — layout checker skeleton (pure data: `LayoutPlan`, `Footprint`, `RoadGraph`, `WallLoop`,
   `LayoutChecker`).
 - `neoforge/.../event/SoldierWorkCleanup` — stops a soldier's work goal when it leaves the level
@@ -389,4 +422,7 @@ Optional integrations (JEI, Jade, Accessories, Curios, Create, SmartBrainLib) ar
 - **Stage 2 (Terrain spike) — done (2026-10-04, waiting for the in-game checklist):** research, terrain scan, site
   scorer and search, five grading methods (dev tool, undo), founding terrain check with force for operators, Terrain
   dev book category, TERRAIN recorder category. Recommendation in `docs/TERRAIN.md`.
-- **Stage 3 (Tall construction spike) — next.**
+- **Stage 3 (Tall construction spike) — done (2026-10-04, waiting for the in-game checklist):** research, scaffold
+  planner (5 approaches), climbed scaffolding columns in game, saved jobs with cleanup, Scaffolding dev book category,
+  SCAFFOLD recorder category. Recommendation and height rules in `docs/SCAFFOLDING.md`.
+- **Stage 4 (Tier-1 keep built autonomously) — next.**

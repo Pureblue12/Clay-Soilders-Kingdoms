@@ -20,6 +20,10 @@
   deep water and too steep ground, naming the best site nearby; softer problems give a warning. Grading methods exist
   as a dev tool only; the recommendation for stage 4 is in [`TERRAIN.md`](TERRAIN.md). Flow audit: none of it adds a
   resource yet; tree clearing will become a producer of logs once woodcutters exist (stage 5). Decisions D25–D32.
+- **Scaffolding (stage 3):** structures taller than builders' reach (9 blocks) get temporary scaffolding columns;
+  builders climb them, and they come down afterwards. Flow audit: the scaffold material is fetched from and returned
+  to the builders' storage (store → carrier → temporary use → store); it's never consumed when refunded. Height rules
+  for designers: [`SCAFFOLDING.md`](SCAFFOLDING.md). Decisions D34–D40.
 - **Flow audit, stockpile:** a store with no producer, carrier or consumer yet (dev commands only). Stage 5 adds
   farms and lumber camps (producers), carriers, the storehouse, and the cottage as the first consumer.
 
@@ -30,6 +34,8 @@
   and its metadata says which layer sits on the ground ("ground level"), so the keep absorbs a 1-block bump without
   grading. Bigger unevenness follows the stage 2 recommendation (cut and fill, then a foundation; `TERRAIN.md`).
 - **Door:** faces the lowest side of the site.
+- **Height (recommended, needs the owner's OK):** at most 9 blocks above the base layer for tier 1, so no
+  scaffolding is needed ([`SCAFFOLDING.md`](SCAFFOLDING.md)).
 - Built in stage 4 (tier-1 keep built autonomously).
 
 ## DESIGN DECISION PROTOCOL

@@ -4,7 +4,9 @@ All balancing numbers (costs, radii, rates, caps, unlock thresholds) live in ONE
 (DESIGN DECISION PROTOCOL, rule 6, in [`DESIGN.md`](DESIGN.md)).
 
 - **File:** `common/src/main/resources/data/csr/tuning/tuning.json`, read as the data resource `csr:tuning/tuning.json`.
-- **Format:** one flat JSON object whose keys are namespaced: `kingdom.*`, `economy.*`, `performance.*`, `events.*`.
+- **Format:** one flat JSON object whose keys are namespaced: `kingdom.*`, `economy.*`, `performance.*`, `events.*`,
+  `terrain.*`, `scaffold.*`, `dev.*`. Values are whole numbers, lists of 10 whole numbers (per tier), or block ids in
+  quotes (`scaffold.material`).
   JSON has no comments, so every key is documented here.
 - **Code:** `common/.../tuning/Tuning.java` (key definitions with defaults and ranges) and `TuningKey.java`.
   Read a value with `Tuning.KINGDOM_MAX_LOADED.get()`. The terrain keys are read together through
@@ -68,6 +70,18 @@ All balancing numbers (costs, radii, rates, caps, unlock thresholds) live in ONE
 | `terrain.grade.foundation_max_height` | 6 | 1–32 | Highest a foundation may stand above the lowest ground under it (builders reach 8). |
 | `terrain.grade.pillar_spacing` | 4 | 1–16 | Distance between foundation pillars (edges and corners always get one). |
 | `terrain.grade.clear_trees_budget` | 500 | 0–100,000 | Most tree blocks clearing a site may remove. |
+| `scaffold.material` | `"minecraft:scaffolding"` | a block id | The temporary scaffold block (builders fetch it from storage like any block). Climbed columns (approach 4) need a block soldiers can be inside, like scaffolding; with another block, step pillars are used. |
+| `scaffold.refund` | 1 | 0–1 | 1: builders carry scaffold they take down back to storage (cleanup drops it as items); 0: it is used up. |
+| `scaffold.approach` | 4 | 1–4 | How builders put up scaffolding: 1 ramp up the outside, 2 step pillars, 3 structure tops plus step pillars, 4 scaffolding columns they climb ([D34](DECISIONS.md)). |
+| `scaffold.max_blocks` | 200 | 0–10,000 | Most scaffold blocks one build may plan; a structure needing more stays unfinished (recorded as stuck). |
+| `scaffold.replan_ticks` | 200 | 20–12,000 | How often a stuck build checks again whether it needs (more) scaffolding. |
+| `scaffold.sweep_ticks` | 100 | 20–12,000 | How often scaffold of builds whose easel is gone or has no plan is cleaned up. |
+| `scaffold.request_stale_ticks` | 600 | 100–12,000 | A scaffold request a builder has had this long can go to another builder. |
+| `scaffold.path_nodes_multiplier` | 4 | 1–16 | While a build has scaffolding, its builders' path search may look at this many times more steps. |
+| `scaffold.path_range_bonus` | 16 | 0–64 | While a build has scaffolding, its builders' paths may be this many blocks longer (vanilla limits a path to the follow range, 16). |
+| `scaffold.repath_ticks` | 20 | 5–200 | While a build has scaffolding, builders plan their route again this often while walking to a block or a column. |
+| `scaffold.step_precision_hundredths` | 30 | 5–67 | On scaffold blocks soldiers follow their path precisely (a step counts as reached within this many hundredths of a block of its center; vanilla 67 plus corner cutting). Matters for step approaches 1–3. |
+| `scaffold.teardown_stuck_ticks` | 1200 | 100–72,000 | When builders can't take the scaffold down for this long after the structure is finished, it is removed at once. |
 | `dev.paste_undo_depth` | 10 | 1–100 | How many structure pastes `/csr dev structure undo` can undo (dev tool). |
 
 `economy.*` has no keys yet; stage 5 adds them.
@@ -97,4 +111,7 @@ These numbers are still hardcoded in Java. Move each into the tuning file when i
 
 Not candidates: sizes, render and model numbers, bit flags, item stack limits, and dev-tool limits other than
 `dev.paste_undo_depth`. The test terrains' shapes (`TestTerrain`: radius 13, a 6-block cliff, a 4-deep lake, ...) are
-test fixtures, not balancing numbers, and stay in code; so does the scan's 64-block walk limit.
+test fixtures, not balancing numbers, and stay in code; so does the scan's 64-block walk limit. Likewise the test
+structures (`TestStructures`), the climber's speed (0.2 blocks per tick) and walk limit (200 ticks), the scaffold
+planner's region margin (4) and path margin (8), and the soldiers' safe drop (3, vanilla). The planner uses
+`BuilderReach`'s constants (still to migrate, below) so planning and placing share one rule.
