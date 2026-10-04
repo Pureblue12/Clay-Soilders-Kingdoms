@@ -1,0 +1,8 @@
+{
+  "id": "csr:market",
+  "name": "Market",
+  "design": "TBD",
+  "tier": 4,
+  "zone": "inner",
+  "role": "market"
+}

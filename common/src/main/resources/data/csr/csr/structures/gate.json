@@ -1,0 +1,8 @@
+{
+  "id": "csr:gate",
+  "name": "Gate",
+  "design": "TBD",
+  "tier": 2,
+  "zone": "wall",
+  "role": "gate"
+}

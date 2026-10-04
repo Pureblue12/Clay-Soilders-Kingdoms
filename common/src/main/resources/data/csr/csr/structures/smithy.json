@@ -1,0 +1,8 @@
+{
+  "id": "csr:smithy",
+  "name": "Smithy",
+  "design": "TBD",
+  "tier": 3,
+  "zone": "inner",
+  "role": "workshop"
+}

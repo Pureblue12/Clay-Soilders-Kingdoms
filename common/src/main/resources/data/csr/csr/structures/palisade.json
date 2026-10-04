@@ -1,0 +1,8 @@
+{
+  "id": "csr:palisade",
+  "name": "Palisade segment",
+  "design": "TBD",
+  "tier": 2,
+  "zone": "wall",
+  "role": "defense"
+}

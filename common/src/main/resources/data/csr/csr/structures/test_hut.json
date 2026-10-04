@@ -1,0 +1,17 @@
+{
+  "id": "csr:test_hut",
+  "name": "Test hut (5x5)",
+  "design": "ready",
+  "tier": 1,
+  "zone": "inner",
+  "role": "house",
+  "footprint": [
+    5,
+    3,
+    5
+  ],
+  "cost": "auto",
+  "variant_group": "test_hut",
+  "palette": "oak",
+  "structure": "csr:kingdom/test_hut"
+}

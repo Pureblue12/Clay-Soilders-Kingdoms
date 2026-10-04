@@ -1,0 +1,8 @@
+{
+  "id": "csr:infirmary",
+  "name": "Infirmary",
+  "design": "TBD",
+  "tier": 4,
+  "zone": "inner",
+  "role": "health"
+}

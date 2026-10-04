@@ -1,0 +1,8 @@
+{
+  "id": "csr:food_hall",
+  "name": "Food hall",
+  "design": "TBD",
+  "tier": 4,
+  "zone": "inner",
+  "role": "food"
+}

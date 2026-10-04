@@ -1,0 +1,17 @@
+{
+  "id": "csr:test_wall",
+  "name": "Test wall segment (5 long)",
+  "design": "ready",
+  "tier": 1,
+  "zone": "wall",
+  "role": "defense",
+  "footprint": [
+    5,
+    3,
+    1
+  ],
+  "cost": "auto",
+  "variant_group": "test_wall",
+  "palette": "stone_brick",
+  "structure": "csr:kingdom/test_wall"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "csr:wall_tower",
+  "name": "Wall tower",
+  "design": "TBD",
+  "tier": 3,
+  "zone": "wall",
+  "role": "defense"
+}

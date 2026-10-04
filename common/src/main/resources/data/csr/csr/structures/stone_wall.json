@@ -1,0 +1,8 @@
+{
+  "id": "csr:stone_wall",
+  "name": "Stone wall segment",
+  "design": "TBD",
+  "tier": 3,
+  "zone": "wall",
+  "role": "defense"
+}

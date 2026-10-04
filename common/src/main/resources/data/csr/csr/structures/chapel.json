@@ -1,0 +1,8 @@
+{
+  "id": "csr:chapel",
+  "name": "Chapel",
+  "design": "TBD",
+  "tier": 4,
+  "zone": "inner",
+  "role": "religious"
+}

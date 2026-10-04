@@ -1,0 +1,8 @@
+{
+  "id": "csr:lumber_camp",
+  "name": "Lumber camp",
+  "design": "TBD",
+  "tier": 1,
+  "zone": "outer",
+  "role": "resource"
+}

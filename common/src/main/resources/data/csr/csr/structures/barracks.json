@@ -1,0 +1,8 @@
+{
+  "id": "csr:barracks",
+  "name": "Barracks",
+  "design": "TBD",
+  "tier": 3,
+  "zone": "inner",
+  "role": "military"
+}

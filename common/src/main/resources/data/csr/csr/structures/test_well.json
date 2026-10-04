@@ -1,0 +1,17 @@
+{
+  "id": "csr:test_well",
+  "name": "Test well (3x3)",
+  "design": "ready",
+  "tier": 1,
+  "zone": "inner",
+  "role": "utility",
+  "footprint": [
+    3,
+    2,
+    3
+  ],
+  "cost": "auto",
+  "variant_group": "test_well",
+  "palette": "cobblestone",
+  "structure": "csr:kingdom/test_well"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "csr:cottage",
+  "name": "Cottage",
+  "design": "TBD",
+  "tier": 1,
+  "zone": "inner",
+  "role": "house"
+}

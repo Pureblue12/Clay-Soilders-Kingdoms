@@ -1,0 +1,8 @@
+{
+  "id": "csr:farm",
+  "name": "Farm",
+  "design": "TBD",
+  "tier": 1,
+  "zone": "outer",
+  "role": "farm"
+}

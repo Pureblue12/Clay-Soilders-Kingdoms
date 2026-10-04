@@ -1,0 +1,8 @@
+{
+  "id": "csr:storehouse",
+  "name": "Storehouse",
+  "design": "TBD",
+  "tier": 1,
+  "zone": "inner",
+  "role": "storage"
+}

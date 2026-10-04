@@ -1,0 +1,8 @@
+{
+  "id": "csr:keep",
+  "name": "Keep",
+  "design": "TBD",
+  "tier": 1,
+  "zone": "keep",
+  "role": "keep"
+}
