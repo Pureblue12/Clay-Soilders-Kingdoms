@@ -73,7 +73,7 @@ Every method was applied in GameTests and undone exactly (`TerrainGradingGameTes
       main lesson is that flattening big areas looks wrong.
    5. **Trees: work around them until woodcutters exist** (stage 5). After that, clear them: the logs go to the
       stockpile, so tree clearing becomes a producer in the economy's flow audit.
-3. **Small change to the keep design:** give the keep a 1-block stone plinth as its bottom layer, and add a
+3. **Small change to the keep design (approved by the owner, D33; built in stage 4):** give the keep a 1-block stone plinth as its bottom layer, and add a
    `ground_level` field to the structure metadata (MineColonies' idea: which layer sits on the ground). The keep can
    then absorb ±1 block without any grading. Keep the tier-1 footprint at 9 by 9 or less: grading cost grows with
    area times height. Face the keep's door toward the lowest or flattest side.

@@ -23,6 +23,15 @@
 - **Flow audit, stockpile:** a store with no producer, carrier or consumer yet (dev commands only). Stage 5 adds
   farms and lumber camps (producers), carriers, the storehouse, and the cottage as the first consumer.
 
+## The keep (design, not built yet)
+
+- Tier-1 footprint 9 by 9 or less (D25; the terrain checks use 9 by 9 plus a 1-block margin).
+- **Base layer and ground level (D33, approved):** the keep's structure has a 1-block stone base layer at the bottom,
+  and its metadata says which layer sits on the ground ("ground level"), so the keep absorbs a 1-block bump without
+  grading. Bigger unevenness follows the stage 2 recommendation (cut and fill, then a foundation; `TERRAIN.md`).
+- **Door:** faces the lowest side of the site.
+- Built in stage 4 (tier-1 keep built autonomously).
+
 ## DESIGN DECISION PROTOCOL
 
 1. **Decide gaps yourself.** The design is a draft with many gaps. When a feature needs a decision the design
