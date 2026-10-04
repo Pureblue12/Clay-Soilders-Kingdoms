@@ -84,6 +84,9 @@ How (e) works:
 
 ## 5. Limits and risks
 
+- Scaffolding is climbable, so a builder walking against the structure from a column's base is sometimes carried up
+  the column by vanilla climbing. One standing 2 or more levels up (without climbing) is climbed straight back down
+  (D41). It costs a little time; the dev book tower still finishes in about 5,800 to 6,100 ticks.
 - Builders rise inside a column by direct movement (smooth, no vanilla climbing animation): it looks like gliding up
   the scaffolding.
 - The planner runs on the server thread when builders get stuck (at most every `scaffold.replan_ticks`). It takes
