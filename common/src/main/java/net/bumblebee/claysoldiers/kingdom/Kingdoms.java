@@ -44,7 +44,11 @@ public final class Kingdoms {
     /**
      * The result of founding or disbanding: the kingdom, or why it was refused.
      */
-    public record Result(@Nullable Kingdom kingdom, @Nullable String refusal) {
+    public record Result(@Nullable Kingdom kingdom, @Nullable String refusal, List<String> warnings) {
+        public Result(@Nullable Kingdom kingdom, @Nullable String refusal) {
+            this(kingdom, refusal, List.of());
+        }
+
         public boolean ok() {
             return refusal == null;
         }
@@ -98,6 +102,13 @@ public final class Kingdoms {
      * another kingdom's.
      */
     public static Result found(ServerLevel level, AbstractClaySoldierEntity king, @Nullable Player founder) {
+        return found(level, king, founder, false);
+    }
+
+    /**
+     * Founds a kingdom; with {@code force} the terrain check is skipped (operators' testing tool, logged).
+     */
+    public static Result found(ServerLevel level, AbstractClaySoldierEntity king, @Nullable Player founder, boolean force) {
         MinecraftServer server = level.getServer();
         KingdomSavedData data = KingdomSavedData.get(server);
         ResourceLocation team = king.getClayTeamType();
