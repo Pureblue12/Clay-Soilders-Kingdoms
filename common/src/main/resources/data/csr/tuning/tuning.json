@@ -33,5 +33,13 @@
   "terrain.grade.foundation_max_height": 6,
   "terrain.grade.pillar_spacing": 4,
   "terrain.grade.clear_trees_budget": 500,
+  "scaffold.material": "minecraft:oak_planks",
+  "scaffold.refund": 1,
+  "scaffold.approach": 2,
+  "scaffold.max_blocks": 200,
+  "scaffold.replan_ticks": 200,
+  "scaffold.sweep_ticks": 100,
+  "scaffold.request_stale_ticks": 600,
+  "scaffold.teardown_stuck_ticks": 1200,
   "dev.paste_undo_depth": 10
 }

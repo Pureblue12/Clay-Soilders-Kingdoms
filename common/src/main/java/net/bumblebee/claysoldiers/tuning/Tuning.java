@@ -107,6 +107,23 @@ public final class Tuning {
             "Distance between the pillars under a foundation platform, in blocks (edges and corners always get one).", 4, 1, 16));
     public static final TuningKey.IntKey TERRAIN_GRADE_CLEAR_TREES_BUDGET = register(new TuningKey.IntKey("terrain.grade.clear_trees_budget",
             "Most tree blocks (logs and leaves) clearing a keep site may remove.", 500, 0, 100000));
+    public static final TuningKey.BlockKey SCAFFOLD_MATERIAL = register(new TuningKey.BlockKey("scaffold.material",
+            "The block builders put up as temporary scaffolding (they fetch it from their storage like any block).",
+            ResourceLocation.withDefaultNamespace("oak_planks")));
+    public static final TuningKey.IntKey SCAFFOLD_REFUND = register(new TuningKey.IntKey("scaffold.refund",
+            "1: builders carry each scaffold block back to their storage when they tear it down (and cleanup drops it); 0: it is used up.", 1, 0, 1));
+    public static final TuningKey.IntKey SCAFFOLD_APPROACH = register(new TuningKey.IntKey("scaffold.approach",
+            "How builders put up scaffolding: 1 a ramp up the outside, 2 step pillars beside the structure, 3 the structure's own tops plus step pillars where needed.", 2, 1, 3));
+    public static final TuningKey.IntKey SCAFFOLD_MAX_BLOCKS = register(new TuningKey.IntKey("scaffold.max_blocks",
+            "Most scaffold blocks one build may plan; a structure needing more is left unfinished (and recorded as stuck).", 200, 0, 10_000));
+    public static final TuningKey.IntKey SCAFFOLD_REPLAN_TICKS = register(new TuningKey.IntKey("scaffold.replan_ticks",
+            "How often a stuck build (blocks out of reach) checks again whether it needs (more) scaffolding, in ticks.", 200, 20, 12_000));
+    public static final TuningKey.IntKey SCAFFOLD_SWEEP_TICKS = register(new TuningKey.IntKey("scaffold.sweep_ticks",
+            "How often scaffold of builds whose easel is gone or has no plan is cleaned up, in ticks.", 100, 20, 12_000));
+    public static final TuningKey.IntKey SCAFFOLD_STALE_TICKS = register(new TuningKey.IntKey("scaffold.request_stale_ticks",
+            "A scaffold request a builder has had this long without finishing it can be handed to another builder, in ticks.", 600, 100, 12_000));
+    public static final TuningKey.IntKey SCAFFOLD_TEARDOWN_STUCK_TICKS = register(new TuningKey.IntKey("scaffold.teardown_stuck_ticks",
+            "When builders can't take the scaffold down for this long after the structure is finished, it is removed at once, in ticks.", 1200, 100, 72_000));
     public static final TuningKey.IntKey DEV_PASTE_UNDO_DEPTH = register(new TuningKey.IntKey("dev.paste_undo_depth",
             "How many structure pastes /csr dev structure undo can undo (dev tool).", 10, 1, 100));
 

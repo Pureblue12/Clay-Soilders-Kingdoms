@@ -1,5 +1,8 @@
 package net.bumblebee.claysoldiers.tuning;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
@@ -13,7 +16,7 @@ import java.util.List;
  *
  * @param <T> the value type
  */
-public abstract sealed class TuningKey<T> permits TuningKey.IntKey, TuningKey.IntListKey {
+public abstract sealed class TuningKey<T> permits TuningKey.IntKey, TuningKey.IntListKey, TuningKey.BlockKey {
     private final String id;
     private final String description;
     private final T defaultValue;
@@ -141,6 +144,37 @@ public abstract sealed class TuningKey<T> permits TuningKey.IntKey, TuningKey.In
 
         @Override
         public String format(List<Integer> value) {
+            return value.toString();
+        }
+    }
+
+    /**
+     * The id of a block that exists, e.g. {@code "minecraft:oak_planks"} (materials such as the scaffold block).
+     */
+    public static final class BlockKey extends TuningKey<ResourceLocation> {
+        BlockKey(String id, String description, ResourceLocation defaultValue) {
+            super(id, description, defaultValue);
+        }
+
+        @Override
+        ResourceLocation parse(JsonElement json) {
+            if (!json.isJsonPrimitive() || !json.getAsJsonPrimitive().isString()) {
+                throw new IllegalArgumentException("expected a block id in quotes, got " + json);
+            }
+            ResourceLocation block = ResourceLocation.tryParse(json.getAsString());
+            if (block == null || !BuiltInRegistries.BLOCK.containsKey(block) || block.equals(BuiltInRegistries.BLOCK.getDefaultKey())) {
+                throw new IllegalArgumentException("no block " + json.getAsString());
+            }
+            return block;
+        }
+
+        @Override
+        public String range() {
+            return "a block id";
+        }
+
+        @Override
+        public String format(ResourceLocation value) {
             return value.toString();
         }
     }

@@ -1,0 +1,138 @@
+package net.bumblebee.claysoldiers.gametest;
+
+import net.bumblebee.claysoldiers.ClaySoldiersCommon;
+import net.bumblebee.claysoldiers.blueprint.BlueprintData;
+import net.bumblebee.claysoldiers.blueprint.BlueprintTemplateSettings;
+import net.bumblebee.claysoldiers.blueprint.templates.ServerBlueprintPlan;
+import net.bumblebee.claysoldiers.dev.DevScenarios;
+import net.bumblebee.claysoldiers.dev.DevTool;
+import net.bumblebee.claysoldiers.dev.DevToolRegistry;
+import net.bumblebee.claysoldiers.init.ModRegistries;
+import net.bumblebee.claysoldiers.scaffold.ScaffoldApproach;
+import net.bumblebee.claysoldiers.scaffold.ScaffoldInput;
+import net.bumblebee.claysoldiers.scaffold.ScaffoldPlan;
+import net.bumblebee.claysoldiers.scaffold.ScaffoldPlanner;
+import net.bumblebee.claysoldiers.scaffold.TestStructures;
+import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.neoforged.neoforge.gametest.GameTestHolder;
+import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static net.bumblebee.claysoldiers.gametest.ClaySoldierGameTests.PLATFORM;
+
+/**
+ * The scaffold planner on generated structures on flat ground (pure data, no world). Each asserts the CORRECT behavior.
+ */
+@GameTestHolder(ClaySoldiersCommon.MOD_ID)
+@PrefixGameTestTemplate(false)
+public class ScaffoldPlannerGameTests {
+    /** Budget for the 20-block tower (160 structure blocks): at most 40 scaffold blocks (a quarter). */
+    static final int TOWER_BUDGET = 40;
+    /** Budget for the 12-high, 16-long wall (192 blocks). */
+    static final int WALL_BUDGET = 40;
+    /** Budget for the corner tower (14 high) on two 10-high walls. */
+    static final int WALL_TOWER_BUDGET = 60;
+
+    static ScaffoldInput flat(TestStructures.Shape shape, int height) {
+        return ScaffoldInput.flat(TestStructures.blocks(shape, height), -1);
+    }
+
+    static ScaffoldPlan inGame(ScaffoldInput input) {
+        return ScaffoldPlanner.plan(input, ScaffoldApproach.STEP_PILLARS);
+    }
+
+    /** A 20-block tower: every block is reachable at some step, the scaffold comes down again, within budget. */
+    @GameTest(template = PLATFORM)
+    public static void plannerReachesEveryTowerBlock(GameTestHelper helper) {
+        ScaffoldPlan plan = inGame(flat(TestStructures.Shape.TOWER, 20));
+        helper.assertTrue(plan.complete() && plan.unreachable().isEmpty(), "Not every block is reachable: " + plan.describe());
+        helper.assertTrue(plan.teardownComplete(), "The scaffold can't be taken down: " + plan.describe());
+        helper.assertTrue(!plan.scaffold().isEmpty() && plan.scaffold().size() <= TOWER_BUDGET,
+                "Scaffold blocks: " + plan.scaffold().size() + ", budget " + TOWER_BUDGET);
+        helper.assertTrue(plan.scaffold().stream().noneMatch(Set.copyOf(TestStructures.blocks(TestStructures.Shape.TOWER, 20))::contains),
+                "Scaffold inside the structure");
+        helper.succeed();
+    }
+
+    /** Within reach (9 high: builders reach 8 above their feet) there is no scaffold. */
+    @GameTest(template = PLATFORM)
+    public static void plannerGivesNoScaffoldWithinReach(GameTestHelper helper) {
+        ScaffoldPlan plan = inGame(flat(TestStructures.Shape.TOWER, 9));
+        helper.assertTrue(plan.complete() && plan.scaffold().isEmpty(), "A 9-high tower needs no scaffold: " + plan.describe());
+        helper.succeed();
+    }
+
+    /** One block taller than reach (10 high) needs scaffold. */
+    @GameTest(template = PLATFORM)
+    public static void plannerNeedsScaffoldAboveReach(GameTestHelper helper) {
+        ScaffoldPlan plan = inGame(flat(TestStructures.Shape.TOWER, 10));
+        helper.assertTrue(plan.complete() && !plan.scaffold().isEmpty(), "A 10-high tower needs scaffold: " + plan.describe());
+        helper.succeed();
+    }
+
+    /**
+     * All four approaches are planned for the 20-block tower: the ramp, step pillars and platforms reach every block
+     * and come down; vanilla scaffolding is not usable by soldiers.
+     */
+    @GameTest(template = PLATFORM)
+    public static void plannerComparesApproaches(GameTestHelper helper) {
+        Map<ScaffoldApproach, ScaffoldPlan> plans = ScaffoldPlanner.compare(flat(TestStructures.Shape.TOWER, 20)).stream()
+                .collect(Collectors.toMap(ScaffoldPlan::approach, Function.identity()));
+        helper.assertTrue(plans.size() == ScaffoldApproach.values().length, "Missing approaches: " + plans.keySet());
+        for (ScaffoldApproach approach : List.of(ScaffoldApproach.OUTSIDE_RAMP, ScaffoldApproach.STEP_PILLARS, ScaffoldApproach.PLATFORMS)) {
+            ScaffoldPlan plan = plans.get(approach);
+            helper.assertTrue(plan.usable() && !plan.scaffold().isEmpty(), approach + " should work: " + plan.describe());
+        }
+        ScaffoldPlan vanilla = plans.get(ScaffoldApproach.VANILLA_SCAFFOLDING);
+        helper.assertTrue(!vanilla.usable() && !vanilla.scaffold().isEmpty(), "Vanilla scaffolding must be counted but not usable: " + vanilla.describe());
+        ClaySoldiersCommon.LOGGER.info("CSR scaffold comparison, tower 20: {}", plans.values().stream().map(ScaffoldPlan::describe).toList());
+        helper.succeed();
+    }
+
+    /** A long wall (16 long, 12 high) and a corner tower (14 high) on two walls (10 high): complete, within budget. */
+    @GameTest(template = PLATFORM)
+    public static void plannerHandlesWallAndCornerTower(GameTestHelper helper) {
+        ScaffoldPlan wall = inGame(flat(TestStructures.Shape.WALL, 12));
+        helper.assertTrue(wall.usable() && !wall.scaffold().isEmpty() && wall.scaffold().size() <= WALL_BUDGET, "Wall: " + wall.describe());
+        ScaffoldPlan corner = inGame(flat(TestStructures.Shape.WALL_TOWER, 10));
+        helper.assertTrue(corner.usable() && !corner.scaffold().isEmpty() && corner.scaffold().size() <= WALL_TOWER_BUDGET, "Corner tower: " + corner.describe());
+        helper.succeed();
+    }
+
+    /** The Small House (151 blocks) is within reach everywhere: no scaffold. */
+    @GameTest(template = PLATFORM)
+    public static void plannerSmallHouseNeedsNoScaffold(GameTestHelper helper) {
+        BlueprintData house = helper.getLevel().registryAccess().registryOrThrow(ModRegistries.BLUEPRINTS).get(DevScenarios.SMALL_HOUSE);
+        helper.assertTrue(house != null && house.isValid(), "No Small House blueprint");
+        ServerBlueprintPlan plan = house.createServerPlan().orElseThrow();
+        List<BlockPos> blocks = plan.targetPositions(BlockPos.ZERO, new BlueprintTemplateSettings(plan.getSize(), Mirror.NONE, Rotation.NONE));
+        ScaffoldPlan scaffold = inGame(ScaffoldInput.flat(new ArrayList<>(blocks), -1));
+        helper.assertTrue(scaffold.scaffold().isEmpty(), "The Small House got scaffold: " + scaffold.describe());
+        helper.succeed();
+    }
+
+    /** The dev book has a Scaffolding category with build, plan, status, cleanup and undo. */
+    @GameTest(template = PLATFORM)
+    public static void devBookHasScaffoldButtons(GameTestHelper helper) {
+        Set<String> commands = DevToolRegistry.defaults().tools().stream().map(DevTool::command).collect(Collectors.toSet());
+        List<String> missing = new ArrayList<>();
+        for (String command : List.of("/csr dev scaffold build", "/csr dev scaffold plan", "/csr dev scaffold status",
+                "/csr dev scaffold cleanup", "/csr dev scaffold undo")) {
+            if (!commands.contains(command)) {
+                missing.add(command);
+            }
+        }
+        helper.assertTrue(missing.isEmpty(), "No dev book entry for " + missing);
+        helper.succeed();
+    }
+}

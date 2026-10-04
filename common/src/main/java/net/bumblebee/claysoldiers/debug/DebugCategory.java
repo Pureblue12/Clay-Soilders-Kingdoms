@@ -22,6 +22,7 @@ public final class DebugCategory {
     public static final DebugCategory STRUCTURE = register("STRUCTURE", "Structure registry: paste, undo, reload, validation problems");
     public static final DebugCategory KINGDOM = register("KINGDOM", "Kingdoms: founding, disbanding, king death, stockpile changes, refusals");
     public static final DebugCategory TERRAIN = register("TERRAIN", "Terrain: scans, site scores, refusals, grading choices and their block counts");
+    public static final DebugCategory SCAFFOLD = register("SCAFFOLD", "Scaffolding: planned, placed, removed, stuck, cleanup, player blocks kept");
 
     /** The categories turned on by "Start recording". */
     public static final List<DebugCategory> PRESET = List.of(BUILD, WORK, DAMAGE);

@@ -1,0 +1,187 @@
+package net.bumblebee.claysoldiers.gametest;
+
+import net.bumblebee.claysoldiers.ClaySoldiersCommon;
+import net.bumblebee.claysoldiers.block.blueprint.EaselBlockEntity;
+import net.bumblebee.claysoldiers.blueprint.BlueprintData;
+import net.bumblebee.claysoldiers.debug.DebugCategory;
+import net.bumblebee.claysoldiers.debug.DebugLog;
+import net.bumblebee.claysoldiers.dev.DevScenarios;
+import net.bumblebee.claysoldiers.entity.goal.workgoal.BuildBlueprintGoal;
+import net.bumblebee.claysoldiers.entity.soldier.ClaySoldierEntity;
+import net.bumblebee.claysoldiers.scaffold.ScaffoldSavedData;
+import net.bumblebee.claysoldiers.scaffold.TestStructures;
+import net.bumblebee.claysoldiers.tuning.Tuning;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.neoforged.neoforge.gametest.GameTestHolder;
+import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static net.bumblebee.claysoldiers.gametest.TerrainScanGameTests.TERRAIN;
+
+/**
+ * Builders finishing structures taller than their reach with temporary scaffolding, which is gone afterwards. Each
+ * asserts the CORRECT behavior. Each test has its own batch (scaffold jobs and the recorder are world-wide state).
+ * The times are written to the log ("CSR scaffold build").
+ */
+@GameTestHolder(ClaySoldiersCommon.MOD_ID)
+@PrefixGameTestTemplate(false)
+public class ScaffoldBuildGameTests {
+    static final int BUILDERS = 3;
+    /** Scaffold material put in the chest (more than any plan within budget needs). */
+    static final int SCAFFOLD_STOCK = 128;
+    static final int LONG_TIMEOUT = 24_000;
+
+    /**
+     * A build scenario in the terrain template: an easel facing north at {@code easelRel}, the structure going south
+     * from 2 blocks behind it, a chest with the cobblestone and the scaffold material, and builders.
+     */
+    record Scenario(EaselBlockEntity easel, ChestBlockEntity chest, List<ClaySoldierEntity> builders, List<BlockPos> blocks, Item scaffold) {
+    }
+
+    static Scenario scenario(GameTestHelper helper, TestStructures.Shape shape, int height, BlockPos easelRel, BlockPos chestRel) {
+        ServerLevel level = helper.getLevel();
+        BlueprintData blueprint = TestStructures.blueprint(level, shape, height);
+        int count = TestStructures.blocks(shape, height).size();
+        Item scaffold = BuiltInRegistries.BLOCK.get(Tuning.SCAFFOLD_MATERIAL.get()).asItem();
+        BlockPos chestPos = helper.absolutePos(chestRel);
+        ChestBlockEntity chest = DevScenarios.placeChest(level, chestPos, List.of(new ItemStack(Items.COBBLESTONE, count), new ItemStack(scaffold, SCAFFOLD_STOCK)));
+        EaselBlockEntity easel = DevScenarios.placeEasel(level, helper.absolutePos(easelRel), Direction.NORTH, blueprint);
+        List<ClaySoldierEntity> builders = new ArrayList<>();
+        for (int i = 0; i < BUILDERS; i++) {
+            builders.add(DevScenarios.spawnWorker(level, chestPos.east(1 + i), DevScenarios.RED_TEAM, ClaySoldierGameTests.owner(level),
+                    BuildBlueprintGoal.class, chestPos));
+        }
+        var settings = easel.getTemplateSettings();
+        BlockPos base = EaselBlockEntity.templateBase(easel.getBlockPos(), easel.getFacing(), settings);
+        List<BlockPos> blocks = new ArrayList<>();
+        var plan = blueprint.createServerPlan().orElseThrow();
+        blocks.addAll(plan.targetPositions(base, settings));
+        return new Scenario(easel, chest, builders, blocks, scaffold);
+    }
+
+    static long countAt(GameTestHelper helper, List<BlockPos> positions, Block block) {
+        return positions.stream().filter(pos -> helper.getLevel().getBlockState(pos).is(block)).count();
+    }
+
+    /** Scaffold blocks anywhere within 6 blocks of the structure. */
+    static long scaffoldLeft(GameTestHelper helper, Scenario scenario) {
+        Block material = BuiltInRegistries.BLOCK.get(Tuning.SCAFFOLD_MATERIAL.get());
+        var box = net.minecraft.world.level.levelgen.structure.BoundingBox.encapsulatingPositions(scenario.blocks()).orElseThrow().inflatedBy(6);
+        return BlockPos.betweenClosedStream(box).filter(pos -> helper.getLevel().getBlockState(pos).is(material)).count();
+    }
+
+    /**
+     * Waits until the structure is finished and its scaffold is gone (job forgotten, no scaffold block left, every
+     * structure block in place, all scaffold material back in the chest when refunded).
+     */
+    static void finishesAndCleansUp(GameTestHelper helper, Scenario scenario, String what) {
+        finishesAndCleansUp(helper, scenario, what, () -> {
+        });
+    }
+
+    /**
+     * Like {@link #finishesAndCleansUp(GameTestHelper, Scenario, String)}, with {@code alsoCheck} run (and allowed to
+     * fail) once everything else holds.
+     */
+    static void finishesAndCleansUp(GameTestHelper helper, Scenario scenario, String what, Runnable alsoCheck) {
+        long[] structureDone = {-1};
+        helper.onEachTick(() -> {
+            if (structureDone[0] < 0 && scenario.easel().isFinished()) {
+                structureDone[0] = helper.getTick();
+            }
+        });
+        helper.succeedWhen(() -> {
+            long placed = countAt(helper, scenario.blocks(), Blocks.COBBLESTONE);
+            helper.assertTrue(scenario.easel().isFinished(), what + " not finished: " + placed + " of " + scenario.blocks().size() + " blocks");
+            helper.assertTrue(ScaffoldSavedData.get(helper.getLevel()).job(scenario.easel().getBlockPos()).isEmpty(), what + ": scaffold job still open");
+            long left = scaffoldLeft(helper, scenario);
+            helper.assertTrue(left == 0, what + ": " + left + " scaffold blocks left");
+            helper.assertTrue(placed == scenario.blocks().size(), what + ": only " + placed + " of " + scenario.blocks().size() + " blocks in place");
+            if (Tuning.SCAFFOLD_REFUND.get() == 1) {
+                int back = scenario.chest().countItem(scenario.scaffold());
+                helper.assertTrue(back == SCAFFOLD_STOCK, what + ": " + back + " of " + SCAFFOLD_STOCK + " scaffold blocks back in the chest");
+            }
+            alsoCheck.run();
+            ClaySoldiersCommon.LOGGER.info("CSR scaffold build: {}: {} blocks, structure finished at tick {}, scaffold gone at tick {}",
+                    what, scenario.blocks().size(), structureDone[0], helper.getTick());
+        });
+    }
+
+    /**
+     * Acceptance test: builders finish a 20-block tower (3 by 3, hollow) with scaffolding, then the scaffold is gone.
+     * While recording BUILD and SCAFFOLD: no builder gives up carrying, and the scaffold is planned, placed and removed.
+     */
+    @GameTest(template = TERRAIN, batch = "scaffold_tower", timeoutTicks = LONG_TIMEOUT)
+    public static void builderFinishesTwentyBlockTower(GameTestHelper helper) {
+        DebugLog.reset();
+        DebugCategory build = DebugCategory.byId("BUILD").orElseThrow();
+        DebugCategory scaffold = DebugCategory.byId("SCAFFOLD").orElseThrow();
+        DebugLog.setEnabled(build, true, helper.getLevel().getServer());
+        DebugLog.setEnabled(scaffold, true, helper.getLevel().getServer());
+        Scenario scenario = scenario(helper, TestStructures.Shape.TOWER, 20, new BlockPos(16, 2, 8), new BlockPos(9, 2, 6));
+        helper.onEachTick(() -> {
+            if (DebugLog.contains(build, "gave up")) {
+                DebugLog.reset();
+                helper.fail("A builder gave up carrying while building the tower");
+            }
+        });
+        finishesAndCleansUp(helper, scenario, "tower 20", () -> {
+            boolean logged = DebugLog.contains(scaffold, "planned") && DebugLog.contains(scaffold, "placed") && DebugLog.contains(scaffold, "removed");
+            DebugLog.reset();
+            helper.assertTrue(logged, "SCAFFOLD events missing (planned, placed, removed)");
+        });
+    }
+
+    /** A long wall (16 long, 12 high) finishes, and its scaffold is gone. */
+    @GameTest(template = TERRAIN, batch = "scaffold_wall", timeoutTicks = LONG_TIMEOUT)
+    public static void builderFinishesLongWall(GameTestHelper helper) {
+        Scenario scenario = scenario(helper, TestStructures.Shape.WALL, 12, new BlockPos(16, 2, 6), new BlockPos(5, 2, 4));
+        finishesAndCleansUp(helper, scenario, "wall 12");
+    }
+
+    /** Two 10-high walls meeting at a 14-high corner tower finish, and the scaffold is gone. */
+    @GameTest(template = TERRAIN, batch = "scaffold_corner_tower", timeoutTicks = LONG_TIMEOUT)
+    public static void builderFinishesCornerTowerOnWall(GameTestHelper helper) {
+        Scenario scenario = scenario(helper, TestStructures.Shape.WALL_TOWER, 10, new BlockPos(16, 2, 4), new BlockPos(5, 2, 2));
+        finishesAndCleansUp(helper, scenario, "corner tower 14 on walls 10");
+    }
+
+    /**
+     * The full Small House (151 blocks) still finishes with 3 builders, and gets no scaffold: nothing in it is above
+     * reach, so its build is unchanged.
+     */
+    @GameTest(template = TERRAIN, batch = "scaffold_small_house", timeoutTicks = 36_000)
+    public static void smallHouseStillReachesAllBlocksWithoutScaffold(GameTestHelper helper) {
+        DebugLog.reset();
+        DebugCategory scaffold = DebugCategory.byId("SCAFFOLD").orElseThrow();
+        DebugLog.setEnabled(scaffold, true, helper.getLevel().getServer());
+        ServerLevel level = helper.getLevel();
+        var result = DevScenarios.buildTest(level, ClaySoldierGameTests.owner(level), helper.absolutePos(new BlockPos(16, 2, 3)), Direction.SOUTH, true);
+        EaselBlockEntity easel = (EaselBlockEntity) level.getBlockEntity(result.easel());
+        long[] start = {helper.getTick()};
+        helper.onEachTick(() -> {
+            if (ScaffoldSavedData.get(level).job(result.easel()).isPresent() || DebugLog.contains(scaffold, "planned")) {
+                DebugLog.reset();
+                helper.fail("The Small House got scaffolding");
+            }
+        });
+        helper.succeedWhen(() -> {
+            helper.assertTrue(easel != null && easel.isFinished(), "Small House not finished: " + (easel == null ? "no easel" : easel.getRequiredItems()));
+            ClaySoldiersCommon.LOGGER.info("CSR scaffold build: Small House 151 blocks, no scaffold, finished at tick {}", helper.getTick() - start[0]);
+            DebugLog.reset();
+        });
+    }
+}
