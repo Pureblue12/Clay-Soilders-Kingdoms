@@ -237,4 +237,30 @@ public class ScaffoldBuildGameTests {
         Item scaffold = BuiltInRegistries.BLOCK.get(Tuning.SCAFFOLD_MATERIAL.get()).asItem();
         return new Scenario(easel, (ChestBlockEntity) level.getBlockEntity(result.chest()), result.soldiers(), blocks, scaffold);
     }
+
+    /**
+     * Once scaffold is planned, builders put the columns up before working above reach, instead of raising each
+     * column one level whenever they run out of reachable blocks (found in game: slow, with pauses). Checked when the
+     * first structure block above reach (9 or more above the ground) is placed: every planned scaffold block stands.
+     */
+    @GameTest(template = TERRAIN, batch = "scaffold_columns_first", timeoutTicks = 12_000, skyAccess = true)
+    public static void columnsGoUpBeforeWorkAboveReach(GameTestHelper helper) {
+        Scenario scenario = scenario(helper, TestStructures.Shape.WALL, 12, new BlockPos(16, 2, 6), new BlockPos(12, 2, 4));
+        ServerLevel level = helper.getLevel();
+        int groundY = scenario.blocks().stream().mapToInt(BlockPos::getY).min().orElseThrow();
+        List<BlockPos> aboveReach = scenario.blocks().stream().filter(pos -> pos.getY() >= groundY + 9).toList();
+        String[] verdict = {null};
+        helper.onEachTick(() -> {
+            if (verdict[0] == null && countAt(helper, aboveReach, Blocks.COBBLESTONE) > 0) {
+                var job = ScaffoldSavedData.get(level).job(scenario.easel().getBlockPos());
+                int planned = job.map(j -> j.planned().size()).orElse(0);
+                int placed = job.map(j -> j.placed().size()).orElse(0);
+                verdict[0] = planned > 0 && placed == planned ? "" : placed + " of " + planned + " scaffold blocks up when work above reach started";
+            }
+        });
+        helper.succeedWhen(() -> {
+            helper.assertTrue(verdict[0] != null, "no block above reach placed yet");
+            helper.assertTrue(verdict[0].isEmpty(), verdict[0]);
+        });
+    }
 }

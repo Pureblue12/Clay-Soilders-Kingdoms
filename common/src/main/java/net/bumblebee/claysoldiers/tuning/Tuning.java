@@ -107,6 +107,10 @@ public final class Tuning {
             "Distance between the pillars under a foundation platform, in blocks (edges and corners always get one).", 4, 1, 16));
     public static final TuningKey.IntKey TERRAIN_GRADE_CLEAR_TREES_BUDGET = register(new TuningKey.IntKey("terrain.grade.clear_trees_budget",
             "Most tree blocks (logs and leaves) clearing a keep site may remove.", 500, 0, 100000));
+    public static final TuningKey.IntKey BUILD_UNREACHABLE_RECHECK_TICKS = register(new TuningKey.IntKey("build.unreachable_recheck_ticks",
+            "A blueprint block builders found out of reach isn't checked again (an expensive path search) for this many ticks, unless a block of the build is placed or removed first. 0: always check.", 100, 0, 1200));
+    public static final TuningKey.IntKey SCAFFOLD_COLUMNS_FIRST = register(new TuningKey.IntKey("scaffold.columns_first",
+            "1: once a build's scaffolding is planned, builders put all of it up before working above reach; 0: they raise it a level at a time, only when nothing else is in reach.", 1, 0, 1));
     public static final TuningKey.BlockKey SCAFFOLD_MATERIAL = register(new TuningKey.BlockKey("scaffold.material",
             "The block builders put up as temporary scaffolding (they fetch it from their storage like any block). Climbed columns (approach 4) need a block soldiers can be inside, like scaffolding; with another block, step pillars are used.",
             ResourceLocation.withDefaultNamespace("scaffolding")));

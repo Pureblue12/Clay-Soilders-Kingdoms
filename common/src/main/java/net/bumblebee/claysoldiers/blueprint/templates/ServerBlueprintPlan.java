@@ -263,6 +263,13 @@ public class ServerBlueprintPlan extends BlueprintPlan {
     }
 
     /**
+     * Forgets which blocks were found out of reach, so the next request search checks them again (call when the world
+     * around the build changed, e.g. a block of the build was placed or removed).
+     */
+    public void forgetUnreachable() {
+    }
+
+    /**
      * Whether the last request search handed out nothing while some remaining blocks were out of reach. The easel then
      * asks for scaffolding ({@code Scaffolds}).
      */

@@ -13,6 +13,7 @@ import net.bumblebee.claysoldiers.scaffold.ScaffoldInput;
 import net.bumblebee.claysoldiers.scaffold.ScaffoldPlan;
 import net.bumblebee.claysoldiers.scaffold.ScaffoldPlanner;
 import net.bumblebee.claysoldiers.scaffold.TestStructures;
+import net.bumblebee.claysoldiers.tuning.Tuning;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -107,6 +108,61 @@ public class ScaffoldPlannerGameTests {
         ScaffoldPlan corner = inGame(flat(TestStructures.Shape.WALL_TOWER, 10));
         helper.assertTrue(corner.usable() && !corner.scaffold().isEmpty() && corner.scaffold().size() <= WALL_TOWER_BUDGET, "Corner tower: " + corner.describe());
         helper.succeed();
+    }
+
+    /** Most time the planner may take for the biggest test structure (it runs on the server thread). */
+    static final long PLAN_MILLIS = 500;
+
+    /**
+     * The planner is quick enough to run in game: climbed columns for a corner tower (24 high) on two 20-high walls
+     * (592 blocks) take less than {@link #PLAN_MILLIS} ms and reach every block. Found in game: it took 2.6 s there.
+     */
+    @GameTest(template = PLATFORM)
+    public static void plannerIsQuickForTallWallWithTower(GameTestHelper helper) {
+        ScaffoldInput input = flat(TestStructures.Shape.WALL_TOWER, 20);
+        ScaffoldPlanner.plan(flat(TestStructures.Shape.TOWER, 10), ScaffoldApproach.CLIMBED_COLUMNS); // warm up
+        long start = System.nanoTime();
+        ScaffoldPlan plan = ScaffoldPlanner.plan(input, ScaffoldApproach.CLIMBED_COLUMNS);
+        long millis = (System.nanoTime() - start) / 1_000_000;
+        ClaySoldiersCommon.LOGGER.info("CSR scaffold planner: wall_tower 20 ({} blocks) planned in {} ms: {}", input.structure().size(), millis, plan.describe());
+        helper.assertTrue(plan.usable(), "Not every block reachable: " + plan.describe());
+        helper.assertTrue(millis < PLAN_MILLIS, "Planning took " + millis + " ms (limit " + PLAN_MILLIS + ")");
+        helper.succeed();
+    }
+
+    /**
+     * A request search doesn't path-search blocks it just found out of reach again (found in game: with 500 blocks out
+     * of reach every search took about 1 s, freezing the server): for {@code build.unreachable_recheck_ticks} they are
+     * skipped (still counted as out of reach), until the build changes ({@code forgetUnreachable}) or the time is up.
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 400)
+    public static void unreachableBlocksAreNotSearchedAgainRightAway(GameTestHelper helper) {
+        var level = helper.getLevel();
+        ServerBlueprintPlan plan = TestStructures.blueprint(level, TestStructures.Shape.TOWER, 20).createServerPlan().orElseThrow();
+        BlueprintTemplateSettings settings = new BlueprintTemplateSettings(plan.getSize(), Mirror.NONE, Rotation.NONE);
+        BlockPos base = helper.absolutePos(new BlockPos(2, 2, 2));
+        int[] checks = {0};
+        java.util.function.Predicate<BlockPos> nothingReachable = pos -> {
+            checks[0]++;
+            return false;
+        };
+        int blocks = plan.targetPositions(base, settings).size();
+        helper.assertTrue(plan.getRequest(level, base, settings, nothingReachable) == null && checks[0] == blocks,
+                "first search should check all " + blocks + " blocks, checked " + checks[0]);
+        helper.assertTrue(plan.lastSearchFoundUnreachable(), "blocks out of reach must still count as out of reach");
+        checks[0] = 0;
+        plan.getRequest(level, base, settings, nothingReachable);
+        helper.assertTrue(checks[0] == 0, "second search right away path-searched " + checks[0] + " blocks again");
+        helper.assertTrue(plan.lastSearchFoundUnreachable(), "skipped blocks must still count as out of reach");
+        plan.forgetUnreachable();
+        plan.getRequest(level, base, settings, nothingReachable);
+        helper.assertTrue(checks[0] == blocks, "after the build changed every block is checked again, checked " + checks[0]);
+        checks[0] = 0;
+        helper.runAfterDelay(Tuning.BUILD_UNREACHABLE_RECHECK_TICKS.get() + 1, () -> {
+            plan.getRequest(level, base, settings, nothingReachable);
+            helper.assertTrue(checks[0] == blocks, "after the wait every block is checked again, checked " + checks[0]);
+            helper.succeed();
+        });
     }
 
     /** The Small House (151 blocks) is within reach everywhere: no scaffold. */
