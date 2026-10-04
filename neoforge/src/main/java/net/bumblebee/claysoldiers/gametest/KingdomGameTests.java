@@ -300,6 +300,61 @@ public class KingdomGameTests {
         helper.succeed();
     }
 
+    /**
+     * The in-game trigger: a player sneaking and right-clicking their own king with a gold block founds the kingdom,
+     * and the gold block is not used up. Without sneaking nothing is founded.
+     */
+    @GameTest(template = PLATFORM, batch = "kingdom_gold_block")
+    public static void goldBlockOnKingFoundsKingdom(GameTestHelper helper) {
+        clear(helper);
+        FakePlayer player = player(helper);
+        ClaySoldierEntity king = spawnKing(helper, KING_AT, RED, player);
+        try {
+            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(Items.GOLD_BLOCK, 2));
+            player.setShiftKeyDown(false);
+            player.interactOn(king, net.minecraft.world.InteractionHand.MAIN_HAND);
+            helper.assertTrue(Kingdoms.byTeam(server(helper), RED).isEmpty(), "Founded without sneaking");
+            player.setShiftKeyDown(true);
+            player.interactOn(king, net.minecraft.world.InteractionHand.MAIN_HAND);
+            helper.assertTrue(Kingdoms.byTeam(server(helper), RED).isPresent(), "Sneak + right-click with a gold block did not found the kingdom");
+            helper.assertTrue(player.getMainHandItem().is(Items.GOLD_BLOCK) && player.getMainHandItem().getCount() == 2, "The gold block was used up");
+        } finally {
+            player.setShiftKeyDown(false);
+            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            clear(helper);
+        }
+        helper.succeed();
+    }
+
+    /**
+     * The census counts the team's living soldiers inside the claim (not other teams, not outside), records when, and
+     * updates the king's last position.
+     */
+    @GameTest(template = PLATFORM, batch = "kingdom_census")
+    public static void censusCountsSoldiersInClaim(GameTestHelper helper) {
+        clear(helper);
+        FakePlayer player = player(helper);
+        try {
+            GameTestTuning.load("{\"kingdom.claim_radius\": 5}");
+            ClaySoldierEntity king = spawnKing(helper, KING_AT, RED, player);
+            helper.assertTrue(Kingdoms.found(helper.getLevel(), king, player).ok(), "Setup: founding failed");
+            DevSoldier.spawnPlain(helper, new BlockPos(6, GROUND_Y, 8), RED);
+            DevSoldier.spawnPlain(helper, new BlockPos(10, GROUND_Y, 9), RED);
+            DevSoldier.spawnPlain(helper, new BlockPos(7, GROUND_Y, 7), BLUE);   // other team
+            DevSoldier.spawnPlain(helper, new BlockPos(1, GROUND_Y, 1), RED);    // outside the claim (about 10 away)
+            king.teleportTo(king.getX() + 1, king.getY(), king.getZ());
+            Kingdom kingdom = Kingdoms.byTeam(server(helper), RED).orElseThrow();
+            Kingdoms.census(server(helper), kingdom);
+            helper.assertTrue(kingdom.census().population() == 3 && kingdom.census().tick() >= 0,
+                    "Expected 3 (king + 2 inside), got " + kingdom.census());
+            helper.assertTrue(kingdom.king().lastPos().equals(king.blockPosition()), "The king's last position was not updated");
+        } finally {
+            GameTestTuning.restore(server(helper));
+            clear(helper);
+        }
+        helper.succeed();
+    }
+
     @AfterBatch(batch = "kingdom_log")
     public static void resetLog(ServerLevel level) {
         DebugLog.reset();

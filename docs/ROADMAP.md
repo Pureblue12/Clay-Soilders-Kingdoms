@@ -76,7 +76,7 @@ Stages are ordered by dependency and risk. Every stage ends playable.
   - **Recorder:** KINGDOM category.
   - **Flow audit:** the stockpile is a store with no producer or consumer yet; only dev commands fill it (stage 5
     adds the first loop).
-  - **Tests:** 103 required (82 before), all pass.
+  - **Tests:** 105 required (82 before), all pass.
 
 ### 2 Terrain spike
 - **Goal:** site scoring, foundations or terraforming; founding refuses or warns on bad ground.

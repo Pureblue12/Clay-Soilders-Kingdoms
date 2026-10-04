@@ -52,7 +52,7 @@ Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/mak
 - Tests that change global state (recorder, `DoorAccess.overrideRuleForTests`) get their own `batch` and reset it
   (`@AfterBatch` for the door rule).
 
-Current status (2026-10-03, after stage 1 Kingdom core): all 103 required tests pass. `SuspectedBugGameTests` covers the easel right-click:
+Current status (2026-10-03, after stage 1 Kingdom core): all 105 required tests pass. `SuspectedBugGameTests` covers the easel right-click:
 non-block item, unneeded block, needed block.
 
 ### Known bugs (confirmed)
