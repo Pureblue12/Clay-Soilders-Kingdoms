@@ -63,6 +63,50 @@ public final class Tuning {
             List.of(8, 12, 16, 20, 26, 32, 40, 48, 56, 64), 1, 1000));
     public static final TuningKey.IntKey EVENTS_WARNING_TIME = register(new TuningKey.IntKey("events.warning_time_ticks",
             "How long before a raid or event the kingdom is warned, in ticks (20 ticks = 1 second).", 1200, 0, 72_000));
+    public static final TuningKey.IntKey TERRAIN_SCAN_RADIUS = register(new TuningKey.IntKey("terrain.scan_radius",
+            "How far /csr dev terrain scan looks around you, in blocks (the scan is a square of 2r+1 columns).", 24, 1, 64));
+    public static final TuningKey.IntKey TERRAIN_KEEP_SIZE = register(new TuningKey.IntKey("terrain.keep_size",
+            "Width of the tier-1 keep's footprint used for site checks and grading, in blocks (placeholder until the keep is designed).", 9, 3, 31));
+    public static final TuningKey.IntKey TERRAIN_KEEP_MARGIN = register(new TuningKey.IntKey("terrain.keep_margin",
+            "Blocks around the keep footprint that are judged and levelled with it.", 1, 0, 8));
+    public static final TuningKey.IntKey TERRAIN_REFUSE_HEIGHT_RANGE = register(new TuningKey.IntKey("terrain.refuse.height_range",
+            "A site whose highest and lowest columns differ by this much or more is refused as too steep.", 8, 1, 64));
+    public static final TuningKey.IntKey TERRAIN_REFUSE_SLOPE = register(new TuningKey.IntKey("terrain.refuse.slope_percent",
+            "A site sloping this much or more (percent along the steeper axis; 100 = 1 up per block) is refused as too steep.", 75, 1, 1000));
+    public static final TuningKey.IntKey TERRAIN_REFUSE_CLIFF_STEP = register(new TuningKey.IntKey("terrain.refuse.cliff_step",
+            "A step of this many blocks or more between neighbouring columns of a site is a cliff and refused (soldiers hop 1).", 4, 2, 64));
+    public static final TuningKey.IntKey TERRAIN_REFUSE_WATER_DEPTH = register(new TuningKey.IntKey("terrain.refuse.water_depth",
+            "Water this deep or deeper anywhere on a site is refused as deep water.", 3, 1, 64));
+    public static final TuningKey.IntKey TERRAIN_REFUSE_LAVA_DISTANCE = register(new TuningKey.IntKey("terrain.refuse.lava_distance",
+            "Lava on the site or within this many blocks of it refuses the site.", 4, 0, 32));
+    public static final TuningKey.IntKey TERRAIN_PENALTY_HEIGHT_RANGE = register(new TuningKey.IntKey("terrain.penalty.height_range",
+            "Score points lost per block of height difference across a site.", 3, 0, 100));
+    public static final TuningKey.IntKey TERRAIN_PENALTY_SLOPE = register(new TuningKey.IntKey("terrain.penalty.slope",
+            "Score points lost per 10 percent of slope.", 2, 0, 100));
+    public static final TuningKey.IntKey TERRAIN_PENALTY_WATER = register(new TuningKey.IntKey("terrain.penalty.water",
+            "Score points lost per 10 percent of the site's columns under (shallow) water.", 4, 0, 100));
+    public static final TuningKey.IntKey TERRAIN_PENALTY_TREES = register(new TuningKey.IntKey("terrain.penalty.trees",
+            "Score points lost per 10 percent of the site's columns with trees.", 2, 0, 100));
+    public static final TuningKey.IntKey TERRAIN_PENALTY_STEP = register(new TuningKey.IntKey("terrain.penalty.step",
+            "Score points lost per 10 percent of the site's columns next to a step of 2 or more blocks (smaller than a cliff).", 4, 0, 100));
+    public static final TuningKey.IntKey TERRAIN_PENALTY_BIOME = register(new TuningKey.IntKey("terrain.penalty.biome",
+            "Score points lost on a wet (ocean, river, beach) or mountain biome.", 10, 0, 100));
+    public static final TuningKey.IntKey TERRAIN_SEARCH_RADIUS = register(new TuningKey.IntKey("terrain.search.radius",
+            "How far the site search looks around the wanted point for a better keep site, in blocks.", 16, 0, 64));
+    public static final TuningKey.IntKey TERRAIN_SEARCH_STEP = register(new TuningKey.IntKey("terrain.search.step",
+            "Distance between candidate sites in the search, in blocks.", 4, 1, 16));
+    public static final TuningKey.IntKey TERRAIN_SEARCH_MAX_CANDIDATES = register(new TuningKey.IntKey("terrain.search.max_candidates",
+            "Most candidate sites one search judges (nearest first).", 81, 1, 1000));
+    public static final TuningKey.IntKey TERRAIN_GRADE_CUT_FILL_BUDGET = register(new TuningKey.IntKey("terrain.grade.cut_fill_budget",
+            "Most ground blocks cut and fill may remove plus place to level a keep site.", 250, 0, 100000));
+    public static final TuningKey.IntKey TERRAIN_GRADE_FOUNDATION_BUDGET = register(new TuningKey.IntKey("terrain.grade.foundation_budget",
+            "Most blocks a foundation platform (floor plus pillars) may use.", 300, 0, 100000));
+    public static final TuningKey.IntKey TERRAIN_GRADE_FOUNDATION_MAX_HEIGHT = register(new TuningKey.IntKey("terrain.grade.foundation_max_height",
+            "Highest a foundation platform may stand above the lowest ground under it, in blocks (builders reach 8 up).", 6, 1, 32));
+    public static final TuningKey.IntKey TERRAIN_GRADE_PILLAR_SPACING = register(new TuningKey.IntKey("terrain.grade.pillar_spacing",
+            "Distance between the pillars under a foundation platform, in blocks (edges and corners always get one).", 4, 1, 16));
+    public static final TuningKey.IntKey TERRAIN_GRADE_CLEAR_TREES_BUDGET = register(new TuningKey.IntKey("terrain.grade.clear_trees_budget",
+            "Most tree blocks (logs and leaves) clearing a keep site may remove.", 500, 0, 100000));
     public static final TuningKey.IntKey DEV_PASTE_UNDO_DEPTH = register(new TuningKey.IntKey("dev.paste_undo_depth",
             "How many structure pastes /csr dev structure undo can undo (dev tool).", 10, 1, 100));
 
