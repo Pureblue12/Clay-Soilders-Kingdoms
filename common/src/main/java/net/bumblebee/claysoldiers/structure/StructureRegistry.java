@@ -180,6 +180,16 @@ public final class StructureRegistry {
             }
             if (meta.isReady()) {
                 validateGeometry(meta, where, sizeOf, problems);
+                validateLevels(meta, where, sizeOf, problems);
+            }
+            if (meta.terrain() != null && !StructureMeta.TERRAIN_BEHAVIORS.contains(meta.terrain())) {
+                problems.add(where + ": terrain \"" + meta.terrain() + "\" is not one of " + StructureMeta.TERRAIN_BEHAVIORS);
+            }
+            if (meta.doorSide() != null && !StructureMeta.DOOR_SIDES.contains(meta.doorSide())) {
+                problems.add(where + ": door_side \"" + meta.doorSide() + "\" is not one of " + StructureMeta.DOOR_SIDES);
+            }
+            if (meta.batch() != null && meta.batch() < 1) {
+                problems.add(where + ": batch must be at least 1, got " + meta.batch());
             }
         }
         problems.forEach(problem -> {
@@ -204,6 +214,31 @@ public final class StructureRegistry {
             problems.add(where + ": a ready structure needs \"footprint\"; the file is " + format(size.get()));
         } else if (!meta.footprint().equals(size.get())) {
             problems.add(where + ": footprint " + format(meta.footprint()) + " doesn't match the structure file's size " + format(size.get()));
+        }
+    }
+
+    /**
+     * Detail levels: level 1 is the structure file; every level's file exists and has the footprint's size (a level only
+     * adds blocks, so the box never changes); ground_level is a layer of the structure.
+     */
+    private static void validateLevels(StructureMeta meta, String where, Function<ResourceLocation, Optional<Vec3i>> sizeOf, List<String> problems) {
+        if (!meta.levels().isEmpty()) {
+            if (!meta.levels().getFirst().equals(meta.structure())) {
+                problems.add(where + ": levels must start with the structure file " + meta.structure() + ", got " + meta.levels().getFirst());
+            }
+            for (int i = 0; i < meta.levels().size(); i++) {
+                ResourceLocation file = meta.levels().get(i);
+                Optional<Vec3i> size = sizeOf.apply(file);
+                if (size.isEmpty()) {
+                    problems.add(where + ": level " + (i + 1) + " structure file " + file + " not found");
+                } else if (meta.footprint() != null && !meta.footprint().equals(size.get())) {
+                    problems.add(where + ": level " + (i + 1) + " file " + file + " is " + format(size.get())
+                            + ", not the footprint " + format(meta.footprint()));
+                }
+            }
+        }
+        if (meta.groundLevel() != null && (meta.groundLevel() < 0 || meta.footprint() != null && meta.groundLevel() >= meta.footprint().getY())) {
+            problems.add(where + ": ground_level " + meta.groundLevel() + " is not a layer of the structure");
         }
     }
 

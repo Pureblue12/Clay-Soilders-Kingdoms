@@ -6,6 +6,7 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,11 +31,21 @@ import java.util.Map;
  * @param structure    the structure file location, e.g. {@code csr:kingdom/test_hut} for
  *                     {@code data/csr/structure/kingdom/test_hut.nbt}; {@code null} for TBD
  * @param source       the metadata file it was read from (for messages)
+ * @param levels       the structure files of its detail levels, level 1 first (level 1 = shell + fittings, each next
+ *                     level only adds flourish blocks; same size); empty when it has one look only. Level 1 is
+ *                     {@code structure}.
+ * @param groundLevel  the layer (local y) that rests on the ground, or {@code null} when not given (0)
+ * @param terrain      how it sits on uneven ground: one of {@link #TERRAIN_BEHAVIORS}, or {@code null}
+ * @param doorSide     which side its door is on: one of {@link #DOOR_SIDES} ({@code front} = local z 0), or
+ *                     {@code null} when it has no door
+ * @param batch        the structure generation batch it was made in (docs/STRUCTURES.md), or {@code null}
  */
 public record StructureMeta(ResourceLocation id, String name, String design, int tier, String zone, String role,
                             @Nullable Vec3i footprint, @Nullable Map<ResourceLocation, Integer> cost,
                             @Nullable String variantGroup, @Nullable String palette, @Nullable ResourceLocation ruin,
-                            @Nullable ResourceLocation structure, ResourceLocation source) {
+                            @Nullable ResourceLocation structure, ResourceLocation source, List<ResourceLocation> levels,
+                            @Nullable Integer groundLevel, @Nullable String terrain, @Nullable String doorSide,
+                            @Nullable Integer batch) {
     public static final String READY = "ready";
     public static final String TBD = "TBD";
     /** The kingdom zones a structure can belong to (the soft rings of D3). */
@@ -42,6 +53,34 @@ public record StructureMeta(ResourceLocation id, String name, String design, int
     /** What a structure is for. Add a role here and in docs/STRUCTURES.md when a new kind of building needs one. */
     public static final List<String> ROLES = List.of("keep", "house", "farm", "resource", "storage", "defense", "gate",
             "military", "workshop", "market", "religious", "health", "food", "utility", "decoration");
+
+    /** How a structure sits on uneven ground (docs/STRUCTURES.md, "Terrain behavior"). */
+    public static final List<String> TERRAIN_BEHAVIORS = List.of("ground_level", "skirt", "stepped", "flexible");
+    /** Sides a door can be on; {@code front} is local z = 0, the side facing the easel. */
+    public static final List<String> DOOR_SIDES = List.of("front", "back", "left", "right");
+
+    /** Metadata without detail levels or placement fields (the stage 0 format). */
+    public StructureMeta(ResourceLocation id, String name, String design, int tier, String zone, String role,
+                         @Nullable Vec3i footprint, @Nullable Map<ResourceLocation, Integer> cost,
+                         @Nullable String variantGroup, @Nullable String palette, @Nullable ResourceLocation ruin,
+                         @Nullable ResourceLocation structure, ResourceLocation source) {
+        this(id, name, design, tier, zone, role, footprint, cost, variantGroup, palette, ruin, structure, source, List.of(),
+                null, null, null, null);
+    }
+
+    /** How many detail levels it has (1 when it has no levels list). */
+    public int levelCount() {
+        return levels.isEmpty() ? 1 : levels.size();
+    }
+
+    /** The structure file of detail level {@code level} (1-based); level 1 is {@link #structure()}. */
+    @Nullable
+    public ResourceLocation levelFile(int level) {
+        if (levels.isEmpty()) {
+            return level == 1 ? structure : null;
+        }
+        return level >= 1 && level <= levels.size() ? levels.get(level - 1) : null;
+    }
 
     public boolean isReady() {
         return READY.equals(design);
@@ -83,10 +122,35 @@ public record StructureMeta(ResourceLocation id, String name, String design, int
         if (!json.has("tier") || !json.get("tier").isJsonPrimitive() || !json.get("tier").getAsJsonPrimitive().isNumber()) {
             throw new IllegalArgumentException("\"tier\" must be a number");
         }
+        List<ResourceLocation> levels = new ArrayList<>();
+        if (json.has("levels")) {
+            if (!json.get("levels").isJsonArray()) {
+                throw new IllegalArgumentException("\"levels\" must be a list of structure files, level 1 first");
+            }
+            for (JsonElement level : json.getAsJsonArray("levels")) {
+                ResourceLocation file = level.isJsonPrimitive() ? ResourceLocation.tryParse(level.getAsString()) : null;
+                if (file == null) {
+                    throw new IllegalArgumentException("\"levels\" has a bad structure file id " + level);
+                }
+                levels.add(file);
+            }
+        }
         return new StructureMeta(id, string(json, "name", true), design, json.get("tier").getAsInt(),
                 string(json, "zone", true), string(json, "role", true), footprint, cost,
                 string(json, "variant_group", false), string(json, "palette", false), location(json, "ruin", false),
-                location(json, "structure", false), source);
+                location(json, "structure", false), source, List.copyOf(levels), integer(json, "ground_level"),
+                string(json, "terrain", false), string(json, "door_side", false), integer(json, "batch"));
+    }
+
+    @Nullable
+    private static Integer integer(JsonObject json, String field) {
+        if (!json.has(field)) {
+            return null;
+        }
+        if (!json.get(field).isJsonPrimitive() || !json.get(field).getAsJsonPrimitive().isNumber()) {
+            throw new IllegalArgumentException("\"" + field + "\" must be a number");
+        }
+        return json.get(field).getAsInt();
     }
 
     @Nullable
