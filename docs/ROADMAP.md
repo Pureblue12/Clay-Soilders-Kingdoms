@@ -13,9 +13,11 @@ Earlier work (M0–M2: testing, bug fixes, `/csr build`, builder fixes, doors) i
 | 3 | Tall construction spike | L | **done** (in-game checklist pending) |
 | 4 | Tier-1 keep built autonomously | L | **next** |
 | 5 | Economy loop v1 | L | not started |
+| 5a | Decoration step | M | not started |
 | 6 | Layout and growth | XL | not started |
 | 7 | Performance checkpoint | M | not started |
 | 8 | Content tiers 2–5 | XL | not started |
+| T | Organic wall and layout testing | L | not started |
 | 9 | Mining, staged | XL | not started |
 | 10 | Life layer | XL | not started |
 | 11 | Events and defense | L | not started |
@@ -137,6 +139,21 @@ Stages are ordered by dependency and risk. Every stage ends playable.
 - **Risks:** carrier traffic and pathing load.
 - **Decisions:** [D5](DECISIONS.md) · **Status:** not started · **Results:** —
 
+### 5a Decoration step
+- **Goal:** a code step that adds what builders can't carry once a structure (or a flourish level) is finished:
+  water (moats, wells, fountains, docks, farm channels), potted plants and other plants, sign text, banner patterns,
+  item frames and armor stands ([D54](DECISIONS.md), [D56](DECISIONS.md)). It is where most of the small details come
+  from.
+- **Acceptance test:** a finished structure with decoration data gets its water, plants, sign text, banner patterns,
+  item frames and armor stands, exactly once. Nothing is added to an unfinished build. Decoration survives save and
+  reload. The ruin stages remove it again.
+- **Depends on:** structures batch 1 (the core tier-1 structure files, `STRUCTURES.md` build order), 5 · **Size:** M
+- **Risks:**
+  - Where the decoration data lives: the structure file's own entities and block data, or a separate list.
+  - Water flowing out of open structures.
+  - Entities in unloaded chunks.
+- **Decisions:** [D46](DECISIONS.md), [D54](DECISIONS.md), [D56](DECISIONS.md) · **Status:** not started · **Results:** —
+
 ### 6 Layout and growth
 - **Goal:** zones, radial roads, scored slots, cottages and farms, visitors joining, a palisade and tier 2, the layout checker enforced.
 - **Acceptance test:** a small village forms with no overlaps and a closed wall.
@@ -157,6 +174,19 @@ Stages are ordered by dependency and risk. Every stage ends playable.
 - **Depends on:** 6, 7 · **Size:** XL
 - **Risks:** structure review time.
 - **Decisions:** [D4](DECISIONS.md) · **Status:** not started · **Results:** —
+
+### T Organic wall and layout testing
+- **Goal:** test the organic wall loop and the town layout on uneven, real terrain:
+  - wall modules joining across height changes (stepped modules, towers as joints, skipped cliff segments);
+  - the loop bending around steep steps;
+  - roads and fields following the ground;
+  - slots on slopes using `ground_level`, skirts and stepped footprints ([`STRUCTURES.md`](STRUCTURES.md)).
+- **Acceptance test:** on a set of saved real-terrain test sites (plains, hills, a river, a forest edge), a closed
+  wall loop and a tier-5 layout are planned and built with no overlaps, no unreachable modules and no floating or
+  buried pieces; a recording and screenshots for each site.
+- **Depends on:** the wall modules and the structures of tiers 1 to 5 (stages 6 and 8) · **Size:** L
+- **Risks:** real terrain may need more module types; build time of a full loop.
+- **Decisions:** [D3](DECISIONS.md), [D43](DECISIONS.md) · **Status:** not started · **Results:** —
 
 ### 9 Mining, staged
 - **Goal:** (a) scanned shaft and strip mine, (b) hazard rules for lava and water, (c) caves, (d) mobs.

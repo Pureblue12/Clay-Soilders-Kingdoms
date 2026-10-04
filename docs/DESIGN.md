@@ -42,12 +42,22 @@
 
 - **Miniature scale with a few larger landmarks (D43, the owner's decision):** soldiers are 0.25 scale, so the
   town is a tiny world.
-  - Common buildings are roughly half-scale: a cottage about 5 by 7, walls 3 to 4, roofs +2 to 3, detail from small
-    blocks.
-  - Landmarks (the keep from tier 4, church and cathedral, town hall, main gate, a few towers) may be larger, up to
-    28 blocks tall.
-- **Detail grows:** each structure has shell, fittings and flourish layers. Flourish is an upgrade (levels 2 and 3),
-  so early builds finish fast and kingdoms visibly get richer (D44).
+  - **Common buildings:** walls of 3 blocks with vanilla 2-tall wooden doors and soldier-sized interiors (D50,
+    D59).
+  - **Landmarks** (the keep from tier 4, church and cathedral, town hall, main gate, a few towers) may be larger,
+    with a hard cap of 28 blocks (D57).
+- **Town style A (D49):** a timber hamlet growing into a stone town, dense and half-timbered in the late tiers. The
+  top-tier keep takes a pale fantasy look: gold-looking caps (real gold only as a tier-10 flourish, D58), slender
+  towers, banners, arcades.
+- **Detail grows:** each structure has shell, fittings and flourish layers. Flourish is an upgrade (levels 2 and 3)
+  that unlocks by tier (D44, D51), so early builds finish fast and kingdoms visibly get richer.
+- **The keep** is rebuilt at tiers 4 and 8 and extended at the others (D52). Its tier-10 dungeon sits inside a
+  raised base (D60).
+- **Decoration step (D54, D56):** water, plants, sign text, banner patterns, item frames and armor stands are added
+  by code after builders finish. It's where most of the small details come from (roadmap stage 5a). Fields are
+  tilled by farmers (D55).
+- **Ruins (D53):** after the king dies, buildings decay over time in stages. Small buildings become small ruins seen
+  from above; landmark ruins are walkable for a player.
 - **Master list and design briefs:** every structure, the tier and perk tables, town styles and the buildability
   checklist are in [`STRUCTURES.md`](STRUCTURES.md) (draft; no structure files yet).
 

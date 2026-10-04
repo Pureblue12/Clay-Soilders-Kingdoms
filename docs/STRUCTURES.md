@@ -12,7 +12,7 @@
 3. [Tier perks (draft)](#tier-perks-draft)
 4. [Town styles](#town-styles-choose-one)
 5. [Build order for the generation batches](#build-order-for-the-generation-batches)
-6. [Open questions](#open-questions-for-the-owner)
+6. [Owner's answers](#owners-answers) (the former open questions)
 7. [Buildability checklist](#buildability-checklist)
 8. [Design briefs](#design-briefs): keep tiers, housing, food and wood, industry, civic and care, defense and
    military, wall modules, infrastructure, small props
@@ -28,8 +28,9 @@ Every brief follows these rules ([D43](DECISIONS.md)).
    - **Common buildings:** small footprints (a cottage is about 5 by 7), walls 3 to 4 blocks high, roofs add 2 to 3.
    - **Detail** comes from small blocks: slabs, stairs, trapdoors, walls, fences, buttons, carpets, candles, lanterns,
      flower pots, banners, signs.
-   - **Doors:** a vanilla door is 2 blocks tall, so a room with a door needs walls of at least 3, or an arched
-     opening without a door. Soldiers open wooden doors (`UseDoorGoal`), not iron doors or fence gates.
+   - **Doors:** common houses use vanilla 2-tall **wooden** doors ([D50](DECISIONS.md)), so their walls are 3 blocks
+     high ([D59](DECISIONS.md)); interiors are furnished at soldier size. Soldiers open wooden doors
+     (`UseDoorGoal`), not iron doors or fence gates.
    - **Soldier-sized doorway variant:** a 1-block-tall opening with no door (a trapdoor or slab lintel above it).
      It suits half-scale houses, but it is **UNTESTED** with the door and pathing code (vanilla pathfinding treats
      every mob as at least 1 block tall, so it should pass, but it has never been tried). Players can't walk through
@@ -40,7 +41,8 @@ Every brief follows these rules ([D43](DECISIONS.md)).
    few towers.
    - **Size rule:** up to **28 blocks tall** (the tallest build tested with scaffolding, [`SCAFFOLDING.md`](SCAFFOLDING.md))
      and up to about 49 by 49 for the tier-10 fortress.
-   - **Anything taller is flagged UNTESTED** (⚠). Anything over 9 tall needs scaffolding: builders need a free
+   - **Nothing is taller than 28:** every tower and spire is capped there ([D57](DECISIONS.md)). Anything over
+     9 tall needs scaffolding: builders need a free
      1-block strip along at least one outside face, and storage within about 14 blocks' walk.
 3. **Three detail layers** per structure:
    - **SHELL:** walls, floor, roof, door.
@@ -48,7 +50,8 @@ Every brief follows these rules ([D43](DECISIONS.md)).
    - **FLOURISH:** shutters, flower boxes, banners, lanterns, signs, chimney, clutter props, wear (moss, cracks).
      Flourish is an **upgrade**: a first build is shell plus fittings, so it finishes fast. **Level 2** and
      **level 3** looks are added later, on top of the standing building, as the kingdom prospers. Proposed unlocks
-     ([D44](DECISIONS.md)): level 2 from tier 3, level 3 from tier 6, so kingdoms visibly get richer.
+     ([D44](DECISIONS.md), [D51](DECISIONS.md)): **by tier**, level 2 from tier 3, level 3 from tier 6, so
+     kingdoms visibly get richer. Prosperity-based unlocks are a possible later addition.
 4. **Detail budget.** Each brief gives the block count per layer and the build time with 3 builders.
    - **Within reach:** 22.5 ticks per block (the Small House: 151 blocks in about 3,400 ticks).
    - **Above reach:** about 60 ticks per block, scaffolding trips included (the 20-high wall with corner tower:
@@ -63,7 +66,7 @@ Every brief follows these rules ([D43](DECISIONS.md)).
      | `structure.budget.landmark_blocks` | 1,800 | A landmark, all layers |
      | `structure.budget.prop_blocks` | 30 | A small prop |
      | `structure.budget.module_blocks` | 60 | One wall module |
-     | `structure.max_height` | 28 | Any structure (taller = untested) |
+     | `structure.max_height` | 28 | Any structure (a hard cap, D57) |
 
      A brief over a limit is flagged ⚠.
 5. **Buildability.** Every block must be placeable by the builder pipeline. Each block type is marked **KNOWN-OK**
@@ -76,16 +79,25 @@ Every brief follows these rules ([D43](DECISIONS.md)).
    - Tables are a fence or wall post under a pressure plate or carpet.
    - Benches are stairs, shelves are trapdoors on a wall, hearths are a campfire or furnace under a chimney.
    - Every workplace has exactly one workstation block.
-7. **Ruins:** each structure has a decay look built from the same layers.
-   - What decays: walls broken down to stumps, cracked and mossy blocks, fallen pieces, vines; flourish mostly gone.
-   - **Open question:** ruins are assumed to be seen from above at miniature scale, so they are designed for their
-     outline and rubble rather than for interior detail.
-8. **Style.** Early tiers are plain wood and cobblestone. By tiers 5 to 8 they grow into one of two looks (ideas
-   only, nothing copied):
+7. **Ruins** ([D53](DECISIONS.md)): after the king dies, buildings decay **over time, in stages**:
+   - **Stage 1, abandoned:** flourish gone, doors gone, some windows broken.
+   - **Stage 2, damaged:** roofs fallen in, walls broken in places, moss and cracks.
+   - **Stage 3, ruin:** wall stumps, rubble, vines and grass.
+
+   Each stage is designed from the same layers.
+   - **Miniature buildings** (houses, workshops, props) become **small ruins seen from above**: designed for their
+     outline and rubble.
+   - **Landmark ruins** (every keep tier, church, cathedral, gate towers, town hall) are big enough for a player to
+     **walk through**: walkable interiors (passages at least 2 high), collapsed walls that open the inside to view,
+     and rubble paths through them.
+8. **Style: town style A** ([D49](DECISIONS.md)), a timber hamlet growing into a stone town. Early tiers are plain
+   wood and cobblestone; by tiers 5 to 8 the town takes on the first look below (dense and half-timbered in the late
+   tiers), and the top-tier keep takes the second (ideas only, nothing copied):
    - **A half-timbered medieval town:** plaster walls, dark wood frames, red-brown stair roofs, dormers, chimneys,
      paved streets with lamp posts, a church with a bell tower.
-   - **A high-fantasy keep for the top tiers:** pale mixed stone, slender towers with conical gold caps, banners,
-     arcades and arched bridges, balconies, on a high, gently sloped site.
+   - **A high-fantasy keep for the top tiers:** pale mixed stone, slender towers with conical caps of gold-looking
+     substitute blocks (real gold only as a tier-10 flourish, [D58](DECISIONS.md)), banners, arcades and arched
+     bridges, balconies, on a high, gently sloped site.
 9. **Terrain behavior** (every brief names one; the stage 2 recommendation is in [`TERRAIN.md`](TERRAIN.md)):
 
    | Behavior | Meaning |
@@ -142,18 +154,19 @@ file.
 | 6 | Siege engines | Siege workshop | For later warfare stages. |
 | 6 | Order | Town hall | Better layout and work planning (larger build radius); its records feed the kingdom book. |
 
-## Town styles (choose one)
+## Town styles (A chosen)
 
-Three directions, all using the same structure list; a style picks palettes, variants and the layout feel.
+Three directions, all using the same structure list; a style picks palettes, variants and the layout feel. The owner chose **A** ([D49](DECISIONS.md)); B and C stay here for reference (biome palettes, stage 14, may borrow from them).
 
 | | A: Timber hamlet → stone town | B: Compact fortified hill town | C: Riverside market town |
 |---|---|---|---|
+| **Chosen** | **Yes ([D49](DECISIONS.md))** | No (kept for reference) | No (kept for reference) |
 | **Palette** | Oak and spruce, cobblestone, then white plaster (white terracotta, calcite), dark oak frames, stone bricks, red-brown stair roofs (granite or brick stairs, or spruce) | Stone bricks, andesite, tuff, deepslate trim, slate-dark roofs; pale stone and gold caps at tiers 8 to 10 | Brick and mud brick, light wood (birch, oak), striped awnings (wool), teal and orange accents, gravel and cobble quays |
-| **Layout feel** | Loose: houses spread along winding roads that follow the ground; fields around | Dense: houses packed inside walls on rising ground; narrow lanes, stepped terraces; keep at the top | Long: a main street along the water with the market at a bridge; docks and fishing; warehouses |
+| **Layout feel** | Loose at first: houses spread along winding roads that follow the ground, fields around; denser half-timbered streets in the inner ward from tier 5 | Dense: houses packed inside walls on rising ground; narrow lanes, stepped terraces; keep at the top | Long: a main street along the water with the market at a bridge; docks and fishing; warehouses |
 | **Preferred variants** | Cottage A (gable), timber-frame townhouse, open commons, farm with hedges | Cottage B (stone, steep roof), tall narrow townhouse, wall-integrated houses, stepped walls | Cottage C (brick, overhanging upper floor), market hall, fishing dock, stone bridge, warehouse storehouse |
 | **Tier 1** | A small cobblestone keep, two tents, one log cottage, a field, dirt paths | The keep on the highest flat spot, a hovel, a field below it | The keep near the bank, a cottage, a field, a dirt path down to the water |
 | **Tier 5** | Plaster and timber cottages around a green with a well, a stone castle with a curtain wall, a chapel, cobble streets | A walled town on the hill with stepped streets, gatehouse and wall towers, a church below the castle | A long market square by a stone bridge, docks, a church facing the river, the castle on the bank |
-| **Tier 10** | A half-timbered town around a grand plaza with a statue, a cathedral with a bell tower, a fortress with banners | A concentric white-stone fortress with slender towers and conical gold caps on the hilltop, ring walls below | A busy river town with arcades along the quay, an arched bridge to the fortress, a cathedral by the water |
+| **Tier 10** | A dense half-timbered town around a grand plaza with a statue, a cathedral with a bell tower, and a pale-stone fortress with slender towers, gold-look conical caps and banners | A concentric white-stone fortress with slender towers and conical gold caps on the hilltop, ring walls below | A busy river town with arcades along the quay, an arched bridge to the fortress, a cathedral by the water |
 
 ## Build order for the generation batches
 
@@ -173,33 +186,35 @@ Generate structure files in this order: core first, so stage 4 and 5 can use the
    garden 3.
 7. **Ruins** of each batch right after it (same layers, decayed).
 
-## Open questions for the owner
+## Owner's answers
 
-These change what you would see. Defaults in brackets are what the briefs assume.
+The 12 former open questions are answered (2026-10-04, all DRAFT):
 
-1. **Town style:** A (timber hamlet to stone town), B (fortified hill town) or C (riverside market town)? [A]
-2. **Doorways on common houses:** vanilla 2-tall doors (walls of 3 or more) or soldier-sized 1-tall openings with no
-   door (more miniature, untested with pathing, players can't enter)? [vanilla doors, 1-tall as a variant]
-3. **Flourish unlocks:** by tier (level 2 at tier 3, level 3 at tier 6) or by how prosperous the kingdom is
-   (stockpile, happiness)? [by tier]
-4. **Keep growth:** rebuild the keep in place at tier 4, 5 and 8 (big visible jumps) or always extend around the old
-   one (D4 allows both)? [rebuild at tiers 4 and 8, extend at all others]
-5. **Ruins:** pasted at once when the king dies, or the standing buildings decay over time? And are they meant to be
-   seen from above? [decay over time, from above]
-6. **Water:** builders can't place water. Moats, wells, fountains and docks either get a code step that adds the
-   water after the build, or stay dry (a ditch, a dry fountain)? [a code step after the build]
-7. **Fields:** farmland can't be placed by builders. Farms are built as dirt and farmers till it (visible work), or
-   a code step makes the farmland? [farmers till]
-8. **Decoration entities and data:** item frames, armor stands, paintings, banner patterns and sign text can't be
-   placed by builders. Add them in a code step after the build, or leave them out? [code step, flourish only]
-9. **Taller than 28:** the cathedral spire and the tier 9 to 10 towers want 30 to 34. Allow them as untested, or cap
-   everything at 28? [cap at 28]
-10. **Gold caps:** real gold blocks (costly, from mines) or gold-looking substitutes (yellow terracotta, honeycomb
-    blocks) on the high-fantasy towers? [substitutes; gold blocks as a tier-10 flourish]
-11. **Players inside:** should common buildings fit a player (walls of 3 or more everywhere) or be truly
-    half-scale with tiny interiors only soldiers use? [walls of 3, interiors soldier-sized]
-12. **Dungeon:** builders only place blocks (no digging), so the tier-10 dungeon sits inside a raised plinth rather
-    than underground. Fine, or should digging come first? [inside the plinth]
+| # | Question | Answer | Decision |
+|---|---|---|---|
+| 1 | Town style | **A**: a timber hamlet growing into a stone town; late tiers dense and half-timbered; the top-tier keep borrows the pale fantasy look | [D49](DECISIONS.md) |
+| 2 | Doors on common houses | Vanilla 2-tall wooden doors; the 1-tall soldier doorway stays an UNTESTED variant | [D50](DECISIONS.md) |
+| 3 | Flourish unlocks | By tier; prosperity-based unlocks maybe later | [D51](DECISIONS.md) |
+| 4 | Keep growth | Rebuild at tiers 4 and 8, extend at the others | [D52](DECISIONS.md) |
+| 5 | Ruins | Decay over time in stages; small ruins seen from above; landmark ruins walkable | [D53](DECISIONS.md) |
+| 6 | Water | Added by a code step after the build (the decoration step) | [D54](DECISIONS.md) |
+| 7 | Fields | Tilled by farmers as visible work | [D55](DECISIONS.md) |
+| 8 | Item frames, armor stands, banner patterns, sign text | Added by the decoration step, flourish layer only | [D56](DECISIONS.md) |
+| 9 | Taller than 28 | No: every tower and spire is capped at 28 | [D57](DECISIONS.md) |
+| 10 | Gold caps | Gold-looking substitutes; real gold blocks only as a tier-10 flourish | [D58](DECISIONS.md) |
+| 11 | Player-sized or half-scale | Common buildings: walls of 3, soldier-sized interiors | [D59](DECISIONS.md) |
+| 12 | Dungeon | Inside a raised base; no digging needed | [D60](DECISIONS.md) |
+
+**The decoration step** (a roadmap item of its own, stage 5a) is where most of the small details come from:
+- water (moats, wells, fountains, docks, farm channels);
+- potted plants;
+- sign text and banner patterns;
+- item frames and armor stands.
+
+It runs as a code step after builders finish a structure (or a flourish level), so these details appear at once
+rather than being carried.
+
+**Open questions:** none right now.
 
 ## Buildability checklist
 
@@ -252,12 +267,12 @@ How builders place a block (code read, `ServerBlueprintPlan`):
 | Grass block, dirt, coarse dirt, rooted dirt, mud, moss block | UNKNOWN | Low |
 | Empty flower pot | UNKNOWN | Low |
 | Iron door, fence gates | BROKEN for passage | They place, but soldiers can't open them (DOORS.md): only as decoration or to lock a room (treasury, dungeon). Replacement in walkways: an opening or a wooden door. |
-| Water, lava, fire | BROKEN | No item to fetch. Water: a code step after the build (open question 6); lava and fire: never used. |
+| Water, lava, fire | BROKEN | No item to fetch. Water: the decoration step adds it after the build (D54); lava and fire: never used. |
 | Potted plants | BROKEN | No item (the potted block isn't the flower pot item). Replacement: empty pot; flowers in the decoration step. |
-| Farmland | BROKEN | No item, and it turns back to dirt. Replacement: dirt, tilled by farmers (open question 7). |
+| Farmland | BROKEN | No item, and it turns back to dirt. Replacement: dirt, tilled by farmers (D55). |
 | Dirt path | BROKEN | No item. Replacement: coarse dirt, packed mud, gravel. |
 | Water cauldron | BROKEN | No item. Replacement: empty cauldron. |
-| Sign text, banner patterns, decorated pot designs | BROKEN (data) | Saved block data isn't applied. Plain block now; data in the decoration step (open question 8). |
+| Sign text, banner patterns, decorated pot designs | BROKEN (data) | Saved block data isn't applied. Plain block now; data in the decoration step (D56). |
 | Item frames, paintings, armor stands | BROKEN | Entities, not blocks: builders never place them. Decoration step only. |
 
 **UNKNOWN or BROKEN blocks used by the briefs** (the list the probe should test first): lanterns, candles, campfire,
@@ -269,7 +284,8 @@ out of its shell and fittings; they appear only in flourish, marked "(decoration
 
 Format of every brief: tier, zone and role, then size, look, inside, the blocks of each detail layer, the budget, the
 flow audit (producer → carrier → store → consumer), perks, variants, ruin, terrain behavior and buildability watch
-points. "(decoration step)" marks BROKEN blocks added by code after the build, if the owner agrees (open question 8).
+points. "(decoration step)" marks details added by code after the build (water, plants, sign text, banner patterns, item
+frames, armor stands; D54, D56). Every keep's ruin is a landmark ruin a player can walk through (D53).
 
 ### Keep tiers 1 to 10
 
@@ -282,7 +298,7 @@ The keep is the kingdom's heart and landmark.
 
 From tier 5 up, curtain walls and moats are built from the [wall modules](#wall-modules-new) as separate builds, so a
 tier upgrade is a series of small builds rather than one huge one; the keep's own budget below excludes them.
-Upgrades extend the old keep except at tiers 4 and 8, where it is rebuilt (open question 4). All keeps stand on a
+Upgrades extend the old keep except at tiers 4 and 8, where it is rebuilt ([D52](DECISIONS.md)). All keeps stand on a
 stone base layer (D33) and face their door to the lowest side.
 
 #### Keep, tier 1: small cobblestone keep (`csr:keep`)
@@ -296,7 +312,7 @@ Tier 1 · zone keep · keep; the king, 1 to 2 guards
 - **Flow:** Producer: none (store). Carrier: every carrier delivers here. Store: the storeroom (counts in the stockpile). Consumer: perk hand-outs, building materials for builders.
 - **Perks:** The kingdom exists; sticks are handed out once the lumber camp delivers.
 - **Variants:** A: plain cobblestone. B: log-framed (oak log corners). C: half-sunk on slopes (stepped entrance).
-- **Ruin:** Walls broken to 1 to 3 high, roof gone, mossy cobblestone, a vine-covered corner, the turret standing alone.
+- **Ruin:** Walls broken to 1 to 3 high, roof gone, mossy cobblestone, a vine-covered corner, the turret standing alone. Landmark ruin (D53): walkable for a player, with passages at least 2 high, collapsed walls opening the inside to view and rubble paths through it.
 - **Terrain:** `ground_level` (base layer, D33); `skirt` up to 4 on one side.
 - **Buildability watch:** beds, lanterns (UNKNOWN medium).
 - **Floor plan:**
@@ -316,7 +332,7 @@ Tier 2 · zone keep · keep; king, 2 to 3 guards
 - **Flow:** As tier 1; the storeroom gets its own door to the yard so carriers don't cross the hall.
 - **Perks:** Palisade: the keep zone is enclosed; guards patrol it.
 - **Variants:** A: stone and timber. B: all-timber hall (long house). C: stone hall with a lean-to storeroom.
-- **Ruin:** The timber upper walls gone, the stone lower walls and tower stump remain, collapsed roof beams (stripped logs on the floor).
+- **Ruin:** The timber upper walls gone, the stone lower walls and tower stump remain, collapsed roof beams (stripped logs on the floor). Landmark ruin (D53): walkable for a player, with passages at least 2 high, collapsed walls opening the inside to view and rubble paths through it.
 - **Terrain:** `skirt` for the hall; the tower keeps its base layer.
 - **Buildability watch:** beds, lanterns, chains.
 - **Floor plan:**
@@ -336,7 +352,7 @@ Tier 3 · zone keep · keep; king, guards, a steward
 - **Flow:** As tier 2; the courtyard is the carriers' drop-off yard by the storeroom door.
 - **Perks:** The gatehouse's guard sees visitors arrive (the inn is near the gate).
 - **Variants:** A: square courtyard. B: courtyard on the slope side with steps. C: courtyard with a wooden gallery.
-- **Ruin:** Courtyard walls broken in two places, the gatehouse arch still standing, rubble piles (cobblestone and gravel) in the yard.
+- **Ruin:** Courtyard walls broken in two places, the gatehouse arch still standing, rubble piles (cobblestone and gravel) in the yard. Landmark ruin (D53): walkable for a player, with passages at least 2 high, collapsed walls opening the inside to view and rubble paths through it.
 - **Terrain:** `stepped`: the courtyard and gatehouse may sit 1 to 2 lower than the hall, joined by steps.
 - **Buildability watch:** iron bars (UNKNOWN low), well water (BROKEN → decoration step).
 - **Floor plan:**
@@ -356,7 +372,7 @@ Tier 4 · zone keep · keep (landmark); king, guards, steward, cook
 - **Flow:** As tier 3; the kitchen is the first consumer of food (it feeds the guard).
 - **Perks:** Corner towers give archers a view; the kitchen feeds the keep's people.
 - **Variants:** A: square towers. B: round-looking towers (stepped corners). C: one big tower plus three small ones.
-- **Ruin:** One tower collapsed into a rubble cone, the upper floor gone over half the keep, arched windows empty, vines.
+- **Ruin:** One tower collapsed into a rubble cone, the upper floor gone over half the keep, arched windows empty, vines. Landmark ruin (D53): walkable for a player, with passages at least 2 high, collapsed walls opening the inside to view and rubble paths through it.
 - **Terrain:** `ground_level` with `skirt` (the bigger footprint makes skirts likely).
 - **Buildability watch:** chains, lanterns (medium); above reach: about 350 blocks (scaffolding).
 - **Floor plan:**
@@ -375,7 +391,7 @@ Tier 5 · zone keep · keep (landmark); king, guard captain, steward, cook, stab
 - **Flow:** Bailey = drop-off and stable yard; stables connect to pens and stables (horses).
 - **Perks:** Bare horses for the guard (stable); the curtain wall protects the keep.
 - **Variants:** A: square bailey. B: bailey following the hill (stepped). C: river-side bailey with a water gate.
-- **Ruin:** Curtain wall breached in two places, towers roofless, the bailey overgrown (grass, flowers).
+- **Ruin:** Curtain wall breached in two places, towers roofless, the bailey overgrown (grass, flowers). Landmark ruin (D53): walkable for a player, with passages at least 2 high, collapsed walls opening the inside to view and rubble paths through it.
 - **Terrain:** `stepped` bailey; towers `ground_level`; the curtain follows the wall module rules.
 - **Buildability watch:** 16 stone wall modules (separate builds, about 16 × 45 blocks); above reach about 250.
 
@@ -390,7 +406,7 @@ Tier 6 · zone keep · keep (landmark); king, guard, steward, cooks, servants
 - **Flow:** The barracks wing draws gear from the storeroom; the great hall consumes food (feasts).
 - **Perks:** Order and court: the throne room raises renown during feasts.
 - **Variants:** A: wings in an L. B: wings either side (symmetrical). C: great hall on a raised terrace.
-- **Ruin:** Great hall roof fallen (exposed trusses), barracks wing reduced to walls, the window frame empty.
+- **Ruin:** Great hall roof fallen (exposed trusses), barracks wing reduced to walls, the window frame empty. Landmark ruin (D53): walkable for a player, with passages at least 2 high, collapsed walls opening the inside to view and rubble paths through it.
 - **Terrain:** `stepped` (each wing at its own height).
 - **Buildability watch:** above reach about 200.
 - **Floor plan:**
@@ -409,7 +425,7 @@ Tier 7 · zone keep · keep (landmark)
 - **Flow:** As tier 6; the moat is a defense with no flow.
 - **Perks:** Moat: attackers must use the bridge (later warfare stages).
 - **Variants:** A: water moat. B: dry ditch with stakes (fences). C: river used as part of the moat.
-- **Ruin:** Moat silted up (dirt, grass), the bridge broken in the middle, the top floor gone.
+- **Ruin:** Moat silted up (dirt, grass), the bridge broken in the middle, the top floor gone. Landmark ruin (D53): walkable for a player, with passages at least 2 high, collapsed walls opening the inside to view and rubble paths through it.
 - **Terrain:** Moat and banks `flexible` (follow the ground); the keep `ground_level`.
 - **Buildability watch:** 24 moat modules; water (BROKEN → decoration step); above reach about 450.
 
@@ -419,12 +435,12 @@ Tier 8 · zone keep · keep (landmark)
 - **Size:** keep core 15 × 15 (rebuilt); outer ward 41 × 41 from wall modules, 22 tall. **Needs scaffolding:** yes (over 9 tall).
 - **Look:** The keep is rebuilt as a pale-stone core (calcite, diorite, stone bricks) with four slender towers, and a second, lower ring wall (the outer ward) surrounds the old curtain (now the inner ward). Signature: the first conical caps (gold-look) on the towers.
 - **Inside:** New core floor plan with a grand stair. See below.
-- **Blocks per layer:** Shell: calcite, polished diorite, stone bricks, quartz trim, deepslate roof, oak floors. Fittings: grand stair, throne room furniture, storeroom racks, beds, kitchen, bookshelves. Flourish L2: banners, lanterns, arcade (stone brick walls + slabs), balconies, gold-look caps. Flourish L3: banner patterns (decoration step), real gold block cap tips (open question 10), candles.
+- **Blocks per layer:** Shell: calcite, polished diorite, stone bricks, quartz trim, deepslate roof, oak floors. Fittings: grand stair, throne room furniture, storeroom racks, beds, kitchen, bookshelves. Flourish L2: banners, lanterns, arcade (stone brick walls + slabs), balconies, gold-look caps. Flourish L3: banner patterns (decoration step), gold-look cap tips (real gold only at tier 10, D58), candles.
 - **Budget:** Shell 1300 · Fittings 180 · Flourish L2 +150 · L3 +170 = **1800** blocks (700 above reach). First build (shell + fittings, 1480): ~54,900 ticks (45.8 min); full: ~66,800 ticks (55.6 min).
 - **Flow:** As tier 7; the inner ward is the delivery yard, the outer ward holds workshops.
 - **Perks:** Two rings of walls: the outer ward slows attackers.
 - **Variants:** A: square rings. B: rings following the hill (stepped). C: river side with a water gate.
-- **Ruin:** The pale core's towers broken at different heights, caps fallen in the yard, outer ward walls in fragments.
+- **Ruin:** The pale core's towers broken at different heights, caps fallen in the yard, outer ward walls in fragments. Landmark ruin (D53): walkable for a player, with passages at least 2 high, collapsed walls opening the inside to view and rubble paths through it.
 - **Terrain:** `ground_level` core; wards `stepped` via wall modules.
 - **Buildability watch:** above reach about 700; quartz and calcite (UNKNOWN low).
 - **Floor plan:**
@@ -438,12 +454,12 @@ Tier 9 · zone keep · keep (landmark)
 - **Size:** 45 × 45, 26 tall. **Needs scaffolding:** yes (over 9 tall).
 - **Look:** Six more slender towers (3 × 3, up to 26) and an armory wing (9 × 11, 12 high) are added; arched bridges link towers to the core at the second floor. Signature: a skyline of conical gold-look caps with banners.
 - **Inside:** Armory wing: weapon racks, armor stands (decoration step), a smithing corner.
-- **Blocks per layer:** Shell: calcite, diorite, stone bricks, quartz, deepslate tile caps, arched bridges (stone brick stairs and slabs). Fittings: armory racks (fences), chests, anvil, smithing table, beds for armorers, stairs. Flourish L2: banners on every tower, lanterns on the bridges, balconies. Flourish L3: armor stands, item frames, banner patterns (decoration step); gold block cap tips.
+- **Blocks per layer:** Shell: calcite, diorite, stone bricks, quartz, deepslate tile caps, arched bridges (stone brick stairs and slabs). Fittings: armory racks (fences), chests, anvil, smithing table, beds for armorers, stairs. Flourish L2: banners on every tower, lanterns on the bridges, balconies. Flourish L3: armor stands, item frames, banner patterns (decoration step); gold-look cap tips (yellow terracotta).
 - **Budget:** Shell 1100 · Fittings 120 · Flourish L2 +150 · L3 +180 = **1550** blocks (700 above reach). First build (shell + fittings, 1220): ~48,100 ticks (40.1 min); full: ~61,100 ticks (50.9 min).
 - **Flow:** Armory: the smithy produces gear → carriers → armory (store) → guard (consumer).
 - **Perks:** The armory equips the whole guard at once.
 - **Variants:** A: towers on the curtain. B: towers clustered around the core. C: towers along the river front.
-- **Ruin:** Towers snapped at different heights, bridges fallen, the armory roofless.
+- **Ruin:** Towers snapped at different heights, bridges fallen, the armory roofless. Landmark ruin (D53): walkable for a player, with passages at least 2 high, collapsed walls opening the inside to view and rubble paths through it.
 - **Terrain:** Towers `ground_level`; bridges join parts at different heights.
 - **Buildability watch:** above reach about 700.
 
@@ -458,9 +474,9 @@ Tier 10 · zone keep · keep (landmark)
 - **Flow:** As tier 9; the treasury stores gold (from mine 2+).
 - **Perks:** The grand throne hall is the top renown feature; the dungeon holds captured enemies (warfare stages).
 - **Variants:** A: symmetrical fortress. B: hill-top fortress (stepped wards). C: river fortress with water gate.
-- **Ruin:** Spire fallen across the hall, plinth cracked open showing the dungeon, gold caps scattered.
+- **Ruin:** Spire fallen across the hall, plinth cracked open showing the dungeon, gold caps scattered. Landmark ruin (D53): walkable for a player, with passages at least 2 high, collapsed walls opening the inside to view and rubble paths through it.
 - **Terrain:** `stepped` plinth (it absorbs the slope); towers `ground_level`.
-- **Buildability watch:** above reach about 800; dungeon is in the plinth, not underground (open question 12).
+- **Buildability watch:** above reach about 800; dungeon is in the raised base, no digging (D60).
 - **Floor plan:**
   - Plinth level: **dungeon** (cells with iron bars), **treasury vault** (iron door), **storeroom** (6 × 8, doors to the yard).
   - Hall level: **grand throne hall**, kitchen, feasting hall.
@@ -882,7 +898,7 @@ Tier 5 · zone inner · religious (landmark); priest, bell ringer
 - **Flow:** As chapel.
 - **Perks:** Blessing: slow healing near it; more festival renown.
 - **Variants:** A: tower at the front. B: tower at the side. C: twin towers (shorter).
-- **Ruin:** Nave roofless, tower standing to half.
+- **Ruin:** Nave roofless, tower standing to half. Landmark ruin (D53): walkable for a player, with passages at least 2 high, collapsed walls opening the inside to view and rubble paths through it.
 - **Terrain:** `stepped` (tower and nave).
 - **Buildability watch:** above reach about 150.
 
@@ -890,14 +906,14 @@ Tier 5 · zone inner · religious (landmark); priest, bell ringer
 Tier 8 · zone inner · religious (landmark); clergy
 
 - **Size:** 15 × 27, 28 tall. **Needs scaffolding:** yes (over 9 tall).
-- **Look:** A pale-stone cathedral with buttresses, a rose window (colored glass) and a spire to 28 (a taller spire is untested). Signature: the rose window.
+- **Look:** A pale-stone cathedral with buttresses, a rose window (colored glass) and a spire capped at 28 (D57). Signature: the rose window.
 - **Inside:** Nave, choir, side chapels, bells.
 - **Blocks per layer:** Shell: calcite, stone bricks, deepslate roof, quartz trim, doors, glass. Fittings: pews, altar, bells, candles. Flourish L2: colored glass, banners, buttresses. Flourish L3: statues (props), gold-look spire tip.
 - **Budget:** Shell 1300 · Fittings 120 · Flourish L2 +120 · L3 +150 = **1690** blocks (800 above reach). First build (shell + fittings, 1420): ~57,200 ticks (47.6 min); full: ~68,000 ticks (56.7 min).
 - **Flow:** As church.
 - **Perks:** Kingdom-wide blessing (renown).
 - **Variants:** A: single spire. B: twin towers. C: domed (no spire).
-- **Ruin:** Spire fallen, nave half-standing, rose window empty.
+- **Ruin:** Spire fallen, nave half-standing, rose window empty. Landmark ruin (D53): walkable for a player, with passages at least 2 high, collapsed walls opening the inside to view and rubble paths through it.
 - **Terrain:** `stepped`.
 - **Buildability watch:** above reach about 800.
 
@@ -942,7 +958,7 @@ Tier 6 · zone inner (on the commons) · civic (landmark); a mayor, clerks
 - **Flow:** Records feed the kingdom book; no material flow.
 - **Perks:** Order: larger build radius.
 - **Variants:** A: arcaded hall. B: stone hall (style B). C: guild hall by the river.
-- **Ruin:** Tower stump, arcade standing.
+- **Ruin:** Tower stump, arcade standing. Landmark ruin (D53): walkable for a player, with passages at least 2 high, collapsed walls opening the inside to view and rubble paths through it.
 - **Terrain:** `stepped`.
 - **Buildability watch:** above reach about 200.
 
@@ -1003,7 +1019,7 @@ Tier 5 · zone wall · defense (landmark: the main gate); 2 gate guards
 - **Flow:** No flow.
 - **Perks:** The only way through the wall; guards check visitors.
 - **Variants:** A: twin towers. B: single tower gate. C: water gate.
-- **Ruin:** Arch standing, towers broken.
+- **Ruin:** Arch standing, towers broken. Landmark ruin (D53): walkable for a player, with passages at least 2 high, collapsed walls opening the inside to view and rubble paths through it.
 - **Terrain:** `ground_level` (it sets the wall's height there).
 - **Buildability watch:** above reach about 80.
 
@@ -1158,7 +1174,7 @@ Tier 6 · zone inner · decoration
 - **Size:** 3 × 3, 6 tall. **Needs scaffolding:** no.
 - **Look:** A plinth with a figure of the king (stone, armor stand: decoration step). Signature: gold-look crown (yellow terracotta).
 - **Inside:** —
-- **Blocks per layer:** Shell: stone bricks, smooth stone. Fittings: —. Flourish L2: flowers, lanterns. Flourish L3: gold block crown.
+- **Blocks per layer:** Shell: stone bricks, smooth stone. Fittings: —. Flourish L2: flowers, lanterns. Flourish L3: gold-look crown (yellow terracotta).
 - **Budget:** Shell 30 · Fittings 0 · Flourish L2 +6 · L3 +6 = **42** blocks. First build (shell + fittings, 30): ~700 ticks (0.6 min); full: ~900 ticks (0.8 min). ⚠ 42 > 30.
 - **Flow:** No flow.
 - **Perks:** Renown (commons level 3).
