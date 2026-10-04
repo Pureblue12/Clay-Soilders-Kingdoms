@@ -10,6 +10,7 @@ import net.bumblebee.claysoldiers.commands.ClaySoldierCommands;
 import net.bumblebee.claysoldiers.dev.DevCommands;
 import net.bumblebee.claysoldiers.tuning.TuningReloadListener;
 import net.bumblebee.claysoldiers.event.KingdomEvents;
+import net.bumblebee.claysoldiers.commands.KingdomCommand;
 import net.neoforged.bus.api.EventPriority;
 import net.bumblebee.claysoldiers.structure.StructureReloadListener;
 import net.bumblebee.claysoldiers.event.RecorderIndicator;
@@ -218,6 +219,7 @@ public class ClaySoldiersNeoForge {
     private void commandRegister(final RegisterCommandsEvent event) {
         ClaySoldierCommands.register(event.getDispatcher(), event.getBuildContext());
         BuildCommand.register(event.getDispatcher());
+        KingdomCommand.register(event.getDispatcher());
         if (ClaySoldiersCommon.PLATFORM.isDevEnv()) {
             DevCommands.register(event.getDispatcher());
         }
