@@ -10,6 +10,7 @@ import net.bumblebee.claysoldiers.kingdom.Kingdom;
 import net.bumblebee.claysoldiers.kingdom.KingdomBook;
 import net.bumblebee.claysoldiers.kingdom.KingdomStatus;
 import net.bumblebee.claysoldiers.kingdom.Kingdoms;
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -28,7 +29,7 @@ import java.util.Optional;
 
 /**
  * {@code /csr kingdom ...}: found, disband, book, status, list (any player: they only act on teams loyal to you, or
- * just show), and goto_king (operators, permission 2). Registered in every install, not only dev.
+ * just show), and goto_king and found force (operators, permission 2). Registered in every install, not only dev.
  */
 public final class KingdomCommand {
     private static final String TEAM = "team";
@@ -40,7 +41,8 @@ public final class KingdomCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("csr").then(Commands.literal("kingdom")
-                .then(Commands.literal("found").executes(KingdomCommand::found))
+                .then(Commands.literal("found").executes(context -> found(context, false))
+                        .then(Commands.literal("force").requires(source -> source.hasPermission(2)).executes(context -> found(context, true))))
                 .then(Commands.literal("disband").executes(context -> disband(context, null))
                         .then(Commands.argument(TEAM, ResourceLocationArgument.id()).suggests(KINGDOM_TEAMS)
                                 .executes(context -> disband(context, ResourceLocationArgument.getId(context, TEAM)))))
@@ -56,9 +58,12 @@ public final class KingdomCommand {
                                 .executes(context -> gotoKing(context, ResourceLocationArgument.getId(context, TEAM)))))));
     }
 
-    private static int found(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    /**
+     * With {@code force} (operators only) the terrain check is skipped, for testing; it is recorded.
+     */
+    private static int found(CommandContext<CommandSourceStack> context, boolean force) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
-        Kingdoms.Result result = Kingdoms.foundNear(player);
+        Kingdoms.Result result = Kingdoms.foundNear(player, force);
         if (!result.ok()) {
             context.getSource().sendFailure(Component.literal("No kingdom founded: " + result.refusal()));
             return 0;
@@ -66,8 +71,20 @@ public final class KingdomCommand {
         Kingdom kingdom = result.kingdom();
         String name = Kingdoms.teamName(context.getSource().getServer(), kingdom.team());
         context.getSource().sendSuccess(() -> Component.literal("Founded the kingdom of " + name + " around " + kingdom.center().toShortString()
-                + " (radius " + kingdom.claimRadius() + "). Read it: /csr kingdom book. Undo: /csr kingdom disband."), true);
+                + " (radius " + kingdom.claimRadius() + ")" + (force ? ", terrain check skipped" : "")
+                + ". Read it: /csr kingdom book. Undo: /csr kingdom disband."), true);
+        warn(context.getSource(), result);
         return 1;
+    }
+
+    /**
+     * Tells the founder about soft terrain problems (the kingdom was founded anyway).
+     */
+    public static void warn(CommandSourceStack source, Kingdoms.Result result) {
+        if (!result.warnings().isEmpty()) {
+            source.sendSystemMessage(Component.literal("Warning: the ground isn't ideal for a keep: " + String.join(", ", result.warnings())
+                    + ". (/csr kingdom found refuses only cliffs, lava, deep water and very steep ground.)").withStyle(ChatFormatting.YELLOW));
+        }
     }
 
     /**

@@ -1,5 +1,6 @@
 package net.bumblebee.claysoldiers.event;
 
+import net.bumblebee.claysoldiers.commands.KingdomCommand;
 import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
 import net.bumblebee.claysoldiers.kingdom.KingdomBook;
 import net.bumblebee.claysoldiers.kingdom.Kingdoms;
@@ -55,6 +56,7 @@ public final class KingdomEvents {
         if (result.ok()) {
             player.sendSystemMessage(Component.literal("You founded the kingdom of " + Kingdoms.teamName(level.getServer(), soldier.getClayTeamType())
                     + ". See it with /csr kingdom book; undo with /csr kingdom disband.").withStyle(ChatFormatting.GOLD));
+            KingdomCommand.warn(player.createCommandSourceStack(), result);
         } else {
             player.sendSystemMessage(Component.literal("No kingdom founded: " + result.refusal()).withStyle(ChatFormatting.RED));
         }

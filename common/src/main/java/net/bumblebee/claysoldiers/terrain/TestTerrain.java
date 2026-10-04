@@ -23,6 +23,8 @@ public final class TestTerrain {
     public static final int DEPTH = 7;
     /** Highest cleared block, above the center's y. */
     public static final int CLEARANCE = 12;
+    /** How far the shapes reach from the center (27 by 27 columns). */
+    public static final int RADIUS = 13;
 
     private static final BlockState DIRT = Blocks.DIRT.defaultBlockState();
     private static final BlockState GRASS = Blocks.GRASS_BLOCK.defaultBlockState();

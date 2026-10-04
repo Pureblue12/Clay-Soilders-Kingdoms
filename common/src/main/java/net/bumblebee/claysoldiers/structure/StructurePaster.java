@@ -32,7 +32,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Dev tool: pastes a whole registry structure instantly, with undo. Uses the builders' conventions: you stand where an
+ * Dev tool: pastes a whole registry structure instantly, with undo. Other dev tools that change blocks (the terrain
+ * tools) share the undo through {@link #remember}. Uses the builders' conventions: you stand where an
  * easel would stand, and the structure goes in {@code buildDirection} (like {@code /csr build}), starting 2 blocks
  * away, centered.
  */
@@ -86,23 +87,44 @@ public final class StructurePaster {
                 .addProcessor(JigsawReplacementProcessor.INSTANCE);
         BoundingBox box = template.getBoundingBox(settings, placement.base());
 
+        List<SavedBlock> saved = capture(level, box);
+        // Empty containers first, so replacing them doesn't drop their contents (undo puts the contents back).
+        saved.forEach(block -> Clearable.tryClear(level.getBlockEntity(block.pos())));
+        template.placeInWorld(level, placement.base(), placement.base(), settings, level.getRandom(), Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
+
+        Pasted pasted = new Pasted(meta.id(), at.immutable(), buildDirection, box);
+        push(new Snapshot(pasted, level.getServer(), level.dimension(), List.copyOf(saved)));
+        DebugLog.event(DebugCategory.STRUCTURE, null, "pasted %s at %s going %s", meta.id(), at, buildDirection.getName() + ", blocks " + describe(box));
+        return pasted;
+    }
+
+    /**
+     * Remembers the blocks in {@code box} before another dev tool changes them (e.g. the terrain tools), so the same
+     * undo ({@link #undo}) puts them back. Call it right before changing the blocks.
+     *
+     * @param id what is about to be done, for messages (e.g. {@code csr:terrain/cut_fill})
+     */
+    public static synchronized Pasted remember(ServerLevel level, ResourceLocation id, BlockPos at, BoundingBox box) {
+        Pasted pasted = new Pasted(id, at.immutable(), Direction.NORTH, box);
+        push(new Snapshot(pasted, level.getServer(), level.dimension(), capture(level, box)));
+        return pasted;
+    }
+
+    private static List<SavedBlock> capture(ServerLevel level, BoundingBox box) {
         List<SavedBlock> saved = new ArrayList<>();
         BlockPos.betweenClosedStream(box).forEach(pos -> {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             saved.add(new SavedBlock(pos.immutable(), level.getBlockState(pos),
                     blockEntity == null ? null : blockEntity.saveWithFullMetadata(level.registryAccess())));
         });
-        // Empty containers first, so replacing them doesn't drop their contents (undo puts the contents back).
-        saved.forEach(block -> Clearable.tryClear(level.getBlockEntity(block.pos())));
-        template.placeInWorld(level, placement.base(), placement.base(), settings, level.getRandom(), Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
+        return List.copyOf(saved);
+    }
 
-        Pasted pasted = new Pasted(meta.id(), at.immutable(), buildDirection, box);
-        UNDO.push(new Snapshot(pasted, level.getServer(), level.dimension(), List.copyOf(saved)));
+    private static void push(Snapshot snapshot) {
+        UNDO.push(snapshot);
         while (UNDO.size() > Tuning.DEV_PASTE_UNDO_DEPTH.get()) {
             UNDO.removeLast();
         }
-        DebugLog.event(DebugCategory.STRUCTURE, null, "pasted %s at %s going %s", meta.id(), at, buildDirection.getName() + ", blocks " + describe(box));
-        return pasted;
     }
 
     /**

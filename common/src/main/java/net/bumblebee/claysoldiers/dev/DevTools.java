@@ -109,6 +109,7 @@ public final class DevTools {
         TuningTools.register(registry);
         StructureTools.register(registry);
         KingdomTools.register(registry);
+        TerrainTools.register(registry);
         return registry;
     }
 

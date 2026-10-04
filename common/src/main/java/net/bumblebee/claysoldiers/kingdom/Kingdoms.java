@@ -7,6 +7,9 @@ import net.bumblebee.claysoldiers.soldierproperties.customproperties.AttackTypeP
 import net.bumblebee.claysoldiers.team.ClayMobTeamManger;
 import net.bumblebee.claysoldiers.team.TeamLoyaltyManger;
 import net.bumblebee.claysoldiers.team.TeamPlayerData;
+import net.bumblebee.claysoldiers.terrain.SiteScore;
+import net.bumblebee.claysoldiers.terrain.SiteSearch;
+import net.bumblebee.claysoldiers.terrain.Terrain;
 import net.bumblebee.claysoldiers.tuning.Tuning;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
@@ -28,6 +31,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Everything that changes kingdoms goes through here: it keeps the saved data dirty, writes the chronicle and records
@@ -88,18 +92,27 @@ public final class Kingdoms {
 
     /** Founds a kingdom around the nearest king loyal to {@code player} (see {@link #findNearestKing}). */
     public static Result foundNear(ServerPlayer player) {
+        return foundNear(player, false);
+    }
+
+    /**
+     * {@link #foundNear(ServerPlayer)}; with {@code force} the terrain check is skipped (operators only: the command
+     * checks the permission).
+     */
+    public static Result foundNear(ServerPlayer player, boolean force) {
         Optional<AbstractClaySoldierEntity> king = findNearestKing(player.serverLevel(), player.position(), player);
         if (king.isEmpty()) {
             return refuse(null, null, "There is no king of a team loyal to you within " + Tuning.KINGDOM_FOUND_SEARCH_RADIUS.get()
                     + " blocks. (A king is a clay soldier wearing a gold ingot; feed it to make its team loyal to you.)");
         }
-        return found(player.serverLevel(), king.get(), player);
+        return found(player.serverLevel(), king.get(), player, force);
     }
 
     /**
      * Founds a kingdom for {@code king}'s team around the king. Refused when: the dimension isn't supported, it isn't a
-     * living king, {@code founder} isn't loyal to its team, the team already has a kingdom, or the claim overlaps
-     * another kingdom's.
+     * living king, {@code founder} isn't loyal to its team, the team already has a kingdom, the claim overlaps
+     * another kingdom's, or the ground around the king can't hold a keep (terrain check: cliff, lava, deep water, too
+     * steep; soft problems become warnings). When part of the site isn't loaded the terrain check is skipped.
      */
     public static Result found(ServerLevel level, AbstractClaySoldierEntity king, @Nullable Player founder) {
         return found(level, king, founder, false);
@@ -137,6 +150,32 @@ public final class Kingdoms {
                         + teamName(server, other.team()) + " (radius " + other.claimRadius() + " around " + other.center().toShortString() + ").");
             }
         }
+        List<String> warnings = List.of();
+        if (force) {
+            String by = founder == null ? "" : " by " + founder.getName().getString();
+            DebugLog.event(DebugCategory.KINGDOM, king, "terrain check skipped for %s: forced%s", team, by);
+            DebugLog.event(DebugCategory.TERRAIN, king, "founding at %s: terrain check skipped (forced%s)", center.toShortString(), by);
+        } else {
+            Terrain.SiteCheck check = Terrain.checkSite(level, center, true);
+            SiteScore score = check.score();
+            if (score.unknown()) {
+                // Not all of the site is loaded: keep the old behavior (found without a terrain check), but record it.
+                DebugLog.event(DebugCategory.TERRAIN, king, "founding at %s: terrain check skipped, %s", center.toShortString(), score.describe());
+            } else if (!score.ok()) {
+                String nearby = check.search().flatMap(SiteSearch.Result::best)
+                        .map(best -> " The best site nearby is at " + best.x() + ", " + best.z() + " (score " + best.score().score()
+                                + ", " + best.distance() + " blocks away): move the king there.")
+                        .orElse(" There is no usable site within " + Tuning.TERRAIN_SEARCH_RADIUS.get() + " blocks either.");
+                DebugLog.event(DebugCategory.TERRAIN, king, "founding refused at %s: %s", center.toShortString(), score.describe());
+                return refuse(king, team, "The ground around the king can't hold a keep: "
+                        + score.refusals().stream().map(SiteScore.Reason::text).collect(Collectors.joining("; ")) + "." + nearby);
+            } else {
+                warnings = score.penalties().stream().map(reason -> reason.text() + " (-" + reason.points() + ")").toList();
+                if (!warnings.isEmpty()) {
+                    DebugLog.event(DebugCategory.TERRAIN, king, "founding at %s with warnings: %s", center.toShortString(), score.describe());
+                }
+            }
+        }
         Kingdom kingdom = Kingdom.found(team, level.dimension(), center, radius, king.getUUID(),
                 king.hasCustomName() ? king.getCustomName().getString() : null, level.getGameTime());
         data.add(kingdom);
@@ -144,7 +183,7 @@ public final class Kingdoms {
                 + " around " + kingTitle(server, kingdom, false) + " at " + center.toShortString() + ".");
         DebugLog.event(DebugCategory.KINGDOM, king, () -> "founded the kingdom of %s at %s, radius %d%s".formatted(team, center.toShortString(), radius,
                 founder == null ? "" : " (by " + founder.getName().getString() + ")"));
-        return new Result(kingdom, null);
+        return new Result(kingdom, null, warnings);
     }
 
     private static boolean overlaps(BlockPos center, int radius, Kingdom other) {
