@@ -35,7 +35,7 @@ Starts a headless test server, runs every test in
 `DevToolkitGameTests`, `SuspectedBugGameTests`, `BuildSiteGameTests`, `BuilderReachGameTests`,
 `DebugLogGameTests`, `RecorderFeedbackGameTests`, `BuildRequestGameTests`, `PlacingGameTests`,
 `DoorGameTests`, `TuningGameTests`, `StructureRegistryGameTests`, `StructurePasteGameTests`,
-`LayoutCheckerGameTests`), prints
+`LayoutCheckerGameTests`, `KingdomDataGameTests`, `KingdomGameTests`, `KingdomBookGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/make_gametest_platform.py`).
@@ -52,7 +52,7 @@ Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/mak
 - Tests that change global state (recorder, `DoorAccess.overrideRuleForTests`) get their own `batch` and reset it
   (`@AfterBatch` for the door rule).
 
-Current status (2026-10-03, after stage 0 Foundations): all 82 required tests pass. `SuspectedBugGameTests` covers the easel right-click:
+Current status (2026-10-03, after stage 1 Kingdom core): all 103 required tests pass. `SuspectedBugGameTests` covers the easel right-click:
 non-block item, unneeded block, needed block.
 
 ### Known bugs (confirmed)
@@ -119,6 +119,31 @@ Background: `docs/DOORS.md`. Code: `common/.../entity/door/`.
 - Tests: `DoorGameTests` (closed room, door closed again, iron door, open door, two builders, the locked-out
   Small House roof, combat chase, door events, refused door, stuck at a door).
 
+### Kingdoms (stage 1: data, founding, observer; no building or economy yet)
+
+Code: `common/.../kingdom/` (`Kingdom`, `KingdomSavedData`, `Kingdoms` service, `KingdomBook`), commands
+`common/.../commands/KingdomCommand`, game hooks `neoforge/.../event/KingdomEvents`. Decisions D16–D23.
+- **Saved:** `<world>/data/csr_kingdoms.dat`, format version `KingdomSavedData.DATA_VERSION` (1); see the migration
+  notes in `docs/DECISIONS.md`. Any format change raises the version and adds a migration.
+- **At most one kingdom per team**, ACTIVE or RUINED. Change kingdoms only through `Kingdoms` (it marks the data
+  dirty, writes the chronicle, records KINGDOM events).
+- **Founding** is explicit and reversible, never automatic:
+  - in game: sneak + right-click your own king (a clay soldier wearing a gold ingot, its team loyal to you) holding
+    a gold block;
+  - or `/csr kingdom found` (nearest loyal king within `kingdom.found_search_radius`).
+
+  Refused: unsupported dimension (Overworld only), not a living king, team not loyal to you, team already has a
+  kingdom, claim overlaps another kingdom.
+- **The claim** is a circle of `kingdom.claim_radius` around the king, fixed at founding.
+- **The king's death** (NeoForge death event, lowest priority) sets RUINED and writes a chronicle line.
+- **Population** is counted every `kingdom.census_interval_ticks`, but only while the whole claim is loaded;
+  otherwise the last count stays, with its time.
+- **Stockpile:** `Kingdoms.addResource` / `removeResource` (all or nothing, shortfall reported).
+- **Commands** (any player, every install): `/csr kingdom found | disband [team] | book [team] | status [team] | list`.
+  `goto_king <team>` needs operators. The book is a snapshot: status page with "Go to the king", stockpile,
+  buildings, chronicle.
+- **Dev only:** `/csr dev kingdom stock_add|stock_remove <resource> [amount]`, `stock_show` (book: Kingdom).
+
 ### Known limitations
 
 - Fixed (Fix B): builders reach higher. `BuilderReach`: a block's center less than 2.5 sideways (up to 2
@@ -163,6 +188,7 @@ the time it was made; a different hash means the registry changed.
 | `/csr dev tuning reload` / `show <key>` | re-read the tuning file / show a value, its default and range (book: Tuning) |
 | `/csr dev structure place <id> [facing]` | paste a registry structure where you stand, builders' conventions (book: Structures) |
 | `/csr dev structure undo` / `reload` / `list` | undo the last paste / re-read structures from disk / list all |
+| `/csr dev kingdom stock_add` / `stock_remove <resource> [amount]`, `stock_show` | test the stockpile of the kingdom you stand in (book: Kingdom, which also links `/csr kingdom found/book/status/disband`) |
 
 How it is built (`common/.../dev/`):
 - `DevToolRegistry` — single source of truth: generates the `/csr dev` commands AND the book buttons.
@@ -189,7 +215,7 @@ Records what soldiers and build plans do, to find out WHY something goes wrong.
 
 Code: `common/.../debug/` — `DebugLog.event(category, soldier, "text %s", arg)` is the one-line entry point
 (returns after one field read when the category is off; pass raw objects, not built strings; use a
-`Supplier<String>` for anything expensive). Categories: `DebugCategory` (BUILD, WORK, DAMAGE, PATHING, TEAM, STRUCTURE;
+`Supplier<String>` for anything expensive). Categories: `DebugCategory` (BUILD, WORK, DAMAGE, PATHING, TEAM, STRUCTURE, KINGDOM;
 add one with `DebugCategory.register` and it gets commands and book buttons automatically).
 Commands/buttons: `common/.../dev/RecorderTools`; action-bar indicator: `neoforge/.../event/RecorderIndicator`
 (registered only in dev). Ring buffer default 5000 events (`/csr dev log capacity`).
@@ -257,6 +283,8 @@ Main package: `net.bumblebee.claysoldiers` (in `common/src/main/java`):
 - `tuning/` — the tuning file (`Tuning`, `TuningKey`): every balancing number; see `docs/TUNING.md`.
 - `structure/` — kingdom structure registry (`StructureMeta`, `StructureRegistry`) and the dev paste tool
   (`StructurePaster`); see `docs/STRUCTURES.md`.
+- `kingdom/` — kingdoms (stage 1): `Kingdom`, `KingdomSavedData` (saved, versioned), `Kingdoms` (all changes),
+  `KingdomBook` (observer book); commands in `commands/KingdomCommand`.
 - `kingdom/layout/` — layout checker skeleton (pure data: `LayoutPlan`, `Footprint`, `RoadGraph`, `WallLoop`,
   `LayoutChecker`).
 - `neoforge/.../event/SoldierWorkCleanup` — stops a soldier's work goal when it leaves the level
@@ -323,4 +351,7 @@ Optional integrations (JEI, Jade, Accessories, Curios, Create, SmartBrainLib) ar
   builds) is part of stage 4, the old M4 (kingdom object) is stage 1.
 - **Stage 0 (Foundations) — done (2026-10-03, waiting for the in-game checklist):** tuning file, structure registry,
   paste tool with undo/reload, layout checker skeleton, STRUCTURE recorder category.
-- **Stage 1 (Kingdom core) — next.**
+- **Stage 1 (Kingdom core + observer v1) — done (2026-10-03, waiting for the in-game checklist):** saved kingdoms,
+  founding/disbanding, king death -> RUINED, stockpile, census, chronicle, kingdom book and commands, KINGDOM
+  recorder category.
+- **Stage 2 (Terrain spike) — next.**

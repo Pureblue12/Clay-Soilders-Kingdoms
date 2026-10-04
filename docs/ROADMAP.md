@@ -8,8 +8,8 @@ Earlier work (M0–M2: testing, bug fixes, `/csr build`, builder fixes, doors) i
 | # | Stage | Size | Status |
 |---|---|---|---|
 | 0 | Foundations | M | **done** (in-game checklist pending) |
-| 1 | Kingdom core | M | **next** |
-| 2 | Terrain spike | L | not started |
+| 1 | Kingdom core | M | **done** (in-game checklist pending) |
+| 2 | Terrain spike | L | **next** |
 | 3 | Tall construction spike | L | not started |
 | 4 | Tier-1 keep built autonomously | L | not started |
 | 5 | Economy loop v1 | L | not started |
@@ -63,14 +63,27 @@ Stages are ordered by dependency and risk. Every stage ends playable.
 - **Acceptance test:** a founded kingdom survives a restart and is visible in the book.
 - **Depends on:** 0 · **Size:** M
 - **Risks:** the saved-data format (needs a migration note).
-- **Decisions:** [D1](DECISIONS.md) · **Status:** next · **Results:** —
+- **Decisions:** [D1](DECISIONS.md), [D16–D23](DECISIONS.md)
+- **Status:** done (2026-10-03); the owner's in-game checklist and recording review are pending.
+- **Results:**
+  - **Saved kingdoms:** `csr_kingdoms.dat`, data version 1.
+  - **Founding:** gold block on your king, or `/csr kingdom found`, with five refusals; disband.
+  - **King death:** sets RUINED and writes a chronicle line.
+  - **Stockpile:** all or nothing, shortfall reported.
+  - **Census:** counted only when the whole claim is loaded.
+  - **Chronicle:** capped by `kingdom.chronicle_max`.
+  - **Observer:** kingdom book and `/csr kingdom` commands.
+  - **Recorder:** KINGDOM category.
+  - **Flow audit:** the stockpile is a store with no producer or consumer yet; only dev commands fill it (stage 5
+    adds the first loop).
+  - **Tests:** 103 required (82 before), all pass.
 
 ### 2 Terrain spike
 - **Goal:** site scoring, foundations or terraforming; founding refuses or warns on bad ground.
 - **Acceptance test:** a keep foundation on a slope and one near water are handled; a cliff is refused with a reason.
 - **Depends on:** 1 · **Size:** L
 - **Risks:** may change the keep design.
-- **Decisions:** — · **Status:** not started · **Results:** —
+- **Decisions:** — · **Status:** next · **Results:** —
 
 ### 3 Tall construction spike
 - **Goal:** scaffolding with a build order, removed afterward.

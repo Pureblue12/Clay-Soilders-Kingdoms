@@ -33,6 +33,10 @@ All balancing numbers (costs, radii, rates, caps, unlock thresholds) live in ONE
 
 | Key | Default | Allowed | What it does |
 |---|---|---|---|
+| `kingdom.claim_radius` | 32 | 4–256 | Radius of the land a new kingdom claims around its king. Read when a kingdom is founded and stored in it: changing it affects only kingdoms founded afterwards. |
+| `kingdom.chronicle_max` | 100 | 5–1000 | How many chronicle lines a kingdom keeps; the oldest are dropped. After lowering it, a kingdom is trimmed when it gets its next line. |
+| `kingdom.found_search_radius` | 16 | 1–64 | How far `/csr kingdom found` looks for your king. |
+| `kingdom.census_interval_ticks` | 100 | 20–12000 | How often population and the king's position are updated (population only while the whole claim is loaded). Used on the next tick after a reload. |
 | `kingdom.max_loaded` | 4 | 1–64 | How many kingdoms are kept loaded (simulated) at once ([D1](DECISIONS.md)). |
 | `kingdom.tier_unlock_renown` | 0, 100, 250, 500, 900, 1400, 2100, 3000, 4200, 6000 | 10 × 0–1,000,000 | Renown needed to reach each tier, tier 1 first. **Placeholder.** |
 | `kingdom.zone.keep_radius` | 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 | 10 × 1–256 | Radius of the keep zone per tier, in blocks. **Placeholder.** |
