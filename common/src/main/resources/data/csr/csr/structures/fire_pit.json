@@ -1,0 +1,24 @@
+{
+  "id": "csr:fire_pit",
+  "name": "Fire pit",
+  "design": "ready",
+  "tier": 1,
+  "zone": "inner",
+  "role": "decoration",
+  "footprint": [
+    5,
+    1,
+    5
+  ],
+  "cost": "auto",
+  "variant_group": "fire_pit",
+  "palette": "oak_a",
+  "structure": "csr:kingdom/batch1/fire_pit_l1",
+  "levels": [
+    "csr:kingdom/batch1/fire_pit_l1",
+    "csr:kingdom/batch1/fire_pit_l2"
+  ],
+  "ground_level": 0,
+  "terrain": "flexible",
+  "batch": 1
+}

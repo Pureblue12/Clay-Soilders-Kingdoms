@@ -1,5 +1,6 @@
 package net.bumblebee.claysoldiers.dev;
 
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -47,6 +48,22 @@ final class StructureTools {
                         .withOptionalExtra("facing", StringArgumentType.word(),
                                 (context, builder) -> SharedSuggestionProvider.suggest(FACINGS, builder)),
                 StructureTools::place));
+        registry.addTool(new DevTool("structure_level", STRUCTURES, Component.literal("Paste level"),
+                "Pastes one detail level (L1 = shell and fittings, L2 and L3 add flourish) of a structure that has levels.",
+                List.of("structure", "level"), false,
+                new DevTool.Argument("structure", ResourceLocationArgument.id(),
+                        (context, builder) -> SharedSuggestionProvider.suggestResource(
+                                StructureRegistry.loaded().stream().filter(meta -> meta.isReady() && meta.levelCount() > 1).map(StructureMeta::id), builder),
+                        access -> StructureRegistry.loaded().stream().filter(meta -> meta.isReady() && meta.levelCount() > 1)
+                                .flatMap(meta -> java.util.stream.IntStream.rangeClosed(1, meta.levelCount()).mapToObj(level ->
+                                        new DevTool.Choice(Component.literal(meta.name() + " L" + level), meta.id() + " " + level, describe(meta))))
+                                .toList())
+                        .withOptionalExtra("level", IntegerArgumentType.integer(1, 9), null),
+                StructureTools::placeLevel));
+        registry.addTool(new DevTool("structure_showcase", STRUCTURES, Component.literal("Showcase batch 1"),
+                "Pastes every batch-1 structure, each detail level side by side, in rows ahead of you (stand on flat ground"
+                        + " with room: about 40 by 70). A legend goes to chat. Undo last paste removes it all.",
+                List.of("structure", "showcase"), false, null, StructureTools::showcase));
         registry.addTool(new DevTool("structure_undo", STRUCTURES, Component.literal("Undo last paste"),
                 "Puts back the blocks the last paste replaced.",
                 List.of("structure", "undo"), false, null, StructureTools::undo));
@@ -96,6 +113,85 @@ final class StructureTools {
                     box.getXSpan(), box.getYSpan(), box.getZSpan()));
         }
         return 1;
+    }
+
+    private static int placeLevel(CommandContext<CommandSourceStack> context) {
+        CommandSourceStack source = context.getSource();
+        ResourceLocation id = ResourceLocationArgument.getId(context, "structure");
+        Optional<StructureMeta> meta = StructureRegistry.get(source.getServer()).byId(id);
+        if (meta.isEmpty()) {
+            fail(context, "No structure " + id + ". /csr dev structure list shows them all.");
+            return 0;
+        }
+        int level;
+        try {
+            level = IntegerArgumentType.getInteger(context, "level");
+        } catch (IllegalArgumentException noLevel) {
+            level = 1;
+        }
+        Direction direction = source.getEntity() != null ? source.getEntity().getDirection() : Direction.SOUTH;
+        BlockPos at = BlockPos.containing(source.getPosition());
+        StructurePaster.Pasted pasted;
+        try {
+            pasted = StructurePaster.paste(source.getLevel(), meta.get(), level, at, direction);
+        } catch (IllegalArgumentException e) {
+            fail(context, "Can't paste: " + e.getMessage());
+            return 0;
+        }
+        report(context, "Pasted %s level %d of %d [%s] going %s: blocks %s. Undo: /csr dev structure undo."
+                .formatted(meta.get().name(), level, meta.get().levelCount(), meta.get().levelFile(level), direction.getName(),
+                        StructurePaster.describe(pasted.box())));
+        return 1;
+    }
+
+    /** Space between showcase structures, in blocks. */
+    private static final int SHOWCASE_GAP = 3;
+
+    /**
+     * Pastes all batch-1 structures: one row per structure (smallest first), its levels left to right, starting 2 blocks
+     * ahead; one undo step.
+     */
+    private static int showcase(CommandContext<CommandSourceStack> context) {
+        CommandSourceStack source = context.getSource();
+        List<StructureMeta> batch = StructureRegistry.get(source.getServer()).ready().stream()
+                .filter(meta -> meta.batch() != null && meta.batch() == 1 && meta.footprint() != null)
+                .sorted(java.util.Comparator.comparingInt((StructureMeta meta) -> meta.footprint().getX() * meta.footprint().getZ())
+                        .thenComparing(meta -> meta.id().toString()))
+                .toList();
+        if (batch.isEmpty()) {
+            fail(context, "No batch-1 structures in the registry.");
+            return 0;
+        }
+        Direction forward = source.getEntity() != null ? source.getEntity().getDirection() : Direction.SOUTH;
+        Direction right = forward.getClockWise();
+        BlockPos origin = BlockPos.containing(source.getPosition());
+        List<StructurePaster.Showpiece> pieces = new java.util.ArrayList<>();
+        List<String> legend = new java.util.ArrayList<>();
+        BoundingBox area = null;
+        int ahead = 0;
+        for (StructureMeta meta : batch) {
+            int across = 0;
+            List<String> levels = new java.util.ArrayList<>();
+            for (int level = 1; level <= meta.levelCount(); level++) {
+                var template = StructurePaster.template(source.getLevel(), meta, level);
+                // The easel position: the structure starts 2 blocks past it and is centered on it.
+                BlockPos at = origin.relative(forward, ahead).relative(right, across + template.getSize().getX() / 2);
+                pieces.add(new StructurePaster.Showpiece(meta, level, at));
+                BoundingBox box = StructurePaster.box(template, at, forward);
+                area = area == null ? box : BoundingBox.encapsulatingBoxes(List.of(area, box)).orElseThrow();
+                levels.add("L" + level);
+                across += template.getSize().getX() + SHOWCASE_GAP;
+            }
+            legend.add("%d ahead: %s (%dx%dx%d) %s, left to right".formatted(ahead + 2, meta.name(), meta.footprint().getX(),
+                    meta.footprint().getY(), meta.footprint().getZ(), String.join(" ", levels)));
+            ahead += meta.footprint().getZ() + SHOWCASE_GAP;
+        }
+        StructurePaster.pasteAll(source.getLevel(), ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, "showcase/batch1"),
+                area, forward, pieces);
+        report(context, "Showcase batch 1: %d structures, %d pastes, going %s from %s (rows start on your right). Undo: /csr dev structure undo."
+                .formatted(batch.size(), pieces.size(), forward.getName(), origin.toShortString()));
+        legend.forEach(line -> report(context, "  " + line));
+        return pieces.size();
     }
 
     private static int undo(CommandContext<CommandSourceStack> context) {

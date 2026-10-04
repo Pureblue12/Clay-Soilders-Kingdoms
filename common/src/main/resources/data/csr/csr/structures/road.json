@@ -1,0 +1,25 @@
+{
+  "id": "csr:road",
+  "name": "Road piece (dirt)",
+  "design": "ready",
+  "tier": 1,
+  "zone": "inner",
+  "role": "utility",
+  "footprint": [
+    5,
+    3,
+    5
+  ],
+  "cost": "auto",
+  "variant_group": "road",
+  "palette": "oak_a",
+  "structure": "csr:kingdom/batch1/road_l1",
+  "levels": [
+    "csr:kingdom/batch1/road_l1",
+    "csr:kingdom/batch1/road_l2",
+    "csr:kingdom/batch1/road_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "flexible",
+  "batch": 1
+}

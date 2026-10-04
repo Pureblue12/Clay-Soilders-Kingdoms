@@ -1,0 +1,235 @@
+{
+  "keep": {
+    "size": [
+      9,
+      9,
+      9
+    ],
+    "layers": {
+      "shell": 355,
+      "fittings": 23,
+      "flourish2": 14,
+      "flourish3": 21
+    },
+    "levels": [
+      378,
+      392,
+      413
+    ],
+    "unknown": [
+      "candle",
+      "moss_carpet",
+      "white_banner",
+      "white_wall_banner"
+    ]
+  },
+  "hovel": {
+    "size": [
+      5,
+      3,
+      5
+    ],
+    "layers": {
+      "shell": 26,
+      "fittings": 4,
+      "flourish2": 5,
+      "flourish3": 4
+    },
+    "levels": [
+      30,
+      35,
+      39
+    ],
+    "unknown": []
+  },
+  "cottage": {
+    "size": [
+      7,
+      8,
+      9
+    ],
+    "layers": {
+      "shell": 134,
+      "fittings": 18,
+      "flourish2": 24,
+      "flourish3": 15
+    },
+    "levels": [
+      152,
+      176,
+      191
+    ],
+    "unknown": [
+      "moss_carpet"
+    ]
+  },
+  "visitors_camp": {
+    "size": [
+      9,
+      4,
+      9
+    ],
+    "layers": {
+      "shell": 48,
+      "fittings": 12,
+      "flourish2": 13,
+      "flourish3": 12
+    },
+    "levels": [
+      60,
+      73,
+      85
+    ],
+    "unknown": [
+      "dandelion",
+      "white_banner"
+    ]
+  },
+  "farm": {
+    "size": [
+      7,
+      7,
+      9
+    ],
+    "layers": {
+      "shell": 27,
+      "fittings": 16,
+      "flourish2": 12,
+      "flourish3": 25
+    },
+    "levels": [
+      43,
+      55,
+      80
+    ],
+    "unknown": [
+      "carved_pumpkin",
+      "white_wool"
+    ]
+  },
+  "lumber_camp": {
+    "size": [
+      7,
+      4,
+      7
+    ],
+    "layers": {
+      "shell": 42,
+      "fittings": 5,
+      "flourish2": 9,
+      "flourish3": 10
+    },
+    "levels": [
+      47,
+      56,
+      66
+    ],
+    "unknown": [
+      "moss_carpet",
+      "oak_sapling"
+    ]
+  },
+  "well": {
+    "size": [
+      3,
+      4,
+      3
+    ],
+    "layers": {
+      "shell": 21,
+      "fittings": 2,
+      "flourish2": 3,
+      "flourish3": 2
+    },
+    "levels": [
+      23,
+      26,
+      28
+    ],
+    "unknown": [
+      "moss_carpet"
+    ]
+  },
+  "bench": {
+    "size": [
+      4,
+      1,
+      1
+    ],
+    "layers": {
+      "shell": 2,
+      "flourish2": 2
+    },
+    "levels": [
+      2,
+      4
+    ],
+    "unknown": []
+  },
+  "fire_pit": {
+    "size": [
+      5,
+      1,
+      5
+    ],
+    "layers": {
+      "shell": 8,
+      "fittings": 1,
+      "flourish2": 2
+    },
+    "levels": [
+      9,
+      11
+    ],
+    "unknown": []
+  },
+  "signpost": {
+    "size": [
+      3,
+      2,
+      1
+    ],
+    "layers": {
+      "shell": 2,
+      "flourish2": 2
+    },
+    "levels": [
+      2,
+      4
+    ],
+    "unknown": []
+  },
+  "flower_bed": {
+    "size": [
+      3,
+      2,
+      1
+    ],
+    "layers": {
+      "shell": 3,
+      "fittings": 3
+    },
+    "levels": [
+      6
+    ],
+    "unknown": []
+  },
+  "road": {
+    "size": [
+      5,
+      3,
+      5
+    ],
+    "layers": {
+      "shell": 15,
+      "flourish2": 4,
+      "flourish3": 4
+    },
+    "levels": [
+      15,
+      19,
+      23
+    ],
+    "unknown": []
+  }
+}

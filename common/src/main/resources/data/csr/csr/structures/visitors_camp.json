@@ -1,0 +1,26 @@
+{
+  "id": "csr:visitors_camp",
+  "name": "Visitors' camp",
+  "design": "ready",
+  "tier": 1,
+  "zone": "inner",
+  "role": "house",
+  "footprint": [
+    9,
+    4,
+    9
+  ],
+  "cost": "auto",
+  "variant_group": "inn",
+  "palette": "oak_a",
+  "structure": "csr:kingdom/batch1/visitors_camp_l1",
+  "levels": [
+    "csr:kingdom/batch1/visitors_camp_l1",
+    "csr:kingdom/batch1/visitors_camp_l2",
+    "csr:kingdom/batch1/visitors_camp_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "flexible",
+  "batch": 1,
+  "door_side": "front"
+}

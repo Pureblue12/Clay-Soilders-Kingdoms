@@ -1,0 +1,24 @@
+{
+  "id": "csr:signpost",
+  "name": "Signpost",
+  "design": "ready",
+  "tier": 1,
+  "zone": "inner",
+  "role": "decoration",
+  "footprint": [
+    3,
+    2,
+    1
+  ],
+  "cost": "auto",
+  "variant_group": "signpost",
+  "palette": "oak_a",
+  "structure": "csr:kingdom/batch1/signpost_l1",
+  "levels": [
+    "csr:kingdom/batch1/signpost_l1",
+    "csr:kingdom/batch1/signpost_l2"
+  ],
+  "ground_level": 0,
+  "terrain": "flexible",
+  "batch": 1
+}

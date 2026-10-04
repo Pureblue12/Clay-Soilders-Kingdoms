@@ -1,0 +1,12 @@
+{
+  "structure": "csr:cottage",
+  "note": "What the decoration step (roadmap 5a) must add after builders finish each level; nothing here is placed by builders.",
+  "unknown_blocks_in_flourish": [
+    "moss_carpet"
+  ],
+  "levels": {
+    "1": [],
+    "2": [],
+    "3": []
+  }
+}

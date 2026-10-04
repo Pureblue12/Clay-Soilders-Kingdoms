@@ -13,6 +13,7 @@ import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.blueprint.BlueprintRequest;
 import net.bumblebee.claysoldiers.capability.BlueprintRequestHandler;
 import net.bumblebee.claysoldiers.capability.IBlockCache;
+import net.bumblebee.claysoldiers.blueprint.ReachOrigin;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.entity.door.UseDoorGoal;
@@ -72,10 +73,15 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
      */
     private final ReachTest reachTest = new ReachTest();
 
-    private final class ReachTest implements java.util.function.Predicate<BlockPos>, ScaffoldHome {
+    private final class ReachTest implements java.util.function.Predicate<BlockPos>, ScaffoldHome, ReachOrigin {
         @Override
         public boolean test(BlockPos pos) {
             return canReach(pos);
+        }
+
+        @Override
+        public BlockPos reachOrigin() {
+            return soldier.blockPosition();
         }
 
         @Override
@@ -128,6 +134,9 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         updatePathSearch();
         if (soldier.level() instanceof ServerLevel level && climber.rescueIfStranded(level)) {
             return; // stood in a scaffolding column without climbing it: come down first
+        }
+        if (!climber.isActive() && OffTheFence.stepDown(soldier)) {
+            return; // stood on a fence top, where no path starts
         }
         if (climber.isDescending()) {
             climber.tick(); // come down a scaffolding column first
@@ -254,6 +263,11 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
 
     private void getRequestJob() {
         if (!moveMobToEasel()) {
+            return;
+        }
+        if (!soldier.onGround()) {
+            // Vanilla finds no path at all while a mob is in the air (mid-hop): a search now would find every block
+            // out of reach, and remember it so (build.unreachable_recheck_ticks). Search once it has landed.
             return;
         }
         var requestHandler = easelPos.getCapability();

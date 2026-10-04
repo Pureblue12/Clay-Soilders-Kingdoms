@@ -1,0 +1,55 @@
+{
+  "structure": "csr:keep",
+  "note": "What the decoration step (roadmap 5a) must add after builders finish each level; nothing here is placed by builders.",
+  "unknown_blocks_in_flourish": [
+    "candle",
+    "moss_carpet",
+    "white_banner",
+    "white_wall_banner"
+  ],
+  "levels": {
+    "1": [],
+    "2": [
+      {
+        "pos": [
+          4,
+          4,
+          1
+        ],
+        "kind": "banner_pattern",
+        "banner": "white_wall_banner",
+        "note": "kingdom colours"
+      },
+      {
+        "pos": [
+          1,
+          2,
+          4
+        ],
+        "kind": "potted_plant",
+        "plant": "poppy"
+      },
+      {
+        "pos": [
+          2,
+          2,
+          5
+        ],
+        "kind": "potted_plant",
+        "plant": "poppy"
+      }
+    ],
+    "3": [
+      {
+        "pos": [
+          0,
+          7,
+          3
+        ],
+        "kind": "banner_pattern",
+        "banner": "white_banner",
+        "note": "kingdom colours"
+      }
+    ]
+  }
+}

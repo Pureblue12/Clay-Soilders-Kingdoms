@@ -1,0 +1,23 @@
+{
+  "id": "csr:flower_bed",
+  "name": "Flower bed",
+  "design": "ready",
+  "tier": 1,
+  "zone": "inner",
+  "role": "decoration",
+  "footprint": [
+    3,
+    2,
+    1
+  ],
+  "cost": "auto",
+  "variant_group": "flower_bed",
+  "palette": "oak_a",
+  "structure": "csr:kingdom/batch1/flower_bed_l1",
+  "levels": [
+    "csr:kingdom/batch1/flower_bed_l1"
+  ],
+  "ground_level": 0,
+  "terrain": "flexible",
+  "batch": 1
+}

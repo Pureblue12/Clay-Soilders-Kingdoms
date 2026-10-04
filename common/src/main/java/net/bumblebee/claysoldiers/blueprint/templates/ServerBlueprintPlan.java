@@ -2,6 +2,7 @@ package net.bumblebee.claysoldiers.blueprint.templates;
 
 import net.bumblebee.claysoldiers.blueprint.BlueprintRequest;
 import net.bumblebee.claysoldiers.blueprint.BlueprintTemplateSettings;
+import net.bumblebee.claysoldiers.blueprint.ReachOrigin;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.tuning.Tuning;
@@ -39,7 +40,13 @@ public class ServerBlueprintPlan extends BlueprintPlan {
      * by its request searches until the time stored or until the build changes ({@link #forgetUnreachable}). Per
      * builder, because one standing somewhere awkward must not make the others skip blocks they can reach.
      */
-    private final Map<Predicate<BlockPos>, Map<BlueprintBlockInfo, Long>> unreachableByBuilder = new WeakHashMap<>();
+    private final Map<Predicate<BlockPos>, BuilderMemory> unreachableByBuilder = new WeakHashMap<>();
+
+    /** One builder's memory: where it stood when it found the blocks out of reach, and until when they count as such. */
+    private static final class BuilderMemory {
+        private BlockPos origin;
+        private final Map<BlueprintBlockInfo, Long> blocks = new HashMap<>();
+    }
 
     public ServerBlueprintPlan(Vec3i size, List<StructureTemplate.StructureBlockInfo> blockInfoList) {
         super(BlueprintUtil.getNeededItemsFromInfo(blockInfoList, StructureTemplate.StructureBlockInfo::state), size);
@@ -297,8 +304,8 @@ public class ServerBlueprintPlan extends BlueprintPlan {
      * checked again when their wait ({@code build.unreachable_recheck_ticks}) is up.
      */
     public void forgetUnreachableNear(BlockPos changed, int radius, BlockPos base, BlueprintTemplateSettings settings) {
-        for (Map<BlueprintBlockInfo, Long> blocks : unreachableByBuilder.values()) {
-            blocks.keySet().removeIf(info -> {
+        for (BuilderMemory memory : unreachableByBuilder.values()) {
+            memory.blocks.keySet().removeIf(info -> {
                 BlockPos pos = targetPosition(base, settings, info);
                 return Math.abs(pos.getX() - changed.getX()) <= radius && Math.abs(pos.getZ() - changed.getZ()) <= radius;
             });
@@ -307,7 +314,16 @@ public class ServerBlueprintPlan extends BlueprintPlan {
 
     /** The blocks one builder (its reach test) found out of reach recently, and until when they count as such. */
     private Map<BlueprintBlockInfo, Long> unreachable(Predicate<BlockPos> canReach) {
-        return unreachableByBuilder.computeIfAbsent(canReach, builder -> new HashMap<>());
+        BuilderMemory memory = unreachableByBuilder.computeIfAbsent(canReach, builder -> new BuilderMemory());
+        if (canReach instanceof ReachOrigin origin) {
+            // Out of reach from where the builder stood then; from another spot it may not be.
+            BlockPos at = origin.reachOrigin().immutable();
+            if (!at.equals(memory.origin)) {
+                memory.blocks.clear();
+                memory.origin = at;
+            }
+        }
+        return memory.blocks;
     }
 
     /**

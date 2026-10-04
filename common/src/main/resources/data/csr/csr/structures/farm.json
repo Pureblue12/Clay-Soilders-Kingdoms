@@ -1,8 +1,26 @@
 {
   "id": "csr:farm",
   "name": "Farm",
-  "design": "TBD",
+  "design": "ready",
   "tier": 1,
   "zone": "outer",
-  "role": "farm"
+  "role": "farm",
+  "footprint": [
+    7,
+    7,
+    9
+  ],
+  "cost": "auto",
+  "variant_group": "farm",
+  "palette": "oak_a",
+  "structure": "csr:kingdom/batch1/farm_l1",
+  "levels": [
+    "csr:kingdom/batch1/farm_l1",
+    "csr:kingdom/batch1/farm_l2",
+    "csr:kingdom/batch1/farm_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "flexible",
+  "batch": 1,
+  "door_side": "front"
 }
