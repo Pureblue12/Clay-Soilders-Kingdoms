@@ -37,9 +37,9 @@
 
    Say so clearly in the final report.
 6. **Numbers live in one tuning data file:** costs, radii, rates, caps and unlock thresholds, never hardcoded.
-   (The file doesn't exist yet. It's created with the first kingdom feature. Constants from before this protocol,
-   such as `BuilderReach`, `UseDoorGoal` and `BlueprintBlockInfo`, move there when those features are next
-   touched.)
+   The file is `data/csr/tuning/tuning.json`, documented in [`TUNING.md`](TUNING.md) (since stage 0). Constants
+   from before this protocol, such as `BuilderReach`, `UseDoorGoal` and `BlueprintBlockInfo`, move there when those
+   features are next touched (list in `TUNING.md`).
 7. **Saved-data format changes** need a migration note in `DECISIONS.md`.
 8. **Every milestone's final report** lists the new decisions made. At the end of each milestone, run a short
    consistency check of `DECISIONS.md` and report any contradictions.

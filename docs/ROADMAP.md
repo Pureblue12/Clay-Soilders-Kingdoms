@@ -7,8 +7,8 @@ Earlier work (M0–M2: testing, bug fixes, `/csr build`, builder fixes, doors) i
 
 | # | Stage | Size | Status |
 |---|---|---|---|
-| 0 | Foundations | M | **next** |
-| 1 | Kingdom core | M | not started |
+| 0 | Foundations | M | **done** (in-game checklist pending) |
+| 1 | Kingdom core | M | **next** |
 | 2 | Terrain spike | L | not started |
 | 3 | Tall construction spike | L | not started |
 | 4 | Tier-1 keep built autonomously | L | not started |
@@ -48,14 +48,22 @@ Stages are ordered by dependency and risk. Every stage ends playable.
 - **Acceptance test:** the owner pastes a test structure from the book and changes a number in the tuning file.
 - **Depends on:** — · **Size:** M
 - **Risks:** choosing the tuning file format.
-- **Decisions:** — · **Status:** next · **Results:** —
+- **Decisions:** [D8–D15](DECISIONS.md)
+- **Status:** done (2026-10-03); the owner's in-game checklist and recording review are pending.
+- **Results:**
+  - **Tuning:** `data/csr/tuning/tuning.json`, 9 keys (`docs/TUNING.md`), book Tuning (reload, show).
+  - **Registry:** 3 test structures plus 16 placeholders (`docs/STRUCTURES.md`).
+  - **Paste tool:** `/csr dev structure place|undo|reload|list`, book Structures.
+  - **Layout checker:** a pure-data skeleton.
+  - **Recorder:** the STRUCTURE category.
+  - **Tests:** 82 required (60 before), all pass.
 
 ### 1 Kingdom core
 - **Goal:** a saved Kingdom object (area, king, stockpile numbers, building list, population, renown), founded by the gold-hat king, that survives save and reload. Observer v1: a status page and a chronicle book.
 - **Acceptance test:** a founded kingdom survives a restart and is visible in the book.
 - **Depends on:** 0 · **Size:** M
 - **Risks:** the saved-data format (needs a migration note).
-- **Decisions:** [D1](DECISIONS.md) · **Status:** not started · **Results:** —
+- **Decisions:** [D1](DECISIONS.md) · **Status:** next · **Results:** —
 
 ### 2 Terrain spike
 - **Goal:** site scoring, foundations or terraforming; founding refuses or warns on bad ground.

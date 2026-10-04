@@ -34,7 +34,8 @@ Starts a headless test server, runs every test in
 `neoforge/src/main/java/net/bumblebee/claysoldiers/gametest/` (`ClaySoldierGameTests`,
 `DevToolkitGameTests`, `SuspectedBugGameTests`, `BuildSiteGameTests`, `BuilderReachGameTests`,
 `DebugLogGameTests`, `RecorderFeedbackGameTests`, `BuildRequestGameTests`, `PlacingGameTests`,
-`DoorGameTests`), prints
+`DoorGameTests`, `TuningGameTests`, `StructureRegistryGameTests`, `StructurePasteGameTests`,
+`LayoutCheckerGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/make_gametest_platform.py`).
@@ -51,7 +52,7 @@ Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/mak
 - Tests that change global state (recorder, `DoorAccess.overrideRuleForTests`) get their own `batch` and reset it
   (`@AfterBatch` for the door rule).
 
-Current status (2026-10-03, after door use): all 60 required tests pass. `SuspectedBugGameTests` covers the easel right-click:
+Current status (2026-10-03, after stage 0 Foundations): all 82 required tests pass. `SuspectedBugGameTests` covers the easel right-click:
 non-block item, unneeded block, needed block.
 
 ### Known bugs (confirmed)
@@ -159,6 +160,9 @@ the time it was made; a different hash means the registry changed.
 | `/csr dev materials <blueprint>` | gives the materials from the blueprint's own item list |
 | `/csr dev cleanup <radius>` | removes clay soldiers and easels in range (asks to confirm in chat) |
 | `/csr build <blueprint>` (book link) | see "Starting a build" below |
+| `/csr dev tuning reload` / `show <key>` | re-read the tuning file / show a value, its default and range (book: Tuning) |
+| `/csr dev structure place <id> [facing]` | paste a registry structure where you stand, builders' conventions (book: Structures) |
+| `/csr dev structure undo` / `reload` / `list` | undo the last paste / re-read structures from disk / list all |
 
 How it is built (`common/.../dev/`):
 - `DevToolRegistry` — single source of truth: generates the `/csr dev` commands AND the book buttons.
@@ -185,7 +189,7 @@ Records what soldiers and build plans do, to find out WHY something goes wrong.
 
 Code: `common/.../debug/` — `DebugLog.event(category, soldier, "text %s", arg)` is the one-line entry point
 (returns after one field read when the category is off; pass raw objects, not built strings; use a
-`Supplier<String>` for anything expensive). Categories: `DebugCategory` (BUILD, WORK, DAMAGE, PATHING, TEAM;
+`Supplier<String>` for anything expensive). Categories: `DebugCategory` (BUILD, WORK, DAMAGE, PATHING, TEAM, STRUCTURE;
 add one with `DebugCategory.register` and it gets commands and book buttons automatically).
 Commands/buttons: `common/.../dev/RecorderTools`; action-bar indicator: `neoforge/.../event/RecorderIndicator`
 (registered only in dev). Ring buffer default 5000 events (`/csr dev log capacity`).
@@ -250,6 +254,11 @@ Main package: `net.bumblebee.claysoldiers` (in `common/src/main/java`):
 - `blueprint/site/` — `BuildSitePlanner`: checks build sites and places easels (M2).
 - `debug/` — `DebugLog` recorder and `DebugCategory` (dev debugging; see "Debug recorder").
 - `entity/door/` — door use: `DoorAccess` (who may open which door), `UseDoorGoal`, `DoorPathing`, `OpenedDoors`.
+- `tuning/` — the tuning file (`Tuning`, `TuningKey`): every balancing number; see `docs/TUNING.md`.
+- `structure/` — kingdom structure registry (`StructureMeta`, `StructureRegistry`) and the dev paste tool
+  (`StructurePaster`); see `docs/STRUCTURES.md`.
+- `kingdom/layout/` — layout checker skeleton (pure data: `LayoutPlan`, `Footprint`, `RoadGraph`, `WallLoop`,
+  `LayoutChecker`).
 - `neoforge/.../event/SoldierWorkCleanup` — stops a soldier's work goal when it leaves the level
   (saving no longer does this).
 - `mixin/` — mixins (config: `common/src/main/resources/csr.mixins.json`).
@@ -264,6 +273,12 @@ Optional integrations (JEI, Jade, Accessories, Curios, Create, SmartBrainLib) ar
   `docs/DECISIONS.md`.
 - Plan of work: `docs/ROADMAP.md` (stages, definition of done, status table). Update a stage's status and
   results when it changes.
+- Tuning file: every balancing number (costs, radii, rates, caps, unlock thresholds) is a key in
+  `data/csr/tuning/tuning.json` (`Tuning.java`, documented in `docs/TUNING.md`), never hardcoded. A new key needs a
+  default, a range, a line in `tuning.json` and a row in `docs/TUNING.md`.
+- Structure pipeline: a kingdom structure is a vanilla `.nbt` (`data/csr/structure/...`, edit with structure blocks)
+  plus a metadata JSON (`data/csr/csr/structures/`). Validation must stay clean
+  (`StructureRegistryGameTests.shippedRegistryIsValid`). Workflow: `docs/STRUCTURES.md`.
 
 - Make small, incremental changes; one feature at a time.
 - Never break the existing build — run `./gradlew :neoforge:build` after every change.
@@ -298,5 +313,8 @@ Optional integrations (JEI, Jade, Accessories, Curios, Create, SmartBrainLib) ar
 - **M2 — done:** `/csr build` + `BuildSitePlanner` (site checks, easel placement), book link, tests.
 - Since then: Fix A/B (builder freeze, reach), recorder, wall-mounted blocks, placement cooldown, door race,
   door use (see "Known bugs" and "Doors").
-- **Next: `docs/ROADMAP.md`** (DRAFT v0, stages 0–14) replaces the old M3/M4 plan. Stage 0 (Foundations) is
-  next; the old M3 (soldiers start builds) is now part of stage 4, the old M4 (kingdom object) is stage 1.
+- **Now: `docs/ROADMAP.md`** (DRAFT v0, stages 0–14) replaces the old M3/M4 plan; the old M3 (soldiers start
+  builds) is part of stage 4, the old M4 (kingdom object) is stage 1.
+- **Stage 0 (Foundations) — done (2026-10-03, waiting for the in-game checklist):** tuning file, structure registry,
+  paste tool with undo/reload, layout checker skeleton, STRUCTURE recorder category.
+- **Stage 1 (Kingdom core) — next.**
