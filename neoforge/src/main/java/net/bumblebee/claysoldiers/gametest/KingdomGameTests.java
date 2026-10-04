@@ -251,10 +251,11 @@ public class KingdomGameTests {
         FakePlayer player = player(helper);
         try {
             GameTestTuning.load("{\"kingdom.claim_radius\": 5}");
+            // A player is loyal-owner of one team at a time, so found Red before making Blue loyal.
             ClaySoldierEntity redKing = spawnKing(helper, new BlockPos(3, GROUND_Y, 3), RED, player);
+            helper.assertTrue(Kingdoms.found(helper.getLevel(), redKing, player).ok(), "Setup: founding Red failed");
             ClaySoldierEntity blueKing = spawnKing(helper, new BlockPos(14, GROUND_Y, 14), BLUE, player);
-            helper.assertTrue(Kingdoms.found(helper.getLevel(), redKing, player).ok() && Kingdoms.found(helper.getLevel(), blueKing, player).ok(),
-                    "Setup: founding failed");
+            helper.assertTrue(Kingdoms.found(helper.getLevel(), blueKing, player).ok(), "Setup: founding Blue failed");
             Kingdom red = Kingdoms.byTeam(server(helper), RED).orElseThrow();
             Kingdom blue = Kingdoms.byTeam(server(helper), BLUE).orElseThrow();
             ResourceLocation wheat = ResourceLocation.withDefaultNamespace("wheat");
