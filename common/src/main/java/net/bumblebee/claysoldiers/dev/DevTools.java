@@ -107,6 +107,7 @@ public final class DevTools {
                 DevTools::cleanup));
         RecorderTools.register(registry);
         TuningTools.register(registry);
+        StructureTools.register(registry);
         return registry;
     }
 

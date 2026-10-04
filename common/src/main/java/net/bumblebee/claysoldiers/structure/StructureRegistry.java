@@ -63,6 +63,14 @@ public final class StructureRegistry {
     }
 
     /**
+     * The entries read last (not validated yet; use {@link #get} for a validated snapshot). Used for book buttons,
+     * which have no server at hand.
+     */
+    public static List<StructureMeta> loaded() {
+        return loaded;
+    }
+
+    /**
      * Reads every metadata file from {@code resourceManager} (called when data packs load and by
      * {@link #reload}). Validation happens on the next {@link #get}.
      */
@@ -95,12 +103,16 @@ public final class StructureRegistry {
             if (meta.ruin() != null) files.add(meta.ruin());
         }
         load(server.getResourceManager());
+        validated = null;
         for (StructureMeta meta : loaded) {
             if (meta.structure() != null) files.add(meta.structure());
             if (meta.ruin() != null) files.add(meta.ruin());
         }
         files.forEach(server.getStructureManager()::remove);
-        return get(server);
+        Snapshot snapshot = get(server);
+        DebugLog.event(DebugCategory.STRUCTURE, null, "reloaded: %s structures (%s ready), %s problem(s)",
+                snapshot.structures().size(), snapshot.ready().size(), snapshot.problems().size());
+        return snapshot;
     }
 
     /**

@@ -80,7 +80,10 @@ public record DevTool(String id, String category, Component label, String descri
      * The command usage, e.g. {@code /csr dev materials <blueprint>}.
      */
     public String usage() {
-        return argument == null ? command() : command() + " <" + argument.name() + ">";
+        if (argument == null) {
+            return command();
+        }
+        return command() + " <" + argument.name() + ">" + (argument.extra() == null ? "" : " [<" + argument.extra().name() + ">]");
     }
 
     /**
@@ -99,12 +102,27 @@ public record DevTool(String id, String category, Component label, String descri
      * @param suggestions tab-completion suggestions, or {@code null}
      * @param choices     values to offer in the book; read from registries where possible so new content appears automatically
      * @param optional    whether the command also runs without the argument (the action must handle it missing)
+     * @param extra       an optional second argument typed after this one, e.g. a facing; it gets no book buttons (the
+     *                    buttons run without it) and the action must handle it missing
      */
     public record Argument(String name, ArgumentType<?> type, @Nullable SuggestionProvider<CommandSourceStack> suggestions,
-                           Function<RegistryAccess, List<Choice>> choices, boolean optional) {
+                           Function<RegistryAccess, List<Choice>> choices, boolean optional, @Nullable Argument extra) {
         public Argument(String name, ArgumentType<?> type, @Nullable SuggestionProvider<CommandSourceStack> suggestions,
                         Function<RegistryAccess, List<Choice>> choices) {
-            this(name, type, suggestions, choices, false);
+            this(name, type, suggestions, choices, false, null);
+        }
+
+        public Argument(String name, ArgumentType<?> type, @Nullable SuggestionProvider<CommandSourceStack> suggestions,
+                        Function<RegistryAccess, List<Choice>> choices, boolean optional) {
+            this(name, type, suggestions, choices, optional, null);
+        }
+
+        /**
+         * This argument with an optional second argument after it (see {@link #extra}).
+         */
+        public Argument withOptionalExtra(String extraName, ArgumentType<?> extraType, @Nullable SuggestionProvider<CommandSourceStack> extraSuggestions) {
+            return new Argument(name, type, suggestions, choices, optional,
+                    new Argument(extraName, extraType, extraSuggestions, access -> List.of(), true, null));
         }
     }
 

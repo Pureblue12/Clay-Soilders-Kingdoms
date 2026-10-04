@@ -162,6 +162,18 @@ public final class DevToolRegistry {
         if (tool.confirm()) {
             argumentNode.then(Commands.literal(CONFIRM).executes(runForReal));
         }
+        DevTool.Argument extra = argument.extra();
+        if (extra != null) {
+            RequiredArgumentBuilder<CommandSourceStack, ?> extraNode = Commands.argument(extra.name(), extra.type());
+            if (extra.suggestions() != null) {
+                extraNode.suggests(extra.suggestions());
+            }
+            extraNode.executes(firstRun);
+            if (tool.confirm()) {
+                extraNode.then(Commands.literal(CONFIRM).executes(runForReal));
+            }
+            argumentNode.then(extraNode);
+        }
         if (argument.optional()) {
             literal.executes(firstRun);
         }

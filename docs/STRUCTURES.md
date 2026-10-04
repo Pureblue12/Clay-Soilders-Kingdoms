@@ -64,3 +64,47 @@ Made by `tools/make_test_structures.py`.
 | `csr:chapel` | Chapel | 4 | inner | religious |
 | `csr:infirmary` | Infirmary | 4 | inner | health |
 | `csr:food_hall` | Food hall | 4 | inner | food |
+
+## Paste tool (development runs only)
+
+| Command | Book (Structures) | Does |
+|---|---|---|
+| `/csr dev structure place <id> [north\|east\|south\|west]` | one "Paste" button per ready structure | Pastes the whole structure instantly. You stand where an easel would stand; the structure goes the way you face (or the given direction), starting 2 blocks away, centered. These are the same rules as builders and `/csr build`. |
+| `/csr dev structure undo` | Undo last paste | Puts back the blocks the last paste replaced, including chest contents. Keeps the last `dev.paste_undo_depth` (10) pastes, in memory only. |
+| `/csr dev structure reload` | Reload structures | Re-reads metadata and structure files from disk and validates them. |
+| `/csr dev structure list` | List all | Every entry, including placeholders, plus problems. |
+
+A paste is an exact copy of the file:
+- Air inside the structure is placed too.
+- Containers it replaces are emptied first, so nothing drops.
+- No shape updates are sent, so nothing outside the box changes. Fences won't link up with blocks outside the structure.
+
+The STRUCTURE recorder category logs pastes, undos, reloads and validation problems.
+
+## Touch-up workflow (edit a structure in game)
+
+1. **Paste it in the file's own orientation:** book → Structures → Paste, while facing **south**
+   (or `/csr dev structure place csr:test_hut south`). The chat then prints exactly where to put the structure block
+   and what to type into it.
+2. **Edit the blocks by hand.**
+3. **Save with a structure block** (`/give @s minecraft:structure_block`). Place it where the chat said: one block
+   below the paste's first corner. Set:
+   - mode **Save**;
+   - name = the structure file, e.g. `csr:kingdom/test_hut`;
+   - relative position `0 1 0`;
+   - size = the printed size (e.g. `5 3 5`).
+
+   Click **SAVE**. Minecraft writes `neoforge/run/saves/<world>/generated/csr/structures/kingdom/test_hut.nbt`.
+4. **Reload:** book → Structures → **Reload structures**. Pastes now use your edited file. The world's `generated`
+   folder wins over the mod's copy.
+5. **Make it permanent:** copy that file over `common/src/main/resources/data/csr/structure/kingdom/test_hut.nbt`.
+   If the size changed, update `footprint` in `common/src/main/resources/data/csr/csr/structures/test_hut.json`.
+   Then delete the copy in the world's `generated` folder, or it keeps winning. Commit.
+
+Notes:
+- Air you leave inside the box is saved as air.
+- A structure void block (`/give @s minecraft:structure_void`) marks "leave whatever is there".
+- Builders' blueprints (the easel) don't read the `generated` folder; only the paste tool and the registry do.
+- **New structure:** build it, save it with a structure block under a new name (e.g. `csr:kingdom/my_house`), copy the
+  file into `common/src/main/resources/data/csr/structure/kingdom/`, add a metadata file next to the others in
+  `data/csr/csr/structures/`, then run `./gradlew :neoforge:processResources` and Reload structures (or restart).
