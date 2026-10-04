@@ -124,6 +124,9 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     @Override
     public void tick() {
         updatePathSearch();
+        if (soldier.level() instanceof ServerLevel level && climber.rescueIfStranded(level)) {
+            return; // stood in a scaffolding column without climbing it: come down first
+        }
         if (climber.isDescending()) {
             climber.tick(); // come down a scaffolding column first
             return;

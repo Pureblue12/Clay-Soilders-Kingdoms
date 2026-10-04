@@ -29,6 +29,8 @@ public final class ScaffoldClimber {
     private static final double SPEED = 0.2;
     /** How long walking to a column's base may take before giving up, in ticks. */
     private static final int MAX_WALK_TICKS = 200;
+    /** How many levels up a column a builder standing there (not climbing) counts as stranded. */
+    private static final int STRANDED_LEVEL = 2;
 
     private enum State { IDLE, WALKING, CLIMBING, HOLDING, DESCENDING }
 
@@ -74,6 +76,41 @@ public final class ScaffoldClimber {
             }
         }
         return best;
+    }
+
+    /**
+     * If this builder isn't climbing but stands in one of a build's scaffolding columns, {@link #STRANDED_LEVEL} or
+     * more levels above its base, starts climbing it down. Builders get there when vanilla climbing (walking against
+     * a wall while in scaffolding, which is climbable) carries them up a column; up there they can't find a path
+     * anywhere and would stand still for good. Lower than that they walk out by themselves.
+     *
+     * @return true when it climbs down now (call {@link #tick} until {@link #isDescending} is false)
+     */
+    public boolean rescueIfStranded(ServerLevel level) {
+        if (state != State.IDLE) {
+            return false;
+        }
+        BlockPos at = soldier.blockPosition();
+        if (!ScaffoldSavedData.get(level).isScaffold(at) && !ScaffoldSavedData.get(level).isScaffold(at.below())) {
+            return false;
+        }
+        for (ScaffoldJob job : ScaffoldSavedData.get(level).jobs()) {
+            BlockPos cell = job.placed().contains(at) ? at : at.below();
+            if (!job.placed().contains(cell)) {
+                continue;
+            }
+            BlockPos columnBase = job.column(cell).getFirst();
+            if (!soldier.onGround() || soldier.getY() < columnBase.getY() + STRANDED_LEVEL) {
+                return false;
+            }
+            DebugLog.event(DebugCategory.SCAFFOLD, soldier, "stranded at y=%s in the column at %s: climbing down", (int) soldier.getY(), columnBase);
+            base = columnBase;
+            soldier.getNavigation().stop();
+            soldier.setNoGravity(true);
+            state = State.DESCENDING;
+            return true;
+        }
+        return false;
     }
 
     /**
