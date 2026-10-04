@@ -18,6 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.LevelResource;
+import net.neoforged.neoforge.common.IOUtilities;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
@@ -78,6 +79,7 @@ public class KingdomDataGameTests {
         try {
             data.add(kingdom);
             server.overworld().getDataStorage().save();
+            IOUtilities.waitUntilIOWorkerComplete(); // NeoForge writes saved data in the background
 
             Path file = server.getWorldPath(LevelResource.ROOT).resolve("data").resolve(KingdomSavedData.NAME + ".dat");
             CompoundTag saved = NbtIo.readCompressed(file, NbtAccounter.unlimitedHeap()).getCompound("data");
