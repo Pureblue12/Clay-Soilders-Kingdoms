@@ -5,8 +5,6 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.block.blueprint.EaselBlockEntity;
-import net.bumblebee.claysoldiers.blueprint.BlueprintData;
-import net.bumblebee.claysoldiers.entity.goal.workgoal.BuildBlueprintGoal;
 import net.bumblebee.claysoldiers.scaffold.ScaffoldInput;
 import net.bumblebee.claysoldiers.scaffold.ScaffoldJob;
 import net.bumblebee.claysoldiers.scaffold.ScaffoldPlan;
@@ -21,13 +19,10 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
 import java.util.Arrays;
@@ -109,11 +104,7 @@ final class ScaffoldTools {
         ServerLevel level = source.getLevel();
         int height = height(context);
         Direction forward = player.getDirection();
-        Direction right = forward.getClockWise();
         BlockPos origin = BlockPos.containing(source.getPosition());
-        BlockPos easelPos = origin.relative(forward, 3);
-        BlockPos chestPos = origin.relative(right, 3);
-        BlueprintData blueprint = TestStructures.blueprint(level, shape.get(), height);
         List<BlockPos> blocks = TestStructures.blocks(shape.get(), height);
 
         // Snapshot first, big enough for the structure (up to 2 + depth blocks ahead of the easel), its scaffold and the chest.
@@ -124,18 +115,12 @@ final class ScaffoldTools {
         StructurePaster.remember(level, ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, "scaffold/test_" + shape.get().getSerializedName()),
                 origin, box);
 
-        ItemStack scaffold = new ItemStack(BuiltInRegistries.BLOCK.get(Tuning.SCAFFOLD_MATERIAL.get()).asItem(), SCAFFOLD_STOCK);
-        DevScenarios.placeChest(level, chestPos, List.of(new ItemStack(Items.COBBLESTONE, blocks.size()), scaffold));
-        EaselBlockEntity easel = DevScenarios.placeEasel(level, easelPos, forward.getOpposite(), blueprint);
-        for (int i = 0; i < BUILDERS; i++) {
-            DevScenarios.spawnWorker(level, origin.relative(right, 1 + i).relative(forward), DevScenarios.RED_TEAM, player,
-                    BuildBlueprintGoal.class, chestPos);
-        }
+        DevScenarios.BuildTestResult result = DevScenarios.scaffoldTest(level, player, origin, forward, shape.get(), height, BUILDERS, SCAFFOLD_STOCK);
         report(context, "Test %s %d high (%d blocks): easel at %s, chest at %s with %d cobblestone and %d %s, %d red builders. "
-                .formatted(shape.get().getSerializedName(), height, blocks.size(), easelPos.toShortString(), chestPos.toShortString(),
+                .formatted(shape.get().getSerializedName(), height, blocks.size(), result.easel().toShortString(), result.chest().toShortString(),
                         blocks.size(), SCAFFOLD_STOCK, Tuning.SCAFFOLD_MATERIAL.get(), BUILDERS)
                 + "Scaffold appears once the lower part is built. Reset: Undo test build, then Cleanup → Remove soldiers + easels.");
-        return easel != null ? 1 : 0;
+        return level.getBlockEntity(result.easel()) instanceof EaselBlockEntity ? 1 : 0;
     }
 
     private static int plan(CommandContext<CommandSourceStack> context) {

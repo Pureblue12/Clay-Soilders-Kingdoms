@@ -8,9 +8,12 @@ import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
 import net.bumblebee.claysoldiers.entity.soldier.ClaySoldierEntity;
 import net.bumblebee.claysoldiers.init.ModEntityTypes;
 import net.bumblebee.claysoldiers.init.ModRegistries;
+import net.bumblebee.claysoldiers.scaffold.TestStructures;
+import net.bumblebee.claysoldiers.tuning.Tuning;
 import net.bumblebee.claysoldiers.team.TeamLoyaltyManger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -68,6 +71,28 @@ public final class DevScenarios {
         for (int i = 0; i < 3; i++) {
             BlockPos spawnPos = origin.relative(forward, 1).relative(right, i);
             soldiers.add(spawnWorker(level, spawnPos, RED_TEAM, player, BuildBlueprintGoal.class, chestPos));
+        }
+        return new BuildTestResult(chestPos, easelPos, soldiers, items);
+    }
+
+    /**
+     * The "Build test" setup of the Scaffolding dev book category (also used by GameTests, so they test the same
+     * layout): a chest 3 blocks to the right with the structure's cobblestone and {@code scaffoldStock} scaffold
+     * material, an easel 3 blocks ahead facing back with a test structure (built behind it), and {@code builders} red
+     * builders between them.
+     */
+    public static BuildTestResult scaffoldTest(ServerLevel level, Player player, BlockPos origin, Direction forward,
+                                               TestStructures.Shape shape, int height, int builders, int scaffoldStock) {
+        Direction right = forward.getClockWise();
+        BlockPos easelPos = origin.relative(forward, 3);
+        BlockPos chestPos = origin.relative(right, 3);
+        ItemStack scaffold = new ItemStack(BuiltInRegistries.BLOCK.get(Tuning.SCAFFOLD_MATERIAL.get()).asItem(), scaffoldStock);
+        List<ItemStack> items = List.of(new ItemStack(Items.COBBLESTONE, TestStructures.blocks(shape, height).size()), scaffold);
+        placeChest(level, chestPos, items);
+        placeEasel(level, easelPos, forward.getOpposite(), TestStructures.blueprint(level, shape, height));
+        List<ClaySoldierEntity> soldiers = new ArrayList<>();
+        for (int i = 0; i < builders; i++) {
+            soldiers.add(spawnWorker(level, origin.relative(right, 1 + i).relative(forward), RED_TEAM, player, BuildBlueprintGoal.class, chestPos));
         }
         return new BuildTestResult(chestPos, easelPos, soldiers, items);
     }

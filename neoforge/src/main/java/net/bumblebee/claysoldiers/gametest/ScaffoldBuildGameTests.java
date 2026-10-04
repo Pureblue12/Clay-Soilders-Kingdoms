@@ -8,6 +8,7 @@ import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.dev.DevScenarios;
 import net.bumblebee.claysoldiers.entity.goal.workgoal.BuildBlueprintGoal;
 import net.bumblebee.claysoldiers.entity.soldier.ClaySoldierEntity;
+import net.bumblebee.claysoldiers.scaffold.ScaffoldJob;
 import net.bumblebee.claysoldiers.scaffold.ScaffoldSavedData;
 import net.bumblebee.claysoldiers.scaffold.TestStructures;
 import net.bumblebee.claysoldiers.tuning.Tuning;
@@ -185,5 +186,55 @@ public class ScaffoldBuildGameTests {
             ClaySoldiersCommon.LOGGER.info("CSR scaffold build: Small House 151 blocks, no scaffold, finished at tick {}", helper.getTick() - start[0]);
             DebugLog.reset();
         });
+    }
+
+    /**
+     * The dev book's "Build test → tower" layout (chest beside the player, easel 3 blocks ahead, builders between):
+     * builders finish a 20-block tower and the scaffold is gone. Found in game: builders who had climbed down a column
+     * were carried back up it by vanilla climbing and got stuck on top.
+     */
+    @GameTest(template = TERRAIN, batch = "scaffold_dev_tower", timeoutTicks = LONG_TIMEOUT, skyAccess = true)
+    public static void devBookTowerLayoutFinishes(GameTestHelper helper) {
+        finishesAndCleansUp(helper, devTower(helper), "dev book tower 20");
+    }
+
+    /**
+     * A builder that ends up standing inside a scaffolding column, on a level too high to drop down from (vanilla
+     * climbing carried it up; it isn't climbing the column itself), comes back down to the ground instead of standing
+     * there for good. The column (6 high, beside the tower) is set up directly, so this doesn't depend on the build.
+     */
+    @GameTest(template = TERRAIN, batch = "scaffold_stranded", timeoutTicks = 1200, skyAccess = true)
+    public static void builderStrandedOnColumnClimbsDown(GameTestHelper helper) {
+        Scenario scenario = devTower(helper);
+        ServerLevel level = helper.getLevel();
+        var box = net.minecraft.world.level.levelgen.structure.BoundingBox.encapsulatingPositions(scenario.blocks()).orElseThrow();
+        Block material = BuiltInRegistries.BLOCK.get(Tuning.SCAFFOLD_MATERIAL.get());
+        List<BlockPos> column = new ArrayList<>();
+        for (int h = 0; h < 6; h++) {
+            BlockPos cell = new BlockPos(box.maxX() + 2, box.minY() + h, box.minZ());
+            level.setBlockAndUpdate(cell, material.defaultBlockState().trySetValue(net.minecraft.world.level.block.ScaffoldingBlock.DISTANCE, 0));
+            column.add(cell);
+        }
+        ScaffoldSavedData.get(level).put(new ScaffoldJob(scenario.easel().getBlockPos(), Tuning.SCAFFOLD_MATERIAL.get(),
+                column, new java.util.HashSet<>(column), true));
+        // A builder with no task, standing on the column 4 levels up (as found in game).
+        ClaySoldierEntity builder = DevScenarios.spawnWorker(level, column.get(4), DevScenarios.RED_TEAM, ClaySoldierGameTests.owner(level),
+                BuildBlueprintGoal.class, scenario.chest().getBlockPos());
+        int groundY = column.getFirst().getY();
+        helper.succeedWhen(() -> helper.assertTrue(builder.blockPosition().getY() == groundY && builder.onGround(),
+                "builder still up at y=" + builder.getY() + " (ground " + groundY + ")"));
+    }
+
+    /** The dev book's tower 20 build test, with the player standing at (16, 2, 5) facing south. */
+    static Scenario devTower(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        var result = DevScenarios.scaffoldTest(level, ClaySoldierGameTests.owner(level), helper.absolutePos(new BlockPos(16, 2, 5)), Direction.SOUTH,
+                TestStructures.Shape.TOWER, 20, BUILDERS, SCAFFOLD_STOCK);
+        EaselBlockEntity easel = (EaselBlockEntity) level.getBlockEntity(result.easel());
+        var settings = easel.getTemplateSettings();
+        BlockPos base = EaselBlockEntity.templateBase(easel.getBlockPos(), easel.getFacing(), settings);
+        List<BlockPos> blocks = new ArrayList<>(TestStructures.blueprint(level, TestStructures.Shape.TOWER, 20).createServerPlan().orElseThrow().targetPositions(base, settings));
+        Item scaffold = BuiltInRegistries.BLOCK.get(Tuning.SCAFFOLD_MATERIAL.get()).asItem();
+        return new Scenario(easel, (ChestBlockEntity) level.getBlockEntity(result.chest()), result.soldiers(), blocks, scaffold);
     }
 }
