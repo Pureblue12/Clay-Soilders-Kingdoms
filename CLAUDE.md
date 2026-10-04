@@ -269,6 +269,12 @@ Optional integrations (JEI, Jade, Accessories, Curios, Create, SmartBrainLib) ar
 
 ## Rules
 
+- **Never commit unless the required suite passed on the code being committed.** Chain it so a failure stops the
+  commit: `tools/suite.sh && git commit ...` (runs the GameTests and the build). The only exception is a tests-first
+  commit: name the new tests that must fail, and it passes only if exactly those failed:
+  `tools/suite.sh newtestname && git commit ...`.
+- Known rare flake: `soldierStuckAtDoorGivesUp` failed once in 30+ runs (2026-10-03), cause unknown. If it fails
+  again, record it first (run it with the recorder and keep the log) before touching the test or the door code.
 - Design gaps: follow the DESIGN DECISION PROTOCOL in `docs/DESIGN.md` (DRAFT) and log every decision in
   `docs/DECISIONS.md`.
 - Plan of work: `docs/ROADMAP.md` (stages, definition of done, status table). Update a stage's status and
