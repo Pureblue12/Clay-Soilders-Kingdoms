@@ -20,6 +20,7 @@ public final class DebugCategory {
     public static final DebugCategory PATHING = register("PATHING", "Why a block counts as unreachable");
     public static final DebugCategory TEAM = register("TEAM", "Team and loyalty changes");
     public static final DebugCategory STRUCTURE = register("STRUCTURE", "Structure registry: paste, undo, reload, validation problems");
+    public static final DebugCategory KINGDOM = register("KINGDOM", "Kingdoms: founding, disbanding, king death, stockpile changes, refusals");
 
     /** The categories turned on by "Start recording". */
     public static final List<DebugCategory> PRESET = List.of(BUILD, WORK, DAMAGE);

@@ -1,4 +1,8 @@
 {
+  "kingdom.claim_radius": 32,
+  "kingdom.chronicle_max": 100,
+  "kingdom.found_search_radius": 16,
+  "kingdom.census_interval_ticks": 100,
   "kingdom.max_loaded": 4,
   "kingdom.tier_unlock_renown": [0, 100, 250, 500, 900, 1400, 2100, 3000, 4200, 6000],
   "kingdom.zone.keep_radius": [6, 7, 8, 9, 10, 11, 12, 13, 14, 15],

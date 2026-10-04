@@ -38,6 +38,14 @@ public final class Tuning {
     private static final Map<String, TuningKey<?>> KEYS = new LinkedHashMap<>();
     private static volatile Values current;
 
+    public static final TuningKey.IntKey KINGDOM_CLAIM_RADIUS = register(new TuningKey.IntKey("kingdom.claim_radius",
+            "Radius of the land a new kingdom claims around its king, in blocks. Changing it affects only kingdoms founded afterwards.", 32, 4, 256));
+    public static final TuningKey.IntKey KINGDOM_CHRONICLE_MAX = register(new TuningKey.IntKey("kingdom.chronicle_max",
+            "How many chronicle lines a kingdom keeps; the oldest are dropped (applied on the next new line).", 100, 5, 1000));
+    public static final TuningKey.IntKey KINGDOM_FOUND_SEARCH_RADIUS = register(new TuningKey.IntKey("kingdom.found_search_radius",
+            "How far /csr kingdom found looks for your king, in blocks.", 16, 1, 64));
+    public static final TuningKey.IntKey KINGDOM_CENSUS_INTERVAL = register(new TuningKey.IntKey("kingdom.census_interval_ticks",
+            "How often a kingdom's population and its king's position are updated (only while the whole claim is loaded), in ticks.", 100, 20, 12_000));
     public static final TuningKey.IntKey KINGDOM_MAX_LOADED = register(new TuningKey.IntKey("kingdom.max_loaded",
             "How many kingdoms are kept loaded (simulated) at once (D1).", 4, 1, 64));
     public static final TuningKey.IntListKey KINGDOM_TIER_UNLOCK_RENOWN = register(new TuningKey.IntListKey("kingdom.tier_unlock_renown",
