@@ -1,0 +1,173 @@
+# Roadmap — DRAFT v0, sizes are guesses, everything can change
+
+Related: [`DESIGN.md`](DESIGN.md) (pillars, decision protocol), [`DECISIONS.md`](DECISIONS.md) (decision log).
+Earlier work (M0–M2: testing, bug fixes, `/csr build`, builder fixes, doors) is listed in `CLAUDE.md`.
+
+## Status
+
+| # | Stage | Size | Status |
+|---|---|---|---|
+| 0 | Foundations | M | **next** |
+| 1 | Kingdom core | M | not started |
+| 2 | Terrain spike | L | not started |
+| 3 | Tall construction spike | L | not started |
+| 4 | Tier-1 keep built autonomously | L | not started |
+| 5 | Economy loop v1 | L | not started |
+| 6 | Layout and growth | XL | not started |
+| 7 | Performance checkpoint | M | not started |
+| 8 | Content tiers 2–5 | XL | not started |
+| 9 | Mining, staged | XL | not started |
+| 10 | Life layer | XL | not started |
+| 11 | Events and defense | L | not started |
+| 12 | Rivals and war | XL | not started |
+| 13 | Decay and ruins | L | not started |
+| 14 | Tiers 6–10 and polish | XL | not started |
+
+## How to read this
+
+Stages are ordered by dependency and risk. Every stage ends playable.
+
+## Definition of done (every stage)
+
+- Required tests pass, and nothing that passed before fails.
+- A recording was reviewed.
+- The owner did the in-game checklist.
+- `docs/DESIGN.md` and `docs/DECISIONS.md` are updated.
+- A flow audit is done for every new structure or resource.
+- The work is pushed to origin.
+
+## Per-stage template
+
+**Goal** · **Acceptance test** · **Depends on** · **Size** (S/M/L/XL, a guess) · **Risks** ·
+**Decisions** (links into `DECISIONS.md`) · **Status** · **Results**
+
+## Stages
+
+### 0 Foundations
+- **Goal:** the design docs are saved; a tuning data file; a structure registry with tags; a book button that pastes any structure into the world; a layout-checker skeleton.
+- **Acceptance test:** the owner pastes a test structure from the book and changes a number in the tuning file.
+- **Depends on:** — · **Size:** M
+- **Risks:** choosing the tuning file format.
+- **Decisions:** — · **Status:** next · **Results:** —
+
+### 1 Kingdom core
+- **Goal:** a saved Kingdom object (area, king, stockpile numbers, building list, population, renown), founded by the gold-hat king, that survives save and reload. Observer v1: a status page and a chronicle book.
+- **Acceptance test:** a founded kingdom survives a restart and is visible in the book.
+- **Depends on:** 0 · **Size:** M
+- **Risks:** the saved-data format (needs a migration note).
+- **Decisions:** [D1](DECISIONS.md) · **Status:** not started · **Results:** —
+
+### 2 Terrain spike
+- **Goal:** site scoring, foundations or terraforming; founding refuses or warns on bad ground.
+- **Acceptance test:** a keep foundation on a slope and one near water are handled; a cliff is refused with a reason.
+- **Depends on:** 1 · **Size:** L
+- **Risks:** may change the keep design.
+- **Decisions:** — · **Status:** not started · **Results:** —
+
+### 3 Tall construction spike
+- **Goal:** scaffolding with a build order, removed afterward.
+- **Acceptance test:** a 20-block tower is built and its scaffolding disappears.
+- **Depends on:** existing builder reach and doors · **Size:** L
+- **Risks:** pathing on scaffolding for tiny soldiers.
+- **Decisions:** — · **Status:** not started · **Results:** —
+
+### 4 Tier-1 keep built autonomously
+- **Goal:**
+  - master plan v0 (keep slot only), and a kingdom-level planner (replaces the old M3);
+  - builders assigned by the kingdom, using materials from the stockpile (the owner supplies them);
+  - a throne room; the king sits on the throne and has high health.
+- **Acceptance test:** a gold-hat king plus the supplied items yields a finished keep with the king on the throne. First real playable.
+- **Depends on:** 1, 2, 3 · **Size:** L
+- **Risks:** keep size versus terrain.
+- **Decisions:** [D3](DECISIONS.md), [D4](DECISIONS.md) · **Status:** not started · **Results:** —
+
+### 5 Economy loop v1
+- **Goal:** lumber camp with replanting, farm, carrier, storehouse, stockpile and renown; a flow audit for each.
+- **Acceptance test:** the kingdom gathers wood and food unaided and spends them on a cottage.
+- **Depends on:** 4 · **Size:** L
+- **Risks:** carrier traffic and pathing load.
+- **Decisions:** [D5](DECISIONS.md) · **Status:** not started · **Results:** —
+
+### 6 Layout and growth
+- **Goal:** zones, radial roads, scored slots, cottages and farms, visitors joining, a palisade and tier 2, the layout checker enforced.
+- **Acceptance test:** a small village forms with no overlaps and a closed wall.
+- **Depends on:** 5 · **Size:** XL
+- **Risks:** layout on real terrain.
+- **Decisions:** [D3](DECISIONS.md), [D7](DECISIONS.md) · **Status:** not started · **Results:** —
+
+### 7 Performance checkpoint
+- **Goal:** many soldiers, loaded chunks, a tick budget, caps per tier in the tuning file.
+- **Acceptance test:** a measured report of soldier count, tick cost and the loaded-chunk limit.
+- **Depends on:** 6 · **Size:** M
+- **Risks:** the caps may be lower than the design wants.
+- **Decisions:** [D1](DECISIONS.md) · **Status:** not started · **Results:** —
+
+### 8 Content tiers 2–5
+- **Goal:** stone wall and towers, gates, barracks, smithy, market, chapel, infirmary, quarry, wall rings.
+- **Acceptance test:** a tier 5 castle stands with a stone wall, and every building's flow audit is complete.
+- **Depends on:** 6, 7 · **Size:** XL
+- **Risks:** structure review time.
+- **Decisions:** [D4](DECISIONS.md) · **Status:** not started · **Results:** —
+
+### 9 Mining, staged
+- **Goal:** (a) scanned shaft and strip mine, (b) hazard rules for lava and water, (c) caves, (d) mobs.
+- **Acceptance test:** each sub-stage passes its own lava, water and cave tests.
+- **Depends on:** 5; may run in parallel with 8 · **Size:** XL
+- **Risks:** soldiers dying in hazards; terrain damage.
+- **Decisions:** [D6](DECISIONS.md) · **Status:** not started · **Results:** —
+
+### 10 Life layer
+- **Goal:** homes, schedules, places to go, mingling, soft wants with no penalties, a population budget.
+- **Acceptance test:** citizens visibly follow routines at a measured tick cost.
+- **Depends on:** 6, 7 · **Size:** XL
+- **Risks:** may exceed the performance budget.
+- **Decisions:** [D7](DECISIONS.md) · **Status:** not started · **Results:** —
+
+### 11 Events and defense
+- **Goal:** alerts and warning time, mob raids, guards and the king's defense, event scaling and an off switch.
+- **Acceptance test:** to be defined.
+- **Depends on:** 8, 10 · **Size:** L
+- **Risks:** feeling punishing (pillar).
+- **Decisions:** — · **Status:** not started · **Results:** —
+
+### 12 Rivals and war
+- **Goal:** decide where rivals come from; foreign parties, harassment, then full invasion aimed at the king.
+- **Acceptance test:** to be defined.
+- **Depends on:** 11 · **Size:** XL
+- **Risks:** where rival kingdoms come from is undecided; restrict `DoorAccess` by team or territory here.
+- **Decisions:** — · **Status:** not started · **Results:** —
+
+### 13 Decay and ruins
+- **Goal:** the king's death triggers ruins, and his soldiers migrate.
+- **Acceptance test:** to be defined.
+- **Depends on:** 12 · **Size:** L
+- **Risks:** the saved-data format for ruins.
+- **Decisions:** [D2](DECISIONS.md) · **Status:** not started · **Results:** —
+
+### 14 Tiers 6–10 and polish
+- **Goal:** biome palettes, structure variants, interiors, balance.
+- **Acceptance test:** to be defined.
+- **Depends on:** 8 onward · **Size:** XL
+- **Risks:** content volume.
+- **Decisions:** — · **Status:** not started · **Results:** —
+
+## Ordering rationale
+
+- Kingdom data comes before anything that depends on it.
+- Observer tools come early.
+- Scary unknowns (terrain, scaffolding, performance) get small spikes before content depends on them.
+- Economy comes before events.
+- The Sims layer comes after the performance checkpoint.
+
+## Cut lines
+
+- **Stages 0–6:** a first kingdom that grows and can be watched. Stopping after stage 6 still leaves a real mod.
+- **Stages 7–10:** it feels alive and deep.
+- **Stages 11–14:** pressure and endgame.
+
+## Known risks
+
+- The Sims layer may exceed the performance budget.
+- Where rival kingdoms come from is undecided.
+- Structure review takes most of the owner's time.
+- Terrain handling may change the keep design.

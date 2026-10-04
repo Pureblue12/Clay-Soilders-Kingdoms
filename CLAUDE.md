@@ -262,6 +262,8 @@ Optional integrations (JEI, Jade, Accessories, Curios, Create, SmartBrainLib) ar
 
 - Design gaps: follow the DESIGN DECISION PROTOCOL in `docs/DESIGN.md` (DRAFT) and log every decision in
   `docs/DECISIONS.md`.
+- Plan of work: `docs/ROADMAP.md` (stages, definition of done, status table). Update a stage's status and
+  results when it changes.
 
 - Make small, incremental changes; one feature at a time.
 - Never break the existing build — run `./gradlew :neoforge:build` after every change.
@@ -294,5 +296,7 @@ Optional integrations (JEI, Jade, Accessories, Curios, Create, SmartBrainLib) ar
 - **M1 — done:** fixed the 3 confirmed bugs (free blueprint blocks from an empty chest,
   dig not stopping at bedrock, saving cancelling work).
 - **M2 — done:** `/csr build` + `BuildSitePlanner` (site checks, easel placement), book link, tests.
-- **M3 — next:** soldiers start a build on their own (should call `BuildSitePlanner`).
-- **M4:** kingdom object (saved world data) with a founding block.
+- Since then: Fix A/B (builder freeze, reach), recorder, wall-mounted blocks, placement cooldown, door race,
+  door use (see "Known bugs" and "Doors").
+- **Next: `docs/ROADMAP.md`** (DRAFT v0, stages 0–14) replaces the old M3/M4 plan. Stage 0 (Foundations) is
+  next; the old M3 (soldiers start builds) is now part of stage 4, the old M4 (kingdom object) is stage 1.
