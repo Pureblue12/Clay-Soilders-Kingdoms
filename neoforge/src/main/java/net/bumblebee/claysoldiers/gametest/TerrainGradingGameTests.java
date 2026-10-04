@@ -127,7 +127,7 @@ public class TerrainGradingGameTests {
     @GameTest(template = PLATFORM)
     public static void gradingRefusesOverBudget(GameTestHelper helper) {
         SiteRules rules = TerrainScoreGameTests.defaults();
-        TerrainScan steep = TerrainScoreGameTests.steep(rules.siteScanRadius());
+        TerrainScan steep = mountain(rules.siteScanRadius());
         GradingPlan cut = GradingPlanner.plan(GradingMethod.CUT_FILL, steep, 0, 0, rules);
         helper.assertTrue(!cut.feasible() && cut.reason().contains("budget"), "Cut and fill on a mountain should be over budget: " + cut.describe());
         GradingPlan foundation = GradingPlanner.plan(GradingMethod.FOUNDATION, steep, 0, 0, rules);
@@ -174,6 +174,17 @@ public class TerrainGradingGameTests {
         DebugLog.reset();
         helper.assertTrue(!seen.containsValue(false), "Missing TERRAIN events: " + seen);
         helper.succeed();
+    }
+
+    /** A diamond-shaped mountain 2 up per block in every direction (20 blocks high across a keep site). */
+    static TerrainScan mountain(int radius) {
+        TerrainScan scan = TerrainScan.flat(0, 0, radius, TerrainScoreGameTests.H);
+        for (int x = -radius; x <= radius; x++) {
+            for (int z = -radius; z <= radius; z++) {
+                scan.setGround(x, z, TerrainScoreGameTests.H + 2 * (2 * radius - Math.abs(x) - Math.abs(z)));
+            }
+        }
+        return scan;
     }
 
     static SiteScore siteScore(GameTestHelper helper, GradingPlan plan) {

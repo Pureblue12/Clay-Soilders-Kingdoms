@@ -229,9 +229,11 @@ public class KingdomGameTests {
         FakePlayer player = player(helper);
         try {
             GameTestTuning.load("{\"kingdom.claim_radius\": 5}");
-            helper.assertTrue(Kingdoms.found(helper.getLevel(), spawnKing(helper, new BlockPos(3, GROUND_Y, 3), RED, player), player).ok(), "Setup: Red failed");
+            // Forced (no terrain check): kings this close to the platform's edge have the test's barrier wall on their
+            // keep site, and two claims of radius 5 don't fit apart on a 16-block platform otherwise.
+            helper.assertTrue(Kingdoms.found(helper.getLevel(), spawnKing(helper, new BlockPos(3, GROUND_Y, 3), RED, player), player, true).ok(), "Setup: Red failed");
             GameTestTuning.load("{\"kingdom.claim_radius\": 6}");
-            helper.assertTrue(Kingdoms.found(helper.getLevel(), spawnKing(helper, new BlockPos(14, GROUND_Y, 14), BLUE, player), player).ok(), "Setup: Blue failed");
+            helper.assertTrue(Kingdoms.found(helper.getLevel(), spawnKing(helper, new BlockPos(14, GROUND_Y, 14), BLUE, player), player, true).ok(), "Setup: Blue failed");
             int red = Kingdoms.byTeam(server(helper), RED).orElseThrow().claimRadius();
             int blue = Kingdoms.byTeam(server(helper), BLUE).orElseThrow().claimRadius();
             helper.assertTrue(red == 5 && blue == 6, "Expected Red 5 (founded before the change) and Blue 6, got " + red + " and " + blue);
@@ -252,10 +254,11 @@ public class KingdomGameTests {
         try {
             GameTestTuning.load("{\"kingdom.claim_radius\": 5}");
             // A player is loyal-owner of one team at a time, so found Red before making Blue loyal.
+            // Forced (no terrain check): see claimRadiusTuningAffectsNewFounding.
             ClaySoldierEntity redKing = spawnKing(helper, new BlockPos(3, GROUND_Y, 3), RED, player);
-            helper.assertTrue(Kingdoms.found(helper.getLevel(), redKing, player).ok(), "Setup: founding Red failed");
+            helper.assertTrue(Kingdoms.found(helper.getLevel(), redKing, player, true).ok(), "Setup: founding Red failed");
             ClaySoldierEntity blueKing = spawnKing(helper, new BlockPos(14, GROUND_Y, 14), BLUE, player);
-            helper.assertTrue(Kingdoms.found(helper.getLevel(), blueKing, player).ok(), "Setup: founding Blue failed");
+            helper.assertTrue(Kingdoms.found(helper.getLevel(), blueKing, player, true).ok(), "Setup: founding Blue failed");
             Kingdom red = Kingdoms.byTeam(server(helper), RED).orElseThrow();
             Kingdom blue = Kingdoms.byTeam(server(helper), BLUE).orElseThrow();
             ResourceLocation wheat = ResourceLocation.withDefaultNamespace("wheat");
