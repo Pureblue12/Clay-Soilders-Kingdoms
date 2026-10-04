@@ -21,6 +21,7 @@ public final class DebugCategory {
     public static final DebugCategory TEAM = register("TEAM", "Team and loyalty changes");
     public static final DebugCategory STRUCTURE = register("STRUCTURE", "Structure registry: paste, undo, reload, validation problems");
     public static final DebugCategory KINGDOM = register("KINGDOM", "Kingdoms: founding, disbanding, king death, stockpile changes, refusals");
+    public static final DebugCategory TERRAIN = register("TERRAIN", "Terrain: scans, site scores, refusals, grading choices and their block counts");
 
     /** The categories turned on by "Start recording". */
     public static final List<DebugCategory> PRESET = List.of(BUILD, WORK, DAMAGE);
