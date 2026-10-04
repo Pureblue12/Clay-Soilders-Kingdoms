@@ -5,24 +5,37 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.WrittenBookContent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The observer's book for one kingdom, made on demand ({@code /csr kingdom book}): a status page (tier, status,
  * population, renown, king and where it is with a "Go to the king" button, claim), the stockpile, the buildings and
- * the chronicle. It is a snapshot: get a new one to see changes.
+ * the chronicle. The pages are rewritten whenever the book is opened ({@link #refresh}, from the hand or a lectern), so
+ * it always shows the kingdom as it is. A book whose kingdom was disbanded keeps its last pages, with a notice first.
  */
 public final class KingdomBook {
     /** Marks kingdom books (custom data), with the team id as value. */
     public static final String MARKER = "csr_kingdom_book";
+    /** The kingdom's id: a book follows its own kingdom, not a later kingdom of the same team. */
+    static final String ID_TAG = "csr_kingdom_id";
+    /** Game time the pages were last written. */
+    static final String UPDATED_TAG = "csr_kingdom_book_updated";
+    /** Set once the kingdom no longer exists and the notice page was written. */
+    static final String GONE_TAG = "csr_kingdom_book_gone";
+
+    private static final String AUTHOR = "Clay Soldiers";
 
     private KingdomBook() {
     }
@@ -34,9 +47,76 @@ public final class KingdomBook {
 
     public static ItemStack create(MinecraftServer server, Kingdom kingdom) {
         ItemStack book = new ItemStack(Items.WRITTEN_BOOK);
-        BookFormat.setPages(book, title(server, kingdom), "Clay Soldiers", pages(server, kingdom));
-        CustomData.update(DataComponents.CUSTOM_DATA, book, tag -> tag.putString(MARKER, kingdom.team().toString()));
+        BookFormat.setPages(book, title(server, kingdom), AUTHOR, pages(server, kingdom));
+        markUpdated(server, book, kingdom);
         return book;
+    }
+
+    /**
+     * Whether the stack is a kingdom book.
+     */
+    public static boolean isKingdomBook(ItemStack stack) {
+        return stack.is(Items.WRITTEN_BOOK) && tag(stack).contains(MARKER, Tag.TAG_STRING);
+    }
+
+    /**
+     * Rewrites a kingdom book's pages to show its kingdom as it is now. If the kingdom no longer exists (disbanded,
+     * or the team has a different kingdom now), the first page is replaced once by a notice and the other pages are
+     * kept as the last record of it. Books made before the kingdom id was stored follow their team's kingdom.
+     *
+     * @return whether the pages changed (false for other items)
+     */
+    public static boolean refresh(MinecraftServer server, ItemStack book) {
+        if (!isKingdomBook(book)) {
+            return false;
+        }
+        CompoundTag tag = tag(book);
+        ResourceLocation team = ResourceLocation.tryParse(tag.getString(MARKER));
+        Optional<Kingdom> kingdom = team == null ? Optional.empty() : Kingdoms.byTeam(server, team)
+                .filter(found -> !tag.hasUUID(ID_TAG) || tag.getUUID(ID_TAG).equals(found.id()));
+        List<Component> old = BookFormat.getPages(book);
+        if (kingdom.isPresent()) {
+            List<Component> pages = pages(server, kingdom.get());
+            boolean changed = !pages.equals(old);
+            if (changed) {
+                BookFormat.setPages(book, title(server, kingdom.get()), AUTHOR, pages);
+            }
+            markUpdated(server, book, kingdom.get());
+            return changed;
+        }
+        if (tag.getBoolean(GONE_TAG) || old.isEmpty()) {
+            return false;
+        }
+        List<Component> pages = new ArrayList<>(old);
+        pages.set(0, gonePage(book, tag.contains(UPDATED_TAG) ? tag.getLong(UPDATED_TAG) : -1));
+        WrittenBookContent content = book.get(DataComponents.WRITTEN_BOOK_CONTENT);
+        BookFormat.setPages(book, content == null ? "Kingdom" : content.title().raw(), AUTHOR, pages);
+        CustomData.update(DataComponents.CUSTOM_DATA, book, data -> data.putBoolean(GONE_TAG, true));
+        return true;
+    }
+
+    private static Component gonePage(ItemStack book, long updated) {
+        WrittenBookContent content = book.get(DataComponents.WRITTEN_BOOK_CONTENT);
+        List<Component> lines = new ArrayList<>();
+        lines.add(Component.literal(content == null ? "Kingdom" : content.title().raw()).withStyle(ChatFormatting.BOLD));
+        lines.add(Component.literal("This kingdom no longer exists: it was disbanded.").withStyle(ChatFormatting.DARK_RED));
+        lines.add(Component.empty());
+        lines.add(Component.literal(updated < 0 ? "The other pages show it as it was when this book last saw it."
+                : "The other pages show it as it was on " + ChronicleEntry.formatTime(updated) + ".").withStyle(ChatFormatting.GRAY));
+        return BookFormat.joinLines(lines);
+    }
+
+    private static void markUpdated(MinecraftServer server, ItemStack book, Kingdom kingdom) {
+        long now = server.overworld().getGameTime();
+        CustomData.update(DataComponents.CUSTOM_DATA, book, tag -> {
+            tag.putString(MARKER, kingdom.team().toString());
+            tag.putUUID(ID_TAG, kingdom.id());
+            tag.putLong(UPDATED_TAG, now);
+        });
+    }
+
+    private static CompoundTag tag(ItemStack stack) {
+        return stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
     }
 
     public static String title(MinecraftServer server, Kingdom kingdom) {

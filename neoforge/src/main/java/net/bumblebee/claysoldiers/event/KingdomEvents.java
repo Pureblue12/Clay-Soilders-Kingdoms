@@ -1,20 +1,24 @@
 package net.bumblebee.claysoldiers.event;
 
 import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
+import net.bumblebee.claysoldiers.kingdom.KingdomBook;
 import net.bumblebee.claysoldiers.kingdom.Kingdoms;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /**
  * Connects kingdoms to the game (all installs, not only dev): a king's death ruins its kingdom, the census runs on
- * server ticks, and sneak + right-clicking your own king with a gold block founds a kingdom.
+ * server ticks, sneak + right-clicking your own king with a gold block founds a kingdom, and a kingdom book is brought
+ * up to date when it is opened.
  */
 public final class KingdomEvents {
     private KingdomEvents() {
@@ -53,6 +57,31 @@ public final class KingdomEvents {
                     + ". See it with /csr kingdom book; undo with /csr kingdom disband.").withStyle(ChatFormatting.GOLD));
         } else {
             player.sendSystemMessage(Component.literal("No kingdom founded: " + result.refusal()).withStyle(ChatFormatting.RED));
+        }
+    }
+
+    /**
+     * A kingdom book opened from the hand is rewritten first. The client opens the book it has in its hand, so the new
+     * pages are sent before vanilla sends "open the book".
+     */
+    public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
+        if (event.getEntity() instanceof ServerPlayer player && KingdomBook.refresh(player.server, event.getItemStack())) {
+            player.containerMenu.broadcastChanges();
+        }
+    }
+
+    /**
+     * A kingdom book on a lectern is rewritten before the lectern opens (only when its pages changed, because
+     * replacing the book sends the lectern back to page 1).
+     */
+    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)
+                || !(event.getLevel().getBlockEntity(event.getPos()) instanceof LecternBlockEntity lectern)) {
+            return;
+        }
+        ItemStack book = lectern.getBook().copy();
+        if (KingdomBook.refresh(player.server, book)) {
+            lectern.setBook(book);
         }
     }
 }
