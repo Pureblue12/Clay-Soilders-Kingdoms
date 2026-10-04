@@ -34,6 +34,8 @@ import static net.bumblebee.claysoldiers.gametest.TerrainScanGameTests.TERRAIN;
 /**
  * Builders finishing structures taller than their reach with temporary scaffolding, which is gone afterwards. Each
  * asserts the CORRECT behavior. Each test has its own batch (scaffold jobs and the recorder are world-wide state).
+ * The tests have sky access: otherwise the framework puts a barrier roof at the top of the 16-high test area. Chests
+ * stand within 16 blocks of every block (builders' paths are limited to their follow range, 16).
  * The times are written to the log ("CSR scaffold build").
  */
 @GameTestHolder(ClaySoldiersCommon.MOD_ID)
@@ -124,7 +126,7 @@ public class ScaffoldBuildGameTests {
      * Acceptance test: builders finish a 20-block tower (3 by 3, hollow) with scaffolding, then the scaffold is gone.
      * While recording BUILD and SCAFFOLD: no builder gives up carrying, and the scaffold is planned, placed and removed.
      */
-    @GameTest(template = TERRAIN, batch = "scaffold_tower", timeoutTicks = LONG_TIMEOUT)
+    @GameTest(template = TERRAIN, batch = "scaffold_tower", timeoutTicks = LONG_TIMEOUT, skyAccess = true)
     public static void builderFinishesTwentyBlockTower(GameTestHelper helper) {
         DebugLog.reset();
         DebugCategory build = DebugCategory.byId("BUILD").orElseThrow();
@@ -146,16 +148,16 @@ public class ScaffoldBuildGameTests {
     }
 
     /** A long wall (16 long, 12 high) finishes, and its scaffold is gone. */
-    @GameTest(template = TERRAIN, batch = "scaffold_wall", timeoutTicks = LONG_TIMEOUT)
+    @GameTest(template = TERRAIN, batch = "scaffold_wall", timeoutTicks = LONG_TIMEOUT, skyAccess = true)
     public static void builderFinishesLongWall(GameTestHelper helper) {
-        Scenario scenario = scenario(helper, TestStructures.Shape.WALL, 12, new BlockPos(16, 2, 6), new BlockPos(5, 2, 4));
+        Scenario scenario = scenario(helper, TestStructures.Shape.WALL, 12, new BlockPos(16, 2, 6), new BlockPos(12, 2, 4));
         finishesAndCleansUp(helper, scenario, "wall 12");
     }
 
     /** Two 10-high walls meeting at a 14-high corner tower finish, and the scaffold is gone. */
-    @GameTest(template = TERRAIN, batch = "scaffold_corner_tower", timeoutTicks = LONG_TIMEOUT)
+    @GameTest(template = TERRAIN, batch = "scaffold_corner_tower", timeoutTicks = LONG_TIMEOUT, skyAccess = true)
     public static void builderFinishesCornerTowerOnWall(GameTestHelper helper) {
-        Scenario scenario = scenario(helper, TestStructures.Shape.WALL_TOWER, 10, new BlockPos(16, 2, 4), new BlockPos(5, 2, 2));
+        Scenario scenario = scenario(helper, TestStructures.Shape.WALL_TOWER, 10, new BlockPos(16, 2, 4), new BlockPos(8, 2, 4));
         finishesAndCleansUp(helper, scenario, "corner tower 14 on walls 10");
     }
 
@@ -163,7 +165,7 @@ public class ScaffoldBuildGameTests {
      * The full Small House (151 blocks) still finishes with 3 builders, and gets no scaffold: nothing in it is above
      * reach, so its build is unchanged.
      */
-    @GameTest(template = TERRAIN, batch = "scaffold_small_house", timeoutTicks = 36_000)
+    @GameTest(template = TERRAIN, batch = "scaffold_small_house", timeoutTicks = 36_000, skyAccess = true)
     public static void smallHouseStillReachesAllBlocksWithoutScaffold(GameTestHelper helper) {
         DebugLog.reset();
         DebugCategory scaffold = DebugCategory.byId("SCAFFOLD").orElseThrow();
