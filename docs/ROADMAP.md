@@ -9,8 +9,8 @@ Earlier work (M0–M2: testing, bug fixes, `/csr build`, builder fixes, doors) i
 |---|---|---|---|
 | 0 | Foundations | M | **done** (in-game checklist pending) |
 | 1 | Kingdom core | M | **done** (in-game checklist pending) |
-| 2 | Terrain spike | L | **next** |
-| 3 | Tall construction spike | L | not started |
+| 2 | Terrain spike | L | **done** (in-game checklist pending) |
+| 3 | Tall construction spike | L | **next** |
 | 4 | Tier-1 keep built autonomously | L | not started |
 | 5 | Economy loop v1 | L | not started |
 | 6 | Layout and growth | XL | not started |
@@ -84,7 +84,19 @@ Stages are ordered by dependency and risk. Every stage ends playable.
 - **Acceptance test:** a keep foundation on a slope and one near water are handled; a cliff is refused with a reason.
 - **Depends on:** 1 · **Size:** L
 - **Risks:** may change the keep design.
-- **Decisions:** — · **Status:** next · **Results:** —
+- **Decisions:** D25–D32 · **Status:** done (2026-10-04), waiting for the in-game checklist · **Results:**
+  - **Research:** `docs/RESEARCH-terrain.md` (vanilla terrain adaptation plus 7 open-source projects).
+  - **Scan, scorer, search:** loaded chunks only (unknown otherwise); radius 64 scans in 1.5 ms.
+  - **Grading:** five methods applied instantly with undo, compared on the test terrains; comparison and
+    recommendation in `docs/TERRAIN.md`.
+  - **Founding:** refuses cliff, lava, deep water and too steep ground with the best site nearby; warns on soft
+    penalties; operators can force it.
+  - **Dev tools and recorder:** Terrain category in the dev book; TERRAIN recorder category.
+  - **Acceptance:** a slope gets a foundation (123 blocks) or cut and fill (165); a lake edge gets a foundation (79);
+    a cliff is refused at founding with its reason.
+  - **Recommendation:** no work, then cut and fill (range 2 to 3), then foundation (range 4 to 6), else refuse or
+    move. The keep gets a 1-block plinth and a `ground_level` metadata field (needs the owner's OK).
+  - **Tests:** 145 required (109 before), all pass.
 
 ### 3 Tall construction spike
 - **Goal:** scaffolding with a build order, removed afterward.

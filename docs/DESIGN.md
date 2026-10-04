@@ -16,6 +16,10 @@
   player founded it. It has a status (active, or ruined when the king dies), a tier, a stockpile, a building list,
   a population count, renown and a chronicle written for humans. The observer reads it all in the kingdom book
   (`/csr kingdom book`), which shows the kingdom as it is whenever it's opened, also on a lectern. Decisions D16–D23.
+- **Terrain (stage 2):** founding judges the ground around the king (keep site 11 by 11) and refuses cliffs, lava,
+  deep water and too steep ground, naming the best site nearby; softer problems give a warning. Grading methods exist
+  as a dev tool only; the recommendation for stage 4 is in [`TERRAIN.md`](TERRAIN.md). Flow audit: none of it adds a
+  resource yet; tree clearing will become a producer of logs once woodcutters exist (stage 5). Decisions D25–D32.
 - **Flow audit, stockpile:** a store with no producer, carrier or consumer yet (dev commands only). Stage 5 adds
   farms and lumber camps (producers), carriers, the storehouse, and the cottage as the first consumer.
 

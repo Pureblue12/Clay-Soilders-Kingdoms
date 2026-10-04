@@ -35,10 +35,13 @@ Starts a headless test server, runs every test in
 `DevToolkitGameTests`, `SuspectedBugGameTests`, `BuildSiteGameTests`, `BuilderReachGameTests`,
 `DebugLogGameTests`, `RecorderFeedbackGameTests`, `BuildRequestGameTests`, `PlacingGameTests`,
 `DoorGameTests`, `TuningGameTests`, `StructureRegistryGameTests`, `StructurePasteGameTests`,
-`LayoutCheckerGameTests`, `KingdomDataGameTests`, `KingdomGameTests`, `KingdomBookGameTests`, `KingdomBookRefreshGameTests`), prints
+`LayoutCheckerGameTests`, `KingdomDataGameTests`, `KingdomGameTests`, `KingdomBookGameTests`, `KingdomBookRefreshGameTests`, `TerrainScoreGameTests`, `TerrainScanGameTests`,
+`TerrainGradingGameTests`, `TerrainFoundingGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
-Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/make_gametest_platform.py`).
+Templates: `data/csr/structure/gametest/platform.nbt` (16x8x16) and `terrain.nbt` (32x16x32, for test terrains);
+regenerate with `tools/make_gametest_platform.py` (size arguments: see the script). `tools/suite.sh` deletes the test
+world first, so every run starts fresh.
 
 - Bug tests assert the CORRECT behavior; a failing bug test = a confirmed bug (fix in M1).
   Don't change gameplay code just to make a test pass.
@@ -51,8 +54,12 @@ Template: `data/csr/structure/gametest/platform.nbt` (regenerate with `tools/mak
   and from the doorway (see `DoorGameTests`).
 - Tests that change global state (recorder, `DoorAccess.overrideRuleForTests`) get their own `batch` and reset it
   (`@AfterBatch` for the door rule).
+- The framework puts barrier walls one block outside every test area. Founding runs the terrain check on an 11 by 11
+  site around the king, so a king closer than 6 blocks to the platform's edge sees the wall as a cliff: tests that
+  aren't about terrain found with `Kingdoms.found(..., true)` (force) there (D32).
+- Grading and test-terrain undo share the structure paste's global undo history: tests that undo get their own batch.
 
-Current status (2026-10-03, after stage 1 Kingdom core): all 109 required tests pass. `SuspectedBugGameTests` covers the easel right-click:
+Current status (2026-10-04, after stage 2 Terrain spike): all 145 required tests pass. `SuspectedBugGameTests` covers the easel right-click:
 non-block item, unneeded block, needed block.
 
 ### Known bugs (confirmed)
@@ -133,7 +140,7 @@ Code: `common/.../kingdom/` (`Kingdom`, `KingdomSavedData`, `Kingdoms` service, 
   - or `/csr kingdom found` (nearest loyal king within `kingdom.found_search_radius`).
 
   Refused: unsupported dimension (Overworld only), not a living king, team not loyal to you, team already has a
-  kingdom, claim overlaps another kingdom.
+  kingdom, claim overlaps another kingdom, or the ground can't hold a keep (terrain check, below).
 - **The claim** is a circle of `kingdom.claim_radius` around the king, fixed at founding.
 - **The king's death** (NeoForge death event, lowest priority) sets RUINED and writes a chronicle line.
 - **Population** is counted every `kingdom.census_interval_ticks`, but only while the whole claim is loaded;
@@ -143,6 +150,26 @@ Code: `common/.../kingdom/` (`Kingdom`, `KingdomSavedData`, `Kingdoms` service, 
   `goto_king <team>` needs operators. The book (status page with "Go to the king", stockpile, buildings, chronicle)
   rewrites itself whenever it's opened, in the hand or on a lectern (D24).
 - **Dev only:** `/csr dev kingdom stock_add|stock_remove <resource> [amount]`, `stock_show` (book: Kingdom).
+
+### Terrain (stage 2 spike: site checks; soldiers don't grade yet)
+
+Code: `common/.../terrain/`; background, comparison and recommendation: `docs/TERRAIN.md`; prior art:
+`docs/RESEARCH-terrain.md`; decisions D25–D32; numbers `terrain.*` (read through `SiteRules`).
+- `TerrainScanner.scan` reads only loaded chunks (others are unknown, never loaded). Ground = top movement-blocking
+  block that isn't a log or leaves; water is a depth, lava a flag.
+- `SiteScorer` (pure) judges the keep site: 9 by 9 keep plus a margin of 1 = 11 by 11 around a center.
+  - Hard refusals: cliff (a step of 4+), lava within 4, water 3+ deep, too steep (slope 75 %+ or range 8+).
+  - Soft penalties lower a score from 100.
+  - A site with unloaded columns is unknown, not refused.
+- `SiteSearch` (pure): rings of candidates (step 4, radius 16, at most 81); best score, nearest on a tie.
+- `GradingPlanner` (pure) plans flattest / cut_fill / foundation / clear_trees / avoid_trees; `Terrain.grade` applies a
+  plan instantly with an undo snapshot (`StructurePaster.remember`, the same undo as the paste). Dev tool only.
+- **Founding** runs `Terrain.checkSite` on the king's position:
+  - refused with the reasons and the best site nearby;
+  - warnings on soft penalties;
+  - skipped and recorded when part of the site isn't loaded;
+  - `/csr kingdom found force` (permission 2) skips it, recorded in KINGDOM and TERRAIN.
+- Recorder TERRAIN: scans (with cost), site scores, searches, refusals, gradings and their block counts.
 
 ### Known limitations
 
@@ -189,6 +216,9 @@ the time it was made; a different hash means the registry changed.
 | `/csr dev structure place <id> [facing]` | paste a registry structure where you stand, builders' conventions (book: Structures) |
 | `/csr dev structure undo` / `reload` / `list` | undo the last paste / re-read structures from disk / list all |
 | `/csr dev kingdom stock_add` / `stock_remove <resource> [amount]`, `stock_show` | test the stockpile of the kingdom you stand in (book: Kingdom, which also links `/csr kingdom found/book/status/disband`) |
+| `/csr dev terrain scan` / `site` | scan the ground around you / score the keep site where you stand and show the best nearby (book: Terrain) |
+| `/csr dev terrain make <shape>` | build a test terrain 16 blocks ahead: slope, hill, cliff, lake_edge, forest, lava_pool, plateau |
+| `/csr dev terrain grade <method>` / `undo` | apply flattest, cut_fill, foundation, clear_trees or avoid_trees to the keep site where you stand / undo the last terrain change or paste |
 
 How it is built (`common/.../dev/`):
 - `DevToolRegistry` — single source of truth: generates the `/csr dev` commands AND the book buttons.
@@ -215,7 +245,7 @@ Records what soldiers and build plans do, to find out WHY something goes wrong.
 
 Code: `common/.../debug/` — `DebugLog.event(category, soldier, "text %s", arg)` is the one-line entry point
 (returns after one field read when the category is off; pass raw objects, not built strings; use a
-`Supplier<String>` for anything expensive). Categories: `DebugCategory` (BUILD, WORK, DAMAGE, PATHING, TEAM, STRUCTURE, KINGDOM;
+`Supplier<String>` for anything expensive). Categories: `DebugCategory` (BUILD, WORK, DAMAGE, PATHING, TEAM, STRUCTURE, KINGDOM, TERRAIN;
 add one with `DebugCategory.register` and it gets commands and book buttons automatically).
 Commands/buttons: `common/.../dev/RecorderTools`; action-bar indicator: `neoforge/.../event/RecorderIndicator`
 (registered only in dev). Ring buffer default 5000 events (`/csr dev log capacity`).
@@ -285,6 +315,8 @@ Main package: `net.bumblebee.claysoldiers` (in `common/src/main/java`):
   (`StructurePaster`); see `docs/STRUCTURES.md`.
 - `kingdom/` — kingdoms (stage 1): `Kingdom`, `KingdomSavedData` (saved, versioned), `Kingdoms` (all changes),
   `KingdomBook` (observer book); commands in `commands/KingdomCommand`.
+- `terrain/` — terrain spike (stage 2): `TerrainScanner`, `TerrainScan`, `SiteRules`, `SiteScorer`, `SiteSearch`,
+  `GradingPlanner`, `Terrain` (world side), `TestTerrain` (test terrains); dev tools in `dev/TerrainTools`.
 - `kingdom/layout/` — layout checker skeleton (pure data: `LayoutPlan`, `Footprint`, `RoadGraph`, `WallLoop`,
   `LayoutChecker`).
 - `neoforge/.../event/SoldierWorkCleanup` — stops a soldier's work goal when it leaves the level
@@ -354,4 +386,7 @@ Optional integrations (JEI, Jade, Accessories, Curios, Create, SmartBrainLib) ar
 - **Stage 1 (Kingdom core + observer v1) — done (2026-10-03, waiting for the in-game checklist):** saved kingdoms,
   founding/disbanding, king death -> RUINED, stockpile, census, chronicle, kingdom book and commands, KINGDOM
   recorder category.
-- **Stage 2 (Terrain spike) — next.**
+- **Stage 2 (Terrain spike) — done (2026-10-04, waiting for the in-game checklist):** research, terrain scan, site
+  scorer and search, five grading methods (dev tool, undo), founding terrain check with force for operators, Terrain
+  dev book category, TERRAIN recorder category. Recommendation in `docs/TERRAIN.md`.
+- **Stage 3 (Tall construction spike) — next.**

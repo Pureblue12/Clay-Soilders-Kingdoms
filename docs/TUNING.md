@@ -7,7 +7,8 @@ All balancing numbers (costs, radii, rates, caps, unlock thresholds) live in ONE
 - **Format:** one flat JSON object whose keys are namespaced: `kingdom.*`, `economy.*`, `performance.*`, `events.*`.
   JSON has no comments, so every key is documented here.
 - **Code:** `common/.../tuning/Tuning.java` (key definitions with defaults and ranges) and `TuningKey.java`.
-  Read a value with `Tuning.KINGDOM_MAX_LOADED.get()`.
+  Read a value with `Tuning.KINGDOM_MAX_LOADED.get()`. The terrain keys are read together through
+  `SiteRules.current()` (or `SiteRules.from(values)` in tests).
 - **Missing key:** its default is used. That is not an error.
 - **Bad value** (wrong type, out of range, wrong number of tiers): reported and the default is used.
   Problems go to the game log (`CSR tuning: ...`) and appear in `/csr dev tuning reload`.
@@ -45,6 +46,28 @@ All balancing numbers (costs, radii, rates, caps, unlock thresholds) live in ONE
 | `kingdom.zone.outer_radius` | 32, 38, 44, 50, 56, 62, 68, 74, 80, 86 | 10 × 1–512 | Outer edge of the outer zone (fields, camps) per tier. **Placeholder.** |
 | `performance.soldier_cap_per_tier` | 8, 12, 16, 20, 26, 32, 40, 48, 56, 64 | 10 × 1–1000 | Most clay soldiers a kingdom may have per tier. **Placeholder** until the stage 7 performance checkpoint. |
 | `events.warning_time_ticks` | 1200 | 0–72000 | How long before a raid or event the kingdom is warned, in ticks (20 ticks = 1 s). |
+| `terrain.scan_radius` | 24 | 1–64 | How far `/csr dev terrain scan` looks around you (a square of 2r+1 columns). |
+| `terrain.keep_size` | 9 | 3–31 | Width of the tier-1 keep's footprint for site checks and grading ([D25](DECISIONS.md)). **Placeholder** until the keep is designed. |
+| `terrain.keep_margin` | 1 | 0–8 | Blocks around the keep judged and levelled with it (the site is keep + 2 × margin wide: 11). |
+| `terrain.refuse.height_range` | 8 | 1–64 | Highest minus lowest column of a site at or above this refuses it as too steep (builders reach 8 up). |
+| `terrain.refuse.slope_percent` | 75 | 1–1000 | Slope (percent along the steeper axis; 100 = 1 up per block) at or above this refuses a site as too steep. |
+| `terrain.refuse.cliff_step` | 4 | 2–64 | A step this high or higher between neighbouring columns is a cliff and refuses the site. |
+| `terrain.refuse.water_depth` | 3 | 1–64 | Water this deep anywhere on the site refuses it. |
+| `terrain.refuse.lava_distance` | 4 | 0–32 | Lava on the site or within this many blocks of it refuses it. |
+| `terrain.penalty.height_range` | 3 | 0–100 | Score points lost per block of height range. |
+| `terrain.penalty.slope` | 2 | 0–100 | Score points lost per 10 % of slope. |
+| `terrain.penalty.water` | 4 | 0–100 | Score points lost per 10 % of the site under shallow water. |
+| `terrain.penalty.trees` | 2 | 0–100 | Score points lost per 10 % of the site with trees. |
+| `terrain.penalty.step` | 4 | 0–100 | Score points lost per 10 % of the site next to a step of 2 or more (below a cliff). |
+| `terrain.penalty.biome` | 10 | 0–100 | Score points lost on a wet (ocean, river, beach) or mountain biome. |
+| `terrain.search.radius` | 16 | 0–64 | How far the site search looks around the wanted point. |
+| `terrain.search.step` | 4 | 1–16 | Distance between candidate sites. |
+| `terrain.search.max_candidates` | 81 | 1–1000 | Most candidates one search judges, nearest first (81 = every candidate of the default radius and step). |
+| `terrain.grade.cut_fill_budget` | 250 | 0–100,000 | Most ground blocks cut and fill may move (cut + filled). |
+| `terrain.grade.foundation_budget` | 300 | 0–100,000 | Most blocks a foundation platform (floor + pillars) may use. |
+| `terrain.grade.foundation_max_height` | 6 | 1–32 | Highest a foundation may stand above the lowest ground under it (builders reach 8). |
+| `terrain.grade.pillar_spacing` | 4 | 1–16 | Distance between foundation pillars (edges and corners always get one). |
+| `terrain.grade.clear_trees_budget` | 500 | 0–100,000 | Most tree blocks clearing a site may remove. |
 | `dev.paste_undo_depth` | 10 | 1–100 | How many structure pastes `/csr dev structure undo` can undo (dev tool). |
 
 `economy.*` has no keys yet; stage 5 adds them.
@@ -73,4 +96,5 @@ These numbers are still hardcoded in Java. Move each into the tuning file when i
 | `ConfigNeoForge` (server config) | existing upstream settings | (stay in the NeoForge config) |
 
 Not candidates: sizes, render and model numbers, bit flags, item stack limits, and dev-tool limits other than
-`dev.paste_undo_depth`.
+`dev.paste_undo_depth`. The test terrains' shapes (`TestTerrain`: radius 13, a 6-block cliff, a 4-deep lake, ...) are
+test fixtures, not balancing numbers, and stay in code; so does the scan's 64-block walk limit.
