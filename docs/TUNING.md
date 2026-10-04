@@ -5,7 +5,7 @@ All balancing numbers (costs, radii, rates, caps, unlock thresholds) live in ONE
 
 - **File:** `common/src/main/resources/data/csr/tuning/tuning.json`, read as the data resource `csr:tuning/tuning.json`.
 - **Format:** one flat JSON object whose keys are namespaced: `kingdom.*`, `economy.*`, `performance.*`, `events.*`,
-  `terrain.*`, `scaffold.*`, `dev.*`. Values are whole numbers, lists of 10 whole numbers (per tier), or block ids in
+  `terrain.*`, `build.*`, `scaffold.*`, `dev.*`. Values are whole numbers, lists of 10 whole numbers (per tier), or block ids in
   quotes (`scaffold.material`).
   JSON has no comments, so every key is documented here.
 - **Code:** `common/.../tuning/Tuning.java` (key definitions with defaults and ranges) and `TuningKey.java`.
@@ -70,6 +70,10 @@ All balancing numbers (costs, radii, rates, caps, unlock thresholds) live in ONE
 | `terrain.grade.foundation_max_height` | 6 | 1–32 | Highest a foundation may stand above the lowest ground under it (builders reach 8). |
 | `terrain.grade.pillar_spacing` | 4 | 1–16 | Distance between foundation pillars (edges and corners always get one). |
 | `terrain.grade.clear_trees_budget` | 500 | 0–100,000 | Most tree blocks clearing a site may remove. |
+| `build.unreachable_recheck_ticks` | 200 | 0–1,200 | A blueprint block a builder found out of reach isn't path-searched again by that builder for this long, unless a block is placed or scaffold put up within 3 blocks sideways of it. Keeps request searches cheap when much is out of reach ([D42](DECISIONS.md)). 0: always search. |
+| `scaffold.columns_first` | 1 | 0–1 | 1: once builders start putting up the scaffolding, they put all of it up before working above reach (no stall at every level); 0: one level at a time whenever nothing else is in reach ([D42](DECISIONS.md)). |
+| `scaffold.start_after_stuck_ticks` | 100 | 0–6,000 | Builders start putting up scaffolding only after finding nothing in reach for this long with no block placed in between (one builder boxed in for a moment doesn't start it). |
+| `scaffold.climb_speed_hundredths` | 30 | 5–100 | How fast builders climb up and down scaffolding columns, in hundredths of a block per tick. |
 | `scaffold.material` | `"minecraft:scaffolding"` | a block id | The temporary scaffold block (builders fetch it from storage like any block). Climbed columns (approach 4) need a block soldiers can be inside, like scaffolding; with another block, step pillars are used. |
 | `scaffold.refund` | 1 | 0–1 | 1: builders carry scaffold they take down back to storage (cleanup drops it as items); 0: it is used up. |
 | `scaffold.approach` | 4 | 1–4 | How builders put up scaffolding: 1 ramp up the outside, 2 step pillars, 3 structure tops plus step pillars, 4 scaffolding columns they climb ([D34](DECISIONS.md)). |

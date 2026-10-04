@@ -63,7 +63,7 @@ world first, so every run starts fresh.
   use `skyAccess = true`. Builders only follow paths up to their follow range (16): keep a test's chest within about
   14 blocks of every block.
 
-Current status (2026-10-04, after stage 3 Tall construction spike and its in-game fix D41): all 165 required tests pass (the suite takes a few
+Current status (2026-10-04, after stage 3 Tall construction spike and its in-game fixes D41, D42): all 168 required tests pass (the suite takes a few
 minutes: the scaffold tests build whole towers and the Small House). `SuspectedBugGameTests` covers the easel right-click:
 non-block item, unneeded block, needed block.
 

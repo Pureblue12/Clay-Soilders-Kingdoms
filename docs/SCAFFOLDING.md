@@ -39,8 +39,9 @@ chest 7 to 10 blocks from the structure; 20 ticks = 1 second. "Trips" = builder 
 How (e) works:
 - Planner: 1 by 1 columns beside the structure (each covers the blocks within 2 blocks sideways), only as tall as
   needed, at least 1 block apart, each base with 2 open sides, and within about 24 blocks' walk of the builders' chest.
-- Building: builders build everything they can reach. When nothing is left in reach, they put up the next scaffolding
-  block (lowest first; higher ones from inside the column). Then they continue: a builder walks to a column's base on
+- Building: builders build everything they can reach. When the whole build has found nothing in reach for
+  `scaffold.start_after_stuck_ticks`, they put up all the scaffolding (each column's lowest missing block first;
+  higher ones from inside the column; D42), then continue: a builder walks to a column's base on
   the ground, rises inside the column (0.2 blocks per tick, no gravity, no falling), places its block and comes back
   down.
 - Teardown: when the structure is finished, a builder walks to each column's base and the column comes down whole
@@ -89,6 +90,10 @@ How (e) works:
   (D41). It costs a little time; the dev book tower still finishes in about 5,800 to 6,100 ticks.
 - Builders rise inside a column by direct movement (smooth, no vanilla climbing animation): it looks like gliding up
   the scaffolding.
+- Request searches: each builder remembers blocks it couldn't reach and skips their (expensive) path search for
+  `build.unreachable_recheck_ticks`, unless something is placed near them (D42). Before, a stall with 500 blocks out
+  of reach cost about 1 s of server time per builder per search. A few such searches remain per build (each builder's
+  first full search when the build runs out of reach).
 - The planner runs on the server thread when builders get stuck (at most every `scaffold.replan_ticks`). It takes
   about 50 to 400 ms for one approach on the bigger test structures (up to 1.8 s comparing all five on a 34-high
   corner tower). Large or many builds could stutter.

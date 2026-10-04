@@ -117,6 +117,8 @@ Stages are ordered by dependency and risk. Every stage ends playable.
   - **Tests:** 163 required (145 before), all pass.
   - **In-game fix (D41):** builders carried up a column by vanilla climbing got stuck there (dev book tower stalled);
     they are now climbed back down. 165 tests, including the dev book's exact tower layout.
+  - **In-game fix (D42):** tall walls crawled above reach with server lag; now no search lag, scaffold goes up in one
+    go once needed, re-plans don't add column sets. 168 tests.
 
 ### 4 Tier-1 keep built autonomously
 - **Goal:**
