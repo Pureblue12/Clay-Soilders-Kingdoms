@@ -260,6 +260,9 @@ Optional integrations (JEI, Jade, Accessories, Curios, Create, SmartBrainLib) ar
 
 ## Rules
 
+- Design gaps: follow the DESIGN DECISION PROTOCOL in `docs/DESIGN.md` (DRAFT) and log every decision in
+  `docs/DECISIONS.md`.
+
 - Make small, incremental changes; one feature at a time.
 - Never break the existing build — run `./gradlew :neoforge:build` after every change.
 - Explain changes in plain language (the user is new to Java and modding).
