@@ -79,8 +79,9 @@ public class StructurePasteGameTests {
         helper.assertTrue(StructurePaster.undo(level).map(undone -> undone.equals(pasted)).orElse(false), "Undo did not undo the paste");
 
         assertSame(helper, before, save(level, area));
-        helper.assertTrue(level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, net.minecraft.world.phys.AABB.of(area).inflate(2)).isEmpty(),
-                "Items were dropped (a container's contents would be duplicated)");
+        List<net.minecraft.world.entity.item.ItemEntity> dropped = level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, net.minecraft.world.phys.AABB.of(area).inflate(2));
+        helper.assertTrue(dropped.isEmpty(), "Items were dropped (a container's contents would be duplicated): "
+                + dropped.stream().map(item -> item.getItem() + " at " + item.blockPosition().toShortString()).toList());
         helper.succeed();
     }
 
