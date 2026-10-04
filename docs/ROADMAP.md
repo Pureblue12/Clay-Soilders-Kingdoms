@@ -77,6 +77,7 @@ Stages are ordered by dependency and risk. Every stage ends playable.
   - **Flow audit:** the stockpile is a store with no producer or consumer yet; only dev commands fill it (stage 5
     adds the first loop).
   - **Tests:** 105 required (82 before), all pass.
+  - **Follow-up (2026-10-04):** the kingdom book refreshes when opened, in the hand or on a lectern (D24); 109 tests.
 
 ### 2 Terrain spike
 - **Goal:** site scoring, foundations or terraforming; founding refuses or warns on bad ground.

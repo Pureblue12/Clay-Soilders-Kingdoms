@@ -15,7 +15,7 @@
 - **Kingdom (stage 1):** a team's claim around where its king (a clay soldier wearing a gold ingot) stood when the
   player founded it. It has a status (active, or ruined when the king dies), a tier, a stockpile, a building list,
   a population count, renown and a chronicle written for humans. The observer reads it all in the kingdom book
-  (`/csr kingdom book`). Decisions D16–D23.
+  (`/csr kingdom book`), which shows the kingdom as it is whenever it's opened, also on a lectern. Decisions D16–D23.
 - **Flow audit, stockpile:** a store with no producer, carrier or consumer yet (dev commands only). Stage 5 adds
   farms and lumber camps (producers), carriers, the storehouse, and the cottage as the first consumer.
 
