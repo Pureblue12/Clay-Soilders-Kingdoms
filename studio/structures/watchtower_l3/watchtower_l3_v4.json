@@ -1,0 +1,152 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "watchtower_l3",
+  "version": 4,
+  "size": [6,9,6],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T03:42:50.774Z",
+    "description": "Watchtower, level 3 of 3: L2 plus flourish 3. Log watchtower: spiral stair inside four posts up to a railed lookout (floor at y 4), hip roof; L2 walls the base with arrow slits, awning and bell; L3 adds a pointed cap with a flag. 4 x 4 core, not 3 x 3 (a walkable stair needs it). Not yet builder-tested: bell, blue_wall_banner, lightning_rod, moss_carpet, red_banner, red_wall_banner, vine, white_wall_banner. Decoration step adds: banner_pattern, item_frame.",
+    "changes": "More detail on L2 and L3: L2 boards the base into a guardhouse with arrow slits and shutters, an awning with an alarm bell over the door, banners, a brazier and supply crates; L3 adds a pointed roof cap with a flag, corner lanterns, ivy, shields by the door and a weapon rack (the roof sits one lower so the cap fits in 9).",
+    "parent": 3,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=east,open=false]",
+    "A": "minecraft:barrel[facing=up,open=false]",
+    "B": "minecraft:bell[attachment=ceiling,facing=north,powered=false]",
+    "C": "minecraft:blue_wall_banner[facing=north]",
+    "D": "minecraft:campfire[facing=south,lit=false,signal_fire=false,waterlogged=false]",
+    "E": "minecraft:chest[facing=west,type=single,waterlogged=false]",
+    "F": "minecraft:cobblestone",
+    "G": "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=outer_left,waterlogged=false]",
+    "H": "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "I": "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=outer_left,waterlogged=false]",
+    "J": "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "K": "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=outer_left,waterlogged=false]",
+    "L": "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "M": "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=outer_left,waterlogged=false]",
+    "N": "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "O": "minecraft:hay_block[axis=y]",
+    "P": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "Q": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "R": "minecraft:lightning_rod[facing=up,powered=false,waterlogged=false]",
+    "S": "minecraft:moss_carpet",
+    "T": "minecraft:oak_fence[east=false,north=true,south=true,waterlogged=false,west=false]",
+    "U": "minecraft:oak_fence[east=true,north=false,south=false,waterlogged=false,west=true]",
+    "V": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "W": "minecraft:oak_log[axis=y]",
+    "X": "minecraft:oak_planks",
+    "Y": "minecraft:oak_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "Z": "minecraft:oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "a": "minecraft:oak_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "b": "minecraft:red_banner[rotation=10]",
+    "c": "minecraft:red_wall_banner[facing=east]",
+    "d": "minecraft:red_wall_banner[facing=north]",
+    "e": "minecraft:spruce_fence[east=false,north=false,south=true,waterlogged=false,west=false]",
+    "f": "minecraft:spruce_fence[east=true,north=true,south=false,waterlogged=false,west=false]",
+    "g": "minecraft:spruce_planks",
+    "h": "minecraft:spruce_slab[type=bottom,waterlogged=false]",
+    "i": "minecraft:spruce_stairs[facing=east,half=bottom,shape=outer_left,waterlogged=false]",
+    "j": "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "k": "minecraft:spruce_stairs[facing=north,half=bottom,shape=outer_left,waterlogged=false]",
+    "l": "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "m": "minecraft:spruce_stairs[facing=south,half=bottom,shape=outer_left,waterlogged=false]",
+    "n": "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "o": "minecraft:spruce_stairs[facing=west,half=bottom,shape=outer_left,waterlogged=false]",
+    "p": "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "q": "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]",
+    "r": "minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]",
+    "s": "minecraft:spruce_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]",
+    "t": "minecraft:stripped_spruce_log[axis=x]",
+    "u": "minecraft:stripped_spruce_log[axis=z]",
+    "v": "minecraft:torch",
+    "w": "minecraft:vine[east=false,north=false,south=false,up=false,west=true]",
+    "x": "minecraft:vine[east=true,north=false,south=false,up=false,west=false]",
+    "y": "minecraft:wall_torch[facing=east]",
+    "z": "minecraft:white_wall_banner[facing=west]"
+  },
+  "layers": [
+    [
+      "e.....",
+      "fF..FO",
+      "S.Z..A",
+      "V....#",
+      ".F..FE",
+      ".....S"
+    ],
+    [
+      "R.....",
+      "RW..Wh",
+      ".X.YXA",
+      ".X..X.",
+      "xWyXWw",
+      "......"
+    ],
+    [
+      ".C.BC.",
+      "xW..W.",
+      ".u..u.",
+      ".u.Zu.",
+      "xWttWw",
+      "......"
+    ],
+    [
+      ".nnnn.",
+      ".WttW.",
+      "sX....",
+      "..a.Xq",
+      "xWX.Ww",
+      "..r..."
+    ],
+    [
+      "......",
+      ".WggW.",
+      ".gggg.",
+      ".g..g.",
+      ".WggW.",
+      "......"
+    ],
+    [
+      "Q...dQ",
+      "zWUUW.",
+      ".T..T.",
+      ".T..T.",
+      ".WUUWc",
+      "Q....Q"
+    ],
+    [
+      "KLLLLM",
+      "HWD.WN",
+      "HvQ..N",
+      "H....N",
+      "HW.PWN",
+      "GJJJJI"
+    ],
+    [
+      "......",
+      ".mnno.",
+      ".jggp.",
+      ".jggp.",
+      ".illk.",
+      "......"
+    ],
+    [
+      "......",
+      "......",
+      "..Kb..",
+      "..GI..",
+      "......",
+      "......"
+    ]
+  ]
+}

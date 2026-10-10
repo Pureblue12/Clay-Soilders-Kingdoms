@@ -1,0 +1,143 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "watchtower_l2",
+  "version": 4,
+  "size": [6,9,6],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T03:42:50.317Z",
+    "description": "Watchtower, level 2 of 3: L1 plus flourish 2. Log watchtower: spiral stair inside four posts up to a railed lookout (floor at y 4), hip roof; L2 walls the base with arrow slits, awning and bell; L3 adds a pointed cap with a flag. 4 x 4 core, not 3 x 3 (a walkable stair needs it). Not yet builder-tested: bell, red_wall_banner, white_wall_banner. Decoration step adds: banner_pattern.",
+    "changes": "More detail on L2 and L3: L2 boards the base into a guardhouse with arrow slits and shutters, an awning with an alarm bell over the door, banners, a brazier and supply crates; L3 adds a pointed roof cap with a flag, corner lanterns, ivy, shields by the door and a weapon rack (the roof sits one lower so the cap fits in 9).",
+    "parent": 3,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=east,open=false]",
+    "A": "minecraft:barrel[facing=up,open=false]",
+    "B": "minecraft:bell[attachment=ceiling,facing=north,powered=false]",
+    "C": "minecraft:campfire[facing=south,lit=false,signal_fire=false,waterlogged=false]",
+    "D": "minecraft:chest[facing=west,type=single,waterlogged=false]",
+    "E": "minecraft:cobblestone",
+    "F": "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=outer_left,waterlogged=false]",
+    "G": "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "H": "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=outer_left,waterlogged=false]",
+    "I": "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "J": "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=outer_left,waterlogged=false]",
+    "K": "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "L": "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=outer_left,waterlogged=false]",
+    "M": "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "N": "minecraft:hay_block[axis=y]",
+    "O": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "P": "minecraft:oak_fence[east=false,north=true,south=true,waterlogged=false,west=false]",
+    "Q": "minecraft:oak_fence[east=true,north=false,south=false,waterlogged=false,west=true]",
+    "R": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "S": "minecraft:oak_log[axis=y]",
+    "T": "minecraft:oak_planks",
+    "U": "minecraft:oak_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "V": "minecraft:oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "W": "minecraft:oak_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "X": "minecraft:red_wall_banner[facing=east]",
+    "Y": "minecraft:red_wall_banner[facing=north]",
+    "Z": "minecraft:spruce_planks",
+    "a": "minecraft:spruce_slab[type=bottom,waterlogged=false]",
+    "b": "minecraft:spruce_stairs[facing=east,half=bottom,shape=outer_left,waterlogged=false]",
+    "c": "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "d": "minecraft:spruce_stairs[facing=north,half=bottom,shape=outer_left,waterlogged=false]",
+    "e": "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "f": "minecraft:spruce_stairs[facing=south,half=bottom,shape=outer_left,waterlogged=false]",
+    "g": "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "h": "minecraft:spruce_stairs[facing=west,half=bottom,shape=outer_left,waterlogged=false]",
+    "i": "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "j": "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]",
+    "k": "minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]",
+    "l": "minecraft:spruce_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]",
+    "m": "minecraft:stripped_spruce_log[axis=x]",
+    "n": "minecraft:stripped_spruce_log[axis=z]",
+    "o": "minecraft:torch",
+    "p": "minecraft:wall_torch[facing=east]",
+    "q": "minecraft:white_wall_banner[facing=west]"
+  },
+  "layers": [
+    [
+      "......",
+      ".E..EN",
+      "..V..A",
+      "R....#",
+      ".E..ED",
+      "......"
+    ],
+    [
+      "......",
+      ".S..Sa",
+      ".T.UTA",
+      ".T..T.",
+      ".SpTS.",
+      "......"
+    ],
+    [
+      "...B..",
+      ".S..S.",
+      ".n..n.",
+      ".n.Vn.",
+      ".SmmS.",
+      "......"
+    ],
+    [
+      ".gggg.",
+      ".SmmS.",
+      "lT....",
+      "..W.Tj",
+      ".ST.S.",
+      "..k..."
+    ],
+    [
+      "......",
+      ".SZZS.",
+      ".ZZZZ.",
+      ".Z..Z.",
+      ".SZZS.",
+      "......"
+    ],
+    [
+      "....Y.",
+      "qSQQS.",
+      ".P..P.",
+      ".P..P.",
+      ".SQQSX",
+      "......"
+    ],
+    [
+      "JKKKKL",
+      "GSC.SM",
+      "GoO..M",
+      "G....M",
+      "GS..SM",
+      "FIIIIH"
+    ],
+    [
+      "......",
+      ".fggh.",
+      ".cZZi.",
+      ".cZZi.",
+      ".beed.",
+      "......"
+    ],
+    [
+      "......",
+      "......",
+      "......",
+      "......",
+      "......",
+      "......"
+    ]
+  ]
+}
