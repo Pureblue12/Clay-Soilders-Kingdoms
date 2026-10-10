@@ -4,14 +4,14 @@
   "version": 3,
   "size": [17,16,17],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "Needs more deffrenatiators between levels in terms of functionality and decoration id also like it to expand more get bigger with a grand hall for the king",
     "author": "claude",
     "created": "2026-10-10T03:32:23.368Z",
     "description": "Keep, level 2 of 3: L1 plus flourish 2. A grand stone keep after the approved sample: 15 x 15 on a cobblestone apron, four corner towers with corbelled tops, a gatehouse with an arched passage, battlements on corbels, a great hall with a throne, tables and a hearth, stairs (no ladders) to the king's rooms and the roof deck. 16 tall: needs scaffold in game. Not yet builder-tested: cracked_stone_bricks, mossy_stone_bricks, red_banner, red_wall_banner, stone_brick_slab.",
     "changes": "Dark oak ties it to the kingdom look: a dark oak door frame (level 1) and low dark oak pyramid roofs that close the four tower tops (level 1, no more open boxes); level 3 now has its own feature, timber hoardings (dark oak posts and pent roofs) over every battlement.",
     "parent": 2,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T03:36:22.944Z",
     "tags": [
       "revise1",
       "tier4",

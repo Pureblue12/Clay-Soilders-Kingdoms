@@ -4,14 +4,14 @@
   "version": 2,
   "size": [17,16,17],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "Needs more deffrenatiators between levels in terms of functionality and decoration id also like it to expand more get bigger with a grand hall for the king",
     "author": "claude",
     "created": "2026-10-10T03:11:21.838Z",
     "description": "Keep, level 1 of 3: shell and fittings (what soldiers build first). A grand stone keep after the approved sample: 15 x 15 on a cobblestone apron, four corner towers with corbelled tops, a gatehouse with an arched passage, battlements on corbels, a great hall with a throne, tables and a hearth, stairs (no ladders) to the king's rooms and the roof deck. 16 tall: needs scaffold in game.",
     "changes": "New keep from the approved sample, bigger and grander: 15 x 15 with four corner towers, a gatehouse front, a great hall and stairs up to the roof; level 1 is the buildable shell, levels 2 and 3 add the battlements, banners, lanterns and details.",
     "parent": 1,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T03:36:22.943Z",
     "tags": [
       "revise1",
       "tier4",
