@@ -4,14 +4,14 @@
   "version": 3,
   "size": [11,13,20],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T05:31:29.026Z",
     "description": "Chapel, level 2 of 3: L1 plus flourish 2. Needs scaffolding: 13 tall (the bell cote; the nave roof is 9). Over budget: 600 blocks vs 210 (first build 371 vs 170; the L2 sacristy is about 90 and the L3 churchyard front 94; 7 wide instead of 5, for two pews a side). Stone chapel (stone bricks on a cobblestone plinth, buttresses, spruce gable roof) whose front gable rises into a bell cote; door under a stone hood, lancet windows, shuttered gable windows, pews, an altar; L2 adds the sacristy wing at the back, the bell, runner, lectern, candles, lanterns, flower boxes; L3 the churchyard front (a low churchyard wall with a lych gate, old headstones, a stone path, lantern posts), stained glass in the gable windows, banners, candles and flowers. Not yet builder-tested: bell, candle, cornflower, dandelion, lectern, lily_of_the_valley, oxeye_daisy. Decoration step adds: item.",
     "changes": "L2 now adds a feature seen from afar: the sacristy, a small stone wing at the back right with its own spruce gable roof, door, window and vestments chest (Carlton: not much differentiating L2 and L3). L3 keeps the walled churchyard front with the lych gate. The box grew 4 rows at the back.",
     "parent": 2,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:39:09.619Z",
     "tags": [
       "batch4",
       "tier4",
