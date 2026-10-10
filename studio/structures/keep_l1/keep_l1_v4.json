@@ -4,14 +4,14 @@
   "version": 4,
   "size": [31,19,33],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "Better some of the areas seem inaccessable thought and dont seem liek they really fit I put some thought into that remeber soilders will actually use this place",
     "author": "claude",
     "created": "2026-10-10T04:06:05.296Z",
     "description": "Keep, level 1 of 3: shell and fittings (what soldiers build first). A castle that grows round the approved sample keep, symmetric on one centre line. Level 1: the keep, 11 x 11 on a cobblestone apron, battlements on corbels, four corner turrets with pointed dark oak caps, a guard hall, the king's chamber and stairs (no ladders) to the roof. Level 2: the royal court, a 9 x 13 great hall behind the keep (dark oak roof, tall windows, two hearths, long tables, the throne on a dais under banners) and a walled forecourt with a gate. Level 3: the castle, a curtain wall round the whole site with four corner towers (pointed roofs, flags), a gatehouse, kitchen and barracks lean-tos, a well, a forge and walled gardens. 19 tall: needs scaffold in game.",
     "changes": "Rebuilt as one symmetric plan that grows outward: level 1 is the sample keep with pointed turret caps (no flat lids), level 2 adds a great hall with the throne on a dais behind it and a walled forecourt, level 3 turns it into a castle with a curtain wall, four corner towers, a gatehouse, a kitchen, barracks, a well and gardens.",
     "parent": 3,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T04:11:08.245Z",
     "tags": [
       "revise1",
       "tier4",
