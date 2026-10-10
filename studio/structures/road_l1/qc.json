@@ -58,6 +58,61 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:45:15.219Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 2,
+      "score": 50,
+      "auto": {
+        "issues": [
+          {
+            "level": "fail",
+            "check": "too-small",
+            "message": "Only 24 blocks: too bare for a common (at least 50). Carlton wants more detail, not less."
+          }
+        ],
+        "stats": {
+          "blocks": 24,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 1,
+          "types": 5,
+          "dominant": {
+            "name": "cobblestone_slab",
+            "share": 0.6666666666666666
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 1,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 0
+        },
+        "notes": {
+          "artefacts": "the earth stretches show as grass in the viewer (known, decoration step); with them missing level 1 reads as a broken H of cobblestone"
+        },
+        "summary": "Now half a block high, which answers Carlton's note as far as the mod allows, but level 1 is only 24 cobblestone slabs in an H with big gaps, a lamp post and a few poppies.",
+        "problems": [
+          "Level 1 is too bare (automatic check: 24 blocks): fill the road with the mixed slabs from level 2 already (stone, andesite, mossy, mud brick) so L1 is a whole road, and keep the earth stretches for the decoration step",
+          "Put kerb slabs or a row of coarse dirt along both edges in L1 so the road has a clear border"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

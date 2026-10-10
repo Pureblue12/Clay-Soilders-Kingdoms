@@ -54,6 +54,59 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:44:51.051Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 72,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: oak_sign, dandelion, short_grass, cornflower, oxeye_daisy, cauldron, azure_bluet, fern, red_wool, white_wool, red_banner."
+          }
+        ],
+        "stats": {
+          "blocks": 229,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.6899563318777293,
+          "types": 36,
+          "dominant": {
+            "name": "green_wool",
+            "share": 0.19213973799126638
+          },
+          "height": 4,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Level 3 adds a red and white striped market awning over the crates, which clearly sets it apart from L2. Tents still look stepped.",
+        "problems": [
+          "The tents still read as green wool staircases, and the white stripes show as scattered spots on the steps. Make each tent a clean A-frame: one colour per slope, a white or brown trim row only along the bottom edge, a fence or log ridge pole sticking out at front and back, and a fence pole at each front corner",
+          "The layout is scattered: tents, stall and crates sit at odd angles round the fire with gaps. Put the two tents facing the fire on either side, the stall and woodpile at the back, and a gravel or coarse dirt patch under the fire so it reads as one camp",
+          "Red awning, red banners and green tents together are loud: a brown or white awning would sit better"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

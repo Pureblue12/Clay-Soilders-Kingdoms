@@ -54,6 +54,58 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:44:50.531Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 67,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cauldron, red_banner."
+          }
+        ],
+        "stats": {
+          "blocks": 195,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.6974358974358974,
+          "types": 25,
+          "dominant": {
+            "name": "green_wool",
+            "share": 0.22564102564102564
+          },
+          "height": 4,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Level 1 plus a cooking spit over the fire and red banners on the tents. Busy and camp-like, same tent shape problem as L1.",
+        "problems": [
+          "The tents still read as green wool staircases, and the white stripes show as scattered spots on the steps. Make each tent a clean A-frame: one colour per slope, a white or brown trim row only along the bottom edge, a fence or log ridge pole sticking out at front and back, and a fence pole at each front corner",
+          "The layout is scattered: tents, stall and crates sit at odd angles round the fire with gaps. Put the two tents facing the fire on either side, the stall and woodpile at the back, and a gravel or coarse dirt patch under the fire so it reads as one camp"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

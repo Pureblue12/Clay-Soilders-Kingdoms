@@ -54,6 +54,62 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:45:48.594Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 67,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "variety",
+            "message": "stone_bricks is 58 % of the build: break it up with a second material."
+          }
+        ],
+        "stats": {
+          "blocks": 1713,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.20607122008172796,
+          "types": 22,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.5761821366024519
+          },
+          "height": 16,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "artefacts": "Carlton's newest note (bigger, a grand hall and a throne for the king, levels more different) is not addressed yet"
+        },
+        "summary": "A solid square stone brick keep with four corner towers, a plinth and a dark oak door frame. The new tower caps read as flat wooden lids with a stick in the middle, and it does not yet have the grand hall and throne Carlton asked for.",
+        "problems": [
+          "Carlton's newest note: make it bigger, with a grand hall and a throne for the king (a raised dais with a stair throne, red carpet runner, banners and chandeliers), and make each level add a clear function, not just decoration",
+          "The tower caps look like flat brown lids with a single fence post: use steep dark oak or spruce stair cones (at least 3 steps high) or keep the battlements open with a flagpole and banner",
+          "Still almost all grey stone brick and no life: a few vines, a banner over the door, lanterns by the entrance"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

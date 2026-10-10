@@ -1,0 +1,56 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "garden_l1",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:42:23.940Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 56,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 97,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4948453608247423,
+          "types": 9,
+          "dominant": {
+            "name": "cobblestone_stairs",
+            "share": 0.32989690721649484
+          },
+          "height": 5,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 0
+        },
+        "notes": {
+          "artefacts": "two of Carlton's three notes (bigger, different flowers) are not addressed"
+        },
+        "summary": "Same 9 x 9 garden: four dirt beds of red poppies, a deck with a chest and a bench. Carlton's notes about size and different flowers aren't addressed yet.",
+        "problems": [
+          "Carlton asked for different flowers: the beds are all red poppies. Mix 4 or 5 kinds (cornflower, allium, oxeye daisy, azure bluet, red and orange tulips, lilac or rose bush as tall flowers) in rows per bed",
+          "Carlton asked for it to be bigger: it is still about 9 x 9. Go to 11 x 11 or 13 x 13 with more beds or a centre feature",
+          "It now stands on a one-block cobblestone plinth with a stair step, which fixes the sinking. Check that Carlton is happy with a raised plinth; a garden floor level with the grass (beds edged by logs or a low fence) would look more natural"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

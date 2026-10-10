@@ -58,6 +58,62 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:45:36.359Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 72,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: short_grass, cauldron, dandelion, fern."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "58 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 58,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.7241379310344828,
+          "types": 21,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.22413793103448276
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Level 1 plus red cushions on the benches, a cauldron, a second lamp post and a cooking pot. Reads as a cosy gathering spot.",
+        "problems": [
+          "The lone cobblestone blocks in front of the ring and beside the bench look like stray blocks: join them into a short stepping path to the fire, or use gravel or coarse dirt patches round the ring instead"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

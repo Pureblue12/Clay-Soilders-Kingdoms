@@ -1,0 +1,63 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "garden_l2",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:42:24.429Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 58,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cauldron."
+          }
+        ],
+        "stats": {
+          "blocks": 111,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5585585585585585,
+          "types": 13,
+          "dominant": {
+            "name": "cobblestone_stairs",
+            "share": 0.2882882882882883
+          },
+          "height": 5,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 0
+        },
+        "notes": {
+          "artefacts": "two of Carlton's three notes (bigger, different flowers) are not addressed"
+        },
+        "summary": "Level 2 adds hedges round two beds, lanterns and a composter, but the beds are still all poppies and the garden is still small.",
+        "problems": [
+          "Carlton asked for different flowers: the beds are all red poppies. Mix 4 or 5 kinds (cornflower, allium, oxeye daisy, azure bluet, red and orange tulips, lilac or rose bush as tall flowers) in rows per bed",
+          "Carlton asked for it to be bigger: it is still about 9 x 9. Go to 11 x 11 or 13 x 13 with more beds or a centre feature",
+          "Add a trellis, a bench under a tree or a small pond so L2 has a centre of interest",
+          "It now stands on a one-block cobblestone plinth with a stair step, which fixes the sinking. Check that Carlton is happy with a raised plinth; a garden floor level with the grass (beds edged by logs or a low fence) would look more natural"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

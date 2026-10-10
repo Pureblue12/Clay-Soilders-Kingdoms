@@ -53,6 +53,60 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:45:16.414Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 81,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: fern, mossy_cobblestone_slab, stone_button, short_grass, moss_carpet, andesite_slab, cornflower, stone_slab, dandelion, tuff_slab, mossy_cobblestone_wall, azure_bluet, mud_brick_slab."
+          }
+        ],
+        "stats": {
+          "blocks": 50,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 1,
+          "types": 18,
+          "dominant": {
+            "name": "cobblestone_slab",
+            "share": 0.32
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "artefacts": "earth stretches render as grass in the viewer: known, decoration step"
+        },
+        "summary": "Level 2's mixed slab road with flowers of several colours, bushes and moss along both sides. Clearly the finished, lived-in version.",
+        "problems": [
+          "A small milestone or a sign post at one end would give it a focal point"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

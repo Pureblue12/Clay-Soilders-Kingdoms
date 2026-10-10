@@ -1,0 +1,53 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "commons_l2",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:41:47.956Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 72,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 301,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5249169435215947,
+          "types": 26,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.25249169435215946
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Level 2 adds an oak tree, lamp posts at the corners and a notice board, which helps, but the square is still mostly flat grey cobblestone.",
+        "problems": [
+          "Same floor problem as L1: one grey cobblestone everywhere; mix in stone brick borders and gravel or dirt paths",
+          "Add a bench ring or planter around the tree trunk so the tree sits in the square instead of on it",
+          "The well roof is still a flat plank lid"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}
