@@ -4,14 +4,14 @@
   "version": 3,
   "size": [4,4,2],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude-qc",
     "created": "2026-10-10T03:31:52.594Z",
     "description": "Notice board, level 2 of 2: L1 plus flourish 2. Two dark oak posts with a spruce plank board under a small gable roof; level 2 pins two signs, a lantern, a barrel and flowers. Decoration step adds: potted_plant, sign_text.",
     "changes": "Quality check round 3: level 1 gets one notice, a hanging lantern and a bush, so it reads as a notice board at once; level 2 keeps its two notices, lantern, barrel and flowers",
     "parent": 2,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T03:40:31.343Z",
     "tags": [
       "batch2",
       "tier2",
