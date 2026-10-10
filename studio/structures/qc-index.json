@@ -1050,25 +1050,25 @@
     "checkedAt": "2026-10-10T04:50:57.037Z"
   },
   "town_hall_l1": {
-    "version": 1,
-    "verdict": "pass",
-    "score": 78,
-    "round": 1,
-    "checkedAt": "2026-10-10T08:51:36.968Z"
-  },
-  "town_hall_l2": {
-    "version": 1,
-    "verdict": "pass",
-    "score": 80,
-    "round": 1,
-    "checkedAt": "2026-10-10T08:51:37.554Z"
-  },
-  "town_hall_l3": {
-    "version": 1,
+    "version": 2,
     "verdict": "pass",
     "score": 95,
     "round": 1,
-    "checkedAt": "2026-10-10T08:51:38.126Z"
+    "checkedAt": "2026-10-10T09:07:57.125Z"
+  },
+  "town_hall_l2": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 98,
+    "round": 1,
+    "checkedAt": "2026-10-10T09:07:57.702Z"
+  },
+  "town_hall_l3": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 100,
+    "round": 1,
+    "checkedAt": "2026-10-10T09:07:58.268Z"
   },
   "townhouse_l1": {
     "version": 2,

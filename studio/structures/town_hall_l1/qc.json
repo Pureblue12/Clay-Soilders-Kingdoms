@@ -74,6 +74,72 @@
           "right"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T09:07:57.125Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 95,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: white_wool."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "1115 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "18 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          }
+        ],
+        "stats": {
+          "blocks": 1115,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3094170403587444,
+          "types": 23,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.27533632286995513
+          },
+          "height": 18,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "life": "no plants or lanterns yet; fine for the shell level",
+          "depth": "back now has buttresses, sills and the brick chimney up the gable; window shutters and sills on the long sides"
+        },
+        "summary": "Shell: half-timbered council hall on a stone arcade with a front clock tower; white dials now read clearly as clock faces.",
+        "problems": [
+          "Back gable (z16-17) above the chimney is still mostly plain plaster; optional: a small gable window or beam either side of the chimney.",
+          "Reachability: hall, arcade, clerks' office, back stair and now the clock chamber (y10 x5..7 z2..4, via the new spruce stair) are reached; unreached places are roof slopes, tower ledge, dormer tops: fine."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }
