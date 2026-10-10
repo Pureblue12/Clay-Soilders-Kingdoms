@@ -59,6 +59,55 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:43:52.428Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 90,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 40,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.225,
+          "types": 5,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.525
+          },
+          "height": 8,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "roof": "Joint profile matches stone_wall_straight v2: front arm pier (0,6,0), crenel x1, merlon (2,6,0), then the next module's half merlon; side arm pier, merlon (0,6,1), crenel (0,6,2) after the previous module's x4 merlon. Footing, wall, corbels (y4), parapet (y5) and walk (stand at 5) line up with the straight piece.",
+          "depth": "Projecting corner pier, corbels on both arms, slit niches at (2,2,1) and (1,2,2)."
+        },
+        "summary": "Level 1 outside corner: a corner pier with corbelled parapets on both arms and a 2x2 walk, with merlons now alternating with the neighbours.",
+        "problems": [
+          "Minor (carried over): the single south-facing stair at (0,7,0) on the corner pier still reads like a stray step from the east/west views; a proper cap (e.g. a slab, or a stone_brick_wall finial) would finish the pier."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

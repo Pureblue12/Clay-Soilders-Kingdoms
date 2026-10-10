@@ -55,6 +55,60 @@
           "iso"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:43:50.497Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 75,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 183,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3005464480874317,
+          "types": 14,
+          "dominant": {
+            "name": "oak_fence",
+            "share": 0.18579234972677597
+          },
+          "height": 5,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 1,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Round-1 problems fixed (dummies with fence arms, weapon rack of barrels with a spear rail, one solid sparring floor, no scattered dirt), but the gravel archery lane and the stone brick path are wide and empty; only torches on the posts and two dummies.",
+          "purpose": "Now reads as a drill yard rather than an animal pen thanks to the armed dummies and the row of hay butts, but without targets the right half is just a gravel strip.",
+          "roof": "Open yard, no roof: neutral score.",
+          "life": "Mossy cobblestone in the curb and torches; no plants yet (flowers come at L3)."
+        },
+        "summary": "Fenced 11 x 11 drill yard on a cobblestone curb: a stone brick drill path, a coarse-dirt sparring ground with two hay dummies with fence arms and a weapon rack, and a gravel archery lane ending in a row of hay butts.",
+        "problems": [
+          "The archery lane (x=6..9, z=2..9) is a bare gravel strip at L1: a shooting-line edge of stone brick slabs or a pair of fence-post lane markers at z=3 would make it read as a lane before the L2 targets arrive.",
+          "Reach: the whole yard floor is reached; only post tops and dummy tops are unreached (fine)."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "front"
+        ]
+      }
     }
   }
 }

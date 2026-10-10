@@ -66,6 +66,69 @@
           "iso_back"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:43:49.845Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 83,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: red_banner, azure_bluet, oxeye_daisy, cornflower, dandelion, vine, carved_pumpkin, candle."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "397 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 397,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5188916876574308,
+          "types": 42,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.15365239294710328
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 2,
+          "scale": 2,
+          "levels": 1
+        },
+        "notes": {
+          "detail": "Nice props (log pile, barrel, spear rack, red banner, hay bale, ivy on the corner posts, flowers at the back), but they are only props: capped at 1 by the levels rule.",
+          "levels": "L3 vs L2 is hard to tell apart at a glance: same house and yard, a few more props along the sides and a banner. No new visible feature or job."
+        },
+        "summary": "L2 plus a log pile, a barrel and spear rack on the side, a red banner by the yard, ivy on the corner posts and flowers at the back.",
+        "problems": [
+          "L3 adds only props: give it one clearly visible new feature, e.g. a small lean-to armoury or covered weapon rack against the left side wall (x=0, z=3..7) with a slab roof, or a covered porch over the door, so L3 reads differently from L2 at a glance.",
+          "Reach: interior, aisle and yard reached; roof slopes, chimney top and prop tops unreached (fine)."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "iso_back"
+        ]
+      }
     }
   }
 }

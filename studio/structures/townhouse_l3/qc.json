@@ -134,6 +134,74 @@
           "right"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T08:43:14.854Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 95,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "buildability",
+            "message": "Soldiers can't open: spruce_fence_gate (decoration only)."
+          },
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: brick_stairs, fern, allium, cornflower, oxeye_daisy, azure_bluet, red_tulip, vine, red_wall_banner, candle."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "355 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 355,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.49014084507042255,
+          "types": 42,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.15211267605633802
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Jetty flower boxes front and back (coarse dirt in trapdoors with flowers), lantern post, wall banner, vines on the chimney side, smoking chimney, plus the L2 dressing.",
+          "artefacts": "Lantern and flower-pot fixes from last round are in. But the back-garden gate (7,0,9), now open, opens straight into the oak-leaf bush at (6,0,9)/(6,1,9), so the garden is still closed off: the fix did not work.",
+          "levels": "L3 clearly adds a fenced back garden with composter, seat and flowers, jetty flower boxes and a lantern post: tells apart from L2 at a glance."
+        },
+        "summary": "L2 plus a fenced back garden (composter, seat, bush, flowers), jetty flower boxes front and back, a lantern post, a banner, vines and chimney smoke.",
+        "problems": [
+          "The open garden gate at (7,0,9) leads straight into the oak-leaf bush at (6,0,9) and (6,1,9), so the garden is still unreachable (qc_reach: x2..6 y0 z9..10 not reached). Move the bush to a corner away from the gate (e.g. (6,0,10)) or move the gate to (7,0,10) so (6,0,9)/(6,0,10) gives a free step inside.",
+          "Reachability: 86 of 139 reached; unreached are roof slopes, chimney top, flower-box tops, barrel/composter tops and the whole back garden (x2..6 y0 z9..10) because of the bush behind the gate. House floors and stairs are reached."
+        ],
+        "views": [
+          "sheet",
+          "iso_back"
+        ]
+      }
     }
   }
 }

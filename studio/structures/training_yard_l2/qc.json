@@ -59,6 +59,64 @@
           "iso"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:43:51.134Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 88,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: target, carved_pumpkin, red_banner."
+          }
+        ],
+        "stats": {
+          "blocks": 196,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.32653061224489793,
+          "types": 19,
+          "dominant": {
+            "name": "oak_fence",
+            "share": 0.17346938775510204
+          },
+          "height": 5,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Targets on the hay butts, carved pumpkin heads on the dummies, a red carpet shooting line, a red flag banner on the back post, lanterns on the entrance posts, an arrow barrel and a water cauldron-barrel.",
+          "levels": "Clearly different from L1: targets, pumpkin heads, the flag and the red line change the look at a glance.",
+          "roof": "Open yard, no roof: neutral score.",
+          "life": "Still no greenery (flowers come at L3); fine."
+        },
+        "summary": "L1 plus archery targets on the butts, pumpkin-headed dummies, a red shooting line, a red flag on the back post and lanterns on the entrance posts; now reads plainly as a military training yard.",
+        "problems": [
+          "Reach: whole yard floor reached; only post tops, target tops and dummy heads unreached (fine)."
+        ],
+        "views": [
+          "sheet",
+          "iso"
+        ]
+      }
     }
   }
 }

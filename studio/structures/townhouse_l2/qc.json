@@ -120,6 +120,64 @@
           "right"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T08:43:14.204Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 88,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: brick_stairs, red_tulip, candle."
+          }
+        ],
+        "stats": {
+          "blocks": 303,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.42244224422442245,
+          "types": 30,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.1782178217821782
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 1
+        },
+        "notes": {
+          "detail": "Plenty of small blocks (shutters, trapdoor planters with poppy and tulip, lanterns, log pile with barrel and bench, carpets, candles), but capped at 1 because L2 adds only dressing, no clearly visible new feature or job over L1.",
+          "artefacts": "Fixed: the hanging lanterns now hang at (2,2,2) and (6,2,2) under the corner bracket stairs (block above them), beside the windows instead of in front of the glass. The empty flower pot upstairs is now a candle at (5,5,3).",
+          "levels": "L1 vs L2 differ at a glance (shutters, planters, lanterns, east log pile), but it is all props; the log pile is the only thing close to a new feature and it is small."
+        },
+        "summary": "Two-storey jettied town house; L2 dresses L1 with shutters, doorstep planters, bracket lanterns, a log pile with barrel and bench on the east side and more furniture inside.",
+        "problems": [
+          "Levels: L2 adds only props (shutters, planters, lanterns, log pile). Give it one clearly visible new feature, e.g. turn the east log pile (x7, y0-1, z3-7) into a small woodshed lean-to with posts and a stair roof against the wall, or a front bench under a small door canopy.",
+          "Reachability: 102 of 140 standing places reached; unreached are roof slopes, the chimney cap and a barrel top. Both floors and the staircase are reached: fine."
+        ],
+        "views": [
+          "sheet",
+          "front"
+        ]
+      }
     }
   }
 }

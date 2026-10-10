@@ -145,6 +145,72 @@
           "floor_top"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T08:43:15.472Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 100,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: dandelion, azure_bluet, allium, cornflower, oxeye_daisy, fern, oak_hanging_sign, candle, brick_slab, red_wall_banner, brick_wall."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "568 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 568,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5070422535211268,
+          "types": 46,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.2007042253521127
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "roof": "Fixed: the storeroom shed (x0-2, z11-14) now has a small gable of spruce stairs (x0 and x2, y2) on a dark oak plank ridge with a spruce slab cap (x1, y3), matching the main roof. The automatic 'no overhang' warning is a false alarm: the main roof overhangs the long walls by a block in the renders.",
+          "levels": "L3 adds functions over L2: a bread oven, a storeroom shed with kegs and a chest, and a beer-garden terrace, plus candles and flower boxes."
+        },
+        "summary": "Long timber food hall; L3 adds a brick bread oven, a storeroom shed with barrels and chest under its own gable roof, and a hedged beer-garden terrace beside the hall.",
+        "problems": [
+          "Reachability: 146 of 272 standing places reached; unreached are the main and lean-to roof slopes, the ridge, the oven top, the shed roof and two chimney-side brick tops. The hall floor, kitchen, terrace, shed and outdoor kitchen are all reached: fine."
+        ],
+        "views": [
+          "sheet",
+          "iso_back"
+        ]
+      }
     }
   }
 }

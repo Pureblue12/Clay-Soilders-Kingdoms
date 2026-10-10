@@ -66,6 +66,69 @@
           "iso"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:43:49.063Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 95,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cornflower, dandelion, carved_pumpkin, candle."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "379 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 379,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.503957783641161,
+          "types": 35,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.16094986807387862
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Coarse-dirt boxes replaced by trapdoor-faced planters with flowers; lanterns under both gables on log/chain, a duty-roster sign by the door, a lantern post, campfire smoke on the chimney.",
+          "levels": "Clearly different from L1 at a glance: a fenced front yard with planters, a lantern post and a pumpkin-headed dummy, plus carpet inside.",
+          "purpose": "The pumpkin dummy, fenced yard and roster sign now say 'barracks'.",
+          "shape": "The front yard adds a second part, but the house is still a plain box with a chimney."
+        },
+        "summary": "L1 plus a fenced front yard with trapdoor planters, a lantern post, a pumpkin-headed training dummy, a duty-roster sign, gable lanterns and a smoking chimney.",
+        "problems": [
+          "Reach: unchanged from L1; interior, aisle and front yard reached, only roof slopes, the chimney top and prop tops unreached (fine)."
+        ],
+        "views": [
+          "sheet",
+          "iso"
+        ]
+      }
     }
   }
 }
