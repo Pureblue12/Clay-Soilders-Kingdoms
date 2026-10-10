@@ -236,7 +236,7 @@ def keep():
             s.put(x, UPPER + 1, z, 'red_carpet')
     s.put(17, UPPER + 1, 18, 'spruce_slab', type='top', waterlogged='false')
     s.put(17, UPPER + 1, 17, 'spruce_stairs', facing='north', **BOT)
-    s.put(12, UPPER + 1, 10, 'crafting_table')
+    s.put(13, UPPER + 1, 10, 'crafting_table')
     for x, z in ((CX, 12), (CX, 16)):
         s.put(x, DECK - 1, z, 'lantern', hanging='true', waterlogged='false')
 
@@ -283,6 +283,11 @@ def keep():
         s.put(K0 + 1, UPPER + 1, z, 'barrel', facing='up', open='false')
     s.put(14, UPPER + 1, 18, 'spruce_slab', type='top', waterlogged='false')
     s.put(14, UPPER + 2, 18, 'lantern', hanging='false', waterlogged='false')
+    for z in (14, 15):                                               # and a table for two by the east windows
+        s.put(18, UPPER + 1, z, 'spruce_slab', type='top', waterlogged='false')
+        s.put(17, UPPER + 1, z, 'spruce_stairs', facing='west', **BOT)
+        s.put(19, UPPER + 1, z, 'spruce_stairs', facing='east', **BOT)
+    s.put(18, UPPER + 2, 14, 'lantern', hanging='false', waterlogged='false')
 
     # ================================================================ level 2: the royal court
     s.at(2, 'shell2')
@@ -431,7 +436,7 @@ def keep():
         s.put(x, 3, 7, 'lantern', hanging='false', waterlogged='false')
 
     # ---- level 2 polish (v6)
-    flowers = ['poppy', 'oxeye_daisy']
+    flowers = ['poppy', 'cornflower', 'oxeye_daisy']
     for x in (CX - 3, CX + 3):                                       # flowers at the foot of the lantern posts
         for z in (6, 7):
             s.put(x, 0, z, 'coarse_dirt')

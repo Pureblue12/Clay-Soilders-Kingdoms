@@ -62,8 +62,8 @@ def armory():
     for x in range(X0, X1 + 1):                                      # top plates over the gable walls
         for z in (Z0, Z1):
             A(s, x, 4, z, 'dark_oak_log', axis='x')
-    gable_roof(s, X0, X1, Z0, Z1, 3, front=1, back=1, slope='stone_brick_stairs', eave='dark_oak_stairs',
-               ridge='cobblestone', cap='cobblestone_slab', gable='stone_bricks', plates='dark_oak_log')
+    gable_roof(s, X0, X1, Z0, Z1, 3, front=1, back=1, slope='spruce_stairs', eave='stone_brick_stairs',
+               ridge='dark_oak_planks', cap='spruce_slab', gable='stone_bricks', plates='dark_oak_log')
     for z in (Z0, Z1):                                               # gable windows: the loft at the back, the hall
         s.remove(MID, 5, z)
     # buttresses at the four corners (front and back faces) and halfway along the left side
@@ -148,15 +148,26 @@ def armory():
 
     # ------------------------------------------------------------------ L3: the arsenal
     s.at(3, 'flourish3')
-    # an open-air rack along the left wall under the eaves: fences, a shelf, armour stands (decoration step)
+    # an open-air rack along the left wall under the eaves: fences on the ground, a shelf, armour stands
     for z in (4, 5, 7, 8):
-        P(s, X0 - 1, 1, z, 'spruce_fence')
+        P(s, X0 - 1, 0, z, 'spruce_fence'); P(s, X0 - 1, 1, z, 'spruce_fence')
         P(s, X0 - 1, 2, z, 'spruce_trapdoor', facing='west', **SHELF)
     for z in (4, 8):
-        s.decorate(X0 - 2, 1, z, 'armor_stand', note='iron armour on show')
-    s.decorate(X0 - 1, 1, 6, 'item_frame', item='minecraft:shield', facing='west', note='shield on the buttress')
-    # a hitching rail for the guard's barded horses, with hay
-    P(s, 0, 0, 3, 'hay_block', axis='y'); P(s, 0, 0, 9, 'hay_block', axis='z')
+        s.decorate(X0 - 2, 0, z, 'armor_stand', note='iron armour on show')
+    s.decorate(X0 - 1, 2, 6, 'item_frame', item='minecraft:shield', facing='west', note='shield on the buttress')
+    # a hitching rail for the guard's barded horses: a rail, hay, a trough (water: decoration step)
+    for z in (5, 6, 7):
+        P(s, 0, 0, z, 'spruce_fence')
+    P(s, 0, 0, 4, 'hay_block', axis='y')
+    P(s, 0, 0, 8, 'cauldron')
+    # a lamp post at the forge corner and a banner on the lean-to post
+    P(s, W - 1, 0, 2, 'stone_brick_wall'); P(s, W - 1, 1, 2, 'stone_brick_wall')
+    P(s, W - 1, 2, 2, 'lantern', **STAND)
+    P(s, W - 1, 2, 3, 'red_wall_banner', facing='north')
+    s.decorate(W - 1, 2, 3, 'banner_pattern', banner='red_wall_banner', note='crossed swords of the armory')
+    for (x, z) in ((W - 2, 9), (W - 1, 9)):                          # crates of new arms by the chimney
+        P(s, x, 0, z + 1, 'barrel', facing='up', open='false')
+    P(s, W - 1, 1, 10, 'barrel', facing='up', open='false')
     # planters beside the door, chimney smoke, ivy and moss
     for x, f in ((MID - 2, 'poppy'), (MID + 2, 'cornflower')):
         P(s, x, 0, Z0 - 1, 'coarse_dirt')

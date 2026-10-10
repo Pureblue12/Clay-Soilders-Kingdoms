@@ -70,8 +70,8 @@ def noble_house():
     for x, y, z in chimney:                                         # the chimney (back right corner, inside)
         P(s, x, y, z, 'bricks')
     # dormers (before the roof, so the roof fills in round them)
-    dormer(s, x0, 5, 5, 'west')
-    dormer(s, x1, 5, 5, 'east')
+    dormer(s, x0, 5, 6, 'west')
+    dormer(s, x1, 5, 6, 'east')
     dormer(s, mid, 5, z1, 'south')
     roof = [(x, z) for x in range(x0 - 1, x1 + 2) for z in range(z0 - 1, z1 + 2)]
     hip_roof(s, roof, 4)
@@ -119,10 +119,6 @@ def noble_house():
     for z in (4, 5):
         P(s, mid, 5, z, 'spruce_planks')
         P(s, mid, 6, z, 'spruce_planks')
-    for x in (8, 10, 11):
-        P(s, x, 5, 7, 'spruce_planks')
-        if x != 11:
-            P(s, x, 6, 7, 'spruce_planks')
     s.bed(8, 5, 5, 'north')
     s.bed(10, 5, 5, 'north')
     s.bed(9, 5, 9, 'south')

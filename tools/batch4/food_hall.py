@@ -213,9 +213,11 @@ def food_hall(width=7, depth=11):
         P(s, x, 0, sz1, 'cobblestone')
         P(s, x, 1, sz1, 'spruce_log' if x == sx0 + 2 else 'spruce_planks', **({'axis': 'y'} if x == sx0 + 2 else {}))
     P(s, sx0 + 2, 0, sz0, 'spruce_fence'); P(s, sx0 + 2, 1, sz0, 'spruce_fence')
-    for x in range(sx0, sx0 + 3):
-        for z in range(sz0, sz1 + 1):
-            P(s, x, 2, z, 'spruce_slab', **SLAB)
+    for z in range(sz0, sz1 + 1):                                        # a little gable roof of stairs, slab ridge
+        P(s, sx0, 2, z, 'spruce_stairs', facing='east', **STAIR)
+        P(s, sx0 + 1, 2, z, 'dark_oak_planks')
+        P(s, sx0 + 1, 3, z, 'spruce_slab', **SLAB)
+        P(s, sx0 + 2, 2, z, 'spruce_stairs', facing='west', **STAIR)
     P(s, sx0 + 1, 0, sz1 - 1, 'barrel', facing='up', open='false'); P(s, sx0 + 1, 1, sz1 - 1, 'barrel', facing='up', open='false')
     P(s, sx0 + 1, 0, sz1 - 2, 'barrel', facing='east', open='false')
     P(s, sx0 + 2, 0, sz1 - 1, 'chest', facing='north', type='single', waterlogged='false')
@@ -230,8 +232,8 @@ def food_hall(width=7, depth=11):
 
 
 STRUCTURES = [dict(path='food_hall', name='Tavern / food hall', tier=4, zone='inner', role='food', group='food_hall',
-                   terrain='skirt', door='front', make=food_hall, changes='Carlton: each level must also add function. L2 now adds a bigger kitchen (an outdoor kitchen under a lean-to by the kitchen door with a second smoker, a prep table and a supply barrel), a serving hatch between kitchen and hall, and a table for two. L3 adds a brick bread oven opening into the outdoor kitchen and a storeroom shed (barrels, chest, potatoes) behind the beer-garden terrace (the extra dining area). Quality check: the chimney now rises to the top of the ridge; the flower boxes have trapdoor ends. The decorations of v1 are kept.',
-                   description='Over budget: 564 blocks vs 345 (first build 418 vs 280). Long timber food hall: one long table '
+                   terrain='skirt', door='front', make=food_hall, changes='Quality check: the storeroom shed behind the terrace gets a small gable roof of spruce stairs with a slab ridge instead of a flat slab roof. Nothing else changed.',
+                   description='Over budget: 568 blocks vs 345 (first build 418 vs 280). Long timber food hall: one long table '
                                'with benches under a dormer, a big brick hearth and chimney at the far end, a kitchen '
                                'corner (smoker) by a side door and a bar of kegs. L2 adds function: an outdoor kitchen '
                                'under a lean-to (second smoker, prep table, supplies), a serving hatch and a table for '
