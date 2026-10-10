@@ -4,14 +4,14 @@
   "version": 1,
   "size": [3,6,3],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:58:39.574Z",
     "description": "Lamp post, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 20 blocks vs 5 (a 3 x 3 stepped foot so it is not a bare post). Slim spruce fence post on a dark oak foot and a stepped cobblestone base, a short arm to the street with a hanging lantern (L1); L2 a second arm with a lantern on a chain, a lantern on top, slab corners; L3 a street-name sign, a tulip and a little bush at the foot.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:02:35.759Z",
     "tags": [
       "batch4",
       "tier4",
