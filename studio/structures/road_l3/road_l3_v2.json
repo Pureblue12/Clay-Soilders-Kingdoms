@@ -1,0 +1,66 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "road_l3",
+  "version": 2,
+  "size": [9,3,6],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T03:11:24.031Z",
+    "description": "Road piece (dirt), level 3 of 3: L2 plus flourish 3. A 3-wide road of gravel ruts and a coarse dirt crown with set cobblestones between cobblestone curbs; level 2 adds shoulders of andesite and packed mud with stone slab stepping stones; level 3 grass, ferns, flowers and a lamp post. Tiles end to end. Not yet builder-tested: andesite, cornflower, dandelion, packed_mud, short_grass, stone_slab.",
+    "changes": "More varied: gravel ruts, a coarse dirt and cobblestone crown, mossy cobblestone curbs and andesite and packed mud shoulders in a fixed pattern, with stone slab stepping stones down to the grass, flowers and a lamp; the edge posts that showed missing textures (cobblestone walls stored without a state) are gone.",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "revise1",
+      "tier1",
+      "inner",
+      "utility"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:andesite",
+    "A": "minecraft:coarse_dirt",
+    "B": "minecraft:cobblestone",
+    "C": "minecraft:cornflower",
+    "D": "minecraft:dandelion",
+    "E": "minecraft:dirt",
+    "F": "minecraft:gravel",
+    "G": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "H": "minecraft:mossy_cobblestone",
+    "I": "minecraft:packed_mud",
+    "J": "minecraft:poppy",
+    "K": "minecraft:short_grass",
+    "L": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "M": "minecraft:spruce_fence[east=true,north=false,south=false,waterlogged=false,west=false]",
+    "N": "minecraft:stone_slab[type=bottom,waterlogged=false]"
+  },
+  "layers": [
+    [
+      "K#BAEEBIC",
+      "NIHFBAB#D",
+      ".IBAAFHIN",
+      "MIBEEAB#K",
+      "N#FAHAF#J",
+      "K#BAAFHIN"
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      "L........",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      "G........",
+      ".........",
+      "........."
+    ]
+  ]
+}

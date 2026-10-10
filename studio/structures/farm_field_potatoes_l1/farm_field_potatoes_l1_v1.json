@@ -1,0 +1,78 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "farm_field_potatoes_l1",
+  "version": 1,
+  "size": [11,3,9],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T03:07:59.418Z",
+    "description": "Farm field: potatoes, level 1 of 1: shell and fittings (what soldiers build first). A raised field bed, one level: dirt in two blocks of 4 rows each side of an open trench, oak log border and fence with an entrance at the front centre, plank boardwalk and composter in front. Builders place the dirt; farmers till it into farmland and the decoration step adds the trench water and the potatoes (builders can place neither water, farmland nor crops). Modules tile side by side and around the farmhouse. A sack pile and a chest by the path. Decoration step adds: crop, farmland, water.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "revise1",
+      "tier1",
+      "outer",
+      "farm"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:brown_carpet",
+    "B": "minecraft:chest[facing=north,type=single,waterlogged=false]",
+    "C": "minecraft:cobblestone",
+    "D": "minecraft:composter",
+    "E": "minecraft:dirt",
+    "F": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "G": "minecraft:oak_fence[east=false,north=false,south=false,waterlogged=false,west=true]",
+    "H": "minecraft:oak_fence[east=false,north=false,south=true,waterlogged=false,west=true]",
+    "I": "minecraft:oak_fence[east=false,north=true,south=false,waterlogged=false,west=true]",
+    "J": "minecraft:oak_fence[east=false,north=true,south=true,waterlogged=false,west=false]",
+    "K": "minecraft:oak_fence[east=true,north=false,south=false,waterlogged=false,west=false]",
+    "L": "minecraft:oak_fence[east=true,north=false,south=false,waterlogged=false,west=true]",
+    "M": "minecraft:oak_fence[east=true,north=false,south=true,waterlogged=false,west=false]",
+    "N": "minecraft:oak_fence[east=true,north=true,south=false,waterlogged=false,west=false]",
+    "O": "minecraft:oak_log[axis=x]",
+    "P": "minecraft:oak_log[axis=z]",
+    "Q": "minecraft:spruce_slab[type=bottom,waterlogged=false]"
+  },
+  "layers": [
+    [
+      "DQQQQQQQQB#",
+      "OOOOOCOOOOO",
+      "PEEEE.EEEEP",
+      "PEEEE.EEEEP",
+      "PEEEE.EEEEP",
+      "PEEEE.EEEEP",
+      "PEEEE.EEEEP",
+      "PEEEE.EEEEP",
+      "OOOOOCOOOOO"
+    ],
+    [
+      "..........A",
+      "MLLLG.KLLLH",
+      "J.........J",
+      "J.........J",
+      "J.........J",
+      "J.........J",
+      "J.........J",
+      "J.........J",
+      "NLLLLLLLLLI"
+    ],
+    [
+      "...........",
+      "F.........F",
+      "...........",
+      "...........",
+      "...........",
+      "...........",
+      "...........",
+      "...........",
+      "..........."
+    ]
+  ]
+}

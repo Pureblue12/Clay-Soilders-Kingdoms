@@ -1,0 +1,60 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "bench_l1",
+  "version": 2,
+  "size": [11,4,3],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T03:07:13.846Z",
+    "description": "Bench, level 1 of 2: shell and fittings (what soldiers build first). Bench nook: three-seat oak stair bench with sign armrests between two planters, a leaf hedge and spruce posts behind, a cobblestone apron and lantern posts; L2 adds a pergola roof with a hanging lantern and more greenery. Decoration step adds: sign_text.",
+    "changes": "Rebuilt from two bare stairs into a bench nook: a three-seat bench with sign armrests, planters with flowers at both ends, a hedge and posts behind, a stone apron and a lantern post; level 2 adds a little pergola roof with a hanging lantern, a shaped flowering hedge, a second lantern post and flowers.",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "revise1",
+      "tier1",
+      "inner",
+      "decoration"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:coarse_dirt",
+    "A": "minecraft:cobblestone_slab[type=bottom,waterlogged=false]",
+    "B": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "C": "minecraft:oak_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "D": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "E": "minecraft:oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "F": "minecraft:oak_wall_sign[facing=east,waterlogged=false]",
+    "G": "minecraft:oak_wall_sign[facing=west,waterlogged=false]",
+    "H": "minecraft:poppy",
+    "I": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "J": "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]",
+    "K": "minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]",
+    "L": "minecraft:spruce_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]"
+  },
+  "layers": [
+    [
+      ".K.AAAAA.KC",
+      "L#JGEEEFL#J",
+      "DDDIDDDIDDD"
+    ],
+    [
+      "..........C",
+      ".H.......H.",
+      "...I...I..."
+    ],
+    [
+      "..........B",
+      "...........",
+      "..........."
+    ],
+    [
+      "...........",
+      "...........",
+      "..........."
+    ]
+  ]
+}

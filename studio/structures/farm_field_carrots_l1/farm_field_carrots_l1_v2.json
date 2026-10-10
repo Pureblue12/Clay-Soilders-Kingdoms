@@ -1,0 +1,75 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "farm_field_carrots_l1",
+  "version": 2,
+  "size": [14,3,9],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T03:27:21.843Z",
+    "description": "Farm field: carrots, level 1 of 1: shell and fittings (what soldiers build first). A raised field bed, one level: dirt in two blocks of 4 rows each side of an open trench, oak log border and low leaf hedge with an entrance at the front centre, plank boardwalk and composter in front. Builders place the dirt; farmers till it into farmland and the decoration step adds the trench water and the carrots (builders can place neither water, farmland nor crops). Modules tile side by side and around the farmhouse. A low rabbit-proof hedge instead of the fence, and a hand cart of carrots beside the bed. Decoration step adds: crop, farmland, item, water.",
+    "changes": "Its own look now: a low rabbit-proof hedge instead of the fence and a hand cart of carrots, plus a step up at the entrance so soldiers can walk in.",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "revise1",
+      "tier1",
+      "outer",
+      "farm"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:cobblestone",
+    "B": "minecraft:composter",
+    "C": "minecraft:dirt",
+    "D": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "E": "minecraft:oak_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "F": "minecraft:oak_fence[east=false,north=false,south=false,waterlogged=false,west=true]",
+    "G": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "H": "minecraft:oak_log[axis=x]",
+    "I": "minecraft:oak_log[axis=z]",
+    "J": "minecraft:oak_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]",
+    "K": "minecraft:oak_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]",
+    "L": "minecraft:spruce_slab[type=bottom,waterlogged=false]",
+    "M": "minecraft:spruce_slab[type=top,waterlogged=false]",
+    "N": "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]"
+  },
+  "layers": [
+    [
+      "BLLLLNLLLL#...",
+      "HHHHHAHHHHH...",
+      "ICCCC.CCCCI...",
+      "ICCCC.CCCCIKMJ",
+      "ICCCC.CCCCI.M.",
+      "ICCCC.CCCCIKMJ",
+      "ICCCC.CCCCIF.E",
+      "ICCCC.CCCCI...",
+      "HHHHHAHHHHH..."
+    ],
+    [
+      "..............",
+      "GGGGG.GGGGG...",
+      "G.........G...",
+      "G.........G.#.",
+      "G.........G.B.",
+      "G.........G...",
+      "G.........G...",
+      "G.........G...",
+      "GGGGGGGGGGG..."
+    ],
+    [
+      "..............",
+      "D.........D...",
+      "..............",
+      "..............",
+      "..............",
+      "..............",
+      "..............",
+      "..............",
+      ".............."
+    ]
+  ]
+}
