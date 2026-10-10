@@ -4,14 +4,14 @@
   "version": 5,
   "size": [31,20,33],
   "meta": {
-    "status": "pending",
-    "notes": "much better just needs some polsihing add some small details and its golden",
+    "status": "rejected",
+    "notes": "much better just needs some polsihing and add some small details and its golden",
     "author": "claude",
     "created": "2026-10-10T04:30:49.670Z",
     "description": "Keep, level 2 of 3: L1 plus flourish 2. A castle that grows round the approved sample keep, symmetric on one centre line, every part reachable on foot by soldiers. Level 1: the keep, 11 x 11 on a cobblestone apron, battlements on corbels, four corner turrets under steep dark oak cones, a guard hall, the king's chamber and stairs (no ladders) to the roof. Level 2: the royal court, a 9 x 13 great hall behind the keep (side doors, two hearths, long tables, the throne on a dais) and a walled forecourt with a gate, side gateways and posterns. Level 3: the castle, a curtain with a wall walk round the whole site, four corner towers with winding stairs to the walks and a lookout, a gatehouse with a guard chamber and roof, storehouse and guardroom in the forecourt, a well and a forge, and two side wards: flower garden and kitchen (west), training yard and armory (east). 20 tall: needs scaffold in game. Not yet builder-tested: candle, cracked_stone_bricks, dark_oak_fence, dark_oak_slab, gold_block, mossy_stone_bricks, red_banner, red_wall_banner.",
     "changes": "For your note that some areas were unreachable and did not fit: every place can now be walked to from the gate (checked block by block). The side gardens have gateways from the forecourt and the great hall has side doors into them, so the hall is no longer reachable only through the keep. The curtain has a real wall walk on a corbelled ledge; the corner towers are hollow with a door at the bottom, a winding stair to both wall walks and a lookout at the top; the gatehouse has a guard chamber over the gate, entered from the wall walks, with a stair to its battlements. Rethought what each space is for: kitchen and armory now sit by the hall's side doors, storehouse and guardroom (bunks) by the gate next to the well and forge, a flower garden beside the keep on the west and a training yard with straw targets on the east. Turret and tower roofs are now steep cones (one overhang ring, narrowing upward, slab and flagpole), not stepped caps.",
     "parent": 4,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T04:36:52.618Z",
     "tags": [
       "revise1",
       "tier4",
