@@ -4,12 +4,12 @@
   "version": 1,
   "size": [5,3,5],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "road is above ground now at the same level as posts.",
     "author": "generator",
     "created": "2026-10-10T01:37:40.078Z",
     "description": "Imported from road_l3.nbt",
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T03:16:05.289Z",
     "parent": null
   },
   "palette": {
