@@ -1,0 +1,59 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "keep_l1",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:25:55.500Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 75,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "variety",
+            "message": "stone_bricks is 58 % of the build: break it up with a second material."
+          }
+        ],
+        "stats": {
+          "blocks": 1704,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.20422535211267606,
+          "types": 19,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.5821596244131455
+          },
+          "height": 16,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "summary": "Keep level 1: a big four-towered stone keep with a gate, windows and a throne hall; grand, though the tower tops look like open boxes.",
+        "problems": [
+          "Level 3 only adds vines over level 2: give it its own feature, such as timber hoardings (wooden galleries) on the towers or steep dark conical roofs on two of them.",
+          "It is grey stone brick almost everywhere (56 to 58 %): a dark oak timber element (hoarding, gate canopy, roof) would tie it to the rest of the kingdom's look.",
+          "On level 1 the tower tops are open boxes; even a simple slab cap or a stair parapet would make them look finished."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

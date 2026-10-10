@@ -125,6 +125,27 @@
     "round": 1,
     "checkedAt": "2026-10-10T03:21:05.213Z"
   },
+  "keep_l1": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 75,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:25:55.500Z"
+  },
+  "keep_l2": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 83,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:25:56.046Z"
+  },
+  "keep_l3": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 86,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:25:56.552Z"
+  },
   "lumber_camp_l1": {
     "version": 2,
     "verdict": "revise",
