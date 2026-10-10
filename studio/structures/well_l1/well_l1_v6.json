@@ -1,0 +1,141 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "well_l1",
+  "version": 6,
+  "size": [5,7,5],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T05:26:59.995Z",
+    "description": "Well, level 1 of 3: shell and fittings (what soldiers build first). Round stone well sunk into the ground: a one-course round cobblestone rim round a pool, dark oak posts and windlass with a chain; L2 adds the spruce gable roof, crank, pulley and a lantern, L3 a water tub, a flower pot, moss and lanterns. 5 x 5 x 7 (one layer in the ground), water by the decoration step. Decoration step adds: water.",
+    "changes": "For your note: the rim is now ONE block tall. The well is sunk into the ground (the water is level with the grass, inside a stone lining) and only one course of stone stands above it. Rounder: the corner stairs are gone (grass there now), the rim is a thin round ring and the pool inside is bigger. Posts, roof, windlass and the per-level extras stay; poppies by the rim on level 1, a flower pot on the barrel on level 3.",
+    "parent": 5,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier1",
+      "core",
+      "water"
+    ],
+    "groundLayer": 0,
+    "decorationBlocks": [
+      [
+        2,
+        0,
+        1,
+        "water"
+      ],
+      [
+        1,
+        0,
+        2,
+        "water"
+      ],
+      [
+        2,
+        0,
+        2,
+        "water"
+      ],
+      [
+        3,
+        0,
+        2,
+        "water"
+      ],
+      [
+        2,
+        0,
+        3,
+        "water"
+      ],
+      [
+        1,
+        0,
+        1,
+        "water"
+      ],
+      [
+        3,
+        0,
+        1,
+        "water"
+      ],
+      [
+        3,
+        0,
+        3,
+        "water"
+      ],
+      [
+        1,
+        0,
+        3,
+        "water"
+      ]
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:chain[axis=y]",
+    "B": "minecraft:cobblestone",
+    "C": "minecraft:dark_oak_log[axis=x]",
+    "D": "minecraft:dark_oak_log[axis=y]",
+    "E": "minecraft:mossy_cobblestone",
+    "F": "minecraft:poppy",
+    "G": "minecraft:water[level=0]"
+  },
+  "layers": [
+    [
+      ".BBE.",
+      "BGGGE",
+      "BGGGB",
+      "EGGGB",
+      ".EBB."
+    ],
+    [
+      "FBBB#",
+      "E...B",
+      "D.A.D",
+      "B...E",
+      ".BBBF"
+    ],
+    [
+      ".....",
+      ".....",
+      "D.A.D",
+      ".....",
+      "....."
+    ],
+    [
+      ".....",
+      ".....",
+      "DCCCD",
+      ".....",
+      "....."
+    ],
+    [
+      ".....",
+      ".....",
+      ".....",
+      ".....",
+      "....."
+    ],
+    [
+      ".....",
+      ".....",
+      ".....",
+      ".....",
+      "....."
+    ],
+    [
+      ".....",
+      ".....",
+      ".....",
+      ".....",
+      "....."
+    ]
+  ]
+}

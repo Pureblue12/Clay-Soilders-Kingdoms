@@ -26,7 +26,7 @@ from make_batch1_structures import Structure
 from batch3.ws_kit import P, STAIR, TOP, SLAB_TOP, OPEN, SHELF, HANG, STAND, connect
 from batch5.mil_kit import masonry, cone, vine
 
-W, D, H = 15, 10, 18
+W, D, H = 15, 10, 20
 TOWERS = ((1, 5), (9, 13))          # x ranges; both z 1..5
 TZ0, TZ1 = 1, 5
 GX0, GX1 = 6, 8                     # passage
@@ -35,7 +35,7 @@ WALK = 5                            # stand height of the wall walk (stone_wall.
 WROW = 4                            # the walk row through the towers and the gate room
 TOP_FLOOR = 8                       # tower top floor (stand 9)
 TERRACE = 7                         # gate room roof (stand 8)
-SLITS = [(3, 2, 1), (11, 2, 1), (3, 6, 1), (11, 6, 1), (1, 6, 2), (13, 6, 2), (7, 5, CZ0), (5, 2, 3), (9, 2, 3),
+SLITS = [(3, 2, 1), (11, 2, 1), (2, 6, 1), (4, 6, 1), (10, 6, 1), (12, 6, 1), (1, 6, 2), (13, 6, 2), (7, 5, CZ0), (5, 2, 3), (9, 2, 3),
          (3, 6, 5), (11, 6, 5), (11, 2, 5)]
 
 
@@ -92,9 +92,10 @@ def gatehouse():
         if y <= 4:
             for x in range(GX0, GX1 + 1):
                 P(s, x, y, CZ1, masonry(x, y, CZ1, 13))
-    for y in (5, 6):                                                 # the gate room's town face: a timber frame
-        P(s, 6, y, CZ1, 'white_terracotta'); P(s, 8, y, CZ1, 'white_terracotta')
-        P(s, 7, y, CZ1, 'white_terracotta' if y == 6 else 'glass_pane')
+    for y in (5, 6):                                                 # the gate room's town face: a timber frame,
+        P(s, 6, y, CZ1, 'white_terracotta' if y == 6 else 'glass_pane')   # two windows either side of a post
+        P(s, 8, y, CZ1, 'white_terracotta' if y == 6 else 'glass_pane')
+        P(s, 7, y, CZ1, 'dark_oak_log', axis='y')
         for x in (lx1, rx0):
             for z in (6, CZ1):
                 P(s, x, y, z, 'dark_oak_log', axis='y')
@@ -147,6 +148,12 @@ def gatehouse():
         out = x0 - 1 if x0 == lx0 else x1 + 1
         for z in (TZ0, TZ0 + 1):
             P(s, out, 0, z, 'cobblestone_stairs', facing='east' if x0 == lx0 else 'west', **STAIR)
+        for x in range(x0, x1 + 1):                                  # corbel table under the fighting tops
+            P(s, x, TOP_FLOOR, TZ0 - 1, 'stone_brick_stairs', facing='south', **TOP)
+            if (x0 == lx0 and x < lx1) or (x0 == rx0 and x > rx0):
+                P(s, x, TOP_FLOOR, TZ1 + 1, 'stone_brick_stairs', facing='north', **TOP)
+        for z in range(TZ0, TZ1 + 1):
+            P(s, out, TOP_FLOOR, z, 'stone_brick_stairs', facing='east' if x0 == lx0 else 'west', **TOP)
     for x in range(GX0, GX1 + 1):                                    # steps up into the passage
         P(s, x, 0, 0, 'stone_brick_stairs', facing='south', **STAIR)
         P(s, x, 0, CZ1 + 1, 'stone_brick_stairs', facing='north', **STAIR)
@@ -197,8 +204,8 @@ def gatehouse():
     P(s, 7, 3, 6, 'lantern', **HANG)                                 # a lantern under the gate room
     P(s, 7, 6, 5, 'lantern', **HANG)                                 # and in the gate room
     for x in (3, 11):                                                # banners on the tower fronts
-        P(s, x, 8, 0, 'red_wall_banner', facing='north')
-        s.decorate(x, 8, 0, 'banner_pattern', banner='red_wall_banner', note='kingdom colours')
+        P(s, x, 7, 0, 'red_wall_banner', facing='north')
+        s.decorate(x, 7, 0, 'banner_pattern', banner='red_wall_banner', note='kingdom colours')
     P(s, 7, TERRACE + 1, 1, 'red_wall_banner', facing='north')       # the banner over the arch, on the parapet
     s.decorate(7, TERRACE + 1, 1, 'banner_pattern', banner='red_wall_banner', note='kingdom arms, over the gate')
     for x in (lx1, rx0):                                             # lamp posts on the town side
@@ -215,6 +222,8 @@ def gatehouse():
     P(s, 10, 1, 4, 'brown_carpet'); P(s, 11, 1, 4, 'brown_carpet')
     P(s, 10, 3, 2, 'spruce_trapdoor', facing='south', **SHELF)       # a shelf over the table
     P(s, 3, 5, 4, 'brown_carpet'); P(s, 11, 5, 4, 'brown_carpet')
+    for x in (lx1, rx0):                                             # shutters beside the gate room windows
+        P(s, x, 5, CZ1 + 1, 'spruce_trapdoor', facing='south', **OPEN)
     # town side: a bench and the guards' supplies by the steps
     P(s, 2, 0, 7, 'spruce_stairs', facing='north', **STAIR)
     P(s, 3, 0, 7, 'spruce_stairs', facing='north', **STAIR)
@@ -226,7 +235,7 @@ def gatehouse():
     # ------------------------------------------------------------------ L3: the crowned gate
     s.at(3, 'flourish3')
     for (x0, x1) in TOWERS:                                          # steep cones over the fighting tops, flags
-        top = cone(s, x0, TZ0, x1, TZ1, TOP_FLOOR + 3)
+        top = cone(s, x0, TZ0, x1, TZ1, TOP_FLOOR + 3, stairs='deepslate_tile_stairs', body='deepslate_tiles')
         cx = (x0 + x1) // 2
         P(s, cx, top, 3, 'spruce_fence')
         P(s, cx, top + 1, 3, 'red_banner', rotation='8')
@@ -252,7 +261,7 @@ def gatehouse():
 
 STRUCTURES = [dict(path='gatehouse', name='Gatehouse', tier=5, zone='wall', role='gate', group='gatehouse',
                    terrain='ground_level', door=None, make=gatehouse, max_height=H, changes='First version.',
-                   description='Needs scaffolding: 11 tall (L3 cones: 18). Twin-tower stone gate for the batch-3 '
+                   description='Needs scaffolding: 11 tall (L3 cones: 20). Twin-tower stone gate for the batch-3 '
                                'stone wall line (wall face z 3, walk z 4..5 at stand 5, joining at x 1 and x 13): '
                                'arched passage, gate room over it, crenellated tops; stairs (no ladders) from the '
                                'passage up to the wall walk, the gate room and both fighting tops.')]

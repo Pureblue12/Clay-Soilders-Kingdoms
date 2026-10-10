@@ -88,7 +88,10 @@ def cone(s, cx, cz, y, r, fence, slab='dark_oak_slab', tip=2, add=False):
         yy += 2
     for i in range(tip):
         put(cx, yy + i, cz, 'dark_oak_planks')
-    put(cx, yy + tip, cz, slab, type='bottom', waterlogged='false')
+    if slab:
+        put(cx, yy + tip, cz, slab, type='bottom', waterlogged='false')
+    else:
+        put(cx, yy + tip, cz, 'dark_oak_planks')                     # a plank tip (no extra block state)
     put(cx, yy + tip + 1, cz, fence)
     return yy + tip + 1
 
@@ -197,7 +200,7 @@ def keep():
                     s.put(x, DECK, z, 'stone_brick_stairs', facing=f, **TOP)
                 for y in range(DECK + 1, DECK + 4):
                     s.put(x, y, z, 'cobblestone' if (x != tx and z != tz and y % 2 == 0) else sb)
-        assert cone(s, tx, tz, DECK + 3, 2, 'spruce_fence', 'spruce_slab') == TURRET_FLAG   # a steep dark oak cone
+        assert cone(s, tx, tz, DECK + 3, 2, 'spruce_fence', None) == TURRET_FLAG   # a steep dark oak cone
     # battered plinth: cobblestone stairs leaning on the walls (not at the doors)
     for x in range(K0 - 1, K1 + 2):
         for z in range(KZ0 - 1, KZ1 + 2):
@@ -274,20 +277,14 @@ def keep():
     for z in (14, 16):
         s.put(K0, DECK + 1, z, 'barrel', facing='up', open='false')
     s.put(K0, DECK + 1, 15, 'chest', facing='east', type='single', waterlogged='false')
-    for x in (K1 - 2, K1):
-        for z in (11, 12, 13):
-            s.put(x, DECK + 1, z, 'spruce_fence')
-    s.put(K1 - 2, DECK + 2, 13, 'lantern', hanging='false', waterlogged='false')
+    for z in (11, 13):                                               # two lantern posts by the stair head
+        s.put(K1 - 2, DECK + 1, z, 'spruce_fence')
+        s.put(K1 - 2, DECK + 2, z, 'lantern', hanging='false', waterlogged='false')
     # king's chamber: a wardrobe of barrels, a night stand with a lantern
     for z in (10, 11):
         s.put(K0 + 1, UPPER + 1, z, 'barrel', facing='up', open='false')
     s.put(14, UPPER + 1, 18, 'spruce_slab', type='top', waterlogged='false')
     s.put(14, UPPER + 2, 18, 'lantern', hanging='false', waterlogged='false')
-    # guard hall: a spear rack (fence posts under a trapdoor shelf) by the front door
-    for x in (12, 18):
-        s.put(x, 1, KZ0 + 1, 'spruce_fence')
-        s.put(x, 2, KZ0 + 1, 'spruce_trapdoor', facing='south', half='top', open='false', powered='false',
-              waterlogged='false')
 
     # ================================================================ level 2: the royal court
     s.at(2, 'shell2')
@@ -436,7 +433,7 @@ def keep():
         s.put(x, 3, 7, 'lantern', hanging='false', waterlogged='false')
 
     # ---- level 2 polish (v6)
-    flowers = ['poppy', 'cornflower', 'oxeye_daisy', 'allium', 'azure_bluet']
+    flowers = ['poppy', 'oxeye_daisy']
     for x in (CX - 3, CX + 3):                                       # flowers at the foot of the lantern posts
         for z in (6, 7):
             s.put(x, 0, z, 'coarse_dirt')
@@ -448,7 +445,7 @@ def keep():
     for x, f in ((HX0 - 1, 'east'), (HX1 + 1, 'west')):
         s.put(x, 4, SIDE_DOOR, 'stone_brick_stairs', facing=f, **TOP)   # a lantern on a bracket over each side door
         s.put(x, 3, SIDE_DOOR, 'lantern', hanging='true', waterlogged='false')
-        for z in (25, 26, 28, 29, 30):                               # flower beds under the hall windows, between
+        for z in (25, 26, 28):                                       # flower beds under the hall windows, between
             s.put(x, 0, z, 'coarse_dirt')                            # the chimney and the buttresses
             s.put(x, 1, z, flowers[(z * 3 + (x > CX)) % len(flowers)])
     for x in (14, 16):                                               # and either side of the back buttresses
@@ -656,10 +653,10 @@ def keep():
     s.add(26, 1, 14, 'barrel', facing='up', open='false')             # practice weapons
     # back wards: firewood for the kitchen (west), hay for the yard (east)
     for x, z in ((4, 25), (4, 26), (5, 25), (5, 26)):
-        s.add(x, 1, z, 'oak_log', axis='z')
+        s.add(x, 1, z, 'dark_oak_log', axis='z')
         s.add(W - 1 - x, 1, z, 'hay_block', axis='y')
     for z in (25, 26):
-        s.add(4, 2, z, 'oak_log', axis='z')
+        s.add(4, 2, z, 'dark_oak_log', axis='z')
         s.add(W - 1 - 4, 2, z, 'hay_block', axis='y')
     # lean-to fittings (the cell inside each doorway stays free)
     (XW, dw), (XE, de) = fronts
@@ -691,6 +688,93 @@ def keep():
         s.add(x, 4, WALL_Z - 1, 'red_wall_banner', facing='north')
     for x in (GATE[0] - 1, GATE[1] + 1):
         s.add(x, 2, 0, 'wall_torch', facing='north')
+
+    # ---- level 3 polish (v6)
+    def in_curtain_line(x, z):
+        return (x, z) in curtain_set or in_tower(x, z) or in_gatehouse(x, z)
+    curtain_set = set(curtain)
+    # buttresses on the long outer faces of the curtain (and one on each front and back stretch), capped with a stair
+    butts = [(WALL_X0 - 1, z, 'east') for z in (9, 14, 19, 24)] + [(WALL_X1 + 1, z, 'west') for z in (9, 14, 19, 24)]
+    butts += [(x, WALL_Z - 1, 'south') for x in (9, W - 1 - 9)] + [(x, BACK_Z + 1, 'north') for x in (8, W - 1 - 8)]
+    for x, z, f in butts:
+        s.add(x, 0, z, 'cobblestone')
+        s.add(x, 1, z, base_mix(x, 1, z))
+        for y in (2, 3):
+            s.add(x, y, z, brick_mix(x, y, z))
+        s.add(x, 4, z, 'stone_brick_stairs', facing=f, **BOT)
+    # a string course of upside-down stairs at y 5 round the whole outside of the curtain, towers and gatehouse
+    # (the cells of the open ground outside, next to their walls)
+    from collections import deque
+    seen, todo = set(), deque()
+    for x in range(W):
+        for z in range(D):
+            if (x in (0, W - 1) or z in (0, D - 1)) and (x, 5, z) not in s.blocks:
+                seen.add((x, z)); todo.append((x, z))
+    while todo:
+        x, z = todo.popleft()
+        for dx, dz in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            n = (x + dx, z + dz)
+            if 0 <= n[0] < W and 0 <= n[1] < D and n not in seen and (n[0], 5, n[1]) not in s.blocks:
+                seen.add(n); todo.append(n)
+    assert not any(6 <= x <= 24 and 6 <= z <= 26 for x, z in seen), 'string course flood leaked inside'
+    for x, z in sorted(seen):
+        for f, (dx, dz) in (('south', (0, 1)), ('north', (0, -1)), ('east', (1, 0)), ('west', (-1, 0))):
+            if in_curtain_line(x + dx, z + dz) and (x + dx, 5, z + dz) in s.blocks:
+                s.add(x, 5, z, 'stone_brick_stairs', facing=f, **TOP)
+                break
+    # red banners on the corner towers' outer faces, under the corbels; vines on their side faces
+    for cx, cz in corners:
+        sx, sz = (1 if cx < CX else -1), (1 if cz < D // 2 else -1)
+        if sz > 0:
+            s.add(cx, 9, cz - 3, 'red_wall_banner', facing='north')
+        s.add(cx - 3 * sx, 9, cz, 'red_wall_banner', facing='west' if sx > 0 else 'east')
+        vx = cx - 3 * sx
+        for dz in (-2, -1, 1, 2):
+            n = noise(vx, 0, cz + dz, 11)
+            if n < 0.6:
+                for y in range(9, 9 - (1 + int(n * 6)), -1):          # hanging 1..4 down from under the corbels
+                    s.add(vx, y, cz + dz, 'vine', east=str(sx > 0).lower(), west=str(sx < 0).lower(),
+                          north='false', south='false', up='false')
+    for vx, sx in ((WALL_X0 - 1, 1), (WALL_X1 + 1, -1)):            # and low on the long curtain faces
+        for z in range(7, 26):
+            n = noise(vx, 1, z, 13)
+            if n < 0.3 and (vx, 1, z) not in s.blocks:
+                for y in range(4, 4 - (1 + int(n * 10)), -1):
+                    s.add(vx, y, z, 'vine', east=str(sx > 0).lower(), west=str(sx < 0).lower(),
+                          north='false', south='false', up='false')
+    # lanterns: on the merlons along the side walks, under the arch of the gate, in every tower's lookout and on the
+    # ward side of the wall walk's ledge
+    for z in (9, 15, 21):
+        for x in (WALL_X0, WALL_X1):
+            s.add(x, 7, z, 'lantern', hanging='false', waterlogged='false')
+    for x in (7, W - 1 - 7):
+        s.add(x, 7, WALL_Z, 'lantern', hanging='false', waterlogged='false')
+    s.add(CX, 3, 2, 'lantern', hanging='true', waterlogged='false')
+    for cx, cz in corners:
+        sx, sz = (1 if cx < CX else -1), (1 if cz < D // 2 else -1)
+        dx, dz = ring8[6]
+        s.add(cx + dx * sx, 11, cz + dz * sz, 'lantern', hanging='true', waterlogged='false')
+    for z in (10, 14, 18):
+        for x in (WALL_X0 + 1, WALL_X1 - 1):
+            s.add(x, 3, z, 'lantern', hanging='true', waterlogged='false')
+    # crates by the well and the forge, stores and a chopping block in the back wards
+    for x in (9, 10, W - 1 - 9, W - 1 - 10):
+        s.add(x, 1, 4, 'barrel', facing='up', open='false')
+    for x in (10, W - 1 - 10):
+        s.add(x, 2, 4, 'barrel', facing='up', open='false')
+    for x in (4, 5, W - 1 - 4, W - 1 - 5):
+        s.add(x, 1, 24, 'barrel', facing='up', open='false')
+    s.add(6, 1, 25, 'dark_oak_log', axis='y')
+    s.add(W - 1 - 6, 1, 25, 'hay_block', axis='y')
+    # lean-to windows: shutters, and a flower box under the storehouse and guardroom windows
+    for X, door in fronts + backs:
+        f = 'east' if X(6) < CX else 'west'
+        for dz in (0, 2):
+            s.add(X(7), 2, door + dz, 'spruce_trapdoor', facing=f, half='bottom', open='true', powered='false',
+                  waterlogged='false')
+    for X, door in fronts:
+        s.add(X(7), 1, door + 1, 'coarse_dirt')
+        s.add(X(7), 2, door + 1, 'poppy')
     return connect(s)
 
 

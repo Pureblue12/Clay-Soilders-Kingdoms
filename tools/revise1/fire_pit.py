@@ -18,44 +18,50 @@ def clear_of_fire(x, z, c):
 
 
 def young_tree(s):
-    """Level 2: a young oak at the back left: a trunk 4 high with a tuft of leaves at its top."""
+    """Level 2: a young oak at the back left, between the left and back benches: a trunk 4 high with a loose tuft of
+    leaves round its top (it grows into level 3's shade tree)."""
     tx, tz = TRUNK
     for y in range(0, 4):
         put_id(s, tx, y, tz, 'oak_log', axis='y')
     for x, y, z in ((tx, 4, tz), (tx - 1, 4, tz), (tx, 4, tz + 1), (tx - 1, 3, tz), (tx, 3, tz + 1),
-                    (tx + 1, 4, tz + 1), (tx - 1, 4, tz + 1)):
+                    (tx + 1, 4, tz + 1), (tx, 5, tz), (tx - 1, 3, tz + 1)):
         put_id(s, x, y, z, 'oak_leaves', **LEAVES)
 
 
 def shade_tree(s, c):
-    """Level 3: the oak has grown: the trunk bends forward out of the young tree's tuft, splits into a branch over the
-    left bench and one over the back bench, and carries a broad, ragged crown (y 5 to 7) that shades both benches but
-    leaves the fire ring open. A few leaves hang under the crown's edge; a lantern hangs from each branch."""
+    """Level 3: the oak has grown. The trunk bends forward out of the young tree's tuft and rises to 6; one branch
+    reaches forward over the left bench, one right over the back bench. The crown is three clumps (over each branch
+    tip and over the trunk), not one ball, with leaves hanging under their edges; the fire ring stays open to the sky.
+    A lantern hangs from each branch, over the benches."""
     tx, tz = TRUNK
     put_id(s, tx + 1, 4, tz - 1, 'oak_wood', axis='y')            # the bend: bark all round, no sawn ends
-    put_id(s, tx + 1, 5, tz - 1, 'oak_log', axis='y')
-    put_id(s, tx + 1, 6, tz - 1, 'oak_log', axis='y')
-    for x, z, axis in ((tx, tz - 2, 'z'), (tx, tz - 3, 'z')):     # branch forward over the left bench
-        put_id(s, x, 5, z, 'oak_log', axis=axis)
-    for x, z in ((tx + 2, tz), (tx + 3, tz)):                      # branch right over the back bench
-        put_id(s, x, 5, z, 'oak_log', axis='x')
-    put_id(s, tx, 5, tz - 1, 'oak_wood', axis='y')                # joints where the branches leave the trunk
-    put_id(s, tx + 2, 5, tz - 1, 'oak_wood', axis='y')
-    cx, cz = tx + 1.2, tz - 1.4                                    # the crown's middle, over the gap between benches
-    for y, r in ((4, 3.4), (5, 3.3), (6, 3.0), (7, 1.9)):
-        for x in range(s.size[0]):
-            for z in range(s.size[2]):
-                if (x, y, z) in s.blocks or not clear_of_fire(x, z, c):
-                    continue
-                dist = math.hypot(x - cx, (z - cz) * 0.9)
-                if y == 4:                                         # leaves hanging under the edge, not on the seats
-                    if not (2.2 < dist <= r and noise(x, y, z, 11) < 0.35):
-                        continue
-                elif dist > r or (dist > r - 1.2 and noise(x, y, z, 12) < 0.4):
-                    continue
-                put_id(s, x, y, z, 'oak_leaves', **LEAVES)
-    s.put(tx, 4, tz - 3, 'lantern', hanging='true', waterlogged='false')       # lanterns hanging from the branches
+    for y in (5, 6):
+        put_id(s, tx + 1, y, tz - 1, 'oak_log', axis='y')
+    put_id(s, tx, 5, tz - 1, 'oak_wood', axis='y')                # branch forward over the left bench
+    put_id(s, tx, 5, tz - 2, 'oak_log', axis='z')
+    put_id(s, tx, 5, tz - 3, 'oak_wood', axis='y')                # its tip (bark, the lantern hangs from it)
+    put_id(s, tx + 2, 5, tz, 'oak_wood', axis='y')                # branch right over the back bench
+    put_id(s, tx + 3, 5, tz, 'oak_wood', axis='y')                # its tip
+    s.put(tx, 4, tz - 3, 'lantern', hanging='true', waterlogged='false')
     s.put(tx + 3, 4, tz, 'lantern', hanging='true', waterlogged='false')
+    # the clumps: (centre x, centre z, lowest y, radius per layer from the lowest), ragged by noise at the edge
+    clumps = ((tx - 0.1, tz - 3.2, 5, (1.9, 1.5)),                 # over the left bench
+              (tx + 3.3, tz + 0.3, 5, (1.9, 1.4)),                 # over the back bench
+              (tx + 1.0, tz - 0.8, 6, (2.6, 1.7)))                 # over the trunk, the top
+    cells = {}
+    for cx, cz, y0, radii in clumps:
+        for i, r in enumerate(radii):
+            y = y0 + i
+            for x in range(s.size[0]):
+                for z in range(s.size[2]):
+                    dist = math.hypot(x - cx, z - cz)
+                    if dist <= r and not (dist > r - 0.9 and noise(x, y, z, 12) < 0.4):
+                        cells[(x, y, z)] = True
+                    elif y == y0 and r < dist <= r + 0.8 and noise(x, 4, z, 11) < 0.3:
+                        cells[(x, 4, z)] = True                   # a leaf hanging under the clump's edge
+    for (x, y, z) in sorted(cells):
+        if (x, y, z) not in s.blocks and clear_of_fire(x, z, c):
+            put_id(s, x, y, z, 'oak_leaves', **LEAVES)
 
 
 def fire_pit(size=9):
@@ -64,8 +70,11 @@ def fire_pit(size=9):
     cobblestone and mossy cobblestone at the sides) with a cooking spit (two spruce fence posts, a chain bar, a chain
     hook), three spruce log benches, a spruce woodpile, a chopping stump, a barrel and a chest, a joined stepping-stone
     path in from the front, poppies and leaf bushes round the edge and a lantern post.
-    Level 2: a cauldron pot, a second lantern post, cushions on the benches, a potted flower, grass and ferns.
-    Level 3: a firewood shelter over the woodpile (dark oak posts and slab roof) with a lantern hanging under it."""
+    Level 2: a cauldron pot, a second lantern post, cushions on the benches, a potted flower, grass and ferns, and a
+    young oak between the left and back benches.
+    Level 3: the oak grown into a hand-built shade tree (a bent trunk, a branch over the left bench and one over the
+    back bench, a crown of three clumps, lanterns hanging from the branches) that shades both benches and never covers
+    the fire ring; a firewood shelter over the woodpile (dark oak posts and slab roof) with a lantern under it."""
     s = Structure('fire_pit', (size, 8, size))
     c = size // 2                                                   # 4
     s.at(1, 'shell')
@@ -137,7 +146,12 @@ STRUCTURES = [dict(path='fire_pit', name='Fire pit', tier=1, zone='inner', role=
                    terrain='flexible', door=None, make=fire_pit,
                    description='An unlit campfire (it never burns) in a stone ring with a cooking spit, three spruce '
                                'log benches, a woodpile, a chopping stump, supplies, poppies and a lantern post; level 2 '
-                               'a pot, a second lantern, cushions and plants; level 3 a dark oak firewood shelter with a '
-                               'hanging lantern.',
-                   changes='The lone stepping stones are now one joined stone path in from the front with a wider '
-                           'mouth, and leaf bushes and more poppies grow round the edge.')]
+                               'a pot, a second lantern, cushions, plants and a young oak; level 3 the oak grown into a '
+                               'shade tree over the benches (lanterns hang from its branches) and a dark oak firewood '
+                               'shelter.',
+                   changes='For your note (custom shade tree): a hand-built oak now grows between the left and the '
+                           'back bench. Level 2 has it as a young tree (a trunk with a tuft of leaves); on level 3 it '
+                           'has grown: the trunk bends forward, one branch reaches over the left bench and one over '
+                           'the back bench, and the crown is three ragged clumps (not one ball) that overhang and '
+                           'shade both benches, with a lantern hanging from each branch. The fire ring stays open to '
+                           'the sky (no leaves over the campfire, which stays unlit). Level 1 is unchanged.')]
