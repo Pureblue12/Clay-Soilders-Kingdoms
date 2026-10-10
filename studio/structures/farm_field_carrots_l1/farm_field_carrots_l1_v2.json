@@ -4,14 +4,14 @@
   "version": 2,
   "size": [14,3,9],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T03:27:21.843Z",
     "description": "Farm field: carrots, level 1 of 1: shell and fittings (what soldiers build first). A raised field bed, one level: dirt in two blocks of 4 rows each side of an open trench, oak log border and low leaf hedge with an entrance at the front centre, plank boardwalk and composter in front. Builders place the dirt; farmers till it into farmland and the decoration step adds the trench water and the carrots (builders can place neither water, farmland nor crops). Modules tile side by side and around the farmhouse. A low rabbit-proof hedge instead of the fence, and a hand cart of carrots beside the bed. Decoration step adds: crop, farmland, item, water.",
     "changes": "Its own look now: a low rabbit-proof hedge instead of the fence and a hand cart of carrots, plus a step up at the entrance so soldiers can walk in.",
     "parent": 1,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T03:44:42.847Z",
     "tags": [
       "revise1",
       "tier1",
