@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Structure Studio</title>
+<link rel="stylesheet" href="/src/ui/style.css" />
+</head>
+<body>
+<div id="app">
+  <aside id="library">
+    <header>
+      <h1>Structure Studio</h1>
+      <div class="filters" role="tablist">
+        <button data-filter="all" class="on">All</button>
+        <button data-filter="pending">Pending</button>
+        <button data-filter="approved">Approved</button>
+        <button data-filter="rejected">Rejected</button>
+      </div>
+      <input id="search" type="search" placeholder="Search structures" />
+    </header>
+    <ul id="list"></ul>
+  </aside>
+
+  <main id="stage">
+    <div id="asset-banner" hidden></div>
+    <div id="views">
+      <div class="view" id="view-a"><canvas></canvas><div class="view-label"></div></div>
+      <div class="view" id="view-b" hidden><canvas></canvas><div class="view-label"></div></div>
+    </div>
+    <div id="toolbar">
+      <div class="group" id="presets" title="Camera (keys 1-7)"></div>
+      <div class="group">
+        <button id="fly" title="Free-fly: WASD, Space/Shift, mouse; Esc to stop (key F)">Fly</button>
+        <button id="markers" class="toggle" title="Player (1.8) and clay soldier (0.5) for scale">Scale</button>
+      </div>
+      <div class="group">
+        <label>Ground
+          <select id="terrain">
+            <option value="flat">Superflat</option>
+            <option value="hills">Rolling hills</option>
+            <option value="slope">Steep slope</option>
+            <option value="none">None</option>
+          </select>
+        </label>
+        <select id="terrain-size" title="Test world size">
+          <option value="64">64</option>
+          <option value="96" selected>96</option>
+          <option value="128">128</option>
+          <option value="256">256</option>
+        </select>
+        <button id="trees" class="toggle" title="Trees on the test world">Trees</button>
+        <button id="reseed" title="New hills">↻</button>
+      </div>
+    </div>
+    <div id="layerbar">
+      <div class="group">
+        <button data-layer="all" class="on">All layers</button>
+        <button data-layer="upto">Up to</button>
+        <button data-layer="single">Single</button>
+        <button id="topdown" title="Floor plan: up to the chosen layer, from above">Top-down</button>
+      </div>
+      <input id="layer-y" type="range" min="0" max="0" value="0" disabled />
+      <span id="layer-label">y —</span>
+    </div>
+  </main>
+
+  <aside id="review">
+    <div id="empty-review">Pick a structure on the left.</div>
+    <div id="review-body" hidden>
+      <h2 id="r-title"></h2>
+      <p id="r-meta" class="muted"></p>
+      <p id="r-desc"></p>
+      <div id="r-status" class="status-big"></div>
+      <div class="decide">
+        <button id="approve" class="approve">✔ Approve</button>
+        <button id="reject" class="reject">✖ Reject</button>
+      </div>
+      <label class="notes-label" for="notes">Notes for this version</label>
+      <textarea id="notes" rows="4" placeholder="What's good, what to change…"></textarea>
+      <div class="row">
+        <button id="save-notes">Save notes</button>
+        <button id="set-pending" title="Back to pending">Mark pending</button>
+      </div>
+
+      <h3>Versions</h3>
+      <ul id="versions"></ul>
+
+      <h3>Compare</h3>
+      <div class="row compare-row">
+        <select id="compare-with"></select>
+        <button id="compare" class="toggle">Side by side</button>
+      </div>
+
+      <h3>Blocks</h3>
+      <ul id="blocks" class="blocks"></ul>
+    </div>
+  </aside>
+</div>
+<div id="toast" hidden></div>
+<script type="module" src="/src/ui/app.ts"></script>
+</body>
+</html>

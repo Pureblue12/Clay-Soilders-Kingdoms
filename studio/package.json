@@ -1,0 +1,28 @@
+{
+  "name": "minecraft-structure-studio",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Local browser tool to view, review and approve Minecraft block structures for Clay Soldiers Kingdoms.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "studio": "tsx cli/studio.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test test/*.test.ts"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.21",
+    "@types/three": "0.176.0",
+    "playwright": "1.56.1",
+    "tsx": "4.19.4",
+    "typescript": "5.8.3",
+    "vite": "6.3.5"
+  },
+  "dependencies": {
+    "fflate": "0.8.2",
+    "three": "0.176.0"
+  }
+}

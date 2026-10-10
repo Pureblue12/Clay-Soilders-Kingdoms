@@ -1,0 +1,127 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "house",
+  "version": 1,
+  "size": [7,8,9],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T00:29:51.232Z",
+    "description": "Timber cottage, style A tier 1: cobblestone plinth, oak walls, spruce gable roof. 5 x 7 walls, 3 high.",
+    "tags": [
+      "sample",
+      "housing"
+    ],
+    "reviewedAt": null,
+    "parent": null
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:cobblestone",
+    "=": "minecraft:spruce_planks",
+    "+": "minecraft:spruce_log[axis=y]",
+    "-": "minecraft:oak_door[facing=south,half=lower,hinge=left,open=false]",
+    "*": "minecraft:crafting_table",
+    "@": "minecraft:red_bed[facing=north,part=head]",
+    "%": "minecraft:red_bed[facing=north,part=foot]",
+    "&": "minecraft:chest[facing=west,type=single]",
+    "$": "minecraft:oak_planks",
+    "!": "minecraft:oak_door[facing=south,half=upper,hinge=left,open=false]",
+    "?": "minecraft:glass_pane[east=false,north=true,south=true,west=false]",
+    "~": "minecraft:glass_pane[east=true,north=false,south=false,west=true]",
+    "^": "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight]",
+    ":": "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight]",
+    ";": "minecraft:spruce_slab[type=bottom]"
+  },
+  "layers": [
+    [
+      ".......",
+      ".#####.",
+      ".#===#.",
+      ".#===#.",
+      ".#===#.",
+      ".#===#.",
+      ".#===#.",
+      ".#####.",
+      "......."
+    ],
+    [
+      ".......",
+      ".+#-#+.",
+      ".#..*#.",
+      ".#...#.",
+      ".#...#.",
+      ".#@..#.",
+      ".#%.&#.",
+      ".+###+.",
+      "......."
+    ],
+    [
+      ".......",
+      ".+$!$+.",
+      ".$...$.",
+      ".?...?.",
+      ".$...$.",
+      ".?...?.",
+      ".$...$.",
+      ".+$~$+.",
+      "......."
+    ],
+    [
+      "^.....:",
+      "^+$$$+:",
+      "^$...$:",
+      "^$...$:",
+      "^$...$:",
+      "^$...$:",
+      "^$...$:",
+      "^+$$$+:",
+      "^.....:"
+    ],
+    [
+      ".^...:.",
+      ".^$$$:.",
+      ".^...:.",
+      ".^...:.",
+      ".^...:.",
+      ".^...:.",
+      ".^...:.",
+      ".^$$$:.",
+      ".^...:."
+    ],
+    [
+      "..^.:..",
+      "..^$:..",
+      "..^.:..",
+      "..^.:..",
+      "..^.:..",
+      "..^.:..",
+      "..^.:..",
+      "..^$:..",
+      "..^.:.."
+    ],
+    [
+      "...;...",
+      "...;...",
+      "...;...",
+      "...;...",
+      "...;...",
+      "...;...",
+      "...;...",
+      "...;...",
+      "...;..."
+    ],
+    [
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      "......."
+    ]
+  ]
+}

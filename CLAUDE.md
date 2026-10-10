@@ -308,6 +308,12 @@ gitignored upstream. It is produced by `runData` from the datagen classes in
 but items have missing textures/names and there are no recipes. Re-run `runData`
 whenever you change a datagen provider or add items/blocks/recipes.
 
+## Structure Studio (`studio/`)
+
+A separate Node tool (not part of the Gradle build) to view structures with real Minecraft textures, review them
+(approve / reject, versions, compare) and render screenshots. Run with `cd studio && npm install && npm run dev`.
+Its own guide is `studio/CLAUDE.md`; building rules `studio/STYLE.md`. Only Carlton approves structures there.
+
 ## Code structure
 
 - `common/` — loader-independent code (almost all gameplay; ~320 Java files).
