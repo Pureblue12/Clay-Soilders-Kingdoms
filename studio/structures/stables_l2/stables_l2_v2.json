@@ -4,14 +4,14 @@
   "version": 2,
   "size": [9,8,11],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "Needs gate and more of a diffretienaction from eachtoher in terms of functionalitys would also like to see more decorations at the hgiher levels but other wise on a great start",
     "author": "claude-qc",
     "created": "2026-10-10T03:11:49.065Z",
     "description": "Pens and stables, level 2 of 3: L1 plus flourish 2. Fenced pen (front opening, no gate) before an open-sided log stable with two stalls, a steep spruce gable roof and a hay loft under the ridge; the stable wants level ground. Not yet builder-tested: cauldron. Decoration step adds: water_cauldron.",
     "changes": "Quality check round 2: fences joined, steep spruce stair gable roof with dark oak eaves and ridge, plank gable ends showing the loft hay; level 3 adds bushes, a back-wall flower and a lantern under the front eaves",
     "parent": 1,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T03:15:07.527Z",
     "tags": [
       "batch2",
       "tier2",
