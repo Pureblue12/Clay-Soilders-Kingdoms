@@ -378,25 +378,25 @@
     "checkedAt": "2026-10-10T03:27:35.023Z"
   },
   "stables_l1": {
-    "version": 4,
+    "version": 5,
     "verdict": "pass",
     "score": 83,
     "round": 1,
-    "checkedAt": "2026-10-10T04:13:20.084Z"
+    "checkedAt": "2026-10-10T04:15:54.267Z"
   },
   "stables_l2": {
-    "version": 4,
+    "version": 5,
     "verdict": "pass",
-    "score": 94,
+    "score": 97,
     "round": 1,
-    "checkedAt": "2026-10-10T04:13:20.614Z"
+    "checkedAt": "2026-10-10T04:15:54.793Z"
   },
   "stables_l3": {
-    "version": 4,
+    "version": 5,
     "verdict": "pass",
     "score": 100,
     "round": 1,
-    "checkedAt": "2026-10-10T04:13:21.160Z"
+    "checkedAt": "2026-10-10T04:15:55.317Z"
   },
   "visitors_camp_l1": {
     "version": 3,
