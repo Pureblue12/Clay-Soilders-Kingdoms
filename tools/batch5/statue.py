@@ -117,7 +117,7 @@ def statue():
 
 STRUCTURES = [dict(path='statue', name='Statue', tier=6, zone='inner', role='decoration', group='statue',
                    terrain='flexible', door=None, make=statue, ground_layer=0, changes='First version.',
-                   description='Flush plaza piece (ground_layer 0: the paving replaces the grass, level with the lawn; '
+                   description='Over budget: 182 blocks vs 42 (a paved round 9 across round the 3 x 3 plinth). Flush plaza piece (ground_layer 0: the paving replaces the grass, level with the lawn; '
                                'the mod\'s builders can\'t do that yet). The founding king as a clay soldier in stone, '
                                'sword raised and shield on his arm, on a stepped plinth with a plaque, in a paved round '
                                '9 across. L2 lantern posts, flowering bushes and flowers; L3 a gold-look crown, a red '

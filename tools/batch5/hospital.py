@@ -25,11 +25,11 @@ Level 1 (KNOWN-OK only): all of the above, beds and windows included.
 Level 2 (the hospital at work): brewing stands and cauldrons in the dispensary and the back hall, candles and pots on
 the bedside tables, lanterns on chains in the wards, white carpets in the aisles, herbs in the courtyard bed (ferns,
 flowers, berry bushes) with lantern posts, lily pads, flower boxes under the front windows, the red-cross banner
-over the door and a canopy on lantern brackets, brick shoulders on the chimney, clay in the clay room.
-Level 3 (the town's pride): red-cross banners on the front corners and in the courtyard, a bell at the gate, herb
-pots on the sills, a herb garden strip along the left side, vines, a bench and lantern posts at the front, candles."""
+over the door and a canopy with hanging lanterns, shutters on the side and back windows, clay in the clay room.
+Level 3 (the town's pride): red-cross banners on the front corners, a herb garden strip along the left side,
+lantern posts by the gate, a log pile and barrels at the back."""
 from make_batch1_structures import Structure
-from batch3.ws_kit import P, A, STAIR, TOP, SLAB, SLAB_TOP, OPEN, SHELF, HANG, STAND, LEAVES, connect, flower_box
+from batch3.ws_kit import P, A, STAIR, TOP, SLAB, SLAB_TOP, OPEN, SHELF, HANG, STAND, LEAVES, connect, shutters
 from batch5.roofkit import hip_roof, height_roof, levels, corbels
 
 W, D, H = 17, 17, 12
@@ -77,7 +77,7 @@ def hospital():
     upper_windows = [(3, OZ0), (6, OZ0), (MID, OZ0), (10, OZ0), (13, OZ0)] + [(OX0, z) for z in beds_z] + \
                     [(OX1, z) for z in beds_z] + [(3, OZ1), (MID, OZ1), (13, OZ1)] + \
                     [(IX0, 7), (IX0, 9), (IX1, 7), (IX1, 9), (7, IZ0), (MID, IZ0), (9, IZ0), (7, IZ1), (9, IZ1)]
-    stairs = [(6, 1, 14), (7, 2, 14), (8, 3, 14), (9, 4, 14)]       # back hall, up along the back wall (east)
+    stairs = [(7, 1, 14), (8, 2, 14), (9, 3, 14), (10, 4, 14)]       # back hall, up along the back wall (east)
     chimney = [(W - 1, y, 13) for y in range(0, H)]
 
     s.at(1, 'shell')
@@ -107,14 +107,14 @@ def hospital():
             if on_outer(x, z) or on_inner(x, z):
                 along_x = z in (OZ0, OZ1, IZ0, IZ1) and not (x in (OX0, OX1, IX0, IX1))
                 P(s, x, 8, z, 'dark_oak_log', axis='x' if along_x else 'z')
-            elif ring_interior(x, z) and (x, z) not in ((6, 14), (7, 14), (8, 14)):
+            elif ring_interior(x, z) and (x, z) not in ((7, 14), (8, 14), (9, 14)):
                 P(s, x, 4, z, 'spruce_planks')
     for x in (IX0, IX1):                                            # partitions in the front and back wings
         for z in (2, 3, 4, 12, 13, 14):
             for y in (1, 2, 3, 5, 6, 7):
                 P(s, x, y, z, 'spruce_planks' if y < 4 else 'white_terracotta')
     for x, z in openings:
-        for y in (1, 2):
+        for y in (1, 2, 5, 6):
             s.remove(x, y, z)
     for (x, z), f in doors.items():
         s.remove(x, 1, z); s.remove(x, 2, z)
@@ -180,31 +180,26 @@ def hospital():
     P(s, 13, 1, 3, 'spruce_stairs', facing='south', **STAIR)
     P(s, 14, 1, 2, 'chest', facing='south', type='single', waterlogged='false')
     # the entrance hall: a bench each side of the door
-    P(s, 6, 1, 2, 'dark_oak_stairs', facing='west', **STAIR)
-    P(s, 10, 1, 2, 'dark_oak_stairs', facing='east', **STAIR)
+    P(s, 6, 1, 2, 'spruce_stairs', facing='west', **STAIR)
+    P(s, 10, 1, 2, 'spruce_stairs', facing='east', **STAIR)
     # the herb store (back left): barrels, a composter, hay
     P(s, 2, 1, 14, 'barrel', facing='up', open='false')
     P(s, 3, 1, 14, 'barrel', facing='up', open='false')
     P(s, 2, 1, 13, 'composter', level='3')
     P(s, 4, 1, 14, 'hay_block', axis='y')
-    P(s, 2, 1, 12, 'chest', facing='east', type='single', waterlogged='false')
+    P(s, 2, 1, 12, 'chest', facing='south', type='single', waterlogged='false')
     # the back hall: the hearth (hot water) by the courtyard door, a table
-    P(s, 10, 1, 14, 'furnace', facing='north', lit='false')
-    P(s, 10, 1, 12, 'barrel', facing='up', open='false')
+    P(s, 10, 1, 12, 'furnace', facing='north', lit='false')
+    P(s, 6, 1, 12, 'barrel', facing='up', open='false')
     # the clay room (back right): the kiln under the chimney, a worktable, chests
     P(s, 14, 1, 13, 'smoker', facing='west', lit='false')
     P(s, 14, 1, 12, 'crafting_table')
-    P(s, 14, 1, 14, 'chest', facing='west', type='single', waterlogged='false')
-    P(s, 12, 1, 14, 'chest', facing='north', type='single', waterlogged='false')
+    P(s, 14, 1, 14, 'chest', facing='south', type='single', waterlogged='false')
+    P(s, 12, 1, 14, 'chest', facing='south', type='single', waterlogged='false')
     # the healers' quarters upstairs at the front: chests and a table
     for x in (6, 10):
         P(s, x, 5, 2, 'chest', facing='south', type='single', waterlogged='false')
     P(s, MID, 5, 2, 'spruce_slab', **SLAB_TOP)
-    # torches on the inner posts of the wards and halls
-    for y in (3, 7):
-        for x, z, f in ((OX0 + 1, 7, 'east'), (OX0 + 1, 9, 'east'), (OX1 - 1, 7, 'west'), (OX1 - 1, 9, 'west')):
-            if (x, y, z) not in s.blocks and (x - (1 if f == 'east' else -1), y, z) in s.blocks:
-                P(s, x, y, z, 'wall_torch', facing=f)
     # courtyard benches in the corners
     for x, z, f in ((IX0 + 1, IZ0 + 1, 'west'), (IX1 - 1, IZ0 + 1, 'east'), (IX0 + 1, IZ1 - 1, 'west'),
                     (IX1 - 1, IZ1 - 1, 'east')):
@@ -215,7 +210,7 @@ def hospital():
     P(s, 3, 2, 2, 'brewing_stand', has_bottle_0='true', has_bottle_1='false', has_bottle_2='true')
     P(s, 3, 1, 3, 'cauldron')
     P(s, 11 - 1, 1, 13, 'cauldron')
-    P(s, 10, 2, 12, 'brewing_stand', has_bottle_0='false', has_bottle_1='true', has_bottle_2='true')
+    P(s, 6, 2, 12, 'brewing_stand', has_bottle_0='true', has_bottle_1='false', has_bottle_2='true')
     # candles and pots on the bedside tables, white carpets in the aisles, lanterns on chains
     for y in (2, 6):
         for z, k in ((7, 'candle'), (9, 'pot')):
@@ -231,7 +226,7 @@ def hospital():
             P(s, x, 3, z, 'lantern', **HANG)
     # the courtyard herbs and lantern posts
     herbs = {(7, 7): 'fern', (8, 7): 'allium', (9, 7): 'sweet_berry_bush', (7, 8): 'cornflower', (9, 8): 'fern',
-             (7, 9): 'sweet_berry_bush', (8, 9): 'blue_orchid', (9, 9): 'oxeye_daisy'}
+             (7, 9): 'sweet_berry_bush', (8, 9): 'allium', (9, 9): 'oxeye_daisy'}
     for (x, z), f in herbs.items():
         if f == 'sweet_berry_bush':
             P(s, x, 1, z, f, age='2')
@@ -240,16 +235,20 @@ def hospital():
     s.decorate(MID, 1, MID, 'lily_pad')
     # flower boxes under the front ground windows, the red-cross banner and a canopy over the door
     for x, f in ((3, 'poppy'), (6, 'cornflower'), (10, 'allium'), (13, 'poppy')):
-        flower_box(s, x, 1, OZ0 - 1, 'north', f)
+        P(s, x, 0, OZ0 - 1, 'coarse_dirt'); P(s, x, 1, OZ0 - 1, f)     # a planter at the wall's foot
     for x in (MID - 1, MID, MID + 1):
         P(s, x, 3, OZ0 - 1, 'spruce_slab', **SLAB)
     for x in (MID - 1, MID + 1):
         P(s, x, 2, OZ0 - 1, 'lantern', **HANG)
     P(s, MID, 7, OZ0 - 1, 'white_wall_banner', facing='north')
     s.decorate(MID, 7, OZ0 - 1, 'banner_pattern', banner='white_wall_banner', note='a red cross (the hospital sign)')
-    # brick shoulders on the chimney, clay in the clay room
-    P(s, W - 1, 3, 12, 'brick_stairs', facing='south', **STAIR)
-    P(s, W - 1, 3, 14, 'brick_stairs', facing='north', **STAIR)
+    # shutters on the outer windows of the sides and the back (both storeys)
+    for y, wins in ((2, ground_windows), (6, upper_windows)):
+        for x, z in wins:
+            if z == OZ0 or not on_outer(x, z):
+                continue
+            shutters(s, x, y, z, 'west' if x == OX0 else 'east' if x == OX1 else 'south')
+    # clay in the clay room
     P(s, 13, 1, 13, 'clay')
     P(s, 13, 1, 14, 'clay')
 
@@ -260,11 +259,18 @@ def hospital():
     # a herb garden strip along the left side
     for z in range(3, 14):
         P(s, 0, 0, z, 'coarse_dirt')
-        f = ('fern', 'allium', 'sweet_berry_bush', 'cornflower', 'fern', 'azure_bluet')[z % 6]
+        f = ('fern', 'allium', 'sweet_berry_bush', 'cornflower', 'fern', 'oxeye_daisy')[z % 6]
         if f == 'sweet_berry_bush':
             P(s, 0, 1, z, f, age='2')
         else:
             P(s, 0, 1, z, f)
+    # a log pile and barrels against the back wall
+    for x in (5, 6):
+        for y in (0, 1):
+            P(s, x, y, D - 1, 'spruce_log', axis='z')
+    P(s, 10, 0, D - 1, 'barrel', facing='up', open='false')
+    P(s, 11, 0, D - 1, 'barrel', facing='up', open='false')
+    P(s, 10, 1, D - 1, 'barrel', facing='up', open='false')
     # a bell at the gate: on a post by the door
     for y in (1, 2, 3):
         P(s, MID + 3, y, 0, 'spruce_fence')
@@ -272,12 +278,18 @@ def hospital():
     for y in (1, 2, 3):
         P(s, MID - 3, y, 0, 'spruce_fence')
     P(s, MID - 3, 4, 0, 'lantern', **STAND)
-    # vines on the stone ground storey
-    for z in (4, 12):
-        A(s, OX0 - 1, 2, z, 'vine', east='true', north='false', south='false', west='false', up='false')
     return connect(s)
 
 
 STRUCTURES = [dict(path='hospital', name='Hospital', tier=6, zone='inner', role='health', group='infirmary',
                    terrain='ground_level', door='front', make=hospital, max_height=12, changes='First version.',
-                   description='Needs scaffolding: 12 tall.')]
+                   description='Needs scaffolding: 12 tall. Over budget: 1,536 blocks vs the infirmary\'s 285 (no '
+                               'hospital budget in the brief; under the landmark 1,800). Saved as its own structure: the '
+                               'infirmary\'s tier-6 big brother, a two-storey cloister hospital round a 5 x 5 herb '
+                               'courtyard: stone brick ground storey, white plaster in a dark oak frame above, one '
+                               'spruce roof round the ring with a cross gable over the door and a kiln chimney. 14 beds '
+                               '(three a side on each floor, two more upstairs at the back), dispensary, healers\' '
+                               'room, herb store, clay room (rebuilding fallen soldiers), a staircase; courtyard pool by '
+                               'the decoration step. L2 brewing stands, cauldrons, candles, chained lanterns, carpets, '
+                               'courtyard herbs, planters, a door canopy, the red-cross banner, shutters, clay; L3 more '
+                               'red-cross banners, a herb garden strip, lantern posts at the gate, a log pile, barrels.')]

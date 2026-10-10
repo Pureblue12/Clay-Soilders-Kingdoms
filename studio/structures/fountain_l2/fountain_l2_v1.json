@@ -1,0 +1,279 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "fountain_l2",
+  "version": 1,
+  "size": [9,8,9],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T08:50:23.790Z",
+    "description": "Fountain, level 2 of 3: L1 plus flourish 2. Over budget: 160 blocks vs 51 (9 x 9 with its paving instead of 5 x 5). Flush plaza piece (ground_layer 0: the paving and basin floor replace the grass, level with the lawn; the mod's builders can't do that yet). A round two-tier stone fountain: a basin 7 across with a rim one block tall, a stem and corbelled upper bowl, on a paved round 9 across with a cobble path in from each side; the basin water by the decoration step. L2 lantern posts with flowering bushes, flower beds in the grass corners, lily pads; L3 a statue top with a gold-look finial, flower pots on the rim, banners. Not yet builder-tested: allium, cornflower, dandelion, flowering_azalea_leaves, grass_block, oxeye_daisy, stone_brick_wall. Decoration step adds: lily_pad, water.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch5",
+      "tier5",
+      "inner",
+      "decoration"
+    ],
+    "groundLayer": 0,
+    "decorationBlocks": [
+      [
+        2,
+        1,
+        3,
+        "water"
+      ],
+      [
+        2,
+        1,
+        4,
+        "water"
+      ],
+      [
+        2,
+        1,
+        5,
+        "water"
+      ],
+      [
+        3,
+        1,
+        2,
+        "water"
+      ],
+      [
+        3,
+        1,
+        3,
+        "water"
+      ],
+      [
+        3,
+        1,
+        4,
+        "water"
+      ],
+      [
+        3,
+        1,
+        5,
+        "water"
+      ],
+      [
+        3,
+        1,
+        6,
+        "water"
+      ],
+      [
+        4,
+        1,
+        2,
+        "water"
+      ],
+      [
+        4,
+        1,
+        3,
+        "water"
+      ],
+      [
+        4,
+        1,
+        5,
+        "water"
+      ],
+      [
+        4,
+        1,
+        6,
+        "water"
+      ],
+      [
+        5,
+        1,
+        2,
+        "water"
+      ],
+      [
+        5,
+        1,
+        3,
+        "water"
+      ],
+      [
+        5,
+        1,
+        4,
+        "water"
+      ],
+      [
+        5,
+        1,
+        5,
+        "water"
+      ],
+      [
+        5,
+        1,
+        6,
+        "water"
+      ],
+      [
+        6,
+        1,
+        3,
+        "water"
+      ],
+      [
+        6,
+        1,
+        4,
+        "water"
+      ],
+      [
+        6,
+        1,
+        5,
+        "water"
+      ],
+      [
+        3,
+        2,
+        6,
+        "lily_pad"
+      ],
+      [
+        6,
+        2,
+        3,
+        "lily_pad"
+      ],
+      [
+        2,
+        2,
+        3,
+        "lily_pad"
+      ]
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:allium",
+    "A": "minecraft:cobblestone",
+    "B": "minecraft:cobblestone_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none]",
+    "C": "minecraft:cornflower",
+    "D": "minecraft:dandelion",
+    "E": "minecraft:flowering_azalea_leaves[distance=1,persistent=true,waterlogged=false]",
+    "F": "minecraft:grass_block[snowy=false]",
+    "G": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "H": "minecraft:lily_pad",
+    "I": "minecraft:mossy_cobblestone",
+    "J": "minecraft:oxeye_daisy",
+    "K": "minecraft:poppy",
+    "L": "minecraft:stone_brick_stairs[facing=east,half=top,shape=straight,waterlogged=false]",
+    "M": "minecraft:stone_brick_stairs[facing=north,half=top,shape=outer_left,waterlogged=false]",
+    "N": "minecraft:stone_brick_stairs[facing=north,half=top,shape=outer_right,waterlogged=false]",
+    "O": "minecraft:stone_brick_stairs[facing=north,half=top,shape=straight,waterlogged=false]",
+    "P": "minecraft:stone_brick_stairs[facing=south,half=top,shape=outer_left,waterlogged=false]",
+    "Q": "minecraft:stone_brick_stairs[facing=south,half=top,shape=outer_right,waterlogged=false]",
+    "R": "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "S": "minecraft:stone_brick_stairs[facing=west,half=top,shape=straight,waterlogged=false]",
+    "T": "minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none]",
+    "U": "minecraft:stone_bricks",
+    "V": "minecraft:water[level=0]"
+  },
+  "layers": [
+    [
+      "FFFIAUFFF",
+      "FUUUUUIUF",
+      "FIUUUUUUF",
+      "UUUUUUUUU",
+      "AUUUUUUUA",
+      "UUUUUUUUU",
+      "FUUUUUUIF",
+      "FUUUUUUIF",
+      "FFFUAUFFF"
+    ],
+    [
+      "K#K...K#K",
+      "CTEUUUETC",
+      "JEUVVVUEJ",
+      ".UVVVVVU.",
+      ".UVVUVVU.",
+      ".UVVVVVU.",
+      "KEUVVVUEK",
+      "CTEUUUETC",
+      "JDJ...JDJ"
+    ],
+    [
+      ".........",
+      ".T.....T.",
+      ".........",
+      "..H...H..",
+      "....B....",
+      ".........",
+      "...H.....",
+      ".T.....T.",
+      "........."
+    ],
+    [
+      ".........",
+      ".G.....G.",
+      ".........",
+      "...QRP...",
+      "...LUS...",
+      "...MON...",
+      ".........",
+      ".G.....G.",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "....U....",
+      ".........",
+      ".........",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "........."
+    ]
+  ]
+}

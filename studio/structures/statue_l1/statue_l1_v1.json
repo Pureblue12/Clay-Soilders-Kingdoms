@@ -1,0 +1,153 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "statue_l1",
+  "version": 1,
+  "size": [9,9,9],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T08:50:27.903Z",
+    "description": "Statue, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 182 blocks vs 42 (a paved round 9 across round the 3 x 3 plinth). Flush plaza piece (ground_layer 0: the paving replaces the grass, level with the lawn; the mod's builders can't do that yet). The founding king as a clay soldier in stone, sword raised and shield on his arm, on a stepped plinth with a plaque, in a paved round 9 across. L2 lantern posts, flowering bushes and flowers; L3 a gold-look crown, a red cloak, candles at his feet and banners. Decoration step adds: sign_text.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch5",
+      "tier6",
+      "inner",
+      "decoration"
+    ],
+    "groundLayer": 0
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:chain[axis=y]",
+    "A": "minecraft:cobblestone",
+    "B": "minecraft:cobblestone_wall[east=low,north=none,south=none,up=true,waterlogged=false,west=none]",
+    "C": "minecraft:cobblestone_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=low]",
+    "D": "minecraft:cobblestone_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none]",
+    "E": "minecraft:mossy_cobblestone",
+    "F": "minecraft:oak_wall_sign[facing=north,waterlogged=false]",
+    "G": "minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]",
+    "H": "minecraft:stone_brick_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "I": "minecraft:stone_brick_stairs[facing=east,half=top,shape=straight,waterlogged=false]",
+    "J": "minecraft:stone_brick_stairs[facing=north,half=bottom,shape=outer_left,waterlogged=false]",
+    "K": "minecraft:stone_brick_stairs[facing=north,half=bottom,shape=outer_right,waterlogged=false]",
+    "L": "minecraft:stone_brick_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "M": "minecraft:stone_brick_stairs[facing=north,half=top,shape=outer_left,waterlogged=false]",
+    "N": "minecraft:stone_brick_stairs[facing=north,half=top,shape=outer_right,waterlogged=false]",
+    "O": "minecraft:stone_brick_stairs[facing=north,half=top,shape=straight,waterlogged=false]",
+    "P": "minecraft:stone_brick_stairs[facing=south,half=bottom,shape=outer_left,waterlogged=false]",
+    "Q": "minecraft:stone_brick_stairs[facing=south,half=bottom,shape=outer_right,waterlogged=false]",
+    "R": "minecraft:stone_brick_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "S": "minecraft:stone_brick_stairs[facing=south,half=top,shape=outer_left,waterlogged=false]",
+    "T": "minecraft:stone_brick_stairs[facing=south,half=top,shape=outer_right,waterlogged=false]",
+    "U": "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "V": "minecraft:stone_brick_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "W": "minecraft:stone_brick_stairs[facing=west,half=top,shape=straight,waterlogged=false]",
+    "X": "minecraft:stone_bricks",
+    "Y": "minecraft:white_terracotta"
+  },
+  "layers": [
+    [
+      "...AAA...",
+      ".AAEAAAA.",
+      ".AXXXXXA.",
+      "AAXXXXXAA",
+      "AAXXXXXAA",
+      "AAXXXXXAA",
+      ".AXXXXXA.",
+      ".AEAAEAE.",
+      "...AAA..."
+    ],
+    [
+      ".........",
+      "....F....",
+      "..PRXRQ..",
+      "..HXXXV..",
+      "..HXXXV..",
+      "..HXXXV..",
+      "..KLLLJ..",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      "...TUS...",
+      "...IXW...",
+      "...MON...",
+      ".........",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "...D.D...",
+      ".........",
+      ".........",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "...HXV...",
+      ".........",
+      ".........",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      "...G.....",
+      "...BY....",
+      ".........",
+      ".........",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "...IDW...",
+      ".........",
+      ".........",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "....YC...",
+      ".........",
+      ".........",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".....#...",
+      ".........",
+      ".........",
+      ".........",
+      "........."
+    ]
+  ]
+}
