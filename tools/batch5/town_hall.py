@@ -32,8 +32,10 @@ FLOOR = 5                                  # upper floor layer
 UTOP = 8                                   # last upper wall layer
 STONE_TOP = 10                             # tower stone up to here
 CLOCK = (11, 15)                           # timber clock stage (faces y 12..14)
-PIERS = (5, 8, 11, 14)
-BAYS = ((6, 7), (9, 10), (12, 13))
+PIERS = (5, 9, 13)
+BAYS = ((6, 7, 8), (10, 11, 12))             # arcade bays, 3 wide
+WIN_Z = (6, 8, 10, 12, 15)                 # upper windows on the long sides
+DORMER_Z = 11
 CANDLES = dict(candles='3', lit='true', waterlogged='false')
 
 
@@ -59,6 +61,22 @@ def pyramid_ring(s, x0, x1, z0, z1, y, block='spruce_stairs'):
 def clock_faces():
     """(x, z, axis, outside x, outside z) of the three clock hubs (front and sides; the hall roof hides the back)."""
     return [(MID, TZ0, 'z', MID, TZ0 - 1), (TX0, TMZ, 'x', TX0 - 1, TMZ), (TX1, TMZ, 'x', TX1 + 1, TMZ)]
+
+
+def dormer(s, x, out):
+    """A small gabled dormer standing on the eave wall at x (out: -1 left, +1 right), 3 wide around DORMER_Z, its
+    window at y 9 and its ridge running into the main roof."""
+    z0, z1, zm = DORMER_Z - 1, DORMER_Z + 1, DORMER_Z
+    y = UTOP + 1                                     # 9: the plate layer
+    P(s, x, y, z0, 'dark_oak_log', axis='y'); P(s, x, y, z1, 'dark_oak_log', axis='y')
+    P(s, x, y + 1, zm, 'white_terracotta')
+    for i in range(3):                               # roof: overhang out, the wall line, one in
+        xx = x + out - out * i
+        P(s, xx, y + 1, z0, 'spruce_stairs', facing='south', **STAIR)
+        P(s, xx, y + 1, z1, 'spruce_stairs', facing='north', **STAIR)
+        P(s, xx, y + 2, zm, 'dark_oak_planks')
+    P(s, x + out, y, z0, 'spruce_stairs', facing='north', **TOP)        # corbels under the dormer's gable
+    P(s, x + out, y, z1, 'spruce_stairs', facing='south', **TOP)
 
 
 def town_hall():
@@ -127,7 +145,7 @@ def town_hall():
     # ---------------------------------------------------------------- hall: arcade
     for z in range(HZ0, HZ1 + 1):
         for x in (HX0, HX1):
-            if z in PIERS or z >= HZ1 - 1:
+            if z in PIERS or z >= HZ1 - 2:
                 for yy in range(1, ARC + 1):
                     P(s, x, yy, z, 'cobblestone' if yy == 1 else 'stone_bricks')
     for x in (HX0 + 1, HX1 - 1):                     # front piers beside the tower (2 wide)
@@ -136,10 +154,11 @@ def town_hall():
     for x in range(HX0 + 1, HX1):                    # back wall of the stair hall, two windows
         for yy in range(1, ARC + 1):
             A(s, x, yy, HZ1, 'cobblestone' if yy == 1 else 'stone_bricks')
-    for a, b in BAYS:                                # arches between the piers
+    for a, b, c in BAYS:                             # arches between the piers, a keystone in the middle
         for x in (HX0, HX1):
             P(s, x, ARC, a, 'stone_brick_stairs', facing='north', **TOP)
-            P(s, x, ARC, b, 'stone_brick_stairs', facing='south', **TOP)
+            P(s, x, ARC, b, 'stone_bricks')
+            P(s, x, ARC, c, 'stone_brick_stairs', facing='south', **TOP)
     # the stair to the upper floor along the back wall (rising to the east), solid underneath
     for i, x in enumerate((4, 5, 6, 7)):
         for yy in range(1, 1 + i):
@@ -159,7 +178,7 @@ def town_hall():
                 A(s, x, FLOOR, z, 'dark_oak_log', axis='x')
             elif (x, z) not in stairwell:
                 A(s, x, FLOOR, z, 'spruce_planks')
-    posts_z = set(PIERS) | {HZ1}
+    posts_z = set(PIERS) | {HZ1, 7, 11}
     for y in range(FLOOR + 1, UTOP + 1):
         for x in range(HX0, HX1 + 1):
             for z in range(HZ0, HZ1 + 1):
@@ -175,13 +194,17 @@ def town_hall():
                 else:
                     A(s, x, y, z, 'white_terracotta')
     wy = FLOOR + 2
-    windows = [(x, wy, z) for x in (HX0, HX1) for a, b in BAYS for z in (a, b)] + \
+    windows = [(x, wy, z) for x in (HX0, HX1) for z in WIN_Z] + \
               [(4, wy, HZ1), (8, wy, HZ1), (HX0 + 1, wy, HZ0), (HX1 - 1, wy, HZ0)]
     for w in windows:
         s.remove(*w)
     for x in (4, 8):
         s.remove(x, 2, HZ1)                          # stair hall windows
-    gable_roof(s, HX0, HX1, HZ0, HZ1, UTOP, front=1, back=1, gable='white_terracotta', plates='dark_oak_log')
+    for x, out in ((HX0, -1), (HX1, 1)):             # a dormer over the middle bay on each side
+        dormer(s, x, out)
+    dormer_windows = {(HX0, UTOP + 1, DORMER_Z), (HX1, UTOP + 1, DORMER_Z)}
+    gable_roof(s, HX0, HX1, HZ0, HZ1, UTOP, front=1, back=1, gable='white_terracotta', plates='dark_oak_log',
+               skip=dormer_windows | {(HX0 - 1, UTOP + 1, DORMER_Z), (HX1 + 1, UTOP + 1, DORMER_Z)})
     for x in (HX0, HX1):                             # brackets under the floor beam at the piers
         for z in PIERS:
             P(s, x + (-1 if x == HX0 else 1), ARC, z, 'dark_oak_stairs', facing='east' if x == HX0 else 'west', **TOP)
@@ -190,6 +213,8 @@ def town_hall():
     s.at(1, 'fittings')
     for x, y, z in windows:
         P(s, x, y, z, 'glass_pane')
+    for x in (HX0, HX1):
+        P(s, x, UTOP + 1, DORMER_Z, 'glass_pane')
     for x in (4, 8):
         P(s, x, 2, HZ1, 'glass_pane')
     for x, z in ((TX0, TMZ), (TX1, TMZ), (MID, TZ0)):
@@ -259,11 +284,10 @@ def town_hall():
     for x, z, axis, ox, oz in clock_faces():
         s.decorate(ox, 13, oz, 'item_frame', item='minecraft:clock', note='the town clock, on the hub')
     for x, side in ((HX0 - 1, 'west'), (HX1 + 1, 'east')):               # flower boxes under the upper windows
-        for a, b in BAYS:
-            for z in (a, b):
-                P(s, x, FLOOR + 1, z, 'coarse_dirt')
-                P(s, x, FLOOR, z, 'dark_oak_stairs', facing='east' if side == 'west' else 'west', **TOP)
-            P(s, x, FLOOR + 2, a, 'poppy'); P(s, x, FLOOR + 2, b, 'cornflower')
+        for i, z in enumerate(WIN_Z[:4]):
+            P(s, x, FLOOR + 1, z, 'coarse_dirt')
+            P(s, x, FLOOR, z, 'dark_oak_stairs', facing='east' if side == 'west' else 'west', **TOP)
+            P(s, x, FLOOR + 2, z, ('poppy', 'cornflower', 'oxeye_daisy', 'azure_bluet')[i])
     for z in range(7, 14):                                                # carpet runners in the chamber
         A(s, MID - 2, FLOOR + 1, z, 'red_carpet'); A(s, MID + 2, FLOOR + 1, z, 'red_carpet')
     for z in range(TZ0 + 1, HZ0 + 2):                                     # and through the porch

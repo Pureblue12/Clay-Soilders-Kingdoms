@@ -183,7 +183,7 @@ def noble_house():
             continue
         side = 'west' if x == X0 else 'east' if x == X1 else 'south'
         shutters(s, x, y, z, side)
-    for x, f in ((7, 'poppy'), (8, 'cornflower'), (12, 'allium'), (13, 'poppy')):
+    for x, f in ((7, 'poppy'), (13, 'cornflower')):
         P(s, x, 1, Z0 - 1, 'coarse_dirt'); P(s, x, 2, Z0 - 1, f)
         P(s, x, 1, Z0 - 2, 'spruce_trapdoor', facing='north', **OPEN)
     # red banners on the front corner posts
@@ -206,6 +206,8 @@ def noble_house():
             P(s, x, y, Z1 + 1, 'spruce_log', axis='z')
     P(s, 11, 0, Z1 + 1, 'spruce_log', axis='z')
     P(s, 11, 1, Z1 + 1, 'spruce_slab', **SLAB)
+    for z in (5, 8):                                                # the bench's arms
+        P(s, 0, 0, z, 'spruce_trapdoor', facing='north' if z == 5 else 'south', **OPEN)
     # the garden: flower beds and two lantern posts
     for i, (x, z) in enumerate(((3, 6), (3, 7), (3, 8), (1, 3), (0, 10), (1, 9), (2, 11), (4, 11))):
         A(s, x, 0, z, FLOWERS[i % len(FLOWERS)])
@@ -221,10 +223,12 @@ def noble_house():
             A(s, x, 0, z, 'stone_bricks'); P(s, x, 1, z, 'stone_bricks'); P(s, x, 2, z, 'lantern', **STAND)
         else:
             A(s, x, 0, z, 'stone_brick_wall')
-    # the statue: a garden urn on a carved pedestal
+    # the statue: a little obelisk with a gold-look tip on a carved pedestal
     P(s, 2, 0, 10, 'stone_bricks')
     P(s, 2, 1, 10, 'chiseled_stone_bricks')
-    P(s, 2, 2, 10, 'decorated_pot', facing='north', cracked='false', waterlogged='false')
+    P(s, 2, 2, 10, 'stone_brick_wall')
+    P(s, 2, 3, 10, 'stone_brick_wall')
+    P(s, 2, 4, 10, 'light_weighted_pressure_plate', power='0')
     # potted plants on the balcony, banners on the porch columns, candles and carpets inside
     for x in (MID - 2, MID + 2):
         P(s, x, 5, 1, 'flower_pot'); s.decorate(x, 5, 1, 'potted_plant', plant='red_tulip')
