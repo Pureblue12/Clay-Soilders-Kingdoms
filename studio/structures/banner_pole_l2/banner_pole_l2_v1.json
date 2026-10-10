@@ -1,0 +1,86 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "banner_pole_l2",
+  "version": 1,
+  "size": [3,9,3],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T04:58:38.725Z",
+    "description": "Banner pole, level 2 of 3: L1 plus flourish 2. Over budget: 25 blocks vs 4 (a stone plinth and a crossbar so it is not a bare pole). Tall spruce pole on a stone brick plinth with a crossbar and two hanging lanterns (L1); L2 the kingdom's red banner on top and two white banners on the crossbar; L3 two red banners on the back, a plaque, banner patterns (decoration step). Not yet builder-tested: red_banner, white_wall_banner.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch4",
+      "tier4",
+      "all",
+      "decoration"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:cobblestone_slab[type=bottom,waterlogged=false]",
+    "A": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "B": "minecraft:red_banner[rotation=8]",
+    "C": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "D": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=true]",
+    "E": "minecraft:spruce_fence[east=true,north=false,south=false,waterlogged=false,west=false]",
+    "F": "minecraft:spruce_fence[east=true,north=false,south=false,waterlogged=false,west=true]",
+    "G": "minecraft:spruce_log[axis=y]",
+    "H": "minecraft:stone_brick_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "I": "minecraft:stone_brick_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "J": "minecraft:stone_brick_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "K": "minecraft:stone_brick_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "L": "minecraft:stone_bricks",
+    "M": "minecraft:white_wall_banner[facing=north]"
+  },
+  "layers": [
+    [
+      "#J#",
+      "HLK",
+      "#I#"
+    ],
+    [
+      "...",
+      ".G.",
+      "..."
+    ],
+    [
+      "...",
+      ".C.",
+      "..."
+    ],
+    [
+      "...",
+      ".C.",
+      "..."
+    ],
+    [
+      "...",
+      ".C.",
+      "..."
+    ],
+    [
+      "...",
+      "ACA",
+      "..."
+    ],
+    [
+      "M.M",
+      "EFD",
+      "..."
+    ],
+    [
+      "...",
+      ".B.",
+      "..."
+    ],
+    [
+      "...",
+      "...",
+      "..."
+    ]
+  ]
+}
