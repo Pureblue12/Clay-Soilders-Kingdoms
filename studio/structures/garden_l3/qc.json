@@ -115,6 +115,77 @@
           "sheet"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T04:22:15.668Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 89,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Drawn for the decoration step, not built: minecraft:water, minecraft:lily_pad."
+          },
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: grass_block, stone_brick_slab, fern, pink_petals, allium, azure_bluet, cornflower, azalea, flowering_azalea_leaves, blue_orchid, dandelion, lily_of_the_valley, flowering_azalea, peony, rose_bush, lilac, mossy_cobblestone_slab, pink_tulip, orange_tulip, oxeye_daisy, red_tulip, white_tulip, birch_log, birch_wood, cherry_wood, cherry_log, stone_brick_wall, vine, azalea_leaves, daylight_detector, bee_nest, cherry_leaves, birch_leaves."
+          },
+          {
+            "level": "warn",
+            "check": "connections",
+            "message": "1 fence/pane/wall block(s) have no north/east/south/west set although a neighbour would connect, so they show as lone posts: (7, 1, 0)."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "768 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 768,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.640625,
+          "types": 46,
+          "dominant": {
+            "name": "cherry_leaves",
+            "share": 0.17447916666666666
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {
+          "artefacts": "dark holes in the cherry crown",
+          "roof": "no roof, not needed"
+        },
+        "summary": "Level 2 plus wild flowers and pink petals along the hedge and fuller borders: the garden in full bloom under the two shade trees.",
+        "problems": [
+          "The cherry crown shows dark holes on its front and sides (black blotches in the front and right views): fill the gaps in the outer leaf layer so the crown reads as solid blossom",
+          "The crowns now cover about half the garden from above; keep them, but make sure the sundial and the pond stay visible from the front (they are)"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

@@ -109,6 +109,72 @@
           "sheet"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T04:22:15.099Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 89,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Drawn for the decoration step, not built: minecraft:water, minecraft:lily_pad."
+          },
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: grass_block, stone_brick_slab, azalea, flowering_azalea_leaves, blue_orchid, dandelion, flowering_azalea, mossy_cobblestone_slab, pink_tulip, cornflower, orange_tulip, allium, azure_bluet, oxeye_daisy, red_tulip, white_tulip, birch_log, birch_wood, lily_of_the_valley, cherry_wood, cherry_log, azalea_leaves, cherry_leaves, birch_leaves."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "622 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 622,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.6672025723472669,
+          "types": 36,
+          "dominant": {
+            "name": "cherry_leaves",
+            "share": 0.21543408360128619
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {
+          "artefacts": "dark holes in the cherry crown",
+          "roof": "no roof, not needed"
+        },
+        "summary": "Two big shade trees (a cherry and a birch) with real trunks and wide crowns now arch over the benches and the walk, as Carlton asked, with a lily pond, an arbor and many kinds of flowers.",
+        "problems": [
+          "The cherry crown shows dark holes on its front and sides (black blotches in the front and right views): fill the gaps in the outer leaf layer so the crown reads as solid blossom",
+          "The crowns now cover about half the garden from above; keep them, but make sure the sundial and the pond stay visible from the front (they are)"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

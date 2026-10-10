@@ -113,6 +113,76 @@
           "sheet"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T04:22:14.575Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Drawn for the decoration step, not built: minecraft:water."
+          },
+          {
+            "level": "warn",
+            "check": "flat-wall",
+            "message": "The back is flat: 100 % of it at one depth and 100 % one block. Add posts, sills, a beam, flower boxes."
+          },
+          {
+            "level": "warn",
+            "check": "flat-wall",
+            "message": "The left is flat: 100 % of it at one depth and 100 % one block. Add posts, sills, a beam, flower boxes."
+          },
+          {
+            "level": "warn",
+            "check": "flat-wall",
+            "message": "The right is flat: 100 % of it at one depth and 100 % one block. Add posts, sills, a beam, flower boxes."
+          }
+        ],
+        "stats": {
+          "blocks": 213,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3333333333333333,
+          "types": 8,
+          "dominant": {
+            "name": "coarse_dirt",
+            "share": 0.3192488262910798
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "no roof, not needed"
+        },
+        "summary": "17 x 17 and level with the lawn: hedge ring, a round walk to the sundial, soil beds and the new lily pond in the front corner. The beds are still all red poppies at this level.",
+        "problems": [
+          "Carlton keeps asking for more and different flowers: put two or three kinds in the L1 beds already",
+          "The pond's water and lily pads are decoration-step blocks (listed in meta.decorationBlocks; fine)"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }
