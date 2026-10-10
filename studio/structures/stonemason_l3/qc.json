@@ -143,6 +143,68 @@
           "iso"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T05:37:47.322Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 3,
+      "score": 95,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: polished_andesite, stone_brick_slab, smooth_stone_slab, andesite_wall, chiseled_stone_bricks, stonecutter, dandelion, cornflower, fern, stone_brick_wall, polished_andesite_stairs, moss_carpet, gray_wall_banner, stone_button."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 331,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4471299093655589,
+          "types": 43,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.15709969788519637
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "artefacts": "v2 problems fixed: hanging lanterns at (1,3,2) and (5,3,2) hang from verge stairs; the four flower pots (0,2,1), (10,2,3), (9,2,7), (10,2,7) each get a plant from the decoration step (tools/batch4/stonemason.py decorate potted_plant; the viewer draws them empty).",
+          "roof": "Automatic 'no overhang' warning is a false alarm.",
+          "levels": "Adds a statue in progress inside a scaffold, a banner, potted flowers, moss and bushes: a clear new feature over L2."
+        },
+        "summary": "Level 3: L2 plus a statue in progress under its scaffold, a banner, potted flowers on the wall and stacks, moss and bushes round the shed.",
+        "problems": [
+          "Reachability fine: roof slopes, ridge, interior trapdoor top, an oak_leaves top at (0,2,9) and a few wall-top spots unreached; floor and yard all reached."
+        ],
+        "views": [
+          "sheet",
+          "iso"
+        ]
+      }
     }
   }
 }

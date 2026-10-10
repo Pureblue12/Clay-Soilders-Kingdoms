@@ -137,6 +137,68 @@
           "iso"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T05:37:46.738Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 93,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: polished_andesite, stone_brick_slab, smooth_stone_slab, andesite_wall, stonecutter, chiseled_stone_bricks, stone_brick_wall, polished_andesite_stairs."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 310,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4161290322580645,
+          "types": 34,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.16774193548387098
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "artefacts": "v2 problem fixed: hanging lanterns now at (1,3,2) and (5,3,2) under the verge stairs (spruce_stairs above each); the interior lantern at (3,3,6) hangs from a chain. No floating blocks.",
+          "roof": "Automatic 'no overhang' warning is a false alarm: 2-row front overhang and eaves past the long walls.",
+          "levels": "Clearly adds a stonecutter, the stand of half-cut blocks along the front wall, shutters and corbels: visible at a glance over L1."
+        },
+        "summary": "Level 2: L1 plus the stonecutter, a stand of half-cut blocks along the front wall, shutters, stone corbels and hanging lanterns under the front gable.",
+        "problems": [
+          "Reachability fine: roof slopes, ridge, the interior trapdoor top (2,4,5..6), a stair top (9,3,1) and three wall/pier tops unreached; floor and yard all reached."
+        ],
+        "views": [
+          "sheet",
+          "front"
+        ]
+      }
     }
   }
 }
