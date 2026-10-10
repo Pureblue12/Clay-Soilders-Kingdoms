@@ -378,25 +378,25 @@
     "checkedAt": "2026-10-10T04:07:53.444Z"
   },
   "infirmary_l1": {
-    "version": 2,
+    "version": 3,
     "verdict": "revise",
-    "score": 73,
-    "round": 1,
-    "checkedAt": "2026-10-10T05:25:44.778Z"
+    "score": 68,
+    "round": 2,
+    "checkedAt": "2026-10-10T05:34:45.260Z"
   },
   "infirmary_l2": {
-    "version": 2,
+    "version": 3,
     "verdict": "revise",
     "score": 78,
-    "round": 1,
-    "checkedAt": "2026-10-10T05:25:45.430Z"
+    "round": 2,
+    "checkedAt": "2026-10-10T05:34:45.868Z"
   },
   "infirmary_l3": {
-    "version": 2,
+    "version": 3,
     "verdict": "revise",
-    "score": 80,
-    "round": 1,
-    "checkedAt": "2026-10-10T05:25:46.007Z"
+    "score": 85,
+    "round": 2,
+    "checkedAt": "2026-10-10T05:34:46.417Z"
   },
   "inn_l1": {
     "version": 2,
