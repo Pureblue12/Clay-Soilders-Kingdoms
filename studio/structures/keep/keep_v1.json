@@ -4,8 +4,8 @@
   "version": 1,
   "size": [11,12,11],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "approved",
+    "notes": "This looks fantastic but I notice there is other keeps I want it to get bigger than this more grand and extra detail make levels out of the and scrp the other 3 \"keeps\"",
     "author": "claude",
     "created": "2026-10-10T00:32:37.691Z",
     "description": "Small stone keep: 9 x 9 tower, two floors, overhanging battlements on corbels, corner turrets, banners over the door.",
@@ -14,7 +14,7 @@
       "keep",
       "landmark"
     ],
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T02:26:37.707Z",
     "parent": null
   },
   "palette": {

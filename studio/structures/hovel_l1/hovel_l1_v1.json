@@ -4,12 +4,12 @@
   "version": 1,
   "size": [5,3,5],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "sunk into grund otherwise good",
     "author": "generator",
     "created": "2026-10-10T01:37:40.062Z",
     "description": "Imported from hovel_l1.nbt",
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T02:24:25.078Z",
     "parent": null
   },
   "palette": {

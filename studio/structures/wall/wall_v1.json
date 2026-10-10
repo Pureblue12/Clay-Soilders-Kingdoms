@@ -4,8 +4,8 @@
   "version": 1,
   "size": [13,8,5],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "approved",
+    "notes": "Good",
     "author": "claude",
     "created": "2026-10-10T00:33:24.457Z",
     "description": "Town wall module, 13 long: battered base, walkway at 5, crenellated parapet on corbels, buttresses on the town side. Ends are open to join modules.",
@@ -14,7 +14,7 @@
       "wall",
       "module"
     ],
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T02:29:48.485Z",
     "parent": null
   },
   "palette": {

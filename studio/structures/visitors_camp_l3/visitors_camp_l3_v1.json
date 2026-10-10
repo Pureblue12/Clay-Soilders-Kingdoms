@@ -4,12 +4,12 @@
   "version": 1,
   "size": [9,4,9],
   "meta": {
-    "status": "pending",
+    "status": "rejected",
     "notes": "",
     "author": "generator",
     "created": "2026-10-10T01:37:40.084Z",
     "description": "Imported from visitors_camp_l3.nbt",
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T02:29:42.993Z",
     "parent": null
   },
   "palette": {

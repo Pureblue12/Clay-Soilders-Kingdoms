@@ -4,12 +4,12 @@
   "version": 1,
   "size": [7,7,9],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "Farm is totally wrong for one the fences arent connecting with eachtoehr phrapse cause they dont update? but my vision is I want one single big hut that a farmer lives in lots of detail and the actuall farm grows around the farm setup by the farmer so it expands with \"modules\" if you will the modules can just be 1 level and most be funcutal with a trench for water ",
     "author": "generator",
     "created": "2026-10-10T01:37:40.053Z",
     "description": "Imported from farm_l1.nbt",
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T02:22:01.708Z",
     "parent": null
   },
   "palette": {

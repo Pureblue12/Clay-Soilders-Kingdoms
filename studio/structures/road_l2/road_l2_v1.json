@@ -4,12 +4,12 @@
   "version": 1,
   "size": [5,3,5],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "missing textures also whatever is on hte side of it is sunk into ground",
     "author": "generator",
     "created": "2026-10-10T01:37:40.078Z",
     "description": "Imported from road_l2.nbt",
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T02:28:47.109Z",
     "parent": null
   },
   "palette": {

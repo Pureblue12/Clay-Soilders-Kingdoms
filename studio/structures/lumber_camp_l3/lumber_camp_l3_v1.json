@@ -4,12 +4,12 @@
   "version": 1,
   "size": [7,4,7],
   "meta": {
-    "status": "pending",
+    "status": "rejected",
     "notes": "",
     "author": "generator",
     "created": "2026-10-10T01:37:40.076Z",
     "description": "Imported from lumber_camp_l3.nbt",
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T02:27:52.251Z",
     "parent": null
   },
   "palette": {

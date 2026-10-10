@@ -4,12 +4,12 @@
   "version": 1,
   "size": [5,1,5],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "see l1",
     "author": "generator",
     "created": "2026-10-10T01:37:40.060Z",
     "description": "Imported from fire_pit_l2.nbt",
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T02:23:19.742Z",
     "parent": null
   },
   "palette": {

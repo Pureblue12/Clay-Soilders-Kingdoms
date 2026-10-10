@@ -4,12 +4,12 @@
   "version": 1,
   "size": [4,1,1],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "Also in the ground but it looks a little better would like more detail",
     "author": "generator",
     "created": "2026-10-10T01:37:40.037Z",
     "description": "Imported from bench_l2.nbt",
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T02:19:08.527Z",
     "parent": null
   },
   "palette": {

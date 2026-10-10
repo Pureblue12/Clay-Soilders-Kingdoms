@@ -4,8 +4,8 @@
   "version": 2,
   "size": [7,9,9],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "Veryy nice cute would like a little more detail such as decorations",
     "author": "claude",
     "created": "2026-10-10T00:31:29.962Z",
     "description": "Timber cottage, style A: cobblestone plinth, plaster and spruce frame, spruce gable roof, brick chimney. 5 x 7 walls, 3 high.",
@@ -14,7 +14,7 @@
       "housing"
     ],
     "changes": "After reviewing the v1 renders: the roof now sits on a top-plate beam so the walls show; plaster panels in a spruce frame; gable window, door lights, shutters, flower boxes, brick chimney; furnished inside.",
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T02:24:02.876Z",
     "parent": 1
   },
   "palette": {

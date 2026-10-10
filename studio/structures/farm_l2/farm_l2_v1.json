@@ -4,12 +4,12 @@
   "version": 1,
   "size": [7,7,9],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "see l1",
     "author": "generator",
     "created": "2026-10-10T01:37:40.055Z",
     "description": "Imported from farm_l2.nbt",
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T02:22:16.091Z",
     "parent": null
   },
   "palette": {

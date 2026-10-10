@@ -4,12 +4,12 @@
   "version": 1,
   "size": [5,1,5],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "sunk into ground no much in terms of detail and it may not be a good idea as soilders can burn thensemsves",
     "author": "generator",
     "created": "2026-10-10T01:37:40.058Z",
     "description": "Imported from fire_pit_l1.nbt",
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T02:23:11.509Z",
     "parent": null
   },
   "palette": {
