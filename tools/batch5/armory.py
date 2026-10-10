@@ -186,6 +186,6 @@ def armory():
 
 STRUCTURES = [dict(path='armory', name='Armory', tier=6, zone='inner', role='military', group='armory',
                    terrain='ground_level', door='front', make=armory, changes='First version.',
-                   description='Strong stone store for the guard\'s weapons and armour: racks visible through the '
+                   description='Over budget: 486 blocks vs 310. Roof spruce, not stone brick (an all-grey roof read as one block). Strong stone store for the guard\'s weapons and armour: racks visible through the '
                                'door, footlockers, grindstone workstation, a stair to the armorer\'s loft; L2 adds the '
                                'repair forge lean-to (smithing table, anvil, blast furnace), L3 an outdoor arms rack.')]

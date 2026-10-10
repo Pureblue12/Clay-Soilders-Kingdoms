@@ -261,7 +261,7 @@ def gatehouse():
 
 STRUCTURES = [dict(path='gatehouse', name='Gatehouse', tier=5, zone='wall', role='gate', group='gatehouse',
                    terrain='ground_level', door=None, make=gatehouse, max_height=H, changes='First version.',
-                   description='Needs scaffolding: 11 tall (L3 cones: 20). Twin-tower stone gate for the batch-3 '
+                   description='Needs scaffolding: 11 tall (L3 cones: 20). Over budget: 841 blocks vs 415 (L3 cones about 200). Twin-tower stone gate for the batch-3 '
                                'stone wall line (wall face z 3, walk z 4..5 at stand 5, joining at x 1 and x 13): '
                                'arched passage, gate room over it, crenellated tops; stairs (no ladders) from the '
-                               'passage up to the wall walk, the gate room and both fighting tops.')]
+                               'passage up to the wall walk, the gate room and both fighting tops. L2 banners, iron bars, portcullis, lamp posts; L3 steep slate cones with flags, murder holes.')]

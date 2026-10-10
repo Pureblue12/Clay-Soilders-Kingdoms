@@ -54,14 +54,13 @@ def siege_workshop():
         for y in (1, 2, 3):
             P(s, x, y, Z1, 'spruce_planks')
     P(s, MID, 2, Z1, 'oak_log', axis='y'); P(s, MID, 1, Z1, 'oak_log', axis='y'); P(s, MID, 3, Z1, 'oak_log', axis='y')
-    gable_roof(s, X0, X1, Z0, Z1, 3, front=1, back=1, gable='spruce_planks', corbels=True)
-    for z in (Z0, Z1):                                               # a round window in each gable
-        s.remove(MID, 5, z)
+    gable_roof(s, X0, X1, Z0, Z1, 3, front=1, back=1, gable='spruce_planks', corbels=False, gable_at=(Z1,))
+    s.remove(MID, 5, Z1)                                             # a window in the back gable
     # the tool store lean-to on the right: x 9..11, z 3..9
     for z in range(3, 10):
-        for y in (0,):
-            P(s, X1 + 1, 0, z, 'coarse_dirt') if (X1 + 1, 0, z) not in s.blocks else None
-            P(s, X1 + 2, 0, z, 'coarse_dirt')
+        if (X1 + 1, 0, z) not in s.blocks:
+            P(s, X1 + 1, 0, z, 'coarse_dirt')
+        P(s, X1 + 2, 0, z, 'coarse_dirt')
         P(s, 11, 0, z, 'cobblestone')
         for y in (1, 2):
             P(s, 11, y, z, 'oak_log' if z in (3, 9) else 'spruce_planks', **({'axis': 'y'} if z in (3, 9) else {}))
@@ -92,20 +91,15 @@ def siege_workshop():
     for x in (MID - 1, MID + 1):
         P(s, x, 3, 10, 'spruce_trapdoor', facing='north', **SHELF)
     # a log pile and a plank stack inside on the left, a sawhorse
-    for z in (8, 9, 10):
-        P(s, 3, 1, z, 'oak_log', axis='z') if False else None
     for z in (9, 10):
         P(s, 3, 1, z, 'oak_log', axis='z')
     P(s, 3, 2, 10, 'oak_log', axis='z')
     P(s, 3, 1, 2, 'oak_planks'); P(s, 3, 2, 2, 'oak_slab', **SLAB)
-    P(s, 6, 1, 2, 'spruce_fence'); P(s, 7, 1, 2, 'spruce_fence'); P(s, 6, 2, 2, 'oak_log', axis='x') if False else None
     # log piles outside under the left eaves
     for z in (2, 3, 5, 6, 7):
         P(s, 1, 0, z, 'oak_log', axis='z')
     for z in (2, 3, 6):
         P(s, 1, 1, z, 'oak_log', axis='z')
-    for z in (5, 6, 7):
-        P(s, 0, 0, z, 'oak_log', axis='z') if False else None
     # light: torches on the posts
     for (x, z, f) in ((X0, 4, 'east'), (X1, 4, 'west'), (X0, 8, 'east'), (X1, 8, 'west')):
         P(s, x + (1 if f == 'east' else -1), 2, z, 'wall_torch', facing=f)
@@ -113,12 +107,52 @@ def siege_workshop():
     for z, b in ((4, 'barrel'), (5, 'chest'), (7, 'chest'), (8, 'barrel')):
         P(s, 10, 1, z, b, **({'facing': 'up', 'open': 'false'} if b == 'barrel' else
                              {'facing': 'west', 'type': 'single', 'waterlogged': 'false'}))
+    P(s, 6, 2, 2, 'oak_slab', **SLAB); P(s, 7, 2, 2, 'oak_slab', **SLAB)   # the sawhorse's top
+
+    # ------------------------------------------------------------------ L2: the engine takes shape
+    s.at(2, 'flourish2')
+    for x in (4, 6):                                                 # the A-frame on the rails
+        P(s, x, 2, 6, 'oak_fence'); P(s, x, 3, 6, 'oak_fence')
+    P(s, MID, 3, 6, 'stripped_oak_log', axis='x')                   # the axle
+    P(s, MID, 4, 7, 'spruce_stairs', facing='south', **STAIR)        # the throwing arm, rising to the back
+    P(s, MID, 5, 8, 'spruce_stairs', facing='south', **STAIR)
+    P(s, MID, 5, 9, 'spruce_slab', **SLAB_TOP)
+    P(s, MID, 6, 9, 'cauldron')                                      # the cup
+    P(s, MID, 3, 5, 'spruce_slab', **SLAB_TOP)                       # the short arm and its counterweight
+    P(s, MID, 2, 5, 'barrel', facing='up', open='false')
+    for x in (X0, X1):                                               # banners on the front corner posts
+        P(s, x, 3, 0, 'red_wall_banner', facing='north')
+        s.decorate(x, 3, 0, 'banner_pattern', banner='red_wall_banner', note='the engineers\' colours')
+    for z in (4, 5, 7, 8):                                           # tools on the store wall
+        P(s, 10, 2, z, 'spruce_trapdoor', facing='west', **SHELF)
+    P(s, 10, 1, 6, 'barrel', facing='up', open='false')
+    P(s, 9, 1, 3, 'oak_planks'); P(s, 9, 2, 3, 'oak_planks'); P(s, 9, 1, 8, 'hay_block', axis='y')
+
+    # ------------------------------------------------------------------ L3: the war shop
+    s.at(3, 'flourish3')
+    # a battering ram hanging in its frame under the left eaves (x 0..1, z 8..11)
+    for z in (8, 11):
+        P(s, 0, 0, z, 'spruce_fence'); P(s, 0, 1, z, 'spruce_fence'); P(s, 0, 2, z, 'spruce_fence')
+    for z in range(8, 12):
+        P(s, 0, 3, z, 'spruce_log', axis='z')
+    for z in (9, 10):
+        P(s, 0, 2, z, 'chain', axis='y')
+        P(s, 0, 1, z, 'dark_oak_log', axis='z')
+    for x in (MID,):
+        P(s, x, 3, Z0, 'chain', axis='y'); P(s, x, 2, Z0, 'lantern', **HANG)
+    P(s, 9, 2, 6, 'lantern', **HANG)                                 # in the store, from its roof
+    # stone shot by the engine, a cart at the front, flowers at the posts
+    for (x, z) in ((4, 2), (5, 2)):
+        P(s, x, 1, z, 'cobblestone_slab', **SLAB)                    # stone shot waiting by the deck
+    P(s, 12, 0, 1, 'barrel', facing='up', open='false')
+    P(s, 12, 0, 2, 'barrel', facing='up', open='false'); P(s, 12, 1, 1, 'barrel', facing='up', open='false')
+    s.decorate(MID, 2, 10, 'item_frame', item='minecraft:iron_axe', facing='north', note='an axe over the workbench')
     return connect(s)
 
 
 STRUCTURES = [dict(path='siege_workshop', name='Siege workshop', tier=6, zone='outer', role='military',
                    group='siege_workshop', terrain='flexible', door=None, make=siege_workshop,
                    changes='First version.',
-                   description='Open-sided timber shed where engineers build siege engines: a half-built catapult '
+                   description='Over budget: 460 blocks vs 300. Open-sided timber shed where engineers build siege engines: a half-built catapult '
                                'on its deck (L2 raises its A-frame and throwing arm), crafting table, log piles, a '
                                'tool store lean-to; L3 a battering ram in its frame and lanterns on chains.')]
