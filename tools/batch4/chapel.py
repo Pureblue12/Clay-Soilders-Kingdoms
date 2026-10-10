@@ -187,7 +187,7 @@ def chapel():
 
 STRUCTURES = [dict(path='chapel', name='Chapel', tier=4, zone='inner', role='religious', group='chapel',
                    terrain='ground_level', door='front', make=chapel, max_height=13, changes='First version.',
-                   description='Needs scaffolding: 13 tall (the bell cote; the nave roof is 9). Stone chapel (stone '
+                   description='Needs scaffolding: 13 tall (the bell cote; the nave roof is 9). Over budget: 440 blocks vs 210 (first build 370 vs 170; 7 wide instead of 5, for two pews a side). Stone chapel (stone '
                                'bricks on a cobblestone plinth, buttresses, spruce gable roof) whose front gable rises '
                                'into a bell cote; door under a stone hood, lancet windows, pews, an altar; L2 adds the '
                                'bell, runner, lectern, candles, lanterns, flower boxes; L3 stained glass oculi, banners, '
