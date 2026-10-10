@@ -28,7 +28,7 @@ def tree_farm():
     posts, a timber gateway (dark oak posts, spruce lintel) on the front, three raised dirt rows (empty: the saplings
     are planted at L2) with walking lanes between. Outside the fence on the right, the woodcutter's yard: a 5 x 4 gabled
     shed (dark oak frame, spruce plank walls, glass windows, oak roof with dark oak eaves, an oak door), inside a chest,
-    the grindstone (workstation) and a barrel; a coarse dirt path from the gate to the shed, a log pile, a chopping
+    the grindstone (workstation) and a barrel; a cobblestone slab path from the gate to the shed, a log pile, a chopping
     block and the composter.
     Level 2: saplings in the rows (oak, birch, spruce), lanterns on the piers' caps and under the gateway lintel, a
     lychgate roof on the gateway, shutters on the shed windows, a sawhorse, a cauldron and a barrel by the gate.
@@ -81,13 +81,12 @@ def tree_farm():
     s.door(DOOR, 1, SZ0, facing='north', block='oak_door')
     gable_roof(s, SX0, SX1, SZ0, SZ1, 3, front=1, back=1, slope='oak_stairs', eave='dark_oak_stairs',
                ridge='dark_oak_planks', cap='spruce_slab', gable='spruce_planks', plates='dark_oak_log')
-    # ---- paths: from the gate into the plot's front lane, and along the front to the shed door
-    for z in (0, 1, 2):
-        P(s, GATE, 0, z, 'coarse_dirt')
-    for x in range(GATE + 1, PATH_X + 1):
-        P(s, x, 0, 0, 'coarse_dirt')
-    for z in range(1, SZ0):
-        P(s, PATH_X, 0, z, 'coarse_dirt')
+    # ---- paths (cobblestone slabs, half a block high): from the gate into the plot's front lane, and along the front
+    # to the shed door
+    path = [(GATE, z) for z in (0, 1, 2)] + [(x, 0) for x in range(GATE + 1, PATH_X + 1)] + \
+        [(PATH_X, z) for z in range(1, SZ0)]
+    for x, z in path:
+        P(s, x, 0, z, 'cobblestone_slab', **SLAB)
 
     s.at(1, 'fittings')
     P(s, 14, 1, SZ1 - 1, 'chest', facing='south', type='single', waterlogged='false')
