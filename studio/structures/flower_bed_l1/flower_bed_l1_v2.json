@@ -4,12 +4,12 @@
   "version": 2,
   "size": [3,2,1],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T03:46:57.580Z",
     "description": "Imported from flower_bed_l1.nbt",
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:08:55.940Z",
     "parent": 1,
     "changes": "Same building as v1. The 'sunk into the ground' look was a Studio display bug (fixed): layer 0 now stands on the grass, the way the mod builds it."
   },
