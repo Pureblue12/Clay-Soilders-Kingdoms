@@ -197,14 +197,11 @@ def hospital():
     s.decorate(MID, 0, MID, 'water', note='a little pool in the herb bed')
 
     s.at(1, 'fittings')
-    for x, z in outer_ground + outer_upper + inner_ground + inner_upper:
-        side = x in (OX0, OX1, IX0, IX1) and z not in (OZ0, OZ1, IZ0, IZ1)
-        for y in ((2, 3) if (x, z) in outer_ground else (2,)) if (x, z) in outer_ground + inner_ground else ():
-            pane(s, x, y, z, side)
-    for x, z in outer_upper + inner_upper:
-        side = x in (OX0, OX1, IX0, IX1) and z not in (OZ0, OZ1, IZ0, IZ1)
-        for y in ((6, 7) if (x, z) in outer_upper else (6,)):
-            pane(s, x, y, z, side)
+    for wins, ys in ((outer_ground, (2, 3)), (inner_ground, (2,)), (outer_upper, (6, 7)), (inner_upper, (6,))):
+        for x, z in wins:
+            side = x in (OX0, OX1, IX0, IX1) and z not in (OZ0, OZ1, IZ0, IZ1)
+            for y in ys:
+                pane(s, x, y, z, side)
     pane(s, MID, 10, OZ0, False)
     for x in (3, 13):                                                # shutters on the front's outer windows
         for y in (2, 3, 6, 7):
@@ -343,8 +340,6 @@ def hospital():
         P(s, x, 4, 2, 'spruce_planks')
     for x in (MID - 1, MID + 1):
         P(s, x, 2, 1, 'lantern', **HANG)
-    for x in (MID - 1, MID + 1):                                            # benches under the porch
-        P(s, x - 1 if x < MID else x + 1, 0, 1, 'spruce_slab', **SLAB)
     for x, f in ((6, 'cornflower'), (10, 'allium')):                        # two more planters under the porch
         P(s, x, 0, FW - 1, 'coarse_dirt')
         P(s, x, 0, FW - 2, 'spruce_trapdoor', facing='north', **OPEN)
@@ -371,8 +366,6 @@ def hospital():
         P(s, x, 0, 0, 'cobblestone')
         P(s, x, 1, 0, 'spruce_fence')
         P(s, x, 2, 0, 'lantern', **STAND)
-    for x in (2, 14):                                                       # stepping stones to the planters
-        P(s, x, 0, 1, 'stone_brick_slab', type='bottom', waterlogged='false')
     return connect(s)
 
 

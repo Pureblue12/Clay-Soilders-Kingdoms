@@ -70,7 +70,11 @@ def siege_workshop():
         for y in (1, 2, 3):
             P(s, x, y, Z1, masonry(x, y, Z1, 9))
         P(s, x, 4, Z1, 'dark_oak_log', axis='x')
+    s.remove(MID, 2, Z1)
     P(s, MID, 5, Z1, 'dark_oak_log', **LOG_Y); P(s, MID, 6, Z1, 'dark_oak_log', **LOG_Y)
+    P(s, MID, 1, Z1 + 1, 'spruce_stairs', facing='north', **TOP)     # a window in the back wall: sill and shutters
+    for x in (MID - 1, MID + 1):
+        P(s, x, 2, Z1 + 1, 'spruce_trapdoor', facing='south', **OPEN)
     gable_roof(s, X0, X1, Z0, Z1, 3, front=1, back=1, gable='white_terracotta', corbels=False, gable_at=(Z1,))
     # the tool store: a catslide lean-to on the west (x 0..3, z 4..10)
     for z in range(4, 11):
@@ -90,22 +94,23 @@ def siege_workshop():
 
     # ------------------------------------------------------------------ L1 fittings
     s.at(1, 'fittings')
-    # the catapult in the open front, half out on the apron: rails, cross beams, trapdoor wheels
-    for z in range(0, 6):
-        P(s, MID - 1, 1, z, 'stripped_oak_log', axis='z'); P(s, MID + 1, 1, z, 'stripped_oak_log', axis='z')
-    for z in (0, 5):
-        P(s, MID, 1, z, 'stripped_oak_log', axis='x')
-    for z in (1, 4):
+    # the catapult in the open front, half out on the apron: dark rails, cross beams, trapdoor wheels
+    for z in range(0, 7):
+        P(s, MID - 1, 1, z, 'dark_oak_log', axis='z'); P(s, MID + 1, 1, z, 'dark_oak_log', axis='z')
+    for z in (0, 6):
+        P(s, MID, 1, z, 'spruce_slab', **SLAB)
+    for z in (1, 5):
         P(s, MID - 2, 1, z, 'spruce_trapdoor', facing='west', **OPEN)
         P(s, MID + 2, 1, z, 'spruce_trapdoor', facing='east', **OPEN)
-    # its A-frame: two uprights braced fore and aft, the stop bar across the top, the axle behind
+    # its A-frame out in the yard: two fence uprights braced fore and aft, the stop bar across the top; the axle inside
     for x in (MID - 1, MID + 1):
-        P(s, x, 2, 2, 'oak_fence')
-        P(s, x, 2, 1, 'oak_stairs', facing='south', **STAIR)
-        P(s, x, 2, 3, 'oak_stairs', facing='north', **STAIR)
+        P(s, x, 2, 2, 'spruce_fence'); P(s, x, 3, 2, 'spruce_fence')
+        P(s, x, 2, 1, 'spruce_stairs', facing='south', **STAIR)
+        P(s, x, 2, 3, 'spruce_stairs', facing='north', **STAIR)
     for x in range(MID - 1, MID + 2):
-        P(s, x, 3, 2, 'stripped_oak_log', axis='x')
-        P(s, x, 2, 4, 'stripped_spruce_log', axis='x')
+        P(s, x, 4, 2, 'dark_oak_log', axis='x')
+        P(s, x, 2, 5, 'stripped_spruce_log', axis='x')
+    P(s, MID, 2, Z1, 'glass_pane')
     # the workbench at the back: crafting table (workstation), tool chest, barrels, shelves
     P(s, MID, 1, 10, 'crafting_table')
     P(s, MID - 1, 1, 10, 'chest', facing='north', type='single', waterlogged='false')
@@ -136,10 +141,11 @@ def siege_workshop():
 
     # ------------------------------------------------------------------ L2: the engine takes shape
     s.at(2, 'flourish2')
-    P(s, MID, 3, 3, 'spruce_stairs', facing='north', **STAIR)       # the throwing arm, up from the axle onto the bar
-    P(s, MID, 4, 2, 'stripped_spruce_log', axis='z')
-    P(s, MID, 5, 2, 'cauldron')                                      # the cup
-    P(s, MID, 4, 3, 'chain', axis='y')                               # the hoist holding the arm from the tie beam
+    for (y, z) in ((3, 4), (4, 3), (5, 2)):                          # the throwing arm, up from the axle over the bar
+        P(s, MID, y, z, 'spruce_stairs', facing='north', **STAIR)
+    P(s, MID, 5, 1, 'cauldron')                                      # the cup, out under the sky
+    P(s, MID, 2, 6, 'barrel', facing='north', open='false')          # the winch drum's rope barrel at the tail
+    P(s, MID - 1, 2, 6, 'spruce_fence'); P(s, MID + 1, 2, 6, 'spruce_fence')
     for x in (X0, X1):                                               # banners on the front posts
         P(s, x, 3, Z0 - 1, 'red_wall_banner', facing='north')
         s.decorate(x, 3, Z0 - 1, 'banner_pattern', banner='red_wall_banner', note='the engineers\' colours')
@@ -152,28 +158,25 @@ def siege_workshop():
     # ------------------------------------------------------------------ L3: the war shop
     s.at(3, 'flourish3')
     # a long battering ram hanging in its frame on the east side (x 12..14, z 3..11)
-    for x in (12, 14):
-        for z in (5, 9):
-            P(s, x, 0, z, 'cobblestone'); P(s, x, 1, z, 'spruce_log', **LOG_Y); P(s, x, 2, z, 'spruce_log', **LOG_Y)
-        for z in range(4, 11):
-            P(s, x, 3, z, 'spruce_log', axis='z')
-    for z in (5, 9):
-        P(s, 13, 3, z, 'spruce_log', axis='x')
+    for z in (5, 9):                                                 # two trestles: fence legs, a log bar, a chain
+        for x in (12, 14):
+            P(s, x, 0, z, 'cobblestone'); P(s, x, 1, z, 'spruce_fence'); P(s, x, 2, z, 'spruce_fence')
+        for x in (12, 13, 14):
+            P(s, x, 3, z, 'spruce_log', axis='x')
         P(s, 13, 2, z, 'chain', axis='y')
+    for z in range(6, 9):                                            # a ridge beam ties the trestles
+        P(s, 13, 3, z, 'spruce_fence')
     for z in range(4, 12):
         P(s, 13, 1, z, 'dark_oak_log', axis='z')
     P(s, 13, 1, 3, 'polished_andesite')                              # the ram's capped head
-    for x in (12, 14):                                               # a slab roof keeps the rain off the ram
-        P(s, x, 4, 4, 'spruce_slab', **SLAB); P(s, x, 4, 10, 'spruce_slab', **SLAB)
-    P(s, 13, 4, 5, 'spruce_slab', **SLAB); P(s, 13, 4, 9, 'spruce_slab', **SLAB)
     # lanterns under the middle tie beam and in the store
     P(s, MID - 1, 3, 7, 'lantern', **HANG); P(s, MID + 1, 3, 7, 'lantern', **HANG)
     P(s, 2, 2, 7, 'lantern', **HANG)
     # a pile of stone shot by the engine
     P(s, 3, 0, 0, 'andesite'); P(s, 4, 0, 0, 'andesite'); P(s, 2, 0, 0, 'andesite'); P(s, 3, 1, 0, 'andesite_slab', type='bottom', waterlogged='false')
     # barrels and a cart wheel by the ram, more flowers
-    P(s, 10, 0, 0, 'barrel', facing='up', open='false'); P(s, 11, 0, 0, 'barrel', facing='up', open='false')
-    P(s, 10, 1, 0, 'barrel', facing='up', open='false')
+    P(s, 0, 0, 1, 'barrel', facing='up', open='false'); P(s, 1, 0, 1, 'barrel', facing='up', open='false')
+    P(s, 0, 1, 1, 'barrel', facing='up', open='false')
     for (x, z, f) in ((12, 2, 'dandelion'), (14, 2, 'poppy'), (12, 12, 'dandelion'), (0, 2, 'poppy'), (0, 12, 'dandelion')):
         P(s, x, 0, z, f)
     P(s, 14, 0, 12, 'oak_leaves', persistent='true', distance='1', waterlogged='false')

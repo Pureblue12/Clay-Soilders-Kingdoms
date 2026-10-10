@@ -5,8 +5,8 @@ sits on one stone base course (layer 0).
 Layout (13 wide x 18 deep x 18 tall, front z = 0):
 - Clock tower x 4..8, z 1..5 (5 x 5), stone bricks: an open vaulted porch at the bottom (arches to the front, both
   sides and into the arcade), the clerks' office above it (reached from the council chamber), a timber clock stage at
-  y 11..15 with a clock face on three sides (white plaster round a dark hub in a dark oak frame; the hands are
-  item frames with clocks, the decoration step), and a spruce pyramid roof with one block of eaves, to 17 (18 tall:
+  y 11..15 with a clock face on three sides (a bright white wool dial in the dark oak frame; hands from L2), the
+  clock chamber inside it (reached by a spruce stair from the office, with the clockwork), and a spruce pyramid roof with one block of eaves, to 17 (18 tall:
   needs scaffolding).
 - Hall x 2..10, z 5..16 (9 x 12): the ground floor is an open market arcade, 4 high (stone brick piers every 3 blocks,
   arches of upside-down stairs, dark oak brackets under the floor beam), closed at the back where a stone stair climbs
@@ -14,11 +14,13 @@ Layout (13 wide x 18 deep x 18 tall, front z = 0):
   spruce gable roof (dark oak eaves and ridge) with one block of overhang, ridge at 13.
 - Upper floor: the council chamber: a long table with eight chairs and the mayor's seat, record chests, a doorway into
   the clerks' office in the tower. The notice board on the front piers, beside the tower porch.
-Level 1: shell and fittings (arcade, chamber, table and chairs, records chests, stair, notice board, torches).
-Level 2 (the hall at work): the clock hubs get hands (buttons), bookshelves of records and a lectern, market stalls
-under the arcade (barrels, hay, a counter), lanterns under the floor and in the chamber, red banners on the tower.
-Level 3 (the proud town): the clocks (decoration step), flower boxes on brackets under the upper windows, benches
-and flower beds round the arcade, a lantern post, carpet runners in the chamber and the porch, vines.
+Level 1: shell and fittings (arcade, chamber, table and chairs, records chests, stair, notice board, torches),
+shutters and slab sills on the windows, buttresses and a brick chimney on the back.
+Level 2 (the hall at work): dark chain hands on the white dials, the clock bell, bookshelves of records and a lectern,
+two market stalls in the arcade (counters with goods, striped awnings, stock behind), lanterns in the arcade, under
+the outside brackets and in the chamber, red banners on the tower.
+Level 3 (the proud town): long flower boxes with trapdoor fronts under the upper windows, benches and flower beds
+round the arcade, a lantern post, carpet runners in the chamber and the porch, vines, a clock in the chamber.
 """
 from make_batch1_structures import Structure
 from batch3.ws_kit import P, A, STAIR, TOP, HANG, STAND, LEAVES, OPEN, SLAB_TOP, connect, gable_roof
@@ -385,11 +387,20 @@ def town_hall():
 
 
 STRUCTURES = [dict(path='town_hall', name='Town hall', tier=6, zone='inner', role='civic', group='town_hall',
-                   terrain='stepped', door='front', make=town_hall, max_height=18, changes='First version.',
-                   description='Needs scaffolding: 18 tall (the clock tower; the hall roof is 15). Over budget: 1159 blocks vs '
-                               '740 (first build 1051 vs 620). Half-timbered '
+                   terrain='stepped', door='front', make=town_hall, max_height=18,
+                   changes='From the v1 quality notes. L1: the clock faces are bright white dials in the dark frame '
+                           '(the dark log hubs that read as windows are gone); shutters and slab sills on the windows; '
+                           'the back gets corner buttresses, stone sills and a brick chimney up the gable; the clock '
+                           'chamber is reached by a spruce stair from the clerks\' office (no ladder) and holds the '
+                           'clockwork. L2: dark chain hands on the dials (and a bell in the chamber); the market stalls '
+                           'are two counters with goods, posts and red/white and blue/white striped awnings, with stock '
+                           'behind; lanterns under the outside brackets. L3: the flower boxes are one long box per side '
+                           'with trapdoor fronts and end boards; the item-frame clocks on the hubs became one clock on the council chamber wall.',
+                   description='Needs scaffolding: 18 tall (the clock tower; the hall roof is 15). Over budget: 1291 blocks vs '
+                               '740 (first build 1115 vs 620). Half-timbered '
                                'council hall raised on an open stone market arcade, a stone clock tower at the front '
-                               'with a clock face on every side and a vaulted porch; council chamber with a long table, '
-                               'the mayor\'s seat and records, the clerks\' office in the tower, a stair at the back, a '
-                               'notice board; L2 clock hands, records shelves, lanterns, banners and market stalls; L3 '
-                               'the clocks (decoration step), flower boxes, benches, flowers and a lantern post.')]
+                               'with a white clock dial on three sides, a vaulted porch and a clock chamber up a stair; '
+                               'council chamber with a long table, the mayor\'s seat and records, the clerks\' office in '
+                               'the tower, a stair at the back, a notice board, a back chimney; L2 clock hands and bell, '
+                               'records shelves, lanterns, banners and two market stalls with awnings; L3 flower boxes, '
+                               'benches, flowers, a lantern post and carpets.')]
