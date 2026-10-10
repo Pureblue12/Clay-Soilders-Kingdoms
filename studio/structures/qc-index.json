@@ -483,25 +483,25 @@
     "checkedAt": "2026-10-10T04:19:54.127Z"
   },
   "market_l1": {
-    "version": 1,
+    "version": 2,
     "verdict": "pass",
-    "score": 72,
+    "score": 93,
     "round": 1,
-    "checkedAt": "2026-10-10T05:03:47.649Z"
+    "checkedAt": "2026-10-10T05:22:50.429Z"
   },
   "market_l2": {
-    "version": 1,
+    "version": 2,
     "verdict": "pass",
-    "score": 92,
+    "score": 95,
     "round": 1,
-    "checkedAt": "2026-10-10T05:03:48.206Z"
+    "checkedAt": "2026-10-10T05:22:51.828Z"
   },
   "market_l3": {
-    "version": 1,
+    "version": 2,
     "verdict": "pass",
-    "score": 94,
+    "score": 100,
     "round": 1,
-    "checkedAt": "2026-10-10T05:03:48.829Z"
+    "checkedAt": "2026-10-10T05:22:53.150Z"
   },
   "market_stall_l1": {
     "version": 2,

@@ -65,6 +65,67 @@
           "iso"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T05:22:51.828Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 95,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: pumpkin, lectern, red_banner, white_banner, red_wool, white_wool, yellow_wool, chiseled_stone_bricks, stone_brick_wall."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "616 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 616,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3538961038961039,
+          "types": 31,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.1525974025974026
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "roof": "Flat wool canopies and awnings; fine for a market, not a pitched roof.",
+          "levels": "Clearly different from L1 at a glance: two new covered sitting areas (yellow-white on the west, red-white on the east entrance) on spruce posts with hanging lanterns, the cross head with lanterns, banner poles, lectern scale and strongbox. Carlton's v1 note is answered: the top view now shows six canopies instead of four."
+        },
+        "summary": "L1 plus two striped canopies over the benches and side entrances, a lantern-lit cross head, banner poles, a weighing scale and a strongbox: the market is open and trading.",
+        "problems": [
+          "Reachability: 180 of 312 standing places reached; unreached are awning and canopy tops (y 4..5) and the two cross-step tops at (6,6,7) and (8,6,7). Square, stalls, counters and aisles are reached."
+        ],
+        "views": [
+          "sheet",
+          "iso"
+        ]
+      }
     }
   }
 }
