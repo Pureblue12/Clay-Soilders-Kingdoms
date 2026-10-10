@@ -4,14 +4,14 @@
   "version": 1,
   "size": [3,8,3],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:42:36.856Z",
     "description": "Stone wall, corner, level 2 of 3: L1 plus flourish 2. Outside corner joining two straight modules, with a corner pier. Not yet builder-tested: red_banner, stone_brick_wall. Decoration step adds: banner_pattern.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:26:20.063Z",
     "tags": [
       "batch3",
       "tier3",
