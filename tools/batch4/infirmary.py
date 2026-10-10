@@ -54,6 +54,7 @@ def infirmary():
     # the hearth's chimney: a brick breast outside the back wall, a stack through the back overhang to the ridge
     chimney = [(mid, y, z1 + 1) for y in range(3, 9)]
     gable_roof(s, x0, x1, z0, z1, top, front=1, back=1, gable='spruce_planks', plates='spruce_log', skip=chimney)
+    P(s, mid, top + 3, z0 - 1, 'spruce_planks')                 # closes the front barge board under the ridge
     for x in (mid - 1, mid, mid + 1):
         for y in (0, 1, 2):
             P(s, x, y, z1 + 1, 'bricks')
@@ -146,8 +147,8 @@ def infirmary():
     for x in (x0, x1):                                                                    # red-cross banners on the front posts
         P(s, x, 3, z0 - 1, 'white_wall_banner', facing='north')
         s.decorate(x, 3, z0 - 1, 'banner_pattern', banner='white_wall_banner', note='a red cross')
-    P(s, x1 + 1, 0, z0 - 1, 'spruce_stairs', facing='east', **STAIR)                       # a bench by the front
-    P(s, x1 + 1, 0, z0, 'spruce_stairs', facing='east', **STAIR)
+    P(s, x1 + 1, 0, z0 - 1, 'spruce_stairs', facing='west', **STAIR)                       # a bench by the front
+    P(s, x1 + 1, 0, z0, 'spruce_stairs', facing='west', **STAIR)
     for y in (0, 1):
         P(s, 0, y, 0, 'spruce_fence')
     P(s, 0, 2, 0, 'lantern', **STAND)
@@ -162,8 +163,9 @@ def infirmary():
 
 
 STRUCTURES = [dict(path='infirmary', name='Infirmary', tier=4, zone='inner', role='health', group='infirmary',
-                   terrain='ground_level', door='front', make=infirmary, changes='First version.',
-                   description='Over budget: 447 blocks vs 285 (first build 378 vs 235). White plaster ward in a dark oak frame under a spruce gable roof: six '
+                   terrain='ground_level', door='front', make=infirmary, changes='Quality check round 1: the hole in the front barge board under the ridge is closed (every level); '
+                           'the L3 bench by the front now faces away from the wall.',
+                   description='Over budget: 448 blocks vs 285 (first build 379 vs 235). White plaster ward in a dark oak frame under a spruce gable roof: six '
                                'beds (three on each side, heads to the wall, a window over each), bedside tables, a '
                                'hearth, herb barrels and shelves, a lean-to herb store; L2 adds the brewing stand and '
                                'cauldron, candles, lanterns, flower boxes, a door canopy and the banner; L3 a herb '

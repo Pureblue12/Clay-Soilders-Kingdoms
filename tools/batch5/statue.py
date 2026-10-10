@@ -70,18 +70,17 @@ def statue():
     s.decorate(C, 2, C - 2, 'sign_text', lines=['', 'Our Founder', 'the First King', ''])
 
     s.at(1, 'fittings')                                                 # the figure (faces the front)
-    P(s, C, 4, C, 'stone_bricks')                                       # tabard
+    P(s, C, 4, C, 'white_terracotta')                                   # fired clay: a clay soldier
     P(s, C - 1, 4, C, 'stone_brick_stairs', facing='east', **STAIR)     # its hem flaring out
     P(s, C + 1, 4, C, 'stone_brick_stairs', facing='west', **STAIR)
-    P(s, C, 5, C, 'stone_bricks')                                       # chest
+    P(s, C, 5, C, 'white_terracotta')                                   # chest
     P(s, C - 1, 5, C, 'cobblestone_wall')                               # left arm, down
     P(s, C - 1, 6, C, 'stone_brick_stairs', facing='east', **TOP)       # shoulders
     P(s, C + 1, 6, C, 'stone_brick_stairs', facing='west', **TOP)
-    P(s, C, 6, C, 'stone_bricks')                                       # neck and collar
-    P(s, C, 7, C, 'stone_bricks')                                       # head
+    P(s, C, 6, C, 'white_terracotta')                                   # neck and collar
+    P(s, C, 7, C, 'white_terracotta')                                   # head
     P(s, C - 1, 5, C - 1, 'spruce_trapdoor', facing='north', **OPEN)    # the shield on the left arm
-    P(s, C + 1, 5, C, 'cobblestone_wall')                               # right arm, raised: the fist at the shoulder
-    P(s, C + 1, 7, C, 'cobblestone_wall')                               # the sword's grip above the fist
+    P(s, C + 1, 7, C, 'cobblestone_wall')                               # the right arm raised, the fist round the grip
     P(s, C + 1, 8, C, 'chain', axis='y')                                # the blade
 
     s.at(2, 'flourish2')
@@ -95,9 +94,6 @@ def statue():
     for x, z in posts:                                                  # bushes hugging the posts
         for bx, bz in ((x, z + (1 if z < C else -1)), (x + (1 if x < C else -1), z)):
             P(s, bx, 1, bz, 'flowering_azalea_leaves' if (bx + bz) % 2 else 'azalea_leaves', **LEAVES)
-    P(s, C - 1, 6, C - 1, 'white_wall_banner', facing='north')          # the shield's coat of arms
-    s.decorate(C - 1, 6, C - 1, 'banner_pattern', banner='white_wall_banner', note='the kingdom\'s arms')
-
     s.at(3, 'flourish3')
     P(s, C, 8, C, 'light_weighted_pressure_plate', power='0')           # the gold-look crown
     for y in (5, 6):                                                    # the cloak down his back
