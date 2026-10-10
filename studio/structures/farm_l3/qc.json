@@ -64,6 +64,73 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:34:31.823Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 92,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: sunflower, dandelion, beehive, white_wool."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "872 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "15 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 872,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3704128440366973,
+          "types": 40,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.13761467889908258
+          },
+          "height": 15,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "summary": "Farm level 3: the farmhouse plus a tall windmill with lattice sails and a gallery; the bigger, more detailed windmill Carlton asked for.",
+        "problems": [
+          "The roof is one oak colour and flush at the gable ends: dark eaves, a slab ridge and a block of overhang would finish it.",
+          "872 blocks and 15 tall: far over the common budget and needs scaffold in game (Carlton decides)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

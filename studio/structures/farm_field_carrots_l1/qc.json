@@ -47,6 +47,51 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:34:32.919Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 75,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 139,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.41007194244604317,
+          "types": 11,
+          "dominant": {
+            "name": "dirt",
+            "share": 0.34532374100719426
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Carrot field module: now bordered by a leaf hedge with a crate stack and lanterns; clearly its own module.",
+        "problems": [
+          "The field sits a step up on a plank rim; check soldiers can walk in."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

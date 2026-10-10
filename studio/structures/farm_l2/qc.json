@@ -54,6 +54,68 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:34:31.262Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 89,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: dandelion."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "547 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "15 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          }
+        ],
+        "stats": {
+          "blocks": 547,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3711151736745887,
+          "types": 34,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.16819012797074953
+          },
+          "height": 15,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Farm level 2: adds a lean-to with a porch, hay, barrels and a cart; a working farmstead.",
+        "problems": [
+          "The roof is one oak colour and flush at the gable ends: dark eaves, a slab ridge and a block of overhang would finish it.",
+          "547 blocks, over the common budget (on purpose; Carlton decides)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

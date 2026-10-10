@@ -47,6 +47,51 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:34:33.445Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 78,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 162,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3333333333333333,
+          "types": 15,
+          "dominant": {
+            "name": "dirt",
+            "share": 0.36419753086419754
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Potato field module: a fenced plot with a grass-roofed stone root cellar beside it; clearly its own module.",
+        "problems": [
+          "The field sits a step up on a plank rim; check soldiers can walk in."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

@@ -54,6 +54,64 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:34:30.687Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 72,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "475 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "15 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          }
+        ],
+        "stats": {
+          "blocks": 475,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3157894736842105,
+          "types": 28,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.1936842105263158
+          },
+          "height": 15,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Farm level 1: now a big two-storey farmhouse with a stone ground floor, a timber-framed upper floor and a chimney; the farmer's hut Carlton asked for, still plain round the base.",
+        "problems": [
+          "No plants or garden at level 1: a flower box or a small vegetable bed by the door.",
+          "The roof is one oak colour and flush at the gable ends: dark eaves, a slab ridge and a block of overhang would finish it.",
+          "475 blocks, over the common budget (on purpose; Carlton decides)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }
