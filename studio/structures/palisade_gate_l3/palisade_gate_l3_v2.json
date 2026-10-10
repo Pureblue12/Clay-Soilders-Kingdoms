@@ -1,0 +1,75 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "palisade_gate_l3",
+  "version": 2,
+  "size": [5,7,3],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude-qc",
+    "created": "2026-10-10T03:48:58.826Z",
+    "description": "Palisade gate, level 3 of 3: L2 plus flourish 3. Two log towers and a 3 wide, 3 high opening (no fence gate); the walk crosses over it. Not yet builder-tested: moss_carpet, white_banner. Decoration step adds: banner_pattern.",
+    "changes": "Quality check round 2: cobblestone footing under the stakes (mossy every third), walk posts every other block braced to the stakes, fence points and the gate's beam railing joined the way the game joins them; level 2 adds stores under the walk (barrel, hay) and level 3 hanging lanterns and a second barrel; the corner gets a flag",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "wall",
+      "gate"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:cobblestone",
+    "A": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "B": "minecraft:moss_carpet",
+    "C": "minecraft:mossy_cobblestone",
+    "D": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "E": "minecraft:spruce_fence[east=true,north=false,south=false,waterlogged=false,west=true]",
+    "F": "minecraft:spruce_log[axis=x]",
+    "G": "minecraft:spruce_log[axis=y]",
+    "H": "minecraft:spruce_slab[type=bottom,waterlogged=false]",
+    "I": "minecraft:spruce_slab[type=top,waterlogged=false]",
+    "J": "minecraft:wall_torch[facing=east]",
+    "K": "minecraft:wall_torch[facing=west]",
+    "L": "minecraft:white_banner[rotation=8]"
+  },
+  "layers": [
+    [
+      "#...C",
+      "#...#",
+      "#...#"
+    ],
+    [
+      "G...G",
+      "G...G",
+      "G...G"
+    ],
+    [
+      "GJAKG",
+      "I...I",
+      "G.A.G"
+    ],
+    [
+      "GFFFG",
+      ".HHH.",
+      "GFFFG"
+    ],
+    [
+      "GEEEG",
+      ".B.B.",
+      "D...D"
+    ],
+    [
+      "D...D",
+      ".....",
+      "....."
+    ],
+    [
+      "L...L",
+      ".....",
+      "....."
+    ]
+  ]
+}
