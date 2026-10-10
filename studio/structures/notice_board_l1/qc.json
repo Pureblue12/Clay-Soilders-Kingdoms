@@ -53,6 +53,97 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:31:49.800Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 2,
+      "score": 61,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 18,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.4444444444444444,
+          "types": 3,
+          "dominant": {
+            "name": "dark_oak_stairs",
+            "share": 0.4444444444444444
+          },
+          "height": 4,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 1,
+          "depth": 1,
+          "roof": 2,
+          "materials": 1,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Notice board level 1: a proper roofed board on two dark log posts, standing on the ground; but with no notice on it yet it reads as an empty frame.",
+        "problems": [
+          "Pin one notice and hang a lamp at level 1 so it reads as a notice board at once; a bush at its foot.",
+          "Level 2 keeps its own extras (two more notices, the second lamp, barrel and flowers)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:32:37.558Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 3,
+      "score": 78,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 21,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.5238095238095238,
+          "types": 6,
+          "dominant": {
+            "name": "dark_oak_stairs",
+            "share": 0.38095238095238093
+          },
+          "height": 4,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 1,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Notice board level 1: a roofed board on two dark log posts with one notice, a hanging lantern and a bush; reads as a notice board.",
+        "problems": [
+          "The board is one spruce colour; a dark frame round it would add depth."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }
