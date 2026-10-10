@@ -45,7 +45,8 @@ regenerate with `tools/make_gametest_platform.py` (size arguments: see the scrip
 world first, so every run starts fresh.
 
 GitHub Actions (`.github/workflows/ci.yml`) runs `runData` then `tools/suite.sh` on every push to `main` and every pull
-request; the logs (`build/suite.log`, `build/build.log`) are attached to the run as `suite-logs`.
+request; the logs (`build/suite.log`, `build/build.log`) are attached to the run as `suite-logs`. GitHub's machines are slower: the one wall-clock limit
+(`ScaffoldPlannerGameTests.PLAN_MILLIS`) is doubled there (`CI=true`).
 
 - Bug tests assert the CORRECT behavior; a failing bug test = a confirmed bug (fix in M1).
   Don't change gameplay code just to make a test pass.
