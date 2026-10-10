@@ -61,6 +61,59 @@
           "right"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T09:16:49.012Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 83,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 443,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.44469525959367945,
+          "types": 25,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.18961625282167044
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 1,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "purpose": "Reads as a tidy cottage; nothing outside says guards yet (fine for L1, a weapon rack or banner by the door would help).",
+          "roof": "Single spruce tone from the sides; dark eave row only.",
+          "shape": "Box with a chimney; asymmetry comes only from the chimney."
+        },
+        "summary": "Stone-plinth timber-frame bunkhouse with mess room and bed loft; now with shutters, sills, flower boxes, a door lantern, wall posts with torches and a chimney rising 2 above the roof.",
+        "problems": [
+          "All last-round points fixed (shutters, sills, light, posts on side walls, chimney above roof).",
+          "Roof still one spruce colour from the sides: dark oak verge on the gables or a contrasting ridge.",
+          "Reachability: fine; only roof slopes, prop and furniture tops are unreached, no room or floor is cut off."
+        ],
+        "views": [
+          "sheet",
+          "front"
+        ]
+      }
     }
   }
 }

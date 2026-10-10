@@ -357,25 +357,25 @@
     "checkedAt": "2026-10-10T05:10:18.744Z"
   },
   "guard_quarters_l1": {
-    "version": 1,
-    "verdict": "revise",
-    "score": 68,
-    "round": 1,
-    "checkedAt": "2026-10-10T08:55:03.998Z"
+    "version": 2,
+    "verdict": "pass",
+    "score": 83,
+    "round": 2,
+    "checkedAt": "2026-10-10T09:16:49.012Z"
   },
   "guard_quarters_l2": {
-    "version": 1,
+    "version": 2,
     "verdict": "pass",
-    "score": 70,
+    "score": 83,
     "round": 1,
-    "checkedAt": "2026-10-10T08:55:04.538Z"
+    "checkedAt": "2026-10-10T09:16:49.516Z"
   },
   "guard_quarters_l3": {
-    "version": 1,
+    "version": 2,
     "verdict": "pass",
-    "score": 80,
+    "score": 85,
     "round": 1,
-    "checkedAt": "2026-10-10T08:55:05.090Z"
+    "checkedAt": "2026-10-10T09:16:50.093Z"
   },
   "hitching_post_l1": {
     "version": 3,
@@ -784,25 +784,25 @@
     "checkedAt": "2026-10-10T03:45:16.414Z"
   },
   "siege_workshop_l1": {
-    "version": 1,
-    "verdict": "revise",
-    "score": 63,
-    "round": 1,
-    "checkedAt": "2026-10-10T08:55:05.662Z"
+    "version": 2,
+    "verdict": "pass",
+    "score": 80,
+    "round": 2,
+    "checkedAt": "2026-10-10T09:16:47.288Z"
   },
   "siege_workshop_l2": {
-    "version": 1,
-    "verdict": "revise",
-    "score": 60,
-    "round": 1,
-    "checkedAt": "2026-10-10T08:55:06.177Z"
+    "version": 2,
+    "verdict": "pass",
+    "score": 80,
+    "round": 2,
+    "checkedAt": "2026-10-10T09:16:47.853Z"
   },
   "siege_workshop_l3": {
-    "version": 1,
-    "verdict": "revise",
-    "score": 60,
-    "round": 1,
-    "checkedAt": "2026-10-10T08:55:06.737Z"
+    "version": 2,
+    "verdict": "pass",
+    "score": 88,
+    "round": 2,
+    "checkedAt": "2026-10-10T09:16:48.473Z"
   },
   "signpost_l1": {
     "version": 3,

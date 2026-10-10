@@ -71,6 +71,74 @@
           "front"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T09:16:48.473Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 88,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: andesite, dandelion, andesite_slab, polished_andesite, red_wall_banner, cauldron."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "487 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 487,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4455852156057495,
+          "types": 36,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.18480492813141683
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "levels": "Long battering ram hanging from trestles on the west side clearly changes the silhouette.",
+          "life": "Flowers and bushes around, lanterns; still sparse."
+        },
+        "summary": "L2 plus a long battering ram slung on chains between two trestles on the west side, lanterns, a pile of stone shot and more flowers.",
+        "problems": [
+          "Ram is now a proper length and reads well; fix from last round confirmed.",
+          "Same one-tone roof and brown timber as L1.",
+          "Reachability: fine; only roof slopes, prop and furniture tops are unreached, no room or floor is cut off."
+        ],
+        "views": [
+          "sheet",
+          "iso"
+        ]
+      }
     }
   }
 }

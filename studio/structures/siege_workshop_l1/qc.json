@@ -71,6 +71,71 @@
           "floor_top"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T09:16:47.288Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 80,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "423 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 423,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.41371158392434987,
+          "types": 26,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.20567375886524822
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "roof": "Main roof is one plank tone with only a darker eave row; overhang warning partly real at the front gable. Steep, catslide lean-to now sloped.",
+          "materials": "Still mostly brown (roof, frame, catapult, crates); stone plinths and cobble yard help.",
+          "detail": "Catapult frame in the yard, sawhorses, log piles; few small blocks on the side walls."
+        },
+        "summary": "Open timber shed with stone plinths and a catslide tool store; the catapult base (rails, wheels, A-frame) now stands in a cobble yard in front of the open gable.",
+        "problems": [
+          "Last round's fixes check out: catapult visible in the front yard, no floating sawhorse slabs, back gable closed, front gable infilled, lean-to sloped.",
+          "Roof and timber are one brown tone: give the main roof a dark oak ridge/verge or a contrasting eave row along the long sides.",
+          "Long sides have little small detail: add a lantern or tool rack on the east and west walls.",
+          "Reachability: fine; only roof slopes, prop and furniture tops are unreached, no room or floor is cut off."
+        ],
+        "views": [
+          "sheet",
+          "iso"
+        ]
+      }
     }
   }
 }

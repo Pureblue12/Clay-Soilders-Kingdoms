@@ -64,6 +64,64 @@
           "right"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T09:16:50.093Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 85,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: stone_brick_wall, target, brick_stairs, vine, carved_pumpkin, red_wall_banner."
+          }
+        ],
+        "stats": {
+          "blocks": 548,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.4854014598540146,
+          "types": 35,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.1843065693430657
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 1,
+          "levels": 2
+        },
+        "notes": {
+          "levels": "Drill yard on the east side (straw dummy, target, hay) and vines make L3 tell apart.",
+          "artefacts": "Guard post roof seam from L2 remains."
+        },
+        "summary": "L2 plus a drill yard on the east side (straw dummy now facing east, target, hay bales), vines and more plants.",
+        "problems": [
+          "Dummy pumpkin now faces east: fixed.",
+          "Guard post roof seam and oversized post roof from L2 carry over.",
+          "Reachability: fine; only roof slopes, prop and furniture tops are unreached, no room or floor is cut off."
+        ],
+        "views": [
+          "sheet",
+          "front"
+        ]
+      }
     }
   }
 }
