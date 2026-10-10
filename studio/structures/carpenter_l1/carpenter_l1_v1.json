@@ -1,0 +1,98 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "carpenter_l1",
+  "version": 1,
+  "size": [7,7,6],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T01:57:37.991Z",
+    "description": "Carpenter or fletcher, level 1 of 3: shell and fittings (what soldiers build first). Timber workshop entered by an open front bay (crafting table, fletching table from L2), back door to the yard; log stack and sawhorse under the side eaves.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "inner",
+      "workshop"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:chest[facing=east,type=single,waterlogged=false]",
+    "B": "minecraft:cobblestone",
+    "C": "minecraft:crafting_table",
+    "D": "minecraft:glass_pane",
+    "E": "minecraft:oak_door[facing=south,half=lower,hinge=left,open=false,powered=false]",
+    "F": "minecraft:oak_door[facing=south,half=upper,hinge=left,open=false,powered=false]",
+    "G": "minecraft:oak_log[axis=x]",
+    "H": "minecraft:oak_log[axis=y]",
+    "I": "minecraft:oak_log[axis=z]",
+    "J": "minecraft:oak_planks",
+    "K": "minecraft:oak_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "L": "minecraft:oak_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "M": "minecraft:spruce_planks",
+    "N": "minecraft:wall_torch[facing=north]"
+  },
+  "layers": [
+    [
+      ".......",
+      ".BBBBB.",
+      ".BJJJB.",
+      ".BJJJB.",
+      ".BJJJB.",
+      ".BBBBB."
+    ],
+    [
+      ".......",
+      ".H...H.",
+      ".JC.KJ.",
+      ".J..KJ.",
+      ".JA.#J.",
+      ".HJEJH."
+    ],
+    [
+      ".......",
+      ".H...H.",
+      ".J...J.",
+      ".D...D.",
+      ".J..#J.",
+      ".HDFDH."
+    ],
+    [
+      ".......",
+      ".HGGGH.",
+      ".J...J.",
+      ".J...J.",
+      ".JN.NJ.",
+      ".HJJJH."
+    ],
+    [
+      "K.....L",
+      "KIMMMIL",
+      "KI...IL",
+      "KI...IL",
+      "KI...IL",
+      "KIMMMIL"
+    ],
+    [
+      ".K...L.",
+      ".KMMML.",
+      ".K...L.",
+      ".K...L.",
+      ".K...L.",
+      ".KMMML."
+    ],
+    [
+      "..KJL..",
+      "..KJL..",
+      "..KJL..",
+      "..KJL..",
+      "..KJL..",
+      "..KJL.."
+    ]
+  ]
+}

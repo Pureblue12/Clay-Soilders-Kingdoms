@@ -1,0 +1,56 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "palisade_corner_l2",
+  "version": 1,
+  "size": [2,6,2],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T01:57:47.856Z",
+    "description": "Palisade, corner, level 2 of 2: L1 plus flourish 2. Outside corner piece joining two straight modules.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "A": "minecraft:oak_fence",
+    "B": "minecraft:spruce_fence",
+    "C": "minecraft:spruce_log[axis=y]",
+    "D": "minecraft:spruce_slab[type=bottom,waterlogged=false]"
+  },
+  "layers": [
+    [
+      "CC",
+      "CA"
+    ],
+    [
+      "CC",
+      "CA"
+    ],
+    [
+      "CC",
+      "CD"
+    ],
+    [
+      "CB",
+      "B#"
+    ],
+    [
+      "B.",
+      ".."
+    ],
+    [
+      "..",
+      ".."
+    ]
+  ]
+}

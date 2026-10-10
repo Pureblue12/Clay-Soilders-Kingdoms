@@ -1,0 +1,57 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "palisade_straight_l3",
+  "version": 1,
+  "size": [5,6,2],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T01:57:45.621Z",
+    "description": "Palisade, straight, level 3 of 3: L2 plus flourish 3. 5 sharpened spruce stakes with a slab walkway behind (walk 2.5 high). Not yet builder-tested: moss_carpet.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:moss_carpet",
+    "A": "minecraft:oak_fence",
+    "B": "minecraft:spruce_fence",
+    "C": "minecraft:spruce_log[axis=y]",
+    "D": "minecraft:spruce_slab[type=bottom,waterlogged=false]",
+    "E": "minecraft:wall_torch[facing=south]"
+  },
+  "layers": [
+    [
+      "CCCCC",
+      "AAAAA"
+    ],
+    [
+      "CCCCC",
+      "AAAAA"
+    ],
+    [
+      "CCCCC",
+      "DDDDD"
+    ],
+    [
+      "BCBCB",
+      "#E#E#"
+    ],
+    [
+      ".B.B.",
+      "....."
+    ],
+    [
+      ".....",
+      "....."
+    ]
+  ]
+}

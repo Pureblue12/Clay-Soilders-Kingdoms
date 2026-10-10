@@ -1,0 +1,55 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "palisade_straight_l1",
+  "version": 1,
+  "size": [5,6,2],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T01:57:44.707Z",
+    "description": "Palisade, straight, level 1 of 3: shell and fittings (what soldiers build first). 5 sharpened spruce stakes with a slab walkway behind (walk 2.5 high).",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:oak_fence",
+    "A": "minecraft:spruce_fence",
+    "B": "minecraft:spruce_log[axis=y]",
+    "C": "minecraft:spruce_slab[type=bottom,waterlogged=false]"
+  },
+  "layers": [
+    [
+      "BBBBB",
+      "#####"
+    ],
+    [
+      "BBBBB",
+      "#####"
+    ],
+    [
+      "BBBBB",
+      "CCCCC"
+    ],
+    [
+      "ABABA",
+      "....."
+    ],
+    [
+      ".A.A.",
+      "....."
+    ],
+    [
+      ".....",
+      "....."
+    ]
+  ]
+}

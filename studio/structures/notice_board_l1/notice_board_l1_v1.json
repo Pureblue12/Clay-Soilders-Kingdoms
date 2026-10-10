@@ -1,0 +1,43 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "notice_board_l1",
+  "version": 1,
+  "size": [2,3,2],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T01:57:49.629Z",
+    "description": "Notice board, level 1 of 2: shell and fittings (what soldiers build first). Two fence posts with a spruce trapdoor board and a gravel pad; level 2 pins two signs on it.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "inner",
+      "decoration"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:gravel",
+    "A": "minecraft:oak_fence[east=false,north=false,south=false,waterlogged=false,west=true]",
+    "B": "minecraft:oak_fence[east=true,north=false,south=false,waterlogged=false,west=false]",
+    "C": "minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false,waterlogged=false]"
+  },
+  "layers": [
+    [
+      "##",
+      ".."
+    ],
+    [
+      "..",
+      "BA"
+    ],
+    [
+      "..",
+      "CC"
+    ]
+  ]
+}

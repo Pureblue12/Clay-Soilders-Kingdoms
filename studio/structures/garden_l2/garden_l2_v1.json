@@ -1,0 +1,71 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "garden_l2",
+  "version": 1,
+  "size": [7,4,7],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T01:57:42.507Z",
+    "description": "Garden (level 1), level 2 of 3: L1 plus flourish 2. A 7 x 7 ornamental garden: gravel cross, poppy beds, benches and a tool chest; later levels add hedges, a pond and a leafy pergola. Decoration step adds: water.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "inner",
+      "civic"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:chest[facing=west,type=single,waterlogged=false]",
+    "A": "minecraft:coarse_dirt",
+    "B": "minecraft:cobblestone",
+    "C": "minecraft:gravel",
+    "D": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "E": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "F": "minecraft:oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "G": "minecraft:poppy"
+  },
+  "layers": [
+    [
+      "...C...",
+      ".AACAA.",
+      ".AACAA.",
+      "CCCBCCC",
+      "A..C...",
+      "A..C...",
+      "...C..."
+    ],
+    [
+      "EEE.EEE",
+      "EGG.GGE",
+      "EGG.GGE",
+      ".......",
+      "G......",
+      "G.....#",
+      ".FF..F."
+    ],
+    [
+      "..D.D..",
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      "......."
+    ],
+    [
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      "......."
+    ]
+  ]
+}

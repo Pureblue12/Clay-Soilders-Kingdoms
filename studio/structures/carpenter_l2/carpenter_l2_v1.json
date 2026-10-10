@@ -1,0 +1,104 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "carpenter_l2",
+  "version": 1,
+  "size": [7,7,6],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T01:57:38.429Z",
+    "description": "Carpenter or fletcher, level 2 of 3: L1 plus flourish 2. Timber workshop entered by an open front bay (crafting table, fletching table from L2), back door to the yard; log stack and sawhorse under the side eaves. Not yet builder-tested: fletching_table. Decoration step adds: sign_text.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "inner",
+      "workshop"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:chest[facing=east,type=single,waterlogged=false]",
+    "B": "minecraft:cobblestone",
+    "C": "minecraft:crafting_table",
+    "D": "minecraft:fletching_table",
+    "E": "minecraft:glass_pane",
+    "F": "minecraft:oak_door[facing=south,half=lower,hinge=left,open=false,powered=false]",
+    "G": "minecraft:oak_door[facing=south,half=upper,hinge=left,open=false,powered=false]",
+    "H": "minecraft:oak_fence",
+    "I": "minecraft:oak_log[axis=x]",
+    "J": "minecraft:oak_log[axis=y]",
+    "K": "minecraft:oak_log[axis=z]",
+    "L": "minecraft:oak_planks",
+    "M": "minecraft:oak_slab[type=bottom,waterlogged=false]",
+    "N": "minecraft:oak_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "O": "minecraft:oak_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "P": "minecraft:oak_wall_sign[facing=east,waterlogged=false]",
+    "Q": "minecraft:spruce_planks",
+    "R": "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]",
+    "S": "minecraft:spruce_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]",
+    "T": "minecraft:wall_torch[facing=north]"
+  },
+  "layers": [
+    [
+      ".......",
+      ".BBBBB.",
+      "KBLLLBH",
+      "KBLLLB.",
+      "KBLLLBH",
+      ".BBBBB."
+    ],
+    [
+      ".......",
+      ".J...J.",
+      "KLC.NLM",
+      "KLD.NLM",
+      ".LA.#LM",
+      ".JLFLJ."
+    ],
+    [
+      ".......",
+      ".J...JP",
+      "SL...LR",
+      ".E...E.",
+      "SL..#LR",
+      ".JEGEJ."
+    ],
+    [
+      ".......",
+      ".JIIIJ.",
+      ".L...L.",
+      ".L...L.",
+      ".LT.TL.",
+      ".JLLLJ."
+    ],
+    [
+      "N.....O",
+      "NKQQQKO",
+      "NK...KO",
+      "NK...KO",
+      "NK...KO",
+      "NKQQQKO"
+    ],
+    [
+      ".N...O.",
+      ".NQQQO.",
+      ".N...O.",
+      ".N...O.",
+      ".N...O.",
+      ".NQQQO."
+    ],
+    [
+      "..NLO..",
+      "..NLO..",
+      "..NLO..",
+      "..NLO..",
+      "..NLO..",
+      "..NLO.."
+    ]
+  ]
+}

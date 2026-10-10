@@ -1,0 +1,58 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "palisade_stepped_l3",
+  "version": 1,
+  "size": [5,6,2],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T01:57:46.981Z",
+    "description": "Palisade, stepped, level 3 of 3: L2 plus flourish 3. Like the straight module, but the walk rises 1 block (2.5 to 3.5) in two half steps. Not yet builder-tested: moss_carpet.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:moss_carpet",
+    "A": "minecraft:oak_fence",
+    "B": "minecraft:spruce_fence",
+    "C": "minecraft:spruce_log[axis=y]",
+    "D": "minecraft:spruce_slab[type=bottom,waterlogged=false]",
+    "E": "minecraft:spruce_slab[type=top,waterlogged=false]",
+    "F": "minecraft:wall_torch[facing=south]"
+  },
+  "layers": [
+    [
+      "CCCCC",
+      "AAAAA"
+    ],
+    [
+      "CCCCC",
+      "AAAAA"
+    ],
+    [
+      "CCCCC",
+      "DDEAA"
+    ],
+    [
+      "BCBCC",
+      "#F.DD"
+    ],
+    [
+      ".B.CB",
+      "...F#"
+    ],
+    [
+      "...B.",
+      "....."
+    ]
+  ]
+}

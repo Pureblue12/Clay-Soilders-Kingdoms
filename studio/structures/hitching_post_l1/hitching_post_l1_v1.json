@@ -1,0 +1,40 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "hitching_post_l1",
+  "version": 1,
+  "size": [3,2,2],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T01:57:50.441Z",
+    "description": "Hitching post, level 1 of 2: shell and fittings (what soldiers build first). A fence rail with a hay bale on trampled ground; level 2 adds a cauldron trough.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "inner",
+      "decoration"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:coarse_dirt",
+    "A": "minecraft:hay_block[axis=x]",
+    "B": "minecraft:oak_fence[east=false,north=false,south=false,waterlogged=false,west=true]",
+    "C": "minecraft:oak_fence[east=true,north=false,south=false,waterlogged=false,west=true]",
+    "D": "minecraft:oak_fence[east=true,north=true,south=false,waterlogged=false,west=false]"
+  },
+  "layers": [
+    [
+      "###",
+      "..."
+    ],
+    [
+      "A..",
+      "DCB"
+    ]
+  ]
+}

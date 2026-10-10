@@ -1,0 +1,77 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "garden_l3",
+  "version": 1,
+  "size": [7,4,7],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T01:57:42.944Z",
+    "description": "Garden (level 1), level 3 of 3: L2 plus flourish 3. A 7 x 7 ornamental garden: gravel cross, poppy beds, benches and a tool chest; later levels add hedges, a pond and a leafy pergola. Not yet builder-tested: allium, andesite_wall, cornflower, polished_andesite. Decoration step adds: potted_plant, water.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "inner",
+      "civic"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:allium",
+    "A": "minecraft:andesite_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none]",
+    "B": "minecraft:chest[facing=west,type=single,waterlogged=false]",
+    "C": "minecraft:coarse_dirt",
+    "D": "minecraft:cobblestone",
+    "E": "minecraft:cornflower",
+    "F": "minecraft:flower_pot",
+    "G": "minecraft:gravel",
+    "H": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "I": "minecraft:oak_fence",
+    "J": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "K": "minecraft:oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "L": "minecraft:polished_andesite",
+    "M": "minecraft:poppy"
+  },
+  "layers": [
+    [
+      "...G...",
+      ".CCGCC.",
+      ".CCGCC.",
+      "GGGDGGG",
+      "C..G.C.",
+      "C..GC..",
+      "...G..."
+    ],
+    [
+      "JJJ.JJJ",
+      "JMM.MMJ",
+      "JMM.MMJ",
+      ".......",
+      "M...IEI",
+      "M...#.B",
+      "LKK.IKI"
+    ],
+    [
+      "..H.H..",
+      ".......",
+      ".......",
+      ".......",
+      "....I.I",
+      ".......",
+      "A...I.I"
+    ],
+    [
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      "....JJJ",
+      "....J.J",
+      "F...JJJ"
+    ]
+  ]
+}
