@@ -73,6 +73,78 @@
           "iso_back"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T05:26:47.411Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 95,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: dandelion, azure_bluet, allium, cornflower, oxeye_daisy, fern, oak_hanging_sign, candle, brick_slab, red_wall_banner, brick_wall."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "564 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 564,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5106382978723404,
+          "types": 46,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.1879432624113475
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "levels": "Adds two clearly visible new functions over L2: a brick bread oven (furnace mouth, own little brick-wall flue) opening into the outdoor kitchen, and a storeroom shed (barrels, chest) behind a beer-garden terrace with two tables and benches (extra dining). Reads apart from L2 at a glance.",
+          "roof": "Main roof good (overhang all round; the automatic warning is a false alarm; chimney reaches the ridge). The new storeroom shed (x0-2 z11-14) has a flat spruce-slab roof at y2: it reads as a crate lid next to the steep hall roof.",
+          "life": "Flower boxes now closed with trapdoors on every end (x11 z2/z5/z6/z8): v1 bare-dirt ends fixed. Hedges, flowers and lanterns along the terrace."
+        },
+        "summary": "L3 adds a bread oven next to the outdoor kitchen, a storeroom shed and a beer-garden terrace with extra tables, plus candles and flower boxes, on top of the L2 hall and kitchen.",
+        "problems": [
+          "Storeroom shed (x0-2 y2 z11-14) has a flat slab roof: give it a small pitched or lean-to stair roof (stairs sloping away from the hall) so it matches the main roof.",
+          "Flowers, candle, brick_slab, brick_wall, oak_hanging_sign and red_wall_banner are not yet builder-tested (automatic info).",
+          "Reach: 146 of 272 standing places reached; the unreached ones are main roof slopes, the ridge, the lean-to roof, the oven top (brick slabs x11-12 y3 z13-14), the shed's slab roof (x0-2 y3 z11-14) and the two chimney-side brick tops at y4 z13; the whole floor, kitchen, terrace, shed and outdoor kitchen are reached: fine."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "iso_back",
+          "right",
+          "floor_top"
+        ]
+      }
     }
   }
 }

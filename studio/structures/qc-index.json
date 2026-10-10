@@ -273,25 +273,25 @@
     "checkedAt": "2026-10-10T04:07:53.929Z"
   },
   "food_hall_l1": {
-    "version": 1,
+    "version": 2,
     "verdict": "pass",
-    "score": 78,
+    "score": 98,
     "round": 1,
-    "checkedAt": "2026-10-10T05:07:39.169Z"
+    "checkedAt": "2026-10-10T05:26:46.258Z"
   },
   "food_hall_l2": {
-    "version": 1,
+    "version": 2,
     "verdict": "pass",
-    "score": 94,
+    "score": 100,
     "round": 1,
-    "checkedAt": "2026-10-10T05:07:40.421Z"
+    "checkedAt": "2026-10-10T05:26:46.836Z"
   },
   "food_hall_l3": {
-    "version": 1,
+    "version": 2,
     "verdict": "pass",
-    "score": 97,
+    "score": 95,
     "round": 1,
-    "checkedAt": "2026-10-10T05:07:41.789Z"
+    "checkedAt": "2026-10-10T05:26:47.411Z"
   },
   "garden_l1": {
     "version": 4,
