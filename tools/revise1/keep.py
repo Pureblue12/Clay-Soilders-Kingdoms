@@ -234,7 +234,7 @@ def keep():
                 if z in windows and 2 <= y <= 5:
                     s.put(x, y, z, 'glass_pane')
                 elif z == 24 and y == 1:
-                    s.put(x, y, z, 'campfire', facing='east' if x == HX0 else 'west', lit='true',
+                    s.put(x, y, z, 'campfire', facing='south', lit='true',
                           signal_fire='false', waterlogged='false')       # the hearths
                 else:
                     hall_wall(x, y, z)
@@ -348,7 +348,7 @@ def keep():
     for tx, tz in turrets:
         s.put(tx, DECK + 4 + 5, tz, 'red_banner', rotation='8')
     for x in (12, 18):                                               # lantern posts in the forecourt
-        s.put(x, 1, 5, 'dark_oak_fence'); s.put(x, 2, 5, 'dark_oak_fence')
+        s.put(x, 0, 5, 'cobblestone'); s.put(x, 1, 5, 'dark_oak_fence'); s.put(x, 2, 5, 'dark_oak_fence')
         s.put(x, 3, 5, 'lantern', hanging='false', waterlogged='false')
 
     # ================================================================ level 3: the castle
@@ -442,8 +442,7 @@ def keep():
                 s.add(x, y, z, 'dark_oak_stairs', facing=f, **BOT)
         for x in (x_in, wx - 2 * side):
             s.add(x, 0, 5, 'dark_oak_planks'); s.add(x, 0, 6, 'dark_oak_planks')
-        s.remove(x_front, 1, 5); s.remove(x_front, 2, 5)
-        s.door(x_front, 1, 5, 'east' if side < 0 else 'west', block='spruce_door')
+        s.remove(x_front, 1, 5); s.remove(x_front, 2, 5)            # an open doorway
         s.remove(x_front, 2, 6); s.put(x_front, 2, 6, 'glass_pane')
     # well (west) and forge (east): matching posts under small pointed roofs
     for cx, kind in ((9, 'well'), (21, 'forge')):
@@ -457,7 +456,7 @@ def keep():
                     for y in (1, 2, 3):
                         s.add(x, y, z, 'dark_oak_fence')
                 elif kind == 'well':
-                    s.add(x, 1, z, 'cobblestone_wall')
+                    s.add(x, 1, z, 'cobblestone')
         stair_ring(s, cx, cz, 4, 1, 'dark_oak_stairs', add=True)
         s.add(cx, 4, cz, 'dark_oak_planks')
         s.add(cx, 5, cz, 'dark_oak_slab', type='bottom', waterlogged='false')
@@ -488,7 +487,7 @@ def keep():
     for x in (GATE[0] - 1, GATE[1] + 1):                            # torches either side of the gate, outside
         s.add(x, 2, 0, 'wall_torch', facing='north')
     for x in (CX - 4, CX + 4):                                       # more lanterns in the forecourt
-        s.add(x, 1, 7, 'dark_oak_fence'); s.add(x, 2, 7, 'lantern', hanging='false', waterlogged='false')
+        s.add(x, 0, 7, 'cobblestone'); s.add(x, 1, 7, 'dark_oak_fence'); s.add(x, 2, 7, 'lantern', hanging='false', waterlogged='false')
     for side in (-1, 1):                                             # kitchen and barracks fittings
         wx = CX + side * (CX - WALL_X0)
         x_in = wx - side
