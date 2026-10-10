@@ -4,14 +4,14 @@
   "version": 3,
   "size": [9,9,11],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T03:24:23.426Z",
     "description": "Cottage, level 3 of 3: L2 plus flourish 3. Timber cottage: cobblestone base, oak plank walls between upright spruce posts, two-tone spruce and dark oak gable roof with jettied gables, brick chimney; bed, chest, hearth inside. Not yet builder-tested: azure_bluet, candle, dandelion, moss_carpet. Decoration step adds: item_frame, potted_plant.",
     "changes": "The roof is now two-tone (dark oak eaves and gable edges, spruce between) and overhangs the gables with upside-down stair trim; the pale gable squares are real windows with sills; the lone fence inside is gone (the table is a barrel); L1 gets shutters and lantern posts, L2 adds window boxes with flowers on three sides and a front fence, and L3 adds a covered woodshed on the right side with a stacked woodpile and a lantern.",
     "parent": 2,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T03:33:04.621Z",
     "tags": [
       "revise1",
       "tier1",
