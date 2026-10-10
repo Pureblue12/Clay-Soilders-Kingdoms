@@ -314,7 +314,8 @@ def town_hall():
 
 STRUCTURES = [dict(path='town_hall', name='Town hall', tier=6, zone='inner', role='civic', group='town_hall',
                    terrain='stepped', door='front', make=town_hall, max_height=18, changes='First version.',
-                   description='Needs scaffolding: 18 tall (the clock tower; the hall roof is 15). Half-timbered '
+                   description='Needs scaffolding: 18 tall (the clock tower; the hall roof is 15). Over budget: 1159 blocks vs '
+                               '740 (first build 1051 vs 620). Half-timbered '
                                'council hall raised on an open stone market arcade, a stone clock tower at the front '
                                'with a clock face on every side and a vaulted porch; council chamber with a long table, '
                                'the mayor\'s seat and records, the clerks\' office in the tower, a stair at the back, a '

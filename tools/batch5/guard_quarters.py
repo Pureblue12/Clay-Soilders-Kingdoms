@@ -65,9 +65,9 @@ def guard_quarters():
             P(s, x, 5, z, 'glass_pane')
     for y in range(0, 8):                                            # brick chimney behind the back wall
         P(s, CHIM, y, Z1 + 1, 'bricks')
-    gable_roof(s, X0, X1, JZ, Z1, 3, front=1, back=1, gable='white_terracotta',
+    gable_roof(s, X0, X1, JZ, Z1, 3, front=1, back=1, gable='white_terracotta', corbels=False,
                skip={(CHIM, y, Z1 + 1) for y in range(9)})
-    for x in (X0, MID, X1):                                          # brackets under the jetty
+    for x in (X0, X1):                                               # brackets under the jetty
         P(s, x, 3, JZ, 'dark_oak_stairs', facing='south', **TOP)
     for x in range(X0 + 1, X1):                                      # the porch (guard post) under the jetty
         P(s, x, 0, JZ, 'cobblestone' if x != MID else 'stone_bricks')
@@ -113,7 +113,7 @@ def guard_quarters():
     for x in (3, 5):
         P(s, x, 4, 0, 'red_wall_banner', facing='north')
         s.decorate(x, 4, 0, 'banner_pattern', banner='red_wall_banner', note='the king\'s colours')
-    P(s, 2, 3, JZ, 'lantern', **HANG); P(s, 6, 3, JZ, 'lantern', **HANG)   # under the jetty
+    P(s, MID, 3, JZ, 'lantern', **HANG)                              # under the jetty, over the door
     for (x, y, z, side) in ((X0, 2, 4, 'west'), (X0, 2, 8, 'west'), (X1, 2, 8, 'east')):
         dx = -1 if side == 'west' else 1
         for dz in (-1, 1):

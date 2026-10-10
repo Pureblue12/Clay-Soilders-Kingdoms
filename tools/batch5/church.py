@@ -3,21 +3,22 @@ the right side, a lower chancel at the back and a small churchyard beside it (do
 Terrain: stepped in the brief (tower and nave); here everything sits on one stone base course (layer 0).
 
 Layout (17 wide x 24 deep x 20 tall, front z = 0):
-- Tower x 4..8, z 1..5 (5 x 5), stone bricks, 13 high to its cornice, then a dark oak spire with stone corner
-  pinnacles to 19 (20 tall: needs scaffolding). Door at the front under a hood, a tall entrance hall inside (the bell
-  rope hangs here), the belfry with paired openings on every face at y 9..10, the bell's headstock beam at y 11.
-- Nave x 2..10, z 5..17 (9 x 13): rubble cobblestone walls 5 high with dressed stone brick quoins, window jambs and a
-  top band; buttresses every 4 blocks on both sides; spruce gable roof (dark oak eaves and ridge) to 10 high.
+- Tower x 4..8, z 1..5 (5 x 5), stone bricks, walls to 14 with a cornice, then a dark oak broach spire with stone
+  corner pinnacles to 18 and a weathervane at 19 (20 tall: needs scaffolding). Door at the front under a hood, a tall
+  entrance hall inside (the bell rope hangs here), the belfry with paired openings on every face at y 11..12 over a
+  string course, the bell's headstock beam at y 13.
+- Nave x 2..10, z 5..17 (9 x 13): rubble cobblestone walls 4 high with dressed stone brick quoins, window jambs and a
+  top band; buttresses every 4 blocks on both sides; spruce gable roof (dark oak eaves and ridge) to 11 high.
   Lancets on both sides, pews in two blocks of two rows with a cross aisle to the side door.
 - Chancel x 4..8, z 17..22 (lower, narrower, its own roof): altar, choir stalls, the priest's chest, an east window.
 - Timber porch on the right side (x 11..13, z 10..12) over the side door, facing the churchyard.
 - Churchyard (level 2) to the right of the chancel, x 12..16, z 14..23, low cobblestone walls, gravestones.
 
 Level 1: shell and fittings (pews, altar, stalls, chests, torches, clear glass in the nave, the bell beam).
-Level 2 (the church in use): the bell and its rope, stained glass in the chancel windows, red runner, font, pulpit,
+Level 2 (the church in use): the bell and its rope, the weathervane, stained glass in the chancel windows, red runner, font, pulpit,
 candles, hanging lanterns, banners on the tower, flower boxes, the churchyard with gravestones.
-Level 3 (the feast-day church): carved (chiseled) pinnacles on the tower and porch, a weathervane, a yew in the
-churchyard, flowers on the graves and along the walls, vines and moss, banners inside, more candles.
+Level 3 (the feast-day church): carved (chiseled) pinnacles on the tower cornice, a carved panel over the door, a yew in the
+churchyard, flowers on the graves and along the walls, vines, banners inside, more candles.
 """
 from make_batch1_structures import Structure
 from batch3.ws_kit import P, A, STAIR, TOP, SLAB, OPEN, HANG, STAND, LEAVES, connect, noise, gable_roof
@@ -375,8 +376,9 @@ def church():
 
 STRUCTURES = [dict(path='church', name='Church', tier=5, zone='inner', role='religious', group='church',
                    terrain='stepped', door='front', make=church, max_height=20, changes='First version.',
-                   description='Needs scaffolding: 20 tall (tower and spire; the nave roof is 11). Stone parish '
+                   description='Needs scaffolding: 20 tall (tower and spire; the nave roof is 11). Over budget: 1246 blocks vs 700 '
+                               '(first build 1094 vs 580). Stone parish '
                                'church: a front bell tower with belfry openings and a dark oak spire, a rubble-stone '
                                'nave with buttresses and lancets, a lower chancel with altar and choir stalls, a '
-                               'timber side porch; L2 the bell and its rope, stained glass, runner, font, pulpit, '
-                               'lanterns, banners and a churchyard; L3 carved pinnacles, weathervane, a yew, flowers.')]
+                               'timber side porch; L2 the bell and its rope, a weathervane, stained glass, runner, font, pulpit, '
+                               'lanterns, banners and a churchyard; L3 carved pinnacles, a yew, flowers, vines, banners inside. The bell (L2) is not drawn by the Studio, only its chain.')]
