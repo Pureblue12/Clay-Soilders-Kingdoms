@@ -29,49 +29,49 @@ def well():
     for x, z in POOL:
         s.decorate(x, 0, z, 'water', note='well water')
     for x, z in RING:                                          # upper course: the round rim
-        if (x, z) not in ((2, 0), (2, 4)):
+        if (x, z) not in ((0, 2), (4, 2)):
             s.put(x, 1, z, 'moss' if (x, z) in ((0, 1), (4, 3)) else 'stone')
-    for z in (0, 4):                                           # posts on the rim, front and back, the windlass axle
-        for y in (1, 2, 3):                                    # between them (the gable faces the front)
-            s.put(2, y, z, 'dark_frame', axis='y')
-    for z in (1, 2, 3):
-        s.put(2, 3, z, 'dark_frame', axis='z')
+    for x in (0, 4):                                           # posts on the rim, left and right, the windlass axle
+        for y in (1, 2, 3):                                    # between them (the roof slopes to the front, so the
+            s.put(x, y, 2, 'dark_frame', axis='y')             # well stays in view from the front)
+    for x in (1, 2, 3):
+        s.put(x, 3, 2, 'dark_frame', axis='x')
     s.at(1, 'fittings')
     for y in (1, 2):                                           # the rope down to the water
         s.put(2, y, 2, 'chain', axis='y')
+    s.put(4, 1, 0, 'barrel', facing='up', open='false')        # a barrel on the front corner
     s.at(2, 'flourish2')
-    for z in (0, 4):                                           # posts up to the ridge
-        s.put(2, 4, z, 'dark_frame', axis='y')
-    for z in range(0, 5):                                      # low gable roof: dark eaves, spruce slope, dark ridge
-        for x, y in ((0, 3), (1, 4), (3, 4), (4, 3)):
-            s.put(x, y, z, 'dark_stairs' if x in (0, 4) else 'roof_stairs', facing='east' if x < 2 else 'west', **STAIR)
-        s.put(2, 5, z, 'dark')
-    for z in (0, 4):                                           # gable brackets: upside-down stairs under the slope
-        for x, f in ((1, 'west'), (3, 'east')):
+    for x in (0, 4):                                           # posts up to the ridge
+        s.put(x, 4, 2, 'dark_frame', axis='y')
+    for x in range(0, 5):                                      # a narrow, light roof over the axle only: spruce
+        for z, f in ((1, 'south'), (3, 'north')):              # slopes and a dark slab ridge, the rim stays open
+            s.put(x, 4, z, 'roof_stairs', facing=f, **STAIR)
+        s.put(x, 5, 2, 'dark_oak_slab', type='bottom', waterlogged='false')
+    for x in (0, 4):                                           # gable brackets: upside-down stairs under the slope
+        for z, f in ((1, 'north'), (3, 'south')):
             s.put(x, 3, z, 'dark_stairs', facing=f, half='top', shape='straight', waterlogged='false')
-    for z, f in ((1, 'north'), (3, 'south')):                  # corbels under the axle beside the posts
-        s.put(2, 2, z, 'dark_stairs', facing=f, half='top', shape='straight', waterlogged='false')
-    s.put(3, 2, 0, 'lever', face='wall', facing='east', powered='false')    # the windlass crank on the front post
+    for x, f in ((1, 'west'), (3, 'east')):                    # corbels under the axle beside the posts
+        s.put(x, 2, 2, 'dark_stairs', facing=f, half='top', shape='straight', waterlogged='false')
+    s.put(0, 2, 1, 'lever', face='wall', facing='north', powered='false')   # the windlass crank on the left post
     s.put(2, 4, 2, 'roof_slab', type='top', waterlogged='false')            # pulley block over the axle
+    s.put(4, 2, 1, 'lantern', hanging='true', waterlogged='false')          # lantern under a gable bracket
     s.at(3, 'flourish3')
-    for (x, z), plant in zip(((0, 0), (4, 0)), ('poppy', 'dandelion')):     # flower pots on the front corners
-        s.put(x, 1, z, 'flower_pot'); s.decorate(x, 1, z, 'potted_plant', plant=plant)
+    s.put(0, 1, 0, 'flower_pot'); s.decorate(0, 1, 0, 'potted_plant', plant='poppy')   # flower pot on the front corner
     s.put(0, 1, 4, 'flowering_azalea_leaves', persistent='true', distance='1', waterlogged='false')   # flowering bush
     s.put(4, 1, 4, 'cauldron'); s.decorate(4, 1, 4, 'water_cauldron', note='water tub on the rim')
     s.decorate(4, 1, 4, 'item', item='minecraft:bucket', note='a bucket by the tub')
-    for x, z in ((1, 0), (4, 1), (3, 4), (0, 3), (4, 2)):      # moss on the rim
+    for x, z in ((1, 0), (3, 0), (3, 4), (1, 4)):              # moss on the rim
         s.put(x, 2, z, 'moss_carpet')
-    for x, z in ((0, 0), (4, 0)):                              # lanterns under the front eaves at the corners
+    for x, z in ((0, 3), (4, 3)):                              # lanterns under the back gable brackets
         s.put(x, 2, z, 'lantern', hanging='true', waterlogged='false')
     return s
 
 
 STRUCTURES = [dict(path='well', name='Well', tier=1, zone='core', role='water', group='well', terrain='flexible',
                    door=None, make=well,
-                   changes='Smaller and round: a 5 x 5 octagon basin with cut, stair-rounded corners and a round pool '
-                           '(was a 5 x 5 square basin under a 7 x 7 roof), keeping the windlass and a 5-wide gable roof facing the front; '
-                           'L1 is the working well, L2 adds the roof and windlass crank, L3 flowers, a water tub, moss '
-                           'and lanterns.',
+                   changes='Turned the roof so it slopes to the front: the posts stand left and right of the basin, '
+                           'so the well is no longer hidden behind a post from the front. The roof is narrower and higher (over the axle only), so the rim is open. '
+                           'L1 adds a barrel, L2 a lantern under a gable bracket, L3 two more lanterns.',
                    description='Round stone well: octagon cobblestone basin with stair-rounded corners, '
                                'dark oak posts and windlass with a chain; L2 adds the spruce gable roof and crank, '
                                'L3 flowers, a water tub, moss and lanterns. 5 x 5 x 6, water by the decoration step.')]
