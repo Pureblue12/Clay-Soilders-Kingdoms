@@ -138,6 +138,73 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T05:34:32.512Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 88,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "371 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "13 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 371,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3935309973045822,
+          "types": 18,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.3557951482479784
+          },
+          "height": 13,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Shell level: buttresses, door hood, lancets, shuttered gable windows, moss in the plinth, pews and altar inside; outside still plain (no lanterns or boxes), fine for L1.",
+          "roof": "The 'no overhang' warning is a false alarm: the dark oak eaves run one block past the side walls (x1 and x9) the whole length.",
+          "life": "No plants, lanterns or path yet; those arrive in L2/L3.",
+          "levels": "L1 is the bare chapel; L2 adds the sacristy wing, L3 the lych gate churchyard: all three tell apart at a glance."
+        },
+        "summary": "L1 is the stone chapel shell: buttressed nave with a spruce gable roof, a front gable rising into an empty bell cote, hooded door, pews and altar.",
+        "problems": [
+          "Reachability: interior floor and pews are reached; unreached places are only roof slopes, eaves, buttress caps, the door-hood top and the bell cote top. Fine."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

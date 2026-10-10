@@ -150,6 +150,78 @@
           "iso"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T05:34:33.031Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 100,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: lily_of_the_valley, lectern, cornflower, oxeye_daisy, dandelion, candle, bell."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "506 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "13 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 506,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4209486166007905,
+          "types": 31,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.3300395256916996
+          },
+          "height": 13,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "levels": "Fixed: the sacristy wing at the back right (own spruce gable roof, door with step, window, chest) shows clearly in iso, iso back, right, back and top; plus bell, red runner, lectern, flower boxes and lanterns.",
+          "roof": "The 'no overhang' warning is a false alarm: eaves overhang the side walls by one block, and the sacristy roof overhangs too.",
+          "shape": "Nave plus a lower side wing at the back and the tall bell cote: roof parts at two heights, asymmetric."
+        },
+        "summary": "L2 adds a stone sacristy wing with its own gable roof at the back right, the bell, a red runner, lectern, candles, flower boxes and lanterns.",
+        "problems": [
+          "Reachability: nave floor, runner, pews and the sacristy floor are reached; unreached places are the nave and sacristy roofs, buttress caps, flower-bed pockets between buttresses, the bell top and gable slots. Fine."
+        ],
+        "views": [
+          "sheet",
+          "iso_back"
+        ]
+      }
     }
   }
 }
