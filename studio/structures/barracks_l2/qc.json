@@ -1,0 +1,71 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "barracks_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:58:14.576Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 72,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cornflower, carved_pumpkin, candle."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "413 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 413,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4406779661016949,
+          "types": 30,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.2009685230024213
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "Adds a pumpkin-headed dummy with arms, a lantern post, flower boxes, campfire on the chimney and a red carpet aisle; the walls themselves are still bare.",
+          "life": "Flowers, lantern post and the dummy make the entrance lively.",
+          "roof": "Unchanged from L1: one flat spruce colour, untrimmed gables."
+        },
+        "summary": "L1 plus a proper training dummy, flower boxes and a lantern at the door, a smoking chimney and a red carpet down the aisle; the entrance now has life.",
+        "problems": [
+          "The two raised coarse-dirt flower boxes beside the door (front, y=0..1) read as raw dirt cubes: edge them with trapdoors or use a planter of spruce trapdoors/podzol.",
+          "Back wall and gables are still bare (see L1).",
+          "Reach: unchanged from L1; only roof slopes and dummy top unreached (fine)."
+        ],
+        "views": [
+          "sheet",
+          "front",
+          "iso"
+        ]
+      }
+    }
+  }
+}

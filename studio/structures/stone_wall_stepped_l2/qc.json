@@ -1,0 +1,64 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "stone_wall_stepped_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:58:25.391Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 89,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: iron_bars, red_wall_banner, stone_brick_wall."
+          }
+        ],
+        "stats": {
+          "blocks": 82,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.23170731707317074,
+          "types": 10,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.5121951219512195
+          },
+          "height": 8,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "Iron bars in the slits, red banner, wall torches on the merlons at x0 y6 and x4 y7, lamp post on the raised walk.",
+          "depth": "Front has footing, corbels and slits; the inner (back, z2) face is a flat 5-high slab of brick with only cobble patches.",
+          "roof": "Joins otherwise match: left end (x0) = straight profile (walk stand y5, parapet y5, merlon y6 at x0); right end (x4) = straight profile +1 (stand y6, parapet y6, merlon y7 at x4); the stair at x2 y5 z1-z2 faces east, so the walk climbs the right way.",
+          "life": "Lantern and torches; no greenery yet."
+        },
+        "summary": "L1 plus iron bars, a red wall banner, two wall torches and a lantern on a wall post on the raised end of the walk.",
+        "problems": [
+          "Corbel course does not step with the parapet: corbels (upside-down stone_brick_stairs) run at y4 z0 across x0-x4, so at x2-x4 the raised parapet is 2 courses tall (y5+y6) above them, while the raised straight piece that joins at the right end has its corbels at y5. The corbel line jumps at the right-hand join instead of with the parapet at x2. Fix: put the corbels at x2-x4 on y5 z0 (stone_brick_stairs facing=south, half=top) and make y4 z0 x2-x4 air, so the right end matches the straight profile raised by 1 everywhere.",
+          "Lamp post at x4 z2 y6 sits right at the right-hand join and halves the walk there; moving it to x3 would keep the joint clear (minor)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

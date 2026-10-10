@@ -1,0 +1,84 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "stone_wall_gate_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:58:19.363Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 53,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "too-small",
+            "message": "Only 151 blocks: too bare for a landmark (at least 200). Carlton wants more detail, not less."
+          },
+          {
+            "level": "warn",
+            "check": "detail",
+            "message": "18 % detail blocks: on the bare side, aim for 20 %+."
+          },
+          {
+            "level": "warn",
+            "check": "variety",
+            "message": "stone_bricks is 60 % of the build: break it up with a second material."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 151,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.17880794701986755,
+          "types": 6,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.6026490066225165
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 0,
+          "scale": 1,
+          "grandeur": 1
+        },
+        "notes": {
+          "artefacts": "Open 1-block notches at the front corners of both towers, (0,2,0), (6,2,0), (0,6,0), (6,6,0), read as broken corners (L2 fills them with iron bars).",
+          "roof": "Each tower is capped by two rows of spruce stairs back to back (y8) that look like flat wooden boards: no overhang, no gable trim, the stair ends show at z0 and z3.",
+          "purpose": "Reads as a gate: an arched opening between two towers with the walk crossing over.",
+          "materials": "Stone bricks 60 % with random cobble patches; the spruce caps feel stuck on.",
+          "grandeur": "Towers rise only one block above the merlons; small for a landmark gate."
+        },
+        "summary": "Gate module: two 2x4 stone towers flanking a 3-wide arched opening, with the wall walk running over the arch and through the towers at y5.",
+        "problems": [
+          "Corner notches (0,2,0), (6,2,0), (0,6,0), (6,6,0) are open in L1 and look like missing blocks: fill them with stone or make them proper slits away from the corner.",
+          "Tower caps: replace the flat spruce stair pairs at y8 with a real top (merlons, or a steeper roof with overhang and trimmed gable ends).",
+          "Towers barely rise above the wall (top y8 vs merlons y6): make them 2-3 taller so the gate stands out as a landmark.",
+          "Joins: walk at y5 (z1-2), walk floor y4 and parapet z0 match stone_wall_straight; merlons at x1,3,5 keep the even-x alternation of the straight pieces across the join. OK.",
+          "Reachability: the walk (x0..6 y5 z1-2) has no stair in this piece; it is reached only from a neighbouring wall_tower - fine for a module."
+        ],
+        "views": [
+          "sheet",
+          "iso"
+        ]
+      }
+    }
+  }
+}

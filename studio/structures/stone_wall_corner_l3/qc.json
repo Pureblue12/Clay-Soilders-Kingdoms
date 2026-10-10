@@ -1,0 +1,64 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "stone_wall_corner_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:58:22.355Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: vine, moss_carpet, stone_brick_wall, red_banner."
+          }
+        ],
+        "stats": {
+          "blocks": 52,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.36538461538461536,
+          "types": 11,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.4423076923076923
+          },
+          "height": 8,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 0,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 2,
+          "scale": 1,
+          "grandeur": 1
+        },
+        "notes": {
+          "artefacts": "the wall torch at (1,6,1) facing south hangs on the red banner at (1,6,0); a banner can't hold a torch, so in game it pops off when placed",
+          "life": "Vines under the corbels on both faces, moss carpet on the walk.",
+          "detail": "For a 3x3 module, banner + lantern + vines + moss is a good amount."
+        },
+        "summary": "L2 plus vines hanging under the corbels on both outer faces and moss carpet on the walk; the most lived-in version.",
+        "problems": [
+          "Wall torch at (1,6,1) [facing=south] is unsupported (north neighbour (1,6,0) is the banner): attach it to a merlon, e.g. at (2,6,1) facing south against merlon (2,6,0).",
+          "Lantern post at (2,5,2)/(2,6,2) still narrows the corner walk to 1 block.",
+          "Open ends match the straight profile (footing stair y0, wall z1-2/x1-2, corbel stair y4, parapet y5, walk standing at y5, merlons at even positions), so it joins cleanly. Note for the whole wall set, not this piece: odd-length modules with merlons at both ends put two merlons side by side at every joint (corner x2 next to straight x0, same as straight x4 next to straight x0)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

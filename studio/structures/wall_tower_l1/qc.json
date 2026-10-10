@@ -1,0 +1,80 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "wall_tower_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:58:17.585Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 75,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "159 blocks, over the module budget of 60 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "13 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          },
+          {
+            "level": "warn",
+            "check": "door",
+            "message": "No door on the front half (z = 0 is the front, toward the easel)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 159,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.18867924528301888,
+          "types": 10,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.49056603773584906
+          },
+          "height": 13,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 0,
+          "scale": 1,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "Shell level: arrow slits, door step, inside torches, barrels and a chest; outside faces are still plain.",
+          "roof": "Wall-piece top: a corbelled ring of upside-down stairs at y7 and merlons at y8 read well as an archer platform.",
+          "depth": "The corbel ring and cobble/mossy patches break the faces; shadows show.",
+          "life": "Nothing living and no light on the outside.",
+          "shape": "A plain square box, as expected for L1."
+        },
+        "summary": "Square stone-brick wall tower the wall walk passes through at y5, with a town-side door, an inside stair up to the walk room and a crenellated archer platform.",
+        "problems": [
+          "West opening of the wall walk is only 1 wide (x0 z1, y5-6) while the walk and the east side (x4 z1-2) are 2 wide: (0,5,2) and (0,6,2) are solid, so the walk narrows when it enters from the west; open them to match the walk profile.",
+          "Reachability: fine - 54 of 57 standing places reached; only a window sill (0,2,2), (0,6,3) and the spot beside the stair (1,5,3) are not."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

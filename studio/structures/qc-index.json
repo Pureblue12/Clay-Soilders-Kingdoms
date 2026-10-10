@@ -20,6 +20,27 @@
     "round": 1,
     "checkedAt": "2026-10-10T04:51:00.339Z"
   },
+  "barracks_l1": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 69,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:13.927Z"
+  },
+  "barracks_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 72,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:14.576Z"
+  },
+  "barracks_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 81,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:15.219Z"
+  },
   "bench_l1": {
     "version": 2,
     "verdict": "pass",
@@ -545,6 +566,111 @@
     "round": 1,
     "checkedAt": "2026-10-10T04:15:55.317Z"
   },
+  "stone_wall_corner_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 75,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:21.170Z"
+  },
+  "stone_wall_corner_l2": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 67,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:21.729Z"
+  },
+  "stone_wall_corner_l3": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:22.355Z"
+  },
+  "stone_wall_gate_l1": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 53,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:19.363Z"
+  },
+  "stone_wall_gate_l2": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 61,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:19.924Z"
+  },
+  "stone_wall_gate_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 72,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:20.574Z"
+  },
+  "stone_wall_stairs_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 81,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:22.951Z"
+  },
+  "stone_wall_stairs_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 83,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:23.527Z"
+  },
+  "stone_wall_stairs_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 94,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:24.167Z"
+  },
+  "stone_wall_stepped_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:24.778Z"
+  },
+  "stone_wall_stepped_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 89,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:25.391Z"
+  },
+  "stone_wall_stepped_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:25.972Z"
+  },
+  "stone_wall_straight_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 72,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:26.557Z"
+  },
+  "stone_wall_straight_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 83,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:27.116Z"
+  },
+  "stone_wall_straight_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 86,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:27.670Z"
+  },
   "storehouse_l1": {
     "version": 1,
     "verdict": "pass",
@@ -587,6 +713,27 @@
     "round": 1,
     "checkedAt": "2026-10-10T04:50:57.037Z"
   },
+  "training_yard_l1": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 64,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:15.838Z"
+  },
+  "training_yard_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:16.436Z"
+  },
+  "training_yard_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 81,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:17.016Z"
+  },
   "visitors_camp_l1": {
     "version": 3,
     "verdict": "revise",
@@ -607,6 +754,27 @@
     "score": 72,
     "round": 1,
     "checkedAt": "2026-10-10T03:44:51.051Z"
+  },
+  "wall_tower_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 75,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:17.585Z"
+  },
+  "wall_tower_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:18.142Z"
+  },
+  "wall_tower_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:18.741Z"
   },
   "watchtower_l1": {
     "version": 4,
