@@ -1,0 +1,70 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "lumber_camp_l3",
+  "version": 1,
+  "size": [7,4,7],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "generator",
+    "created": "2026-10-10T01:37:40.076Z",
+    "description": "Imported from lumber_camp_l3.nbt",
+    "reviewedAt": null,
+    "parent": null
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:dirt",
+    "=": "minecraft:oak_log[axis=x]",
+    "+": "minecraft:stripped_oak_log[axis=y]",
+    "-": "minecraft:spruce_planks",
+    "*": "minecraft:oak_fence",
+    "@": "minecraft:oak_log[axis=y]",
+    "%": "minecraft:grindstone[face=floor,facing=south]",
+    "&": "minecraft:chest[facing=west,type=single,waterlogged=false]",
+    "$": "minecraft:moss_carpet",
+    "!": "minecraft:oak_sapling[stage=0]",
+    "?": "minecraft:torch",
+    "~": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "^": "minecraft:oak_slab[type=bottom,waterlogged=false]",
+    ":": "minecraft:spruce_slab[type=bottom,waterlogged=false]"
+  },
+  "layers": [
+    [
+      "......#",
+      "===..+#",
+      "===....",
+      "===..--",
+      "*..@..@",
+      ".*.*%&-",
+      "$$.@--@"
+    ],
+    [
+      "......!",
+      "===...!",
+      "===....",
+      "$$$...-",
+      "?..@~.@",
+      ".^^^..-",
+      "...@--@"
+    ],
+    [
+      ".......",
+      "$=.....",
+      ".......",
+      ".......",
+      "...::::",
+      "...::::",
+      "...::::"
+    ],
+    [
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      "......."
+    ]
+  ]
+}

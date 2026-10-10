@@ -1,0 +1,30 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "fire_pit_l2",
+  "version": 1,
+  "size": [5,1,5],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "generator",
+    "created": "2026-10-10T01:37:40.060Z",
+    "description": "Imported from fire_pit_l2.nbt",
+    "reviewedAt": null,
+    "parent": null
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:cobblestone_slab[type=bottom,waterlogged=false]",
+    "=": "minecraft:stripped_oak_log[axis=z]",
+    "+": "minecraft:campfire[facing=north,lit=false,signal_fire=false,waterlogged=false]"
+  },
+  "layers": [
+    [
+      ".....",
+      ".###.",
+      "=#+#=",
+      ".###.",
+      "....."
+    ]
+  ]
+}

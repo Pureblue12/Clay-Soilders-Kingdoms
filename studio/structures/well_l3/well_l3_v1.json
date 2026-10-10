@@ -1,0 +1,48 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "well_l3",
+  "version": 1,
+  "size": [3,4,3],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "generator",
+    "created": "2026-10-10T01:37:40.085Z",
+    "description": "Imported from well_l3.nbt",
+    "reviewedAt": null,
+    "parent": null
+  },
+  "palette": {
+    "#": "minecraft:cobblestone",
+    ".": "minecraft:air",
+    "=": "minecraft:torch",
+    "+": "minecraft:moss_carpet",
+    "-": "minecraft:flower_pot",
+    "*": "minecraft:cobblestone_wall",
+    "@": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "%": "minecraft:chain[axis=y]",
+    "&": "minecraft:oak_slab[type=bottom,waterlogged=false]"
+  },
+  "layers": [
+    [
+      "###",
+      "#.#",
+      "###"
+    ],
+    [
+      "=+-",
+      "*.*",
+      "-+@"
+    ],
+    [
+      "...",
+      "*%*",
+      "..."
+    ],
+    [
+      "&&&",
+      "&&&",
+      "&&&"
+    ]
+  ]
+}

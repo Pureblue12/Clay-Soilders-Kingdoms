@@ -1,0 +1,42 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "road_l1",
+  "version": 1,
+  "size": [5,3,5],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "generator",
+    "created": "2026-10-10T01:37:40.077Z",
+    "description": "Imported from road_l1.nbt",
+    "reviewedAt": null,
+    "parent": null
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:coarse_dirt"
+  },
+  "layers": [
+    [
+      ".###.",
+      ".###.",
+      ".###.",
+      ".###.",
+      ".###."
+    ],
+    [
+      ".....",
+      ".....",
+      ".....",
+      ".....",
+      "....."
+    ],
+    [
+      ".....",
+      ".....",
+      ".....",
+      ".....",
+      "....."
+    ]
+  ]
+}

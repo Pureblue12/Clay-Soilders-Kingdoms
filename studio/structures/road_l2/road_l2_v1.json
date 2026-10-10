@@ -1,0 +1,43 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "road_l2",
+  "version": 1,
+  "size": [5,3,5],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "generator",
+    "created": "2026-10-10T01:37:40.078Z",
+    "description": "Imported from road_l2.nbt",
+    "reviewedAt": null,
+    "parent": null
+  },
+  "palette": {
+    "#": "minecraft:cobblestone_wall",
+    "=": "minecraft:coarse_dirt",
+    ".": "minecraft:air"
+  },
+  "layers": [
+    [
+      "#===#",
+      ".===.",
+      ".===.",
+      ".===.",
+      "#===#"
+    ],
+    [
+      ".....",
+      ".....",
+      ".....",
+      ".....",
+      "....."
+    ],
+    [
+      ".....",
+      ".....",
+      ".....",
+      ".....",
+      "....."
+    ]
+  ]
+}
