@@ -4,14 +4,14 @@
   "version": 3,
   "size": [16,4,9],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:03:25.203Z",
     "description": "Farm field: potatoes, level 1 of 1: shell and fittings (what soldiers build first). A raised field bed, one level: dirt in two blocks of 4 rows each side of an open trench, oak log border and fence with an entrance at the front centre, plank boardwalk and composter in front. Builders place the dirt; farmers till it into farmland and the decoration step adds the trench water and the potatoes (builders can place neither water, farmland nor crops). Modules tile side by side and around the farmhouse. A potato store beside the bed: a little spruce lean-to over a pile of sacks (barrels with brown carpet), a chest, a lantern and a sign; a side path, poppies and a lantern post round the edges. Decoration step adds: crop, farmland, sign_text, water.",
     "changes": "The cobblestone and dirt root cellar is replaced by a little lean-to over a pile of potato sacks (barrels with brown carpet) with a sign, and the field is two wider with a side path, poppies and a lantern.",
     "parent": 2,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T04:14:44.176Z",
     "tags": [
       "revise1",
       "tier1",
