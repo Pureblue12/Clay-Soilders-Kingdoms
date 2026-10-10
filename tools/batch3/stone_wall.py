@@ -191,7 +191,6 @@ def stone_wall_gate(width=7):
                 put_id(s, x, WALK + 2, z, 'stone_bricks')            # the roof over the walk
         for x, z in ((outer, 0), (inner, 1), (outer, 2), (inner, 3)):   # merlons on the tower top, chequered
             put_id(s, x, WALK + 3, z, 'stone_bricks')
-        s.remove(inner, 2, 0); s.remove(inner, WALK + 1, 0)          # arrow slits beside the arch (not on the corner)
     for x in range(gx0, gx1 + 1):
         for z in (1, 2):
             body(s, x, z, WALK - 1, y0=3)                            # the lintel over the passage
@@ -210,8 +209,7 @@ def stone_wall_gate(width=7):
     s.decorate(mid, 3, 0, 'banner_pattern', banner='red_wall_banner', note='kingdom colours')
     for tx in towers:
         outer, inner = (tx[0], tx[1]) if tx[0] == 0 else (tx[1], tx[0])
-        for y in (2, WALK + 1):                                      # bars in the arrow slits
-            put_id(s, inner, y, 0, 'iron_bars')
+        put_id(s, inner, WALK + 3, 2, 'lantern', **LANTERN)          # a watch light on each tower top
         put_id(s, inner, 3, 4, 'red_wall_banner', facing='south')    # banners on the town side
         s.decorate(inner, 3, 4, 'banner_pattern', banner='red_wall_banner', note='kingdom colours')
     put_id(s, mid, 2, 1, 'lantern', **HANGING)                       # lanterns hanging in the arch

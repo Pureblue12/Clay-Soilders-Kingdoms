@@ -73,15 +73,15 @@ def statue():
 
     s.at(1, 'fittings')                                                 # the figure (faces the front)
     P(s, C, 3, C, 'cobblestone_wall')                                   # legs
-    P(s, C, 4, C, 'white_terracotta')                                   # fired clay: a clay soldier
-    P(s, C - 1, 4, C, 'stone_brick_stairs', facing='east', **STAIR)     # the mail skirt flaring out
+    P(s, C, 4, C, 'stone_bricks')                                       # the mail skirt
+    P(s, C - 1, 4, C, 'stone_brick_stairs', facing='east', **STAIR)     # flaring out
     P(s, C + 1, 4, C, 'stone_brick_stairs', facing='west', **STAIR)
-    P(s, C, 5, C, 'white_terracotta')                                   # chest
+    P(s, C, 5, C, 'white_terracotta')                                   # the chest: fired clay, a clay soldier
     P(s, C - 1, 5, C, 'cobblestone_wall')                               # the left arm, down
     P(s, C - 1, 5, C - 1, 'spruce_trapdoor', facing='north', **OPEN)    # the shield on it
     P(s, C - 1, 6, C, 'stone_brick_stairs', facing='east', **TOP)       # pauldrons
     P(s, C + 1, 6, C, 'stone_brick_stairs', facing='west', **TOP)
-    P(s, C, 6, C, 'white_terracotta')                                   # neck and collar
+    P(s, C, 6, C, 'cobblestone_wall')                                   # the neck
     P(s, C, 7, C, 'white_terracotta')                                   # head
     P(s, C + 1, 7, C, 'cobblestone_wall')                               # the right arm raised, the fist round the grip
     P(s, C + 1, 8, C, 'chain', axis='y')                                # the blade

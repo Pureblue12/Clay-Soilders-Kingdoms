@@ -182,4 +182,14 @@ def tree_farm():
 
 STRUCTURES = [dict(path='tree_farm', name='Tree farm', tier=6, zone='outer', role='resource', group='lumber_camp',
                    terrain='flexible', door=None, make=tree_farm, changes='First version.',
-                   description='TBD')]
+                   description='Over budget: 284 blocks vs 102 (the lumber camp brief; the tree farm has no budget of '
+                               'its own), first build 226 vs 200. The lumber camp\'s tier-6 upgrade: an 11 x 11 fenced '
+                               'plantation (spruce fence on cobblestone corner piers) with three rows of saplings each '
+                               'side of a coarse dirt path, two young oaks from the first planting, and the woodcutter\'s '
+                               'shed at the back in the sawmill\'s look (dark oak frame, oak roof with dark oak eaves; '
+                               'chest, grindstone workstation, barrel), a log pile, woodpile, chopping block and composter. '
+                               'L1: plot, gateway posts, shed, empty planting rows (saplings by the decoration step), '
+                               'young trees. L2: saplings in every row (oak, birch, spruce), a lychgate roof with '
+                               'lanterns, lanterns on the piers, a sawhorse, a cauldron and a barrel by the path. L3: a '
+                               'hanging sign (the Studio does not draw hanging signs), banners on the shed, a nursery '
+                               'shelf of potted saplings, bee nests on the oaks, flowers, moss, an axe in the block.')]
