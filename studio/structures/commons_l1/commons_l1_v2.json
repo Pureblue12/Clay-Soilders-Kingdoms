@@ -4,14 +4,14 @@
   "version": 2,
   "size": [13,7,13],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "id like a center peice and I want this to be circular in shape with a stature or some sort of art piece in the center",
     "author": "claude",
     "created": "2026-10-10T03:33:57.563Z",
     "description": "Commons (level 1), level 1 of 3: shell and fittings (what soldiers build first). A 13 x 13 paved village square on a road junction: fire pit, covered well, benches, planters, a ring bench round a tree; later levels add lanterns, a notice board, banners and a market stall. Decoration step adds: water.",
     "changes": "Bigger (13 x 13 instead of 9 x 9) and sits on the grass: one flat paved square with a stair step all round; level 1 has a proper covered well, a fire pit, benches and planters, level 2 adds a tree, lantern posts and a notice board, level 3 adds banners, hedges, a market stall and hanging lanterns.",
     "parent": 1,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T03:43:18.747Z",
     "tags": [
       "batch2",
       "tier2",
