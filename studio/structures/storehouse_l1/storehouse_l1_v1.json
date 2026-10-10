@@ -4,14 +4,14 @@
   "version": 1,
   "size": [12,9,13],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "Needs to be larger im afraid how about adding a cellar but it needs to be more functional with more chests to store thigns casue there is alot to store should scale with levels",
     "author": "claude",
     "created": "2026-10-10T04:40:46.497Z",
     "description": "Storehouse, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 432 blocks vs 270 (first build 361 vs 230). Half-timbered barn (plaster in a dark oak frame on a cobblestone course, spruce gable roof) with double oak doors; chests and barrels along the walls and a desk inside; L2 adds the lectern ledger, the hoist beam with a barrel on its chain, the side awning with crates, shelves and door lanterns; L3 hay and crates out front, sign, banners, planters, bushes.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T04:59:33.483Z",
     "tags": [
       "batch3",
       "tier3",
