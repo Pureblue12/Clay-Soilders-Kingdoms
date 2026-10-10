@@ -200,6 +200,76 @@
           "iso"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T05:42:02.023Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 3,
+      "score": 85,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: white_wool, red_wool."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "389 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 389,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4138817480719794,
+          "types": 25,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.21079691516709512
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "purpose": "Carlton's note is met: the front gable now carries a red_wool cross on a white field (white corners, framed by the roof), and it reads as a hospital cross at a glance in the front, iso, slope and sheet views; inside, six beds, hearth and herb shelves.",
+          "detail": "Bench and planter by the front help, but outside is still fairly plain at L1 (no sills or flower boxes yet); fine for the first build.",
+          "roof": "Automatic 'no overhang' warning is a false alarm: the renders show the eaves and the gable overhang past the walls.",
+          "depth": "Front has posts, plinth and the gable overhang; side walls are still flat at L1."
+        },
+        "summary": "L1 is the timber-framed ward with six beds, hearth and herb store, and now a clear red-on-white hospital cross in the front gable.",
+        "problems": [
+          "Optional: side walls still flat at L1 (sills arrive only in L2).",
+          "Reachability: ward, aisle and lean-to reached; unreached are only roof slopes, shelf/trapdoor tops and chimney shoulders (4,3,11),(6,3,11). Fine."
+        ],
+        "views": [
+          "sheet",
+          "front",
+          "iso"
+        ]
+      }
     }
   }
 }

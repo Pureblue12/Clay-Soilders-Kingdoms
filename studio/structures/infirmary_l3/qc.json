@@ -215,6 +215,74 @@
           "iso"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T05:42:05.702Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 3,
+      "score": 100,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: dandelion, fern, oxeye_daisy, cauldron, allium, sweet_berry_bush, cornflower, brewing_stand, candle, white_wall_banner, brick_stairs, white_wool, red_wool."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "463 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 463,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.48812095032397407,
+          "types": 44,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.18142548596112312
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "purpose": "Carlton's note is met: the red_wool cross on a white field in the front gable reads as a hospital cross at a glance in front, iso and sheet; the added banners hang at the wall corners and do not cover it.",
+          "roof": "Automatic 'no overhang' warning is a false alarm: eaves and gable overhang are visible in the renders.",
+          "life": "Herb garden with flowers, berry bushes, herb pots, lantern post; the herb-bed end posts now carry lanterns."
+        },
+        "summary": "L3 adds a fenced herb garden, herb pots, more banners, a bench and a lantern post around the L2 infirmary; the red cross is unchanged and clear.",
+        "problems": [
+          "Reachability: ward, aisle, lean-to and herb garden reached; unreached are roof slopes, box/canopy tops and chimney shoulders. Fine."
+        ],
+        "views": [
+          "sheet",
+          "front",
+          "iso"
+        ]
+      }
     }
   }
 }
