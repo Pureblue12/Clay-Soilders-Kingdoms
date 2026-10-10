@@ -4,14 +4,14 @@
   "version": 4,
   "size": [17,9,17],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:19:58.048Z",
     "description": "Garden (level 1), level 3 of 3: L2 plus flourish 3. A 17 x 17 cottage garden set into the lawn: a low hedge, gravel paths and a round walk round a sundial bed, curved flower borders and a small lily pond; later levels add two big shade trees, azaleas, an arbor, benches, lanterns and dense mixed flowers. Not yet builder-tested: allium, azalea, azalea_leaves, azure_bluet, bee_nest, birch_leaves, birch_log, birch_wood, blue_orchid, cherry_leaves, cherry_log, cherry_wood, cornflower, dandelion, daylight_detector, fern, flowering_azalea, flowering_azalea_leaves, grass_block, lilac, lily_of_the_valley, mossy_cobblestone_slab, orange_tulip, oxeye_daisy, peony, pink_petals, pink_tulip, red_tulip, rose_bush, stone_brick_slab, stone_brick_wall, vine, white_tulip. Decoration step adds: lily_pad, water.",
     "changes": "For your note: the birch and the cherry are now big shade trees with proper trunks, root flares, branches and wide layered crowns that spread over the side benches, the back of the round walk and the arbor. Two blocks wider (17 x 17). More flowers: blue orchids added, the borders reach further, and level 3 fills the lawn along the hedge with wild flowers and petals. New lily pond in the front left corner: 3 x 2 of water with lily pads, a mossy stone edge, ferns and orchids. Water and lily pads are added by the decoration step (builders cannot place them).",
     "parent": 3,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T04:21:13.911Z",
     "tags": [
       "batch2",
       "tier2",
