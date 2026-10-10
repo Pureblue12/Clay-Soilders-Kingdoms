@@ -44,6 +44,9 @@ Templates: `data/csr/structure/gametest/platform.nbt` (16x8x16) and `terrain.nbt
 regenerate with `tools/make_gametest_platform.py` (size arguments: see the script). `tools/suite.sh` deletes the test
 world first, so every run starts fresh.
 
+GitHub Actions (`.github/workflows/ci.yml`) runs `runData` then `tools/suite.sh` on every push to `main` and every pull
+request; the logs (`build/suite.log`, `build/build.log`) are attached to the run as `suite-logs`.
+
 - Bug tests assert the CORRECT behavior; a failing bug test = a confirmed bug (fix in M1).
   Don't change gameplay code just to make a test pass.
 - Characterization tests pin current behavior on purpose (known limitations); update them deliberately.
