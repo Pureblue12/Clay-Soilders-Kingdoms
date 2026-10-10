@@ -291,9 +291,9 @@ def storehouse():
             P(s, x, 0, z, 'spruce_log', axis='x')
         P(s, x, 1, 15, 'spruce_log', axis='x')
     P(s, 13, 0, 14, 'hay_block', axis='y'); P(s, 12, 0, 14, 'barrel', facing='up', open='false')
-    for x, z, b in ((0, 3, 'leaves'), (1, 0, 'poppy'), (0, 6, 'azure_bluet'), (1, 13, 'leaves'), (0, 9, 'dandelion'),
-                    (8, 0, 'leaves'), (9, 0, 'poppy'), (10, 0, 'cornflower'), (14, 2, 'leaves'), (14, 14, 'leaves'),
-                    (12, 15, 'poppy'), (1, 16, 'leaves'), (14, 6, 'dandelion')):
+    for x, z, b in ((0, 1, 'leaves'), (1, 0, 'poppy'), (0, 0, 'azure_bluet'), (0, 15, 'leaves'), (0, 17, 'dandelion'),
+                    (8, 0, 'leaves'), (9, 0, 'poppy'), (10, 0, 'cornflower'), (14, 2, 'leaves'), (14, 10, 'poppy'),
+                    (1, 16, 'leaves'), (14, 6, 'dandelion'), (2, 17, 'cornflower')):
         if b == 'leaves':
             P(s, x, 0, z, 'oak_leaves', **LEAVES)
         else:
