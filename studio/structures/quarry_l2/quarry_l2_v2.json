@@ -4,14 +4,14 @@
   "version": 2,
   "size": [18,9,17],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T05:40:00.592Z",
     "description": "Quarry, level 2 of 3: L1 plus flourish 2. Over budget (Carlton asked for more). Flush piece (ground_layer 0: the mod does not support it yet). Cobblestone shed with a spruce gable roof by a gravel yard and a broken-rock quarry floor the quarrymen dig down from (builders never dig); L2 the small log crane, first rock benches, stonecutter, tool rack, rubble; L3 the big works: wider terraced pit, treadwheel crane with a spruce boom, cart track, stone-cutting shed, dressed stone. Not yet builder-tested: andesite, cornflower, dandelion, stone, stone_brick_slab, stonecutter. Decoration step adds: item_frame, sign_text.",
     "changes": "Carlton: \"L2 and L3 should differentiate from each other better\". L2 stays the working quarry (small log crane, now with a spruce jib instead of the pale one, first rock benches, stonecutter, tool rack, rubble, sign). L3 is now the big works and doubles the site: the pit twice as wide and terraced (a 3-high bench along the whole back with a stair path up), a treadwheel crane with a tall spruce mast and a long spruce boom lowering dressed stone onto a cart track that runs from the pit to the road, an open stone-cutting shed with a stonecutter and a mason's bench, stacks of dressed stone. Still flush (ground_layer 0).",
     "parent": 1,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T08:58:08.111Z",
     "tags": [
       "batch3",
       "tier3",
