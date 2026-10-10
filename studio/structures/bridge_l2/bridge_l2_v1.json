@@ -4,14 +4,14 @@
   "version": 1,
   "size": [5,5,13],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "Shelf this has the same problems ase roads where it needs to be built dynamically based upon the situation",
     "author": "claude",
     "created": "2026-10-10T04:40:50.179Z",
     "description": "Wooden bridge, level 2 of 3: L1 plus flourish 2. Over budget: 143 blocks vs 96 (first build 115 vs 80). Wooden bridge, 3 wide and 11 long, oak deck on dark oak stringers and two spruce log trestle piers in the river, cobblestone abutments with two-step stair approaches, spruce fence rails; the water is a decoration step. L2 adds lanterns on the tall posts, wall cheeks and corbels; L3 banners at both ends, moss and flower pots. Piers stand at the water line here: in the world they must reach the river bed. Decoration step adds: water.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:02:12.316Z",
     "tags": [
       "batch3",
       "tier3",
