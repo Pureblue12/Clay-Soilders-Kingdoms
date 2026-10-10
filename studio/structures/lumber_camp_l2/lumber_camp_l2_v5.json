@@ -4,14 +4,14 @@
   "version": 5,
   "size": [16,8,11],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:16:12.975Z",
     "description": "Lumber camp (sawmill), level 2 of 3: L1 plus flourish 2. A miniature sawmill (16 x 11): a short open mill shed (dark oak frame on cobblestone feet, oak roof with dark oak eaves and trim) with the saw bench in the middle, a sash-saw frame whose belt drives the blade on the carriage line; the grindstone (workstation). L1 the shed, the saw and plank stacks; L2 a waterwheel on the end and the log yard; L3 a crane over the logs, a drying rack, a sign and saplings. Not yet builder-tested: stonecutter. Decoration step adds: water.",
     "changes": "Fix: the two lanterns in the shed hung from thin air (they would drop in game); they now hang from the end tie beams. Nothing else changed.",
     "parent": 4,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T04:20:53.662Z",
     "tags": [
       "revise1",
       "tier1",
