@@ -1,75 +1,93 @@
 """Road piece (tier 1), revised from Carlton's notes: l1 "boring, add different dirt and blocks, be creative"; l2 "missing
-textures; also whatever is on the side of it is sunk into ground".
+textures; also whatever is on the side of it is sunk into ground"; v2 (QC): the road stood a full block above the grass.
 
-The missing textures in road l2 v1 were its edge posts: minecraft:cobblestone_wall stored with no properties (no 'up',
-no sides), a state the Studio has no model for, so it drew a placeholder post ("?" texture). This version has no
-walls at all and every state is complete.
+The mod builds layer 0 on top of the ground and never digs, so a road of full blocks always stands proud. This road is
+slab height: half a block, like a real paving of flat stones. The earth stretches between the stones (coarse dirt,
+gravel, dirt path) can't be slabs and builders can't place dirt paths, so they are 'ground_replace' decorations: the
+decoration step swaps the top ground block under that position (until then the grass shows there).
+
+The missing textures in road l2 v1 were its edge posts: minecraft:cobblestone_wall stored with no properties, a state
+the Studio has no model for (placeholder "?" posts). This road has no such blocks.
 """
 from make_batch1_structures import Structure
 from revise1.blockconn import connect, put_id
 
 SLAB = dict(type='bottom', waterlogged='false')
+LANTERN = dict(hanging='false', waterlogged='false')
 
-
-# The fixed pattern, one string per column (x), one character per row (z = 0..5); it tiles end to end.
-#   g gravel, c coarse dirt, d dirt, C cobblestone, M mossy cobblestone (level 1, all KNOWN-OK)
-#   a andesite, p packed mud (level 2)
+# The fixed pattern, one string per column x (2..6), one character per row z (0..5); it tiles end to end.
+#   S cobblestone slab (level 1, KNOWN-OK)
+#   c coarse dirt, g gravel, p dirt path: earth, a ground_replace decoration (level 1)
+#   M mossy cobblestone slab, T stone slab, A andesite slab, U mud brick slab, F tuff slab (level 2; the ground under
+#     them is first marked gravel in level 1)
 PATTERN = {
-    2: 'CMCCgC',      # curb
-    3: 'cgcdcc',      # wheel rut
-    4: 'dCcdMc',      # crown with set stones
-    5: 'dcgccg',      # wheel rut
-    6: 'CCMCgM',      # curb
-    1: 'apppaa',      # shoulder (level 2)
-    7: 'papaap',
+    2: 'SSSSSS',      # curb
+    3: 'gAcSUc',
+    4: 'SpTSpM',      # crown: set stones and a dirt path line
+    5: 'MgSFcT',
+    6: 'SSSSSS',      # curb
 }
-BLOCK = {'g': 'gravel', 'c': 'coarse_dirt', 'd': 'dirt', 'C': 'cobblestone', 'M': 'mossy_cobblestone',
-         'a': 'andesite', 'p': 'packed_mud'}
+LEVEL2 = {'M': 'mossy_cobblestone_slab', 'T': 'stone_slab', 'A': 'andesite_slab', 'U': 'mud_brick_slab', 'F': 'tuff_slab'}
+EARTH = {'c': 'coarse_dirt', 'g': 'gravel', 'p': 'dirt_path'}
 
 
 def road(length=6):
-    """9 wide: a verge (x 0 and 8), a shoulder (x 1 and 7), a curb (x 2 and 6) and a 3-wide surface (x 3..5), all
-    from PATTERN.
-    Level 1: gravel and dirt wheel ruts, a coarse dirt crown with set cobblestones, mossy cobblestone curbs: a complete
-    road from KNOWN-OK blocks.
-    Level 2: shoulders flush with the road (andesite curbstones and packed mud) and stone slab stepping stones on the
-    verge, half a block down to the grass.
-    Level 3: grass tufts, ferns and flowers on the verges and a lamp post (spruce fence and lantern)."""
+    """9 wide: two verge strips each side (x 0..1 and 7..8) and a 5-wide road (x 2..6) of flat stones and earth from
+    PATTERN.
+    Level 1: unbroken cobblestone slab curbs and set stones, the earth between them (ground_replace decorations), poppies,
+    twigs (oak buttons) and a lamp post (spruce fence and lantern) on the verges.
+    Level 2: the paving filled out with mossy cobblestone, stone, andesite, mud brick and tuff slabs; moss carpet
+    patches and pebbles (stone buttons) along the edges.
+    Level 3: wildflowers, grass tufts and ferns along both verges and a mossy milestone."""
     s = Structure('road', (9, 3, length))
     s.at(1, 'shell')
-    for x in (2, 3, 4, 5, 6):
-        for z in range(length):
-            s.put(x, 0, z, BLOCK[PATTERN[x][z % 6]])
-
-    s.at(2, 'flourish2')
-    for x in (1, 7):
-        for z in range(length):
-            s.put(x, 0, z, BLOCK[PATTERN[x][z % 6]])
-    steps = {(0, 1), (0, 4), (8, 2), (8, 5)}          # stepping stones, three apart (they tile end to end)
-    for x, z in sorted(steps):
-        if z < length:
-            put_id(s, x, 0, z, 'stone_slab', **SLAB)
-
-    s.at(3, 'flourish3')
-    lamp = (0, 3)
-    s.put(lamp[0], 0, lamp[1], 'spruce_fence'); s.put(lamp[0], 1, lamp[1], 'spruce_fence')
-    s.put(lamp[0], 2, lamp[1], 'lantern', hanging='false', waterlogged='false')
-    plants = {0: 'Gf.L.G', 8: 'Fy.Gp.'}               # G short grass, f fern, F/y/p flowers (no plant on the steps)
-    plant = {'G': 'short_grass', 'f': 'fern', 'F': 'cornflower', 'y': 'dandelion', 'p': 'poppy'}
-    for x, row in plants.items():
+    for x, row in PATTERN.items():
         for z in range(length):
             ch = row[z % 6]
-            if ch in plant and (x, z) not in steps and (x, z) != lamp:
-                s.put(x, 0, z, plant[ch])
+            if ch == 'S':
+                s.put(x, 0, z, 'cobblestone_slab', **SLAB)
+            else:
+                s.decorate(x, 0, z, 'ground_replace', block=EARTH.get(ch, 'gravel'),
+                           note='swap the top ground block under this position')
+    s.at(1, 'fittings')
+    lamp = (1, 2)
+    s.put(lamp[0], 0, lamp[1], 'spruce_fence'); s.put(lamp[0], 1, lamp[1], 'spruce_fence')
+    s.put(lamp[0], 2, lamp[1], 'lantern', **LANTERN)
+    for x, z in ((1, 4), (7, 1), (7, 5)):
+        s.put(x, 0, z, 'poppy')
+    for x, z in ((1, 0), (7, 3)):                                   # twigs on the verge
+        s.put(x, 0, z, 'oak_button', face='floor', facing='north' if z == 0 else 'east', powered='false')
+
+    s.at(2, 'flourish2')
+    for x, row in PATTERN.items():
+        for z in range(length):
+            ch = row[z % 6]
+            if ch in LEVEL2:
+                put_id(s, x, 0, z, LEVEL2[ch], **SLAB)
+    for x, z in ((1, 1), (1, 5), (0, 5), (7, 2), (7, 4), (8, 4)):  # moss creeping in from the verges
+        s.put(x, 0, z, 'moss_carpet')
+    for x, z in ((1, 3), (7, 0)):                                   # pebbles
+        s.put(x, 0, z, 'stone_button', face='floor', facing='north', powered='false')
+
+    s.at(3, 'flourish3')
+    for x, row in ((0, 'fGcdaG'), (8, 'Gcf.da')):                  # wildflowers and grass in the gaps of the verges
+        for z in range(length):
+            plant = {'G': 'short_grass', 'f': 'fern', 'd': 'dandelion', 'c': 'cornflower', 'a': 'azure_bluet'}.get(row[z % 6])
+            if plant:
+                s.add(x, 0, z, plant)
+    put_id(s, 8, 0, 3, 'mossy_cobblestone_wall')                    # a milestone
+    s.put(8, 1, 3, 'stone_button', face='floor', facing='north', powered='false')
     return connect(s)
 
 
 STRUCTURES = [dict(path='road', name='Road piece (dirt)', tier=1, zone='inner', role='utility', group='road',
                    terrain='flexible', door=None, make=road,
-                   description='A 3-wide road of gravel ruts and a coarse dirt crown with set cobblestones between cobblestone '
-                               'curbs; level 2 adds shoulders of andesite and packed mud with stone slab stepping stones; '
-                               'level 3 grass, ferns, flowers and a lamp post. Tiles end to end.',
-                   changes='More varied: gravel ruts, a coarse dirt and cobblestone crown, mossy cobblestone curbs and '
-                           'andesite and packed mud shoulders in a fixed pattern, with stone slab stepping stones down to '
-                           'the grass, flowers and a lamp; the edge posts that showed missing textures (cobblestone walls '
-                           'stored without a state) are gone.')]
+                   description='A slab-height road (half a block over the grass, never a full block): cobblestone slab '
+                               'curbs and set stones with earth between them; the earth (coarse dirt, gravel, a dirt path '
+                               'line) is a ground_replace decoration that swaps the top ground block, so the Studio shows '
+                               'grass there. Level 2 fills the paving with mossy cobblestone, stone, andesite, mud brick '
+                               'and tuff slabs and adds moss and pebbles; level 3 wildflowers, grass and a milestone. '
+                               'Tiles end to end.',
+                   changes='Slab height now (half a block, not a full block above the grass): a fixed pattern of '
+                           'cobblestone, mossy, stone, andesite, mud brick and tuff slabs with earth stretches recorded '
+                           'for the decoration step, plus poppies, twigs, moss, pebbles and a lamp post along the edges.')]

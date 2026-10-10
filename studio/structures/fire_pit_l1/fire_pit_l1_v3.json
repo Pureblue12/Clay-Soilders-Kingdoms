@@ -1,0 +1,77 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "fire_pit_l1",
+  "version": 3,
+  "size": [9,3,9],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T03:29:27.478Z",
+    "description": "Fire pit, level 1 of 3: shell and fittings (what soldiers build first). An unlit campfire (it never burns) in a stone ring with a cooking spit, three spruce log benches, a woodpile, a chopping stump, supplies, poppies and a lantern post; level 2 a pot, a second lantern, cushions and plants; level 3 a dark oak firewood shelter with a hanging lantern.",
+    "changes": "Benches and woodpile in dark spruce instead of pale logs; level 1 now has the woodpile, a chopping stump, supplies and poppies round the fire; level 3 adds its own feature, a dark oak firewood shelter with a hanging lantern. The campfire stays unlit.",
+    "parent": 2,
+    "reviewedAt": null,
+    "tags": [
+      "revise1",
+      "tier1",
+      "inner",
+      "decoration"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:campfire[facing=north,lit=false,signal_fire=false,waterlogged=false]",
+    "B": "minecraft:chain[axis=x,waterlogged=false]",
+    "C": "minecraft:chain[axis=y,waterlogged=false]",
+    "D": "minecraft:chest[facing=east,type=single,waterlogged=false]",
+    "E": "minecraft:cobblestone",
+    "F": "minecraft:cobblestone_slab[type=bottom,waterlogged=false]",
+    "G": "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "H": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "I": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "J": "minecraft:mossy_cobblestone",
+    "K": "minecraft:oak_log[axis=y]",
+    "L": "minecraft:oak_pressure_plate",
+    "M": "minecraft:poppy",
+    "N": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "O": "minecraft:spruce_log[axis=x]",
+    "P": "minecraft:spruce_log[axis=z]"
+  },
+  "layers": [
+    [
+      "....F.M..",
+      ".KM......",
+      "#...F....",
+      "DP.FGF.P.",
+      ".P.JAE.P.",
+      ".P.FHF.PM",
+      "M........",
+      "...OOO..P",
+      "N......PP"
+    ],
+    [
+      ".........",
+      ".L.......",
+      ".........",
+      ".........",
+      "...NCN...",
+      ".........",
+      ".........",
+      ".........",
+      "N.......P"
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "...NBN...",
+      ".........",
+      ".........",
+      ".........",
+      "I........"
+    ]
+  ]
+}

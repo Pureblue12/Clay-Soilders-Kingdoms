@@ -92,6 +92,24 @@ def tower_ring(tx, tz):
     return ring
 
 
+def tower_roof(s, tx, tz):
+    """A low dark oak pyramid roof inside a tower's parapet: a ring of dark oak stairs (rising to the middle, outer
+    corner pieces at the corners), a dark oak plank peak and a spruce fence finial. It closes the tower top."""
+    y = TOWER_TOP + 1
+    for x in range(tx, tx + 3):
+        for z in range(tz, tz + 3):
+            if (x, z) == (tx + 1, tz + 1):
+                s.put(x, y, z, 'dark_oak_planks')
+                continue
+            f = 'south' if z == tz else 'north' if z == tz + 2 else 'east' if x == tx else 'west'
+            shape = 'straight'
+            if x != tx + 1 and z != tz + 1:                          # corners
+                west = x == tx
+                shape = ('outer_left' if west else 'outer_right') if f == 'south' else ('outer_right' if west else 'outer_left')
+            s.put(x, y, z, 'dark_oak_stairs', facing=f, half='bottom', shape=shape, waterlogged='false')
+    s.put(tx + 1, y + 1, tz + 1, 'spruce_fence')
+
+
 def merlon(x, z):
     return (x + z) % 2 == 0
 
@@ -150,6 +168,11 @@ def keep():
         s.put(x, UPPER, 2, 'spruce_planks')                         # gatehouse room floor
     s.remove(MID, 1, B0); s.remove(MID, 2, B0)
     s.door(MID, 1, B0, 'north', block='spruce_door')
+    for y in (1, 2):                                                 # a dark oak door frame: posts and a lintel
+        for x in (MID - 1, MID + 1):
+            s.put(x, y, B0, 'dark_oak_log', axis='y')
+    for x in (MID - 1, MID, MID + 1):
+        s.put(x, 3, B0, 'dark_oak_log', axis='x')
     s.remove(MID, UPPER + 1, B0); s.remove(MID, UPPER + 2, B0)      # king's room -> room over the gate
     for x in range(g0, g1 + 1):                                      # gatehouse roof
         for z in range(gz0, gz1 + 1):
@@ -198,7 +221,6 @@ def keep():
 
     # depth on the faces: a string course of upside-down stairs at the upper floor, corbels and battlements
     for x, z, f in overhang():
-        s.put(x, UPPER, z, 'stone_brick_stairs', facing=f, **TOP)
         s.put(x, DECK, z, 'stone_brick_stairs', facing=f, **TOP)
         s.put(x, DECK + 1, z, sb)
     for x, z, f in gate_overhang():
@@ -211,6 +233,7 @@ def keep():
         for x, z, f in tower_ring(tx, tz):
             s.put(x, TOWER_TOP, z, 'stone_brick_stairs', facing=f, **TOP)
             s.put(x, TOWER_TOP + 1, z, sb)
+        tower_roof(s, tx, tz)
     # battered plinth: cobblestone stairs leaning on every outside wall at y 1 (not in front of the arch)
     for x in range(W):
         for z in range(W):
@@ -266,15 +289,13 @@ def keep():
     for x, z, f in gate_overhang():
         if merlon(x, z):
             s.put(x, DECK + 3, z, brick_mix(x, DECK + 3, z))
-    for tx, tz in TOWERS:                                            # tower tops: merlons, a flag or a lantern
+    for tx, tz in TOWERS:                                            # tower tops: merlons round the roofs
         for x, z, f in tower_ring(tx, tz):
             if merlon(x, z) or (x in (tx - 1, tx + 3) and z in (tz - 1, tz + 3)):
                 s.put(x, TOWER_TOP + 2, z, brick_mix(x, TOWER_TOP + 2, z))
-        if tz < MID:                                                 # front towers fly a flag
-            s.put(tx + 1, TOWER_TOP + 1, tz + 1, 'spruce_fence')
-            put_id(s, tx + 1, TOWER_TOP + 2, tz + 1, 'red_banner', rotation='8')
-        else:                                                        # back towers carry a lantern
-            s.put(tx + 1, TOWER_TOP + 1, tz + 1, 'lantern', hanging='false', waterlogged='false')
+    for x in (7, 9):                                                 # two flags on the gatehouse roof
+        s.put(x, DECK + 2, 2, 'spruce_fence'); s.put(x, DECK + 3, 2, 'spruce_fence')
+        put_id(s, x, DECK + 4, 2, 'red_banner', rotation='8')
     for x in (g0, g1):                                               # great banners on the gatehouse front
         put_id(s, x, 8, 0, 'red_wall_banner', facing='north')
     for x in (B0 + 1, B1 - 1):                                       # and on the front recesses
@@ -301,20 +322,22 @@ def keep():
     s.at(3, 'flourish3')
     put_id(s, MID, 4, 1, 'iron_bars')                                # portcullis teeth in the arch
     put_id(s, MID, 4, 2, 'iron_bars')
-    for tx, tz in TOWERS:                                            # ivy on the towers' outer faces
-        fx = tx - 1 if tx < MID else tx + 3                          # the air beside the side face
-        fz = tz - 1 if tz < MID else tz + 3                          # the air in front of the front/back face
-        side = 'east' if tx < MID else 'west'                        # vine sides point at the wall they hang on
-        face = 'south' if tz < MID else 'north'
-        for y in range(2, 9 - (tx + tz) % 3):
-            put_id(s, fx, y, tz + 2 if tz < MID else tz, 'vine', **{side: 'true'}, **{d: 'false' for d in ('north', 'south', 'east', 'west', 'up') if d != side})
-        for y in range(3, 7):
-            put_id(s, tx + 2 if tx < MID else tx, y, fz, 'vine', **{face: 'true'}, **{d: 'false' for d in ('north', 'south', 'east', 'west', 'up') if d != face})
+    # timber hoardings: a dark oak pent roof over every battlement walk (body and gatehouse), sloping outwards
+    for x, z, f in overhang():                                       # posts in the crenels carry it
+        if (x, DECK + 2, z) not in s.blocks:
+            put_id(s, x, DECK + 2, z, 'dark_oak_fence')
+    for x, z, f in gate_overhang():
+        if (x, DECK + 3, z) not in s.blocks:
+            put_id(s, x, DECK + 3, z, 'dark_oak_fence')
+    for x, z, f in overhang():
+        if (x, DECK + 3, z) not in s.blocks:
+            put_id(s, x, DECK + 3, z, 'dark_oak_stairs', facing=f, half='bottom', shape='straight', waterlogged='false')
+    for x, z, f in gate_overhang():
+        put_id(s, x, DECK + 4, z, 'dark_oak_stairs', facing=f, half='bottom', shape='straight', waterlogged='false')
     for x in (5, 11):                                                # hall: banners on the side tables' ends
         put_id(s, B0 + 1 if x == 5 else B1 - 1, 4, 11, 'red_wall_banner', facing='east' if x == 5 else 'west')
     for x in (6, 10):                                                # candles on the tables
-        for z in (6, 8):
-            s.put(x, 2, z, 'candle', candles='3', lit='false', waterlogged='false')
+        s.put(x, 2, 7, 'candle', candles='3', lit='false', waterlogged='false')
     for x, z in ((7, 10), (9, 10)):                                  # carpet by the bed and the desk upstairs
         s.add(x, UPPER + 1, z, 'brown_carpet')
     s.put(B1 - 1, UPPER + 1, 12, 'barrel', facing='up', open='false')
@@ -327,6 +350,6 @@ STRUCTURES = [dict(path='keep', name='Keep', tier=4, zone='keep', role='keep', g
                                'corner towers with corbelled tops, a gatehouse with an arched passage, battlements on '
                                'corbels, a great hall with a throne, tables and a hearth, stairs (no ladders) to the '
                                "king's rooms and the roof deck. 16 tall: needs scaffold in game.",
-                   changes='New keep from the approved sample, bigger and grander: 15 x 15 with four corner towers, '
-                           'a gatehouse front, a great hall and stairs up to the roof; level 1 is the buildable shell, '
-                           'levels 2 and 3 add the battlements, banners, lanterns and details.')]
+                   changes='Dark oak ties it to the kingdom look: a dark oak door frame (level 1) and low dark oak '
+                           'pyramid roofs that close the four tower tops (level 1, no more open boxes); level 3 now has '
+                           'its own feature, timber hoardings (dark oak posts and pent roofs) over every battlement.')]

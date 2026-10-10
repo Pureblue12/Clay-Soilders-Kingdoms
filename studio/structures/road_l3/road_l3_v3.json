@@ -1,0 +1,70 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "road_l3",
+  "version": 3,
+  "size": [9,3,6],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T03:28:09.888Z",
+    "description": "Road piece (dirt), level 3 of 3: L2 plus flourish 3. A slab-height road (half a block over the grass, never a full block): cobblestone slab curbs and set stones with earth between them; the earth (coarse dirt, gravel, a dirt path line) is a ground_replace decoration that swaps the top ground block, so the Studio shows grass there. Level 2 fills the paving with mossy cobblestone, stone, andesite, mud brick and tuff slabs and adds moss and pebbles; level 3 wildflowers, grass and a milestone. Tiles end to end. Not yet builder-tested: andesite_slab, azure_bluet, cornflower, dandelion, fern, moss_carpet, mossy_cobblestone_slab, mossy_cobblestone_wall, mud_brick_slab, short_grass, stone_button, stone_slab, tuff_slab. Decoration step adds: ground_replace.",
+    "changes": "Slab height now (half a block, not a full block above the grass): a fixed pattern of cobblestone, mossy, stone, andesite, mud brick and tuff slabs with earth stretches recorded for the decoration step, plus poppies, twigs, moss, pebbles and a lamp post along the edges.",
+    "parent": 2,
+    "reviewedAt": null,
+    "tags": [
+      "revise1",
+      "tier1",
+      "inner",
+      "utility"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:andesite_slab[type=bottom,waterlogged=false]",
+    "A": "minecraft:azure_bluet",
+    "B": "minecraft:cobblestone_slab[type=bottom,waterlogged=false]",
+    "C": "minecraft:cornflower",
+    "D": "minecraft:dandelion",
+    "E": "minecraft:fern",
+    "F": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "G": "minecraft:moss_carpet",
+    "H": "minecraft:mossy_cobblestone_slab[type=bottom,waterlogged=false]",
+    "I": "minecraft:mossy_cobblestone_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none]",
+    "J": "minecraft:mud_brick_slab[type=bottom,waterlogged=false]",
+    "K": "minecraft:oak_button[face=floor,facing=east,powered=false]",
+    "L": "minecraft:oak_button[face=floor,facing=north,powered=false]",
+    "M": "minecraft:poppy",
+    "N": "minecraft:short_grass",
+    "O": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "P": "minecraft:stone_button[face=floor,facing=north,powered=false]",
+    "Q": "minecraft:stone_slab[type=bottom,waterlogged=false]",
+    "R": "minecraft:tuff_slab[type=bottom,waterlogged=false]"
+  },
+  "layers": [
+    [
+      "ELB.BHBPN",
+      "NGB#..BMC",
+      "COB.QBBGE",
+      "DPBBBRBKI",
+      "AMBJ..BGG",
+      "GGB.HQBMA"
+    ],
+    [
+      ".........",
+      ".........",
+      ".O.......",
+      "........P",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".F.......",
+      ".........",
+      ".........",
+      "........."
+    ]
+  ]
+}

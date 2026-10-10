@@ -1,0 +1,57 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "road_l1",
+  "version": 3,
+  "size": [9,3,6],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T03:28:08.708Z",
+    "description": "Road piece (dirt), level 1 of 3: shell and fittings (what soldiers build first). A slab-height road (half a block over the grass, never a full block): cobblestone slab curbs and set stones with earth between them; the earth (coarse dirt, gravel, a dirt path line) is a ground_replace decoration that swaps the top ground block, so the Studio shows grass there. Level 2 fills the paving with mossy cobblestone, stone, andesite, mud brick and tuff slabs and adds moss and pebbles; level 3 wildflowers, grass and a milestone. Tiles end to end. Decoration step adds: ground_replace.",
+    "changes": "Slab height now (half a block, not a full block above the grass): a fixed pattern of cobblestone, mossy, stone, andesite, mud brick and tuff slabs with earth stretches recorded for the decoration step, plus poppies, twigs, moss, pebbles and a lamp post along the edges.",
+    "parent": 2,
+    "reviewedAt": null,
+    "tags": [
+      "revise1",
+      "tier1",
+      "inner",
+      "utility"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:cobblestone_slab[type=bottom,waterlogged=false]",
+    "A": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "B": "minecraft:oak_button[face=floor,facing=east,powered=false]",
+    "C": "minecraft:oak_button[face=floor,facing=north,powered=false]",
+    "D": "minecraft:poppy",
+    "E": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=false]"
+  },
+  "layers": [
+    [
+      ".C#.#.#..",
+      "..#...#D.",
+      ".E#..##..",
+      "..###.#B.",
+      ".D#...#..",
+      "..#...#D."
+    ],
+    [
+      ".........",
+      ".........",
+      ".E.......",
+      ".........",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".A.......",
+      ".........",
+      ".........",
+      "........."
+    ]
+  ]
+}
