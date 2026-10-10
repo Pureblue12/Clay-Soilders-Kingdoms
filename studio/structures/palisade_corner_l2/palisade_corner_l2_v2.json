@@ -4,14 +4,14 @@
   "version": 2,
   "size": [2,6,2],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "Delete this",
     "author": "claude-qc",
     "created": "2026-10-10T03:48:57.154Z",
     "description": "Palisade, corner, level 2 of 2: L1 plus flourish 2. Outside corner piece joining two straight modules. Not yet builder-tested: white_banner. Decoration step adds: banner_pattern.",
     "changes": "Quality check round 2: cobblestone footing under the stakes (mossy every third), walk posts every other block braced to the stakes, fence points and the gate's beam railing joined the way the game joins them; level 2 adds stores under the walk (barrel, hay) and level 3 hanging lanterns and a second barrel; the corner gets a flag",
     "parent": 1,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T04:28:22.866Z",
     "tags": [
       "batch2",
       "tier2",

@@ -147,25 +147,25 @@
     "checkedAt": "2026-10-10T04:07:53.929Z"
   },
   "garden_l1": {
-    "version": 3,
+    "version": 4,
     "verdict": "pass",
     "score": 78,
-    "round": 2,
-    "checkedAt": "2026-10-10T04:05:55.476Z"
+    "round": 1,
+    "checkedAt": "2026-10-10T04:22:14.575Z"
   },
   "garden_l2": {
-    "version": 3,
+    "version": 4,
     "verdict": "pass",
-    "score": 94,
-    "round": 2,
-    "checkedAt": "2026-10-10T04:05:56.077Z"
+    "score": 89,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:22:15.099Z"
   },
   "garden_l3": {
-    "version": 3,
+    "version": 4,
     "verdict": "pass",
-    "score": 94,
-    "round": 2,
-    "checkedAt": "2026-10-10T04:05:56.714Z"
+    "score": 89,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:22:15.668Z"
   },
   "hitching_post_l1": {
     "version": 3,
