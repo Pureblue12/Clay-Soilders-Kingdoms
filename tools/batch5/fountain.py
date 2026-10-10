@@ -8,8 +8,8 @@ tall", round, not square).
 
 Plan (9 x 9, centre (4, 4)): the basin is a rounded octagon 7 across (rim of 16 blocks one high), the paving a ring
 around it 9 across with a cobble path in from each side. In the middle a stem carries an upper bowl (a ring of
-upside-down stairs) at y 3 and a column through it. Water (the basin at y 1 and the upper bowl at y 4, so it spills
-over the bowl's edge into the basin) is added by the decoration step; the Studio shows it as water.
+upside-down stairs) at y 3 and a column through it. Water (the basin at y 1) is added by the decoration step; the
+Studio shows it as water.
 Level 1 (KNOWN-OK only): paving, basin and rim, stem, upper bowl and column.
 Level 2 (a plaza fountain): four lantern posts at the diagonals with flowering azalea bushes round their feet, flower
 beds in the grass corners, lily pads on the basin.
@@ -98,9 +98,9 @@ def fountain():
 
 STRUCTURES = [dict(path='fountain', name='Fountain', tier=5, zone='inner', role='decoration', group='fountain',
                    terrain='flexible', door=None, make=fountain, ground_layer=0, changes='First version.',
-                   description='Flush plaza piece (ground_layer 0: the paving and basin floor replace the grass, level '
+                   description='Over budget: 160 blocks vs 51 (9 x 9 with its paving instead of 5 x 5). Flush plaza piece (ground_layer 0: the paving and basin floor replace the grass, level '
                                'with the lawn; the mod\'s builders can\'t do that yet). A round two-tier stone fountain: '
                                'a basin 7 across with a rim one block tall, a stem and corbelled upper bowl, on a paved '
-                               'round 9 across with a cobble path in from each side; water (basin and upper bowl, '
-                               'spilling into the basin) by the decoration step. L2 a carved rim, lantern posts, '
-                               'benches, flower beds, lily pads; L3 a statue top, hanging lanterns, flower pots, banners.')]
+                               'round 9 across with a cobble path in from each side; the basin water by the decoration step. '
+                               'L2 lantern posts with flowering bushes, flower beds in the grass corners, lily pads; '
+                               'L3 a statue top with a gold-look finial, flower pots on the rim, banners.')]

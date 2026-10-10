@@ -25,9 +25,9 @@ Level 1 (KNOWN-OK only): all of the above, beds and windows included.
 Level 2 (the hospital at work): brewing stands and cauldrons in the dispensary and the back hall, candles and pots on
 the bedside tables, lanterns on chains in the wards, white carpets in the aisles, herbs in the courtyard bed (ferns,
 flowers, berry bushes) with lantern posts, lily pads, flower boxes under the front windows, the red-cross banner
-over the door and a canopy on lantern brackets, brick shoulders on the chimney, clay in the clay room.
-Level 3 (the town's pride): red-cross banners on the front corners and in the courtyard, a bell at the gate, herb
-pots on the sills, a herb garden strip along the left side, vines, a bench and lantern posts at the front, candles."""
+over the door and a canopy with hanging lanterns, shutters on the side and back windows, clay in the clay room.
+Level 3 (the town's pride): red-cross banners on the front corners, a herb garden strip along the left side,
+lantern posts by the gate, a log pile and barrels at the back."""
 from make_batch1_structures import Structure
 from batch3.ws_kit import P, A, STAIR, TOP, SLAB, SLAB_TOP, OPEN, SHELF, HANG, STAND, LEAVES, connect, shutters
 from batch5.roofkit import hip_roof, height_roof, levels, corbels
@@ -283,4 +283,13 @@ def hospital():
 
 STRUCTURES = [dict(path='hospital', name='Hospital', tier=6, zone='inner', role='health', group='infirmary',
                    terrain='ground_level', door='front', make=hospital, max_height=12, changes='First version.',
-                   description='Needs scaffolding: 12 tall.')]
+                   description='Needs scaffolding: 12 tall. Over budget: 1,536 blocks vs the infirmary\'s 285 (no '
+                               'hospital budget in the brief; under the landmark 1,800). Saved as its own structure: the '
+                               'infirmary\'s tier-6 big brother, a two-storey cloister hospital round a 5 x 5 herb '
+                               'courtyard: stone brick ground storey, white plaster in a dark oak frame above, one '
+                               'spruce roof round the ring with a cross gable over the door and a kiln chimney. 14 beds '
+                               '(three a side on each floor, two more upstairs at the back), dispensary, healers\' '
+                               'room, herb store, clay room (rebuilding fallen soldiers), a staircase; courtyard pool by '
+                               'the decoration step. L2 brewing stands, cauldrons, candles, chained lanterns, carpets, '
+                               'courtyard herbs, planters, a door canopy, the red-cross banner, shutters, clay; L3 more '
+                               'red-cross banners, a herb garden strip, lantern posts at the gate, a log pile, barrels.')]
