@@ -4,14 +4,14 @@
   "version": 1,
   "size": [5,7,3],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:42:33.671Z",
     "description": "Stone wall, straight, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 83 blocks vs 60. 5 long stone wall on a battered cobblestone footing, crenellated parapet on corbels, 2-wide walk (stand at 5). Outside is the front (z 0).",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:15:12.903Z",
     "tags": [
       "batch3",
       "tier3",
