@@ -1,0 +1,75 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "stone_wall_corner_l1",
+  "version": 1,
+  "size": [3,8,3],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T04:42:36.426Z",
+    "description": "Stone wall, corner, level 1 of 3: shell and fittings (what soldiers build first). Outside corner joining two straight modules, with a corner pier.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch3",
+      "tier3",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:cobblestone",
+    "A": "minecraft:cobblestone_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "B": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "C": "minecraft:mossy_cobblestone",
+    "D": "minecraft:stone_brick_stairs[facing=east,half=top,shape=straight,waterlogged=false]",
+    "E": "minecraft:stone_brick_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "F": "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "G": "minecraft:stone_bricks"
+  },
+  "layers": [
+    [
+      "#BB",
+      "A##",
+      "AC#"
+    ],
+    [
+      "#..",
+      ".##",
+      ".##"
+    ],
+    [
+      "G..",
+      ".GG",
+      ".GG"
+    ],
+    [
+      "G..",
+      ".GG",
+      ".GG"
+    ],
+    [
+      "GFF",
+      "DGG",
+      "DGG"
+    ],
+    [
+      "GGG",
+      "G..",
+      "G.."
+    ],
+    [
+      "G.G",
+      "...",
+      "G.."
+    ],
+    [
+      "E..",
+      "...",
+      "..."
+    ]
+  ]
+}

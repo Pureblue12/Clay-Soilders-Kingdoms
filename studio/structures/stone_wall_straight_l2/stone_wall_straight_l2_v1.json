@@ -1,0 +1,72 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "stone_wall_straight_l2",
+  "version": 1,
+  "size": [5,7,3],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T04:42:34.135Z",
+    "description": "Stone wall, straight, level 2 of 3: L1 plus flourish 2. Over budget: 83 blocks vs 60. 5 long stone wall on a battered cobblestone footing, crenellated parapet on corbels, 2-wide walk (stand at 5). Outside is the front (z 0). Not yet builder-tested: iron_bars, red_wall_banner, stone_brick_wall. Decoration step adds: banner_pattern.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch3",
+      "tier3",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:cobblestone",
+    "A": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "B": "minecraft:iron_bars[east=true,north=false,south=true,waterlogged=false,west=true]",
+    "C": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "D": "minecraft:mossy_cobblestone",
+    "E": "minecraft:red_wall_banner[facing=north]",
+    "F": "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "G": "minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none]",
+    "H": "minecraft:stone_bricks",
+    "I": "minecraft:wall_torch[facing=south]"
+  },
+  "layers": [
+    [
+      "AAAAA",
+      "###DD",
+      "#D###"
+    ],
+    [
+      ".....",
+      "#####",
+      "H##H#"
+    ],
+    [
+      ".....",
+      "HBHBH",
+      "HHHHH"
+    ],
+    [
+      "..E..",
+      "HHHHH",
+      "HHHHH"
+    ],
+    [
+      "FFFFF",
+      "#HH#H",
+      "HHH#H"
+    ],
+    [
+      "HHHHH",
+      ".....",
+      "..G.."
+    ],
+    [
+      "H.H.H",
+      "I...I",
+      "..C.."
+    ]
+  ]
+}

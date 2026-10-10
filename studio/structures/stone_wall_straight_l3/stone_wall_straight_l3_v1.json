@@ -1,0 +1,77 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "stone_wall_straight_l3",
+  "version": 1,
+  "size": [5,7,3],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T04:42:34.570Z",
+    "description": "Stone wall, straight, level 3 of 3: L2 plus flourish 3. Over budget: 83 blocks vs 60. 5 long stone wall on a battered cobblestone footing, crenellated parapet on corbels, 2-wide walk (stand at 5). Outside is the front (z 0). Not yet builder-tested: iron_bars, moss_carpet, mossy_cobblestone_wall, red_wall_banner, stone_brick_slab, stone_brick_wall, vine. Decoration step adds: banner_pattern, item.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch3",
+      "tier3",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:cobblestone",
+    "B": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "C": "minecraft:iron_bars[east=true,north=false,south=true,waterlogged=false,west=true]",
+    "D": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "E": "minecraft:moss_carpet",
+    "F": "minecraft:mossy_cobblestone",
+    "G": "minecraft:mossy_cobblestone_wall[east=low,north=none,south=none,up=false,waterlogged=false,west=low]",
+    "H": "minecraft:red_wall_banner[facing=north]",
+    "I": "minecraft:stone_brick_slab[type=bottom,waterlogged=false]",
+    "J": "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "K": "minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none]",
+    "L": "minecraft:stone_bricks",
+    "M": "minecraft:vine[east=false,north=false,south=true,up=false,west=false]",
+    "N": "minecraft:wall_torch[facing=south]"
+  },
+  "layers": [
+    [
+      "BBBBB",
+      "AAAFF",
+      "AFAAA"
+    ],
+    [
+      "MM..M",
+      "AAAAA",
+      "LAALA"
+    ],
+    [
+      "M...M",
+      "LCLCL",
+      "LLLLL"
+    ],
+    [
+      "..H..",
+      "LLLLL",
+      "LLLLL"
+    ],
+    [
+      "JJJJJ",
+      "ALLAL",
+      "LLLAL"
+    ],
+    [
+      "LLLLL",
+      ".E.E.",
+      "..K#."
+    ],
+    [
+      "LGLIL",
+      "N...N",
+      "..D.."
+    ]
+  ]
+}

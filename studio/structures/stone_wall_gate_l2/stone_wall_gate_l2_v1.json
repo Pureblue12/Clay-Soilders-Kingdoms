@@ -1,0 +1,110 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "stone_wall_gate_l2",
+  "version": 1,
+  "size": [7,9,5],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T04:42:38.232Z",
+    "description": "Stone wall gate, level 2 of 3: L1 plus flourish 2. Over budget: 179 blocks vs 60. Its wall line is z 0..2 like the others, the towers also reach z 3. Two small towers and an arched opening 3 wide (no fence gate); the walk crosses over it. Not yet builder-tested: iron_bars, red_wall_banner, stone_brick_wall. Decoration step adds: banner_pattern.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch3",
+      "tier3",
+      "wall",
+      "gate"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:cobblestone",
+    "A": "minecraft:iron_bars[east=false,north=false,south=false,waterlogged=false,west=true]",
+    "B": "minecraft:iron_bars[east=false,north=false,south=true,waterlogged=false,west=true]",
+    "C": "minecraft:iron_bars[east=true,north=false,south=false,waterlogged=false,west=false]",
+    "D": "minecraft:iron_bars[east=true,north=false,south=true,waterlogged=false,west=false]",
+    "E": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "F": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "G": "minecraft:mossy_cobblestone",
+    "H": "minecraft:red_wall_banner[facing=north]",
+    "I": "minecraft:red_wall_banner[facing=south]",
+    "J": "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "K": "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "L": "minecraft:stone_brick_stairs[facing=east,half=top,shape=straight,waterlogged=false]",
+    "M": "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "N": "minecraft:stone_brick_stairs[facing=west,half=top,shape=straight,waterlogged=false]",
+    "O": "minecraft:stone_brick_wall[east=none,north=low,south=none,up=true,waterlogged=false,west=none]",
+    "P": "minecraft:stone_bricks",
+    "Q": "minecraft:wall_torch[facing=east]",
+    "R": "minecraft:wall_torch[facing=north]",
+    "S": "minecraft:wall_torch[facing=west]"
+  },
+  "layers": [
+    [
+      "##...GG",
+      "##...##",
+      "#G...GG",
+      "G#...GG",
+      "O.....O"
+    ],
+    [
+      "##Q.SPP",
+      "##...PP",
+      "P#...#P",
+      "##...#P",
+      "E.....E"
+    ],
+    [
+      "DP...PB",
+      "PPNFLPP",
+      "PPNFL#P",
+      "P#...PP",
+      "......."
+    ],
+    [
+      "PP.H.PP",
+      "PPPPPPP",
+      "PPPPPPP",
+      "PP...#P",
+      ".I...I."
+    ],
+    [
+      "PPMMM#P",
+      "#PP#PP#",
+      "PPP#PPP",
+      "PP...PP",
+      "......."
+    ],
+    [
+      "PPPPPPP",
+      ".......",
+      ".......",
+      "PP...PP",
+      "......."
+    ],
+    [
+      "CP.P.PA",
+      ".......",
+      ".R...R.",
+      "PP...PP",
+      "......."
+    ],
+    [
+      "PP...PP",
+      "PP...PP",
+      "PP...PP",
+      "PP...PP",
+      "......."
+    ],
+    [
+      "JK...JK",
+      "JK...JK",
+      "JK...JK",
+      "JK...JK",
+      "......."
+    ]
+  ]
+}
