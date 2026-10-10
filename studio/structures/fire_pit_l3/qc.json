@@ -115,6 +115,62 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T04:13:11.527Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 92,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: short_grass, cauldron, dandelion, fern, dark_oak_fence, dark_oak_slab."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "75 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 75,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.7866666666666666,
+          "types": 24,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.17333333333333334
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Level 3 adds a dark oak firewood shelter with a lantern at the back corner, clearly the finished version.",
+        "problems": [
+          "The shelter roof is flat: one row of stairs would give it a lean-to slope"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

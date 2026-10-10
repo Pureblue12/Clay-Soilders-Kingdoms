@@ -171,6 +171,63 @@
           "sheet"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T04:13:20.614Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 94,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "buildability",
+            "message": "Soldiers can't open: spruce_fence_gate (decoration only)."
+          },
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cauldron."
+          }
+        ],
+        "stats": {
+          "blocks": 227,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5022026431718062,
+          "types": 25,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.15859030837004406
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Level 2 gives it a working job: a hay loft with a hoist in the gable, tack barrels and a saddle rack, a water trough in the paddock and lanterns. Clearly more than L1. Now sits with its floor level with the grass.",
+        "problems": [
+          "The paddock ground is still plain grass; a coarse dirt patch by the trough would show wear",
+          "The stable floor is now flush with the grass (meta.groundLayer 0): the builders never dig or replace ground, so the mod has to support this before it can be built as drawn"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

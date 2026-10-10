@@ -99,6 +99,60 @@
           "sheet"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T04:13:10.371Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 3,
+      "score": 81,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "47 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 47,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.6595744680851063,
+          "types": 15,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.2765957446808511
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "no roof, not needed"
+        },
+        "summary": "Dark log benches round a stone fire ring with an unlit campfire and a spit, now with one joined stone path in from the front, leaf bushes and poppies round the edge, a woodpile and a lamp post.",
+        "problems": [
+          "The benches could have a little more variety (one stump seat or a crate) so the four sides don't look alike"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

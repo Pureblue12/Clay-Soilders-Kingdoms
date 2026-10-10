@@ -114,6 +114,65 @@
           "sheet"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T04:13:10.968Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 81,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: short_grass, cauldron, dandelion, fern."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "64 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 64,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.75,
+          "types": 22,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.203125
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "no roof, not needed"
+        },
+        "summary": "Level 1 plus red cushions on the benches, a cauldron and a second lamp post. A cosy gathering place.",
+        "problems": [
+          "L2's changes are small (cushions, a cauldron): a cooking pot on a tripod or a log seat ring would set it further apart from L1"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

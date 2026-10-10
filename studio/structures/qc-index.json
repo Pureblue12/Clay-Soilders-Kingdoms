@@ -84,18 +84,18 @@
     "checkedAt": "2026-10-10T03:34:32.919Z"
   },
   "farm_field_potatoes_l1": {
-    "version": 2,
+    "version": 3,
     "verdict": "pass",
-    "score": 78,
-    "round": 2,
-    "checkedAt": "2026-10-10T03:34:33.445Z"
+    "score": 83,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:12:57.341Z"
   },
   "farm_field_wheat_l1": {
-    "version": 2,
+    "version": 3,
     "verdict": "pass",
-    "score": 72,
+    "score": 78,
     "round": 1,
-    "checkedAt": "2026-10-10T03:34:32.364Z"
+    "checkedAt": "2026-10-10T04:12:56.776Z"
   },
   "farm_l1": {
     "version": 3,
@@ -119,25 +119,25 @@
     "checkedAt": "2026-10-10T03:34:31.823Z"
   },
   "fire_pit_l1": {
-    "version": 3,
-    "verdict": "revise",
-    "score": 64,
-    "round": 2,
-    "checkedAt": "2026-10-10T03:45:35.819Z"
+    "version": 4,
+    "verdict": "pass",
+    "score": 81,
+    "round": 3,
+    "checkedAt": "2026-10-10T04:13:10.371Z"
   },
   "fire_pit_l2": {
-    "version": 3,
+    "version": 4,
     "verdict": "pass",
-    "score": 72,
+    "score": 81,
     "round": 1,
-    "checkedAt": "2026-10-10T03:45:36.359Z"
+    "checkedAt": "2026-10-10T04:13:10.968Z"
   },
   "fire_pit_l3": {
-    "version": 2,
+    "version": 3,
     "verdict": "pass",
-    "score": 78,
+    "score": 92,
     "round": 1,
-    "checkedAt": "2026-10-10T03:45:36.875Z"
+    "checkedAt": "2026-10-10T04:13:11.527Z"
   },
   "flower_bed_l1": {
     "version": 2,
@@ -210,46 +210,46 @@
     "checkedAt": "2026-10-10T04:07:53.444Z"
   },
   "keep_l1": {
-    "version": 3,
-    "verdict": "revise",
-    "score": 67,
-    "round": 1,
-    "checkedAt": "2026-10-10T03:45:48.594Z"
-  },
-  "keep_l2": {
-    "version": 2,
-    "verdict": "pass",
-    "score": 83,
-    "round": 1,
-    "checkedAt": "2026-10-10T03:25:56.046Z"
-  },
-  "keep_l3": {
-    "version": 2,
-    "verdict": "pass",
-    "score": 86,
-    "round": 1,
-    "checkedAt": "2026-10-10T03:25:56.552Z"
-  },
-  "lumber_camp_l1": {
-    "version": 3,
+    "version": 4,
     "verdict": "pass",
     "score": 78,
     "round": 2,
-    "checkedAt": "2026-10-10T03:35:51.502Z"
+    "checkedAt": "2026-10-10T04:11:53.573Z"
   },
-  "lumber_camp_l2": {
-    "version": 3,
-    "verdict": "pass",
-    "score": 89,
-    "round": 2,
-    "checkedAt": "2026-10-10T03:35:52.055Z"
-  },
-  "lumber_camp_l3": {
-    "version": 3,
+  "keep_l2": {
+    "version": 4,
     "verdict": "pass",
     "score": 92,
-    "round": 2,
-    "checkedAt": "2026-10-10T03:35:52.583Z"
+    "round": 1,
+    "checkedAt": "2026-10-10T04:11:54.161Z"
+  },
+  "keep_l3": {
+    "version": 4,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:11:54.771Z"
+  },
+  "lumber_camp_l1": {
+    "version": 4,
+    "verdict": "pass",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:12:17.028Z"
+  },
+  "lumber_camp_l2": {
+    "version": 4,
+    "verdict": "revise",
+    "score": 89,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:12:36.782Z"
+  },
+  "lumber_camp_l3": {
+    "version": 4,
+    "verdict": "revise",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:12:37.300Z"
   },
   "notice_board_l1": {
     "version": 3,
@@ -378,25 +378,25 @@
     "checkedAt": "2026-10-10T03:27:35.023Z"
   },
   "stables_l1": {
-    "version": 3,
+    "version": 4,
     "verdict": "pass",
     "score": 83,
     "round": 1,
-    "checkedAt": "2026-10-10T03:52:11.604Z"
+    "checkedAt": "2026-10-10T04:13:20.084Z"
   },
   "stables_l2": {
-    "version": 3,
+    "version": 4,
     "verdict": "pass",
     "score": 94,
     "round": 1,
-    "checkedAt": "2026-10-10T03:52:12.161Z"
+    "checkedAt": "2026-10-10T04:13:20.614Z"
   },
   "stables_l3": {
-    "version": 3,
+    "version": 4,
     "verdict": "pass",
     "score": 100,
     "round": 1,
-    "checkedAt": "2026-10-10T03:52:12.677Z"
+    "checkedAt": "2026-10-10T04:13:21.160Z"
   },
   "visitors_camp_l1": {
     "version": 3,
