@@ -1,146 +1,174 @@
 """Lumber camp, revised from Carlton's notes (revise1): a miniature sawmill instead of a log shed.
 
-Front (z = 0) to back: a log yard with a crane, a carriage line (x = 5) running through an open-sided timber shed
-where the saws cut the logs, and a plank yard behind it. The shed's lean-to roof is high on the right (+x, the side the
-iso view shows), so the line and the saws are seen under it. A waterwheel in a stone race on the right turns an axle
-into the shed (level 2). Fences connect (farm.Connected sets their connection properties).
+A long open mill hall along x with the carriage line (z = 5) running through it end to end. The saw bench is the
+centrepiece in the middle of the hall: a sash-saw frame of dark oak over the line, the blade (a chain) cutting the log
+on the carriage. The log yard (piles and a pulley post) is at the right end (+x, the end the iso view shows), the
+plank yard at the left end. Fences connect (farm.Connected sets their connection properties).
 """
-from .farm import Connected, SLAB, TOP_SLAB, HANG
+from .farm import Connected, STAIR, TOP_STAIR, SLAB, TOP_SLAB, LANTERN, HANG, SHUT
 
-LOG_Z = dict(axis='z')
+LOG_X = dict(axis='x')
 
 
 def sawmill():
     """Sawmill.
-    Level 1 (shell and fittings): a 7 x 7 open-sided shed: spruce log posts on cobblestone feet, a spruce plank floor,
-    a low plank wall on the left, a log top plate along the tall right side, and a spruce slab lean-to roof rising from
-    the left (3 high) to the right (6 high) with one block of overhang. The carriage line is a track of stripped spruce
-    logs from the front yard through the shed to the plank yard; a log rides it into the saw (the grindstone, also the
-    workstation) and a squared beam comes out behind it. Front yard: a log pile and a crane (post, jib, chain, a
-    hanging log). Inside: chest and barrels. Torches on the front posts.
-    Level 2: the waterwheel in a cobblestone race (water by the decoration step) with its axle into the shed and a
-    chain belt down to the stonecutter, the second saw (UNKNOWN block); boards and plank stacks in the back yard, a
-    sawhorse, sawdust, a lantern, a sign. Level 3: an axe in the chopping block (decoration step), saplings for
-    replanting, moss on the log pile, more stacks."""
-    W, D, H = 14, 13, 8
+    Level 1 (shell and fittings): a 13 x 5 open mill hall: dark oak log posts on cobblestone feet, dark oak plates and
+    tie beams, a spruce plank floor, a spruce gable roof with dark oak eaves and gable trim and one block of overhang
+    all round, plank gable triangles above the tie beams (the ends stay open under them). The carriage line (stripped
+    spruce logs) runs through the hall from the log yard to the plank yard. Saw bench in the middle: a sash-saw frame
+    over the line with a chain blade cutting a log on the carriage; the grindstone (workstation) beside it. Log yard:
+    two log piles and a pulley post with a hanging log; plank yard: plank and board stacks. Chest, barrels, torches.
+    Level 2: a waterwheel in a stone race behind the hall (water by the decoration step) with its axle to the saw
+    frame, the stonecutter as a second saw (UNKNOWN block), a sawhorse, a hand cart of boards, lanterns, sawdust, a
+    sign board. Level 3: a plank drying rack in front, more logs in the yard, saplings for replanting, moss, an axe in
+    the chopping block (decoration step)."""
+    W, D, H = 21, 12, 9
     s = Connected('lumber_camp', (W, H, D), palette='oak_a2')
-    xa, xb, za, zb = 2, 8, 2, 8                    # shed posts
-    line = 5                                       # carriage line (x)
+    xa, xb, za, zb = 4, 16, 3, 7                   # hall posts
+    posts_x = (4, 8, 12, 16)
+    line, saw = 5, 10                              # carriage line (z), saw (x)
     s.at(1, 'shell')
-    for z in range(0, D):                          # the carriage track (dark rails)
-        s.put(line, 0, z, 'dark_frame', **LOG_Z)
-    for x in range(xa + 1, xb):                    # plank floor
+    for x in range(0, W):                          # the carriage track
+        s.put(x, 0, line, 'stripped_spruce_log', **LOG_X)
+    for x in range(xa, xb + 1):                    # floor, cobblestone feet under the posts
         for z in range(za, zb + 1):
-            if x != line:
-                s.put(x, 0, z, 'plank2')
-    for z in (za, (za + zb) // 2, zb):             # low left side: posts 2 high, a plank wall between them
-        s.put(xa, 0, z, 'base')
-        s.put(xa, 1, z, 'shed_post', axis='y'); s.put(xa, 2, z, 'shed_post', axis='y')
-    for z in range(za + 1, zb):
-        if z != (za + zb) // 2:
-            s.put(xa, 0, z, 'plank2'); s.put(xa, 1, z, 'plank2'); s.put(xa, 2, z, 'plank2')
-    for z in (za, zb):                             # tall right side: corner posts only (open), a top plate
-        s.put(xb, 0, z, 'base')
-        for y in range(1, 5):
-            s.put(xb, y, z, 'shed_post', axis='y')
-    for z in range(za, zb + 1):
-        s.put(xb, 5, z, 'frame', axis='z')
-    for z in range(za + 1, zb):
-        s.put(xb, 0, z, 'plank2')
-    for x in range(xa - 1, xb + 2):                # lean-to roof: half a block up per row, overhang all round
-        k = x - (xa - 1)
-        y, half = 3 + k // 2, ('top' if k % 2 else 'bottom')
-        for z in range(za - 1, zb + 2):
-            over_frame = x in (xa, xb) and za <= z <= zb or z in (za, zb) and xa <= x <= xb
-            s.put(x, y, z, 'roof_slab', type='double' if half == 'top' and over_frame else half, waterlogged='false')
-        if xa < x < xb:                            # gable ends: a beam over the line opening, planks up to the roof
-            for z in (za, zb):
-                s.put(x, 3, z, 'frame', axis='x')
-                for yy in range(4, y):
-                    s.put(x, yy, z, 'plank2')
+            if z == line:
+                continue
+            s.put(x, 0, z, 'base' if x in posts_x and z in (za, zb) else 'plank2')
+    for x in posts_x:
+        for z in (za, zb):
+            for y in range(1, 5):
+                s.put(x, y, z, 'dark_frame', axis='y')
+        for z in range(za + 1, zb):                # tie beams across the hall
+            s.put(x, 5, z, 'dark_frame', axis='z')
+    for x in range(xa, xb + 1):                    # plates along both sides
+        s.put(x, 5, za, 'dark_frame', **LOG_X); s.put(x, 5, zb, 'dark_frame', **LOG_X)
+    rows = {za - 1: 5, za: 6, za + 1: 7, zb - 1: 7, zb: 6, zb + 1: 5}
+    for z, y in rows.items():                      # gable roof, ridge along x, dark oak eaves and gable ends
+        for x in range(xa - 1, xb + 2):
+            dark = z in (za - 1, zb + 1) or x in (xa - 1, xb + 1)
+            s.put(x, y, z, 'dark_stairs' if dark else 'oak_stairs', facing='south' if z < line else 'north', **STAIR)
+    for x in range(xa - 1, xb + 2):
+        s.put(x, 8, line, 'roof_slab', **SLAB)                       # ridge (spruce: a third tone)
+    for x in (xa, xb):                                               # gable triangles above the tie beams
+        for z in range(za + 1, zb):
+            s.put(x, 6, z, 'plank2')
+        s.put(x, 7, line, 'plank2')
+    for z, y in rows.items():                                        # trim under the gable overhangs
+        if y > 5:
+            for x in (xa - 1, xb + 1):
+                s.put(x, y - 1, z, 'dark_stairs', facing='south' if z < line else 'north', **TOP_STAIR)
+    # the saw bench: a sash-saw frame over the line, the chain blade cutting the log on the carriage
+    for z in (line - 1, line + 1):
+        s.put(saw, 0, z, 'base')
+        for y in (1, 2, 3, 4):
+            s.put(saw, y, z, 'stripped', axis='y')                   # light stripped oak against the dark hall
+    s.put(saw, 5, line, 'stripped', axis='z')
     s.at(1, 'fittings')
-    s.put(line, 1, 4, 'grindstone', face='floor', facing='north')     # the saw (and the workstation)
-    for z in (0, 1, 2, 3):                                           # a log riding the carriage into the saw
-        s.put(line, 1, z, 'frame', **LOG_Z)
-    s.put(line, 1, 5, 'stripped', **LOG_Z)                           # the squared beam coming out
-    s.put(xa + 1, 1, za + 1, 'chest', facing='east', type='single', waterlogged='false')
-    s.put(xa + 1, 1, za + 2, 'barrel', facing='up', open='false')
-    s.put(xa + 1, 1, zb - 1, 'barrel', facing='up', open='false')
-    for x in range(1, 4):                                            # log pile in the front yard
-        for z in (0, 1):
-            s.put(x, 0, z, 'frame', **LOG_Z)
-        s.put(x, 1, 0, 'frame', **LOG_Z)
-    s.put(2, 1, 1, 'frame', **LOG_Z); s.put(2, 2, 0, 'frame', **LOG_Z)
-    for y in range(0, 7):                                            # crane: post at the yard corner, jib over the pile
-        s.put(0, y, 0, 'shed_post', axis='y')
-    for x in range(1, 5):
-        s.put(x, 6, 0, 'shed_post', axis='x')
-    s.put(1, 5, 0, 'spruce_stairs', facing='west', half='top', shape='straight', waterlogged='false')   # brace
-    s.put(3, 5, 0, 'chain', axis='y'); s.put(3, 4, 0, 'chain', axis='y')
-    s.put(3, 3, 0, 'frame', axis='x')                                # the log on the hook
-    s.put(xb - 1, 2, za, 'wall_torch', facing='west')                # torches on the front posts
-    s.put(xa + 1, 2, za, 'wall_torch', facing='east')
+    s.put(saw, 1, line, 'grindstone', face='floor', facing='east')   # the saw blade (and the workstation)
+    for y in (2, 3, 4):
+        s.put(saw, y, line, 'chain', axis='y')                       # the drive belt from the beam
+    for x in range(6, saw):
+        s.put(x, 1, line, 'frame', **LOG_X)                          # the log riding into the saw
+    for x in (saw + 1, saw + 2):
+        s.put(x, 1, line, 'stripped', **LOG_X)                       # the squared beam coming out
+    for x in (saw + 3, saw + 4):
+        s.put(x, 1, line, 'spruce_slab', **SLAB)                     # boards
+    s.put(xa + 1, 1, zb - 1, 'chest', facing='east', type='single', waterlogged='false')
+    s.put(xa + 1, 1, za + 1, 'barrel', facing='up', open='false'); s.put(xa + 2, 1, za + 1, 'barrel', facing='up', open='false')
+    for x, z, f in ((saw - 1, line - 1, 'west'), (saw + 1, line - 1, 'east')):
+        s.put(x, 3, z, 'wall_torch', facing=f)                       # torches on the saw frame
+    # log yard (right end): two log piles beside the line, a pulley post with a hanging log over the carriage
+    for z0, z1 in ((1, 3), (7, 9)):
+        for x in (18, 19, 20):
+            for z in range(z0, z1 + 1):
+                s.put(x, 0, z, 'frame', **LOG_X)
+            for z in range(z0 + (1 if z0 == 1 else 0), z1 + (0 if z0 == 1 else 0)):
+                s.put(x, 1, z, 'frame', **LOG_X)
+        s.put(19, 2, 2 if z0 == 1 else 8, 'frame', **LOG_X)
+    for y in range(0, 7):
+        s.put(19, y, 10, 'shed_post', axis='y')
+    for z in range(line, 10):
+        s.put(19, 7, z, 'shed_post', axis='z')
+    s.put(19, 6, 9, 'spruce_stairs', facing='south', half='top', shape='straight', waterlogged='false')   # brace
+    s.put(19, 6, line, 'chain', axis='y'); s.put(19, 5, line, 'chain', axis='y')
+    s.put(19, 4, line, 'frame', **LOG_X)                             # the log on the hook
+    # plank yard (left end): plank and board stacks beside the line
+    for x in (0, 1, 2):
+        for z in (2, 3):
+            s.put(x, 0, z, 'oak_planks'); s.put(x, 1, z, 'oak_planks' if x < 2 else 'oak_slab',
+                                                 **({} if x < 2 else SLAB))
+        for z in (7, 8):
+            s.put(x, 0, z, 'plank2'); s.put(x, 1, z, 'spruce_slab', **SLAB)
+    s.put(0, 2, 2, 'oak_slab', **SLAB)
 
     s.at(2, 'flourish2')
-    wx, wy, wz = 12, 3, 7                                            # waterwheel in a stone race on the right
-    for z in range(wz - 3, wz + 4):
-        s.put(wx - 1, 0, z, 'base'); s.put(wx + 1, 0, z, 'base')
-    s.put(wx, 0, wz - 3, 'base'); s.put(wx, 0, wz + 3, 'base')
-    for z in range(wz - 2, wz + 3):
-        s.decorate(wx, 0, z, 'water', note='mill race under the waterwheel')
-    for dz in range(-2, 3):
+    wy, wz = 3, 10                                                   # waterwheel behind the hall, axle to the saw
+    for x in range(saw - 3, saw + 4):
+        s.put(x, 0, wz - 1, 'base'); s.put(x, 0, wz + 1, 'base')
+    s.put(saw - 3, 0, wz, 'base'); s.put(saw + 3, 0, wz, 'base')
+    for x in range(saw - 2, saw + 3):
+        s.decorate(x, 0, wz, 'water', note='mill race under the waterwheel')
+    for dx in range(-2, 3):
         for dy in range(-2, 3):
-            if abs(dz) == 2 and abs(dy) == 2:
+            if abs(dx) == 2 and abs(dy) == 2:
                 continue
-            if abs(dz) == 2 or abs(dy) == 2:
-                s.put(wx, wy + dy, wz + dz, 'plank2')                     # rim
-            elif dz == 0 and dy == 0:
-                s.put(wx, wy, wz, 'spruce_log', axis='x')                # hub
-            elif dz == 0 or dy == 0:
-                s.put(wx, wy + dy, wz + dz, 'stripped_spruce_log', axis='y' if dz == 0 else 'z')   # spokes
-    for x in range(line + 1, wx):                                    # axle into the shed, chain belt to the saw
-        s.put(x, wy, wz, 'stripped_spruce_log', axis='x')
-    s.put(line, 3, wz, 'chain', axis='y'); s.put(line, 2, wz, 'chain', axis='y')
-    s.put(line, 1, wz, 'stonecutter', facing='north')               # the second saw, driven by the wheel
-    for z in (6, 8, 9):                                              # boards on the track
-        s.put(line, 1, z, 'spruce_slab', **SLAB)
-    for x, z in ((1, 10), (2, 10), (3, 10), (1, 11), (2, 11)):       # plank stacks in the back yard
-        s.put(x, 0, z, 'oak_planks'); s.put(x, 1, z, 'oak_slab', **SLAB)
-    for x, z in ((7, 10), (8, 10), (7, 11)):
-        s.put(x, 0, z, 'plank2'); s.put(x, 1, z, 'spruce_slab', **SLAB)
-    s.put(xb + 1, 0, 0, 'fence'); s.put(xb + 3, 0, 0, 'fence')       # sawhorse in the front yard
-    for x in (xb + 1, xb + 2, xb + 3):
-        s.put(x, 1, 0, 'oak_slab', **SLAB)
-    s.put(xb, 4, 5, 'lantern', **HANG)                               # lantern under the high eave's plate
-    for x, z in ((6, 3), (6, 4), (7, 4), (4, 5)):                    # sawdust by the saws
-        s.put(x, 1, z, 'brown_carpet')
-    s.put(xa + 1, 2, za + 2, 'barrel', facing='up', open='false')
-    s.put(xb + 1, 2, za, 'oak_wall_sign', facing='east', waterlogged='false')
-    s.decorate(xb + 1, 2, za, 'sign_text', lines=['', 'Sawmill', '', ''])
-    s.put(4, 5, 0, 'lantern', **HANG)                                # lantern on the crane jib
+            if abs(dx) == 2 or abs(dy) == 2:
+                s.put(saw + dx, wy + dy, wz, 'plank2')               # rim
+            elif dx == 0 and dy == 0:
+                s.put(saw, wy, wz, 'spruce_log', axis='z')           # hub
+            elif dx == 0 or dy == 0:
+                s.put(saw + dx, wy + dy, wz, 'stripped_spruce_log', axis='y' if dx == 0 else 'x')   # spokes
+    for z in (zb + 1, zb + 2):
+        s.put(saw, wy, z, 'stripped_spruce_log', axis='z')          # axle
+    s.put(saw + 2, 1, line + 1, 'stonecutter', facing='east')       # the second saw, trimming the beams
+    for x in (13, 15):                                               # sawhorse in the front aisle
+        s.put(x, 0, 1, 'fence')
+    for x in (13, 14, 15):
+        s.put(x, 1, 1, 'oak_slab', **SLAB)
+    for x in (6, 7):                                                 # a hand cart of boards in front
+        s.put(x, 0, 1, 'spruce_slab', **TOP_SLAB)
+        s.put(x, 1, 1, 'spruce_slab', **SLAB)
+        s.put(x, 0, 0, 'oak_trapdoor', facing='north', **SHUT)
+    s.put(8, 0, 1, 'fence')                                          # handle
+    for x in (8, 12):                                                # lanterns under the tie beams
+        s.put(x, 4, line, 'lantern', **HANG)
+    for x, z in ((11, 4), (12, 6), (13, 4), (9, 4)):                 # sawdust round the saws
+        s.add(x, 1, z, 'brown_carpet')
+    s.put(12, 3, za - 1, 'oak_wall_sign', facing='north', waterlogged='false')   # sign board on the front post
+    s.decorate(12, 3, za - 1, 'sign_text', lines=['', 'Sawmill', '', ''])
+    s.put(19, 0, line - 1, 'stripped', axis='y')                     # chopping block in the log yard
 
     s.at(3, 'flourish3')
-    s.put(xb + 2, 0, 2, 'stripped', axis='y')                        # chopping block with an axe in it
-    s.decorate(xb + 2, 1, 2, 'item_frame', item='minecraft:iron_axe', facing='up', note='axe in the chopping block')
-    for z in (11, 12):                                               # saplings for replanting, back right
-        for x in (10, 11):
-            s.put(x, 0, z, 'dirt'); s.put(x, 1, z, 'oak_sapling', stage='0')
-    for x, y, z in ((1, 2, 0), (2, 2, 1), (1, 1, 1), (3, 1, 1)):     # moss on the log pile
-        s.put(x, y, z, 'moss_carpet')
-    s.put(7, 2, 10, 'spruce_slab', **SLAB)
-    s.put(8, 1, 11, 'plank2'); s.put(8, 0, 11, 'plank2')
-    s.put(3, 0, 11, 'oak_planks'); s.put(3, 1, 11, 'oak_slab', **SLAB)
+    for x in (1, 4):                                                 # plank drying rack in front (left)
+        for y in (0, 1, 2):
+            s.put(x, y, 0, 'fence')
+    for x in range(1, 5):
+        for y in (1, 2):
+            s.add(x, y, 0, 'oak_slab', type='top', waterlogged='false')
+    for x in (2, 3):
+        s.put(x, 0, 0, 'oak_slab', **TOP_SLAB)
+    s.decorate(19, 1, line - 1, 'item_frame', item='minecraft:iron_axe', facing='up', note='axe in the chopping block')
+    for z in (0, 10, 11):                                            # saplings for replanting by the yard
+        s.put(20, 0, z, 'dirt'); s.put(20, 1, z, 'oak_sapling', stage='0')
+    for x, z in ((17, 0), (18, 0)):                                  # more logs waiting
+        s.put(x, 0, z, 'frame', **LOG_X)
+    for x, z in ((18, 3), (20, 2), (18, 7), (20, 8)):                # moss on the piles
+        s.add(x, 2, z, 'moss_carpet')
+    s.put(xb + 1, 0, za - 1, 'barrel', facing='up', open='false'); s.put(xb + 1, 1, za - 1, 'lantern', **LANTERN)
+    s.put(xa - 1, 0, za - 1, 'barrel', facing='up', open='false'); s.put(xa - 1, 1, za - 1, 'lantern', **LANTERN)
     return s
 
 
 STRUCTURES = [dict(path='lumber_camp', name='Lumber camp (sawmill)', tier=1, zone='outer', role='resource',
                    group='lumber_camp', terrain='flexible', door=None, make=sawmill,
-                   description='A miniature sawmill: logs from the front yard (log pile, crane with a hanging log) ride '
-                               'a carriage line of stripped logs into an open-sided timber shed under a lean-to roof, '
-                               'through the saw (grindstone, the workstation; a stonecutter joins at L2) and out to '
-                               'the plank yard behind. L2 adds a waterwheel in a stone race driving the saw, plank '
-                               'stacks, sawhorse, sawdust, lanterns, a sign; L3 an axe in the chopping block, '
-                               'saplings, moss.',
-                   changes='Rebuilt as a proper sawmill you can read at a glance: an open timber shed with the saw on '
-                           'a log-carriage line, a log pile and crane in front, plank stacks behind, and from L2 a '
-                           'waterwheel driving the saw.')]
+                   description='A miniature sawmill: a long open mill hall (dark oak frame on cobblestone feet, spruce '
+                               'roof with dark oak eaves and trim) with the saw bench in the middle, a sash-saw frame '
+                               'whose chain blade cuts the log on the carriage line; the grindstone (workstation) '
+                               'beside it. Log yard with piles and a pulley at the right end, plank yard at the left. '
+                               'L2 adds a waterwheel behind the hall driving the saw, a stonecutter, sawhorse, cart, '
+                               'lanterns, sign; L3 a drying rack, more logs, saplings, moss.',
+                   changes='Rebuilt as a long open mill hall with the saw bench as the centrepiece (a sash-saw frame '
+                           'over the log line), a log yard on one end and plank stacks on the other, a two-tone roof '
+                           'with overhang and trim on a dark frame and cobblestone feet; each level adds something '
+                           'visible (L2 waterwheel, second saw, cart; L3 drying rack, saplings, more logs).')]
