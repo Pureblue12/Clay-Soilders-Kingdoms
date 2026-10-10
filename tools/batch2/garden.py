@@ -2,13 +2,17 @@
 (docs/STRUCTURES.md, "Garden (levels 1 to 3)").
 
 Ground rule: this is a flush piece (ground_layer=0). Layer y = 0 REPLACES the top grass block, so the gravel paths,
-the stone rings and the bed soil sit level with the lawn; a cell left empty in layer 0 stays grass. Everything that
-stands (flowers, hedges, trees, benches) is at y >= 1. There is no raised rim.
+the stone rings, the pond and the bed soil sit level with the lawn; a cell left empty in layer 0 stays grass.
+Everything that stands (flowers, hedges, trees, benches) is at y >= 1. There is no raised rim.
 
-Layout (15 x 15, front z = 0): a low leaf hedge all round with an opening at the front; a gravel path from the
-entrance to a round gravel walk circling a stone-ringed flower bed with a sundial in the middle; side paths to two
+Layout (17 wide x 17 deep, front z = 0): a low leaf hedge all round with an opening at the front; a gravel path from
+the entrance to a round gravel walk circling a stone-ringed flower bed with a sundial in the middle; side paths to two
 benches (west and east) and a back path to a leafy arbor with a bench under it. Four curved borders of mixed flowers
-hug the round walk, a small tree or flowering azalea stands in each corner."""
+hug the round walk. Two big shade trees (a birch at the back left, a cherry at the back right) spread their crowns
+over the side benches, the back of the walk and the arbor. A small lily pond with a stone edge sits in the front left
+corner, flowering azalea bushes in the front right.
+
+Water and the lily pad are decorations (builders can't place them); the batch-2 driver shows them in the Studio file."""
 import math
 
 from make_batch1_structures import Structure
@@ -22,14 +26,15 @@ OPEN = dict(half='bottom', open='true', powered='false', waterlogged='false')
 SLAB = dict(type='bottom', waterlogged='false')
 
 # Flower drifts (cottage style: colour in clumps, not confetti). Each border gets its own mix; L2 plants the drift
-# kinds in every other cell, L3 fills the rest (densest), poppies (KNOWN-OK) are L1's few plants.
+# kinds in every other cell, L3 fills the rest (densest), poppies (KNOWN-OK) are L1's plants.
 DRIFTS = {
-    'fl': ('cornflower', 'oxeye_daisy', 'allium', 'pink_tulip'),
-    'fr': ('dandelion', 'orange_tulip', 'azure_bluet', 'red_tulip'),
-    'bl': ('allium', 'white_tulip', 'cornflower', 'lily_of_the_valley'),
-    'br': ('oxeye_daisy', 'pink_tulip', 'azure_bluet', 'dandelion'),
+    'fl': ('cornflower', 'oxeye_daisy', 'allium', 'pink_tulip', 'blue_orchid'),
+    'fr': ('dandelion', 'orange_tulip', 'azure_bluet', 'red_tulip', 'cornflower'),
+    'bl': ('allium', 'white_tulip', 'cornflower', 'lily_of_the_valley', 'pink_tulip'),
+    'br': ('oxeye_daisy', 'pink_tulip', 'azure_bluet', 'dandelion', 'blue_orchid'),
 }
 TALL = ('rose_bush', 'peony', 'lilac')
+WILD = ('azure_bluet', 'oxeye_daisy', 'cornflower', 'dandelion', 'lily_of_the_valley', 'allium')
 
 
 def tall(s, x, z, name, y=1):
@@ -37,15 +42,19 @@ def tall(s, x, z, name, y=1):
     put_id(s, x, y + 1, z, name, half='upper')
 
 
-def garden(size=15):
+def garden(size=17):
     """Level 1: the layout, flush with the grass: hedge ring with a front opening, gravel paths and round walk,
-    the stone ring of the centre bed, four dirt borders with a few poppies, cobblestone pads where the benches go.
-    Level 2: trees in the back corners (a birch and a cherry), flowering azalea bushes in the front corners, the arbor
-    over the back bench, benches on the side paths, and the borders half planted with eight flower kinds.
-    Level 3: the sundial in the centre bed, lanterns at the entrance, on the side benches and under the arbor, the
-    borders filled densely with tall rose bushes, peonies and lilacs, pink petals and lilies of the valley."""
-    s = Structure('garden', (size, 7, size), palette='oak_a2')
-    c, e = size // 2, size - 1                                     # centre 7, last 14
+    the stone ring of the centre bed, four dirt borders with poppies, cobblestone pads where the benches go, the
+    stone-edged pond (water from the decoration step).
+    Level 2: the two shade trees (birch and cherry) with branching trunks and broad layered crowns over the benches,
+    flowering azalea bushes in the front right, the arbor over the back bench, benches on the side paths, a lily pad
+    and a stone kerb on the pond, and the borders half planted with ten flower kinds.
+    Level 3: the sundial in the centre bed, lanterns (entrance, benches, arbor, hanging from the tree branches), a bee
+    nest, the borders filled densely with tall rose bushes, peonies and lilacs, wild flowers along the hedge, ferns
+    and a second lily pad at the pond."""
+    W, D = size, size
+    s = Structure('garden', (W, 9, D), palette='oak_a2')
+    c, e = W // 2, W - 1                                           # centre 8, last 16
 
     def d(x, z):
         return math.hypot(x - c, z - c)
@@ -53,18 +62,24 @@ def garden(size=15):
     def quad(x, z):
         return ('f' if z < c else 'b') + ('l' if x < c else 'r')
 
-    hedge = {(x, z) for x in range(size) for z in range(size) if x in (0, e) or z in (0, e)}
+    trees = ((3, 11), (e - 3, 11))                                  # birch back left, cherry back right
+    pond_rim = {(x, z) for x in range(1, 6) for z in range(1, 5)}
+    pond = {(x, z) for x in range(2, 5) for z in range(2, 4)}      # 3 x 2 of water
+    rim = pond_rim - pond
+    hedge = {(x, z) for x in range(W) for z in range(D) if x in (0, e) or z in (0, e)}
     hedge -= {(c - 1, 0), (c, 0), (c + 1, 0)}                      # front opening
-    centre_ring = {(x, z) for x in range(size) for z in range(size) if 1.6 < d(x, z) <= 2.3}
-    centre_bed = {(x, z) for x in range(size) for z in range(size) if d(x, z) <= 1.6}
-    walk = {(x, z) for x in range(size) for z in range(size) if 2.3 < d(x, z) <= 3.3}
+    centre_ring = {(x, z) for x in range(W) for z in range(D) if 1.6 < d(x, z) <= 2.3}
+    centre_bed = {(x, z) for x in range(W) for z in range(D) if d(x, z) <= 1.6}
+    walk = {(x, z) for x in range(W) for z in range(D) if 2.3 < d(x, z) <= 3.3}
     paths = {(c, z) for z in range(0, e)} | {(x, c) for x in range(2, e - 1)}
     paths -= centre_ring | centre_bed
     bench_pads = {(1, z) for z in (c - 1, c, c + 1)} | {(e - 1, z) for z in (c - 1, c, c + 1)} | \
                  {(x, e - 1) for x in (c - 1, c, c + 1)}
-    corners = {(x, z) for x in (1, 2, e - 2, e - 1) for z in (1, 2, e - 2, e - 1)}
+    tree_feet = {(tx + dx, tz + dz) for tx, tz in trees for dx in (-1, 0, 1) for dz in (-1, 0, 1)}
+    azalea_corner = {(x, z) for x in (e - 3, e - 2, e - 1) for z in (1, 2, 3)}
     borders = {(x, z) for x in range(1, e) for z in range(1, e)
-               if 3.3 < d(x, z) <= 6.0 and (x, z) not in paths and (x, z) not in corners}
+               if 3.3 < d(x, z) <= 6.3 and (x, z) not in paths and (x, z) not in tree_feet
+               and (x, z) not in pond_rim and (x, z) not in azalea_corner and (x, z) not in bench_pads}
 
     s.at(1, 'shell')
     for x, z in walk | paths:
@@ -77,24 +92,33 @@ def garden(size=15):
         put_id(s, x, 0, z, 'cobblestone')
     for x in (c - 1, c + 1):                                       # stone threshold either side of the entrance path
         put_id(s, x, 0, 0, 'cobblestone')
+    for x, z in sorted(rim):                                       # the pond's stone edge, a little moss in it
+        put_id(s, x, 0, z, 'mossy_cobblestone' if noise(x, 0, z, 3) < 0.3 else 'stone_bricks')
+    for x, z in sorted(pond):
+        s.decorate(x, 0, z, 'water')
 
     s.at(1, 'fittings')
     for x, z in hedge:                                             # the low hedge round the garden
         put_id(s, x, 1, z, 'oak_leaves', **LEAVES)
     put_id(s, c, 1, c, 'stone_bricks')                             # the sundial's foot in the centre bed
-    for x, z in sorted(borders):                                   # a few poppies along the inner edge of each border
+    for x, z in sorted(borders):                                   # poppies along the inner edge of each border
         if d(x, z) <= 4.8 and (x + z) % 2 == 0:
             put_id(s, x, 1, z, 'poppy')
 
     s.at(2, 'flourish2')
-    # trees: a birch in the back left, a cherry in the back right, flowering azalea bushes in the front corners
-    tree(s, 2, e - 2, 'birch_log', 'birch_leaves', 4)
-    tree(s, e - 2, e - 2, 'cherry_log', 'cherry_leaves', 4)
-    for x in (2, e - 2):
-        put_id(s, x, 1, 2, 'flowering_azalea')
-        for dx, dz in ((-1, 0), (1, 0), (0, -1), (0, 1)):
-            put_id(s, x + dx, 1, 2 + dz, 'azalea')
-        put_id(s, x, 2, 2, 'flowering_azalea_leaves', **LEAVES)
+    tree(s, *trees[0], 'birch_log', 'birch_wood', 'birch_leaves', seed=1)
+    tree(s, *trees[1], 'cherry_log', 'cherry_wood', 'cherry_leaves', seed=2)
+    # flowering azalea bushes in the front right corner
+    for x, z, h in ((e - 2, 2, 2), (e - 3, 1, 1), (e - 1, 3, 1), (e - 3, 3, 1), (e - 1, 1, 1)):
+        put_id(s, x, 1, z, 'flowering_azalea' if h == 2 else 'azalea')
+        if h == 2:
+            put_id(s, x, 2, z, 'flowering_azalea_leaves', **LEAVES)
+    for x, z in ((e - 2, 1), (e - 1, 2), (e - 3, 2), (e - 2, 3)):
+        put_id(s, x, 1, z, 'flowering_azalea_leaves', **LEAVES)
+    # the pond: a lily pad, a low stone kerb on the back and right edge (stairs stepping down to the water)
+    s.decorate(3, 1, 3, 'lily_pad')
+    for x, z in ((1, 4), (5, 4), (5, 1)):                          # stone slabs on the corners of the edge
+        put_id(s, x, 1, z, 'mossy_cobblestone_slab' if x == 1 else 'stone_brick_slab', **SLAB)
     # benches at the ends of the side paths, facing the centre, with arms
     for x, back in ((1, 'west'), (e - 1, 'east')):
         for z in (c - 1, c, c + 1):
@@ -120,11 +144,10 @@ def garden(size=15):
             put_id(s, x, 1, z, 'spruce_trapdoor', facing=f, **OPEN)
     # the borders: drift flowers in every other cell
     for x, z in sorted(borders):
-        if (x, z) in s.blocks or (x, 1, z) in s.blocks:
+        if (x, 1, z) in s.blocks:
             continue
         if (x + z) % 2 == 1:
-            put_id(s, x, 1, z, _drift(x, z, quad(x, z), d(x, z)))
-
+            put_id(s, x, 1, z, _drift(x, z, quad(x, z), d(x, z), c))
     lawn_under(s, 2)
 
     s.at(3, 'flourish3')
@@ -135,19 +158,26 @@ def garden(size=15):
         if (x, 1, z) not in s.blocks:
             put_id(s, x, 1, z, 'lily_of_the_valley' if (x == c or z == c) else 'pink_petals',
                    **({} if (x == c or z == c) else dict(facing=_away(x - c, z - c), flower_amount='4')))
-    # lanterns: beside the side benches, hanging in the arbor and the entrance arch
+    # lanterns: beside the side benches, hanging in the arbor and the entrance arch, hanging from the tree branches
     for x in (0, e):
         for z in (c - 2, c + 2):
             put_id(s, x, 2, z, 'lantern', **LANTERN)
     put_id(s, c, 2, e - 2, 'lantern', **HANGING)                   # under the arbor
-    put_id(s, 2, 2, e - 3, 'bee_nest', facing='north', honey_level='0')   # a bee nest on the birch
     put_id(s, c, 2, 0, 'lantern', **HANGING)                       # under the entrance arch
     for x in (c - 1, c + 1):                                       # vines hanging from the arbor roof
         put_id(s, x, 2, e - 2, 'vine', up='true', north='false', south='false', east='false', west='false')
-    lawn = [(x, z) for x in range(1, e) for z in range(1, e) if (x, 0, z) not in s.blocks and (x, 1, z) not in s.blocks]
-    for x, z in lawn:                                              # wild flowers in the lawn along the hedge
-        if noise(x, 1, z, 5) < 0.45:
-            put_id(s, x, 1, z, ('azure_bluet', 'oxeye_daisy', 'lily_of_the_valley', 'dandelion')[(x + 2 * z) % 4])
+    for tx, tz in trees:                                           # a lantern under each crown, over the walk
+        for lx, lz in ((tx + (2 if tx < c else -2), tz - 2), (tx, tz - 3)):
+            if (lx, 4, lz) not in s.blocks and (lx, 5, lz) in s.blocks and (lx, 3, lz) not in s.blocks:
+                put_id(s, lx, 4, lz, 'lantern', **HANGING)
+                break
+    put_id(s, trees[0][0], 3, trees[0][1] - 1, 'bee_nest', facing='north', honey_level='0')   # a bee nest on the birch
+    # the pond: a second lily pad, ferns and petals by the water
+    s.decorate(2, 1, 2, 'lily_pad')
+    for x, z in ((6, 1), (6, 3), (1, 5), (3, 5)):
+        if (x, 1, z) not in s.blocks and (x, 0, z) not in s.blocks:
+            put_id(s, x, 1, z, 'fern')
+    put_id(s, 6, 1, 2, 'blue_orchid')
     # densest flowers: tall flowers at the back of each border, the rest filled
     for x, z in sorted(borders):
         if (x, 1, z) in s.blocks:
@@ -155,9 +185,50 @@ def garden(size=15):
         if d(x, z) > 5.0 and (x + z) % 2 == 0 and (x, 2, z) not in s.blocks:
             tall(s, x, z, TALL[(x + 2 * z) % len(TALL)])
         else:
-            put_id(s, x, 1, z, _drift(x, z, quad(x, z), d(x, z), shift=1))
+            put_id(s, x, 1, z, _drift(x, z, quad(x, z), d(x, z), c, shift=1))
+    # wild flowers in the lawn along the hedge and round the tree roots
+    lawn = [(x, z) for x in range(1, e) for z in range(1, e) if (x, 0, z) not in s.blocks and (x, 1, z) not in s.blocks
+            and (x, z) not in pond]
+    for x, z in lawn:
+        if noise(x, 1, z, 5) < 0.6:
+            put_id(s, x, 1, z, WILD[(x + 2 * z) % len(WILD)])
+        elif noise(x, 1, z, 6) < 0.5:
+            put_id(s, x, 1, z, 'pink_petals', facing=_away(x - c, z - c), flower_amount=str(2 + (x + z) % 3))
     lawn_under(s, 3)
     return connect(s)
+
+
+def tree(s, x, z, log, wood, leaves, seed=0):
+    """A broad shade tree, 8 tall: a root flare of wood blocks, a trunk 5 high, four branches climbing out to the
+    crown, and a wide layered crown with a flat underside (y 5 to 8, about 9 across) whose edge is ragged by noise."""
+    for y in range(2, 7):                                          # the trunk, up into the crown
+        put_id(s, x, y, z, log, axis='y')
+    for dx, dz in ((-1, 0), (0, 1), (1, 0), (0, -1)):              # root flare: roots lying on the lawn
+        if noise(x + dx, 1, z + dz, seed) < 0.6:
+            put_id(s, x + dx, 1, z + dz, log, axis='x' if dx else 'z')
+    put_id(s, x, 1, z, wood, axis='y')                             # bark all round at the foot
+    branches = ((1, 1), (-1, 1), (1, -1), (-1, -1))
+    for bx, bz in branches:                                        # diagonal branches: one out at y 4, two out at y 5
+        put_id(s, x + bx, 4, z + bz, wood, axis='y')               # bark on every side: no sawn log ends showing
+        put_id(s, x + 2 * bx, 5, z + 2 * bz, wood, axis='y')
+    out = 1 if x < s.size[0] // 2 else -1                          # towards the middle of the garden
+    for i in (1, 2, 3):                                            # long branches reaching over the walk and bench
+        put_id(s, x, 5, z - i, wood, axis='y')
+        if i < 3:
+            s.add(x + out * i, 5, z, wood, axis='y')
+    for y, r in ((4, 4.3), (5, 3.6), (6, 4.6), (7, 4.0), (8, 2.9)):
+        for dx in range(-5, 6):
+            for dz in range(-5, 6):
+                px, pz = x + dx, z + dz
+                if not (0 <= px < s.size[0] and 0 <= pz < s.size[2]) or (px, y, pz) in s.blocks:
+                    continue
+                dist = math.hypot(dx, dz * 1.05)
+                if y == 4:                                         # a few leaves hanging under the crown's edge
+                    if not (3.0 < dist <= r and noise(px, y, pz, seed + 7) < 0.3):
+                        continue
+                elif dist > r or (dist > r - 1.3 and noise(px, y, pz, seed) < 0.45):
+                    continue
+                put_id(s, px, y, pz, leaves, **LEAVES)
 
 
 def lawn_under(s, level):
@@ -174,33 +245,23 @@ def _away(dx, dz):
     return 'south' if dz > 0 else 'north'
 
 
-def _drift(x, z, q, dist, shift=0):
+def _drift(x, z, q, dist, c, shift=0):
     """The flower kind of a border cell: clumps along the border (by angle), so colours come in drifts."""
     kinds = DRIFTS[q]
-    a = math.atan2(z - 7, x - 7)
+    a = math.atan2(z - c, x - c)
     band = int((a + math.pi) / (math.pi / 8))                       # 16 slices round the garden
     return kinds[(band + shift + (1 if dist > 4.8 else 0)) % len(kinds)]
 
 
-def tree(s, x, z, log, leaves, height):
-    """A small tree: a log trunk 'height' high, a 3 x 3 crown with a rounded top (all inside the box)."""
-    for y in range(1, height + 1):
-        put_id(s, x, y, z, log, axis='y')
-    for y in (height - 1, height):
-        for dx in (-1, 0, 1):
-            for dz in (-1, 0, 1):
-                if (dx or dz) and not (abs(dx) == 1 and abs(dz) == 1 and y == height):
-                    put_id(s, x + dx, y, z + dz, leaves, **LEAVES)
-    for dx, dz in ((0, 0), (-1, 0), (1, 0), (0, -1), (0, 1)):
-        put_id(s, x + dx, height + 1, z + dz, leaves, **LEAVES)
-
-
 STRUCTURES = [dict(path='garden', name='Garden (level 1)', tier=2, zone='inner', role='civic', group='garden',
                    terrain='flexible', door=None, make=garden, ground_layer=0,
-                   changes='Bigger (15 x 15) and level with the grass: paths and beds are set into the lawn with no '
-                           'raised rim, and it is now a proper cottage garden with a round walk round a sundial bed, '
-                           'curved borders of a dozen flower kinds, a birch, a cherry, azalea bushes, a flowering arbor '
-                           'and benches.',
-                   description='A 15 x 15 cottage garden set into the lawn: a low hedge, gravel paths and a round walk '
-                               'round a sundial bed, curved flower borders; later levels add trees, azaleas, an arbor, '
-                               'benches, lanterns and dense mixed flowers.')]
+                   changes='For your note: the birch and the cherry are now big shade trees with proper trunks, '
+                           'root flares, branches and wide layered crowns that spread over the side benches, the back '
+                           'of the round walk and the arbor. Two blocks wider (17 x 17). More flowers: blue orchids '
+                           'added, the borders reach further, and level 3 fills the lawn along the hedge with wild '
+                           'flowers and petals. New lily pond in the front left corner: 3 x 2 of water with lily '
+                           'pads, a mossy stone edge, ferns and orchids. Water and lily pads are added by the '
+                           'decoration step (builders cannot place them).',
+                   description='A 17 x 17 cottage garden set into the lawn: a low hedge, gravel paths and a round walk '
+                               'round a sundial bed, curved flower borders and a small lily pond; later levels add two '
+                               'big shade trees, azaleas, an arbor, benches, lanterns and dense mixed flowers.')]
