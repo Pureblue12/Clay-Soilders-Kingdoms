@@ -1,0 +1,75 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "stone_wall_corner_l1",
+  "version": 2,
+  "size": [3,8,3],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T05:35:52.171Z",
+    "description": "Stone wall, corner, level 1 of 3: shell and fittings (what soldiers build first). Outside corner joining two straight modules, with a corner pier. Going clockwise round a town its side arm (x 0) follows a module and its front arm (z 0) leads into the next.",
+    "changes": "Quality check round 1: the merlon pattern changed across the whole set so modules tile end to end (a cobblestone-slab half merlon at x 0, merlons at x 2 and 4: neighbours now alternate high / low instead of two merlons side by side). Corner merlons follow it (front arm: pier, crenel, merlon; side arm: pier, merlon, crenel). The L2 torch moved from the banner onto the merlon at (2, 6, 1); the lamp post that narrowed the corner turn to 1 block is gone. Arrow-slit niches on both faces (bars from L2).",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "batch3",
+      "tier3",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:cobblestone",
+    "A": "minecraft:cobblestone_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "B": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "C": "minecraft:mossy_cobblestone",
+    "D": "minecraft:stone_brick_stairs[facing=east,half=top,shape=straight,waterlogged=false]",
+    "E": "minecraft:stone_brick_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "F": "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "G": "minecraft:stone_bricks"
+  },
+  "layers": [
+    [
+      "#BB",
+      "A##",
+      "AC#"
+    ],
+    [
+      "#..",
+      ".##",
+      ".##"
+    ],
+    [
+      "G..",
+      ".G.",
+      "..G"
+    ],
+    [
+      "G..",
+      ".GG",
+      ".GG"
+    ],
+    [
+      "GFF",
+      "DGG",
+      "DGG"
+    ],
+    [
+      "GGG",
+      "G..",
+      "G.."
+    ],
+    [
+      "G.G",
+      "G..",
+      "..."
+    ],
+    [
+      "E..",
+      "...",
+      "..."
+    ]
+  ]
+}

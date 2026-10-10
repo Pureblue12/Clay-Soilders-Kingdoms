@@ -1,0 +1,82 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "stone_wall_corner_l3",
+  "version": 2,
+  "size": [3,8,3],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T05:35:54.722Z",
+    "description": "Stone wall, corner, level 3 of 3: L2 plus flourish 3. Outside corner joining two straight modules, with a corner pier. Going clockwise round a town its side arm (x 0) follows a module and its front arm (z 0) leads into the next. Not yet builder-tested: iron_bars, moss_carpet, red_banner, vine. Decoration step adds: banner_pattern.",
+    "changes": "Quality check round 1: the merlon pattern changed across the whole set so modules tile end to end (a cobblestone-slab half merlon at x 0, merlons at x 2 and 4: neighbours now alternate high / low instead of two merlons side by side). Corner merlons follow it (front arm: pier, crenel, merlon; side arm: pier, merlon, crenel). The L2 torch moved from the banner onto the merlon at (2, 6, 1); the lamp post that narrowed the corner turn to 1 block is gone. Arrow-slit niches on both faces (bars from L2).",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "batch3",
+      "tier3",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:cobblestone",
+    "A": "minecraft:cobblestone_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "B": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "C": "minecraft:iron_bars[east=false,north=false,south=true,waterlogged=false,west=true]",
+    "D": "minecraft:iron_bars[east=true,north=true,south=false,waterlogged=false,west=false]",
+    "E": "minecraft:moss_carpet",
+    "F": "minecraft:mossy_cobblestone",
+    "G": "minecraft:red_banner[rotation=10]",
+    "H": "minecraft:stone_brick_stairs[facing=east,half=top,shape=straight,waterlogged=false]",
+    "I": "minecraft:stone_brick_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "J": "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "K": "minecraft:stone_bricks",
+    "L": "minecraft:vine[east=false,north=false,south=true,up=false,west=false]",
+    "M": "minecraft:vine[east=true,north=false,south=false,up=false,west=false]",
+    "N": "minecraft:wall_torch[facing=south]"
+  },
+  "layers": [
+    [
+      "#BB",
+      "A##",
+      "AF#"
+    ],
+    [
+      "#L.",
+      "M##",
+      ".##"
+    ],
+    [
+      "KL.",
+      "MKC",
+      ".DK"
+    ],
+    [
+      "KL.",
+      ".KK",
+      ".KK"
+    ],
+    [
+      "KJJ",
+      "HKK",
+      "HKK"
+    ],
+    [
+      "KKK",
+      "K..",
+      "KEE"
+    ],
+    [
+      "KGK",
+      "K.N",
+      "..."
+    ],
+    [
+      "I..",
+      "...",
+      "..."
+    ]
+  ]
+}

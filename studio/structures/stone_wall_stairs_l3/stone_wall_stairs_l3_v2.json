@@ -1,0 +1,94 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "stone_wall_stairs_l3",
+  "version": 2,
+  "size": [5,7,5],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T05:36:04.208Z",
+    "description": "Stone wall, walk stairs, level 3 of 3: L2 plus flourish 3. Over budget: 81 blocks vs 60. A straight module with a stone stair flight on the town side up to the walk. Merlons tile across joints: half merlon, crenel, merlon, crenel, merlon (the next module starts with its half merlon). Not yet builder-tested: iron_bars, moss_carpet, red_wall_banner, stone_brick_wall, vine. Decoration step adds: banner_pattern, potted_plant.",
+    "changes": "Quality check round 1: the merlon pattern changed across the whole set so modules tile end to end (a cobblestone-slab half merlon at x 0, merlons at x 2 and 4: neighbours now alternate high / low instead of two merlons side by side). The L2 torch moved onto the merlon at x 2; the slab that half-filled a crenel in L3 is removed.",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "batch3",
+      "tier3",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:cobblestone",
+    "B": "minecraft:cobblestone_slab[type=bottom,waterlogged=false]",
+    "C": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "D": "minecraft:flower_pot",
+    "E": "minecraft:hay_block[axis=y]",
+    "F": "minecraft:iron_bars[east=true,north=false,south=true,waterlogged=false,west=true]",
+    "G": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "H": "minecraft:moss_carpet",
+    "I": "minecraft:mossy_cobblestone",
+    "J": "minecraft:red_wall_banner[facing=north]",
+    "K": "minecraft:red_wall_banner[facing=south]",
+    "L": "minecraft:stone_brick_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "M": "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "N": "minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none]",
+    "O": "minecraft:stone_bricks",
+    "P": "minecraft:vine[east=false,north=false,south=true,up=false,west=false]",
+    "Q": "minecraft:wall_torch[facing=south]"
+  },
+  "layers": [
+    [
+      "CCCCC",
+      "AAAII",
+      "AIAAA",
+      "LAIIA",
+      "NDE##"
+    ],
+    [
+      "P...P",
+      "AAAAA",
+      "OAAOA",
+      ".LOOO",
+      "G...#"
+    ],
+    [
+      "P...P",
+      "OFOFO",
+      "OOOOO",
+      "..LOO",
+      "....."
+    ],
+    [
+      "..J..",
+      "OOOOO",
+      "OOOOO",
+      "...LA",
+      "....K"
+    ],
+    [
+      "MMMMM",
+      "AOOAO",
+      "OOOAO",
+      "....L",
+      "....."
+    ],
+    [
+      "OOOOO",
+      "...H.",
+      "..H..",
+      ".....",
+      "....."
+    ],
+    [
+      "B.O.O",
+      "..Q..",
+      ".....",
+      ".....",
+      "....."
+    ]
+  ]
+}

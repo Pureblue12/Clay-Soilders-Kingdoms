@@ -50,8 +50,8 @@ def armory():
         s.remove(MID, y, Z0)
     for x in (MID - 1, MID, MID + 1):
         P(s, x, 3, Z0, 'dark_oak_log', axis='x')
-    windows = [(X0, 2, 4), (X0, 2, 8), (X1, 2, 4), (X1, 2, 8)]       # small glazed side windows
-    slits = [(MID - 2, 2, Z0), (MID + 2, 2, Z0), (X1, 2, 6)]          # front slits (bars at L2), the forge hatch
+    windows = []
+    slits = [(X0, 2, 4), (X0, 2, 8), (X1, 2, 4), (X1, 2, 8), (X1, 2, 6)]   # small side windows, the forge hatch
     for p in windows + slits:
         s.remove(*p)
     # loft floor (z 7..9) on a dark oak beam

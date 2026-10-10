@@ -1,0 +1,74 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "stone_wall_stepped_l1",
+  "version": 2,
+  "size": [5,8,3],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T05:35:48.671Z",
+    "description": "Stone wall, stepped, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 72 blocks vs 60. Like the straight module, but the walk rises 1 block (stand at 5, then 6) up a stair in the middle; the parapet and its corbels step up with it. Merlons tile across joints: half merlon, crenel, merlon, crenel, merlon (the next module starts with its half merlon).",
+    "changes": "Quality check round 1: the merlon pattern changed across the whole set so modules tile end to end (a cobblestone-slab half merlon at x 0, merlons at x 2 and 4: neighbours now alternate high / low instead of two merlons side by side). The corbels of the high half (x 2..4) now step up with the parapet (upside-down stairs at y 5, air at y 4). Torches on the merlons at x 2 and 4, the lamp post on the low walk; the crenel fillers removed from L3 (an arrow barrel and more ivy instead).",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "batch3",
+      "tier3",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:cobblestone",
+    "A": "minecraft:cobblestone_slab[type=bottom,waterlogged=false]",
+    "B": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "C": "minecraft:mossy_cobblestone",
+    "D": "minecraft:stone_brick_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "E": "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "F": "minecraft:stone_bricks"
+  },
+  "layers": [
+    [
+      "BBBBB",
+      "###CC",
+      "#C###"
+    ],
+    [
+      ".....",
+      "#####",
+      "F##F#"
+    ],
+    [
+      ".....",
+      "F.F.F",
+      "FFFFF"
+    ],
+    [
+      ".....",
+      "FFFFF",
+      "FFFFF"
+    ],
+    [
+      "EE...",
+      "#FF#F",
+      "FFF#F"
+    ],
+    [
+      "FFEEE",
+      "..DFF",
+      "..DFF"
+    ],
+    [
+      "A.FFF",
+      ".....",
+      "....."
+    ],
+    [
+      "..F.F",
+      ".....",
+      "....."
+    ]
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "stone_wall_gate_l3",
+  "version": 2,
+  "size": [7,9,5],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T05:35:59.354Z",
+    "description": "Stone wall gate, level 3 of 3: L2 plus flourish 3. Over budget: 151 blocks vs 60. Its wall line is z 0..2 like the others, the towers also reach z 3. Two small crenellated towers and an arched opening 3 wide (no fence gate); the walk crosses over it and through the towers. Not yet builder-tested: iron_bars, moss_carpet, red_banner, red_wall_banner, stone_brick_wall, vine. Decoration step adds: banner_pattern.",
+    "changes": "Quality check round 1: the merlon pattern changed across the whole set so modules tile end to end (a cobblestone-slab half merlon at x 0, merlons at x 2 and 4: neighbours now alternate high / low instead of two merlons side by side). The open notches at the front corners (arrow slits) are filled. The towers end in chequered stone merlons 2 above the wall merlons instead of flat spruce stair caps. A stone lintel at y 5 over the L3 portcullis bars. More detail from L1: a battered foot and a corbel course on the towers in line with the parapet corbels, the arch's front ring, lanterns in the arch; a watch lantern on each tower top from L2.",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "batch3",
+      "tier3",
+      "wall",
+      "gate"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:cobblestone",
+    "B": "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "C": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "D": "minecraft:hay_block[axis=y]",
+    "E": "minecraft:iron_bars[east=false,north=true,south=false,waterlogged=false,west=true]",
+    "F": "minecraft:iron_bars[east=true,north=true,south=false,waterlogged=false,west=false]",
+    "G": "minecraft:iron_bars[east=true,north=true,south=false,waterlogged=false,west=true]",
+    "H": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "I": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "J": "minecraft:moss_carpet",
+    "K": "minecraft:mossy_cobblestone",
+    "L": "minecraft:red_banner[rotation=8]",
+    "M": "minecraft:red_wall_banner[facing=north]",
+    "N": "minecraft:red_wall_banner[facing=south]",
+    "O": "minecraft:stone_brick_stairs[facing=east,half=top,shape=straight,waterlogged=false]",
+    "P": "minecraft:stone_brick_stairs[facing=north,half=top,shape=straight,waterlogged=false]",
+    "Q": "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "R": "minecraft:stone_brick_stairs[facing=west,half=top,shape=straight,waterlogged=false]",
+    "S": "minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none]",
+    "T": "minecraft:stone_bricks",
+    "U": "minecraft:vine[east=false,north=true,south=false,up=false,west=false]",
+    "V": "minecraft:wall_torch[facing=east]",
+    "W": "minecraft:wall_torch[facing=north]",
+    "X": "minecraft:wall_torch[facing=west]"
+  },
+  "layers": [
+    [
+      "CC...CC",
+      "AA...AA",
+      "AK...KK",
+      "BB...BB",
+      "SD...#S"
+    ],
+    [
+      "AAV.XTT",
+      "AA...TT",
+      "TA...AT",
+      "AA...AT",
+      "HU...UH"
+    ],
+    [
+      "TT...TT",
+      "TTRIOTT",
+      "TTRIOAT",
+      "TA...TT",
+      ".U...U."
+    ],
+    [
+      "TTRMOTT",
+      "TTTTTTT",
+      "TTTTTTT",
+      "TTGGGAT",
+      ".N...N."
+    ],
+    [
+      "QQQQQQQ",
+      "ATTATTA",
+      "TTTATTT",
+      "PPFGEPP",
+      "......."
+    ],
+    [
+      "ATTTTTT",
+      "..J.J..",
+      ".......",
+      "TTTTTTT",
+      "......."
+    ],
+    [
+      "TT.T.TT",
+      ".......",
+      ".W...W.",
+      "TT...TT",
+      "......."
+    ],
+    [
+      "TT.L.TT",
+      "TT...TT",
+      "TT...TA",
+      "TA...AT",
+      "......."
+    ],
+    [
+      "T.....T",
+      ".T...T.",
+      "TH...HT",
+      ".T...T.",
+      "......."
+    ]
+  ]
+}

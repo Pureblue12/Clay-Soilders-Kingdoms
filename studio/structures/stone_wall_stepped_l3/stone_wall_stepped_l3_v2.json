@@ -1,0 +1,82 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "stone_wall_stepped_l3",
+  "version": 2,
+  "size": [5,8,3],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T05:35:51.003Z",
+    "description": "Stone wall, stepped, level 3 of 3: L2 plus flourish 3. Over budget: 72 blocks vs 60. Like the straight module, but the walk rises 1 block (stand at 5, then 6) up a stair in the middle; the parapet and its corbels step up with it. Merlons tile across joints: half merlon, crenel, merlon, crenel, merlon (the next module starts with its half merlon). Not yet builder-tested: iron_bars, moss_carpet, red_wall_banner, stone_brick_wall, vine. Decoration step adds: banner_pattern, item.",
+    "changes": "Quality check round 1: the merlon pattern changed across the whole set so modules tile end to end (a cobblestone-slab half merlon at x 0, merlons at x 2 and 4: neighbours now alternate high / low instead of two merlons side by side). The corbels of the high half (x 2..4) now step up with the parapet (upside-down stairs at y 5, air at y 4). Torches on the merlons at x 2 and 4, the lamp post on the low walk; the crenel fillers removed from L3 (an arrow barrel and more ivy instead).",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "batch3",
+      "tier3",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:cobblestone",
+    "B": "minecraft:cobblestone_slab[type=bottom,waterlogged=false]",
+    "C": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "D": "minecraft:iron_bars[east=true,north=false,south=true,waterlogged=false,west=true]",
+    "E": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "F": "minecraft:moss_carpet",
+    "G": "minecraft:mossy_cobblestone",
+    "H": "minecraft:red_wall_banner[facing=north]",
+    "I": "minecraft:stone_brick_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "J": "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "K": "minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none]",
+    "L": "minecraft:stone_bricks",
+    "M": "minecraft:vine[east=false,north=false,south=true,up=false,west=false]",
+    "N": "minecraft:wall_torch[facing=south]"
+  },
+  "layers": [
+    [
+      "CCCCC",
+      "AAAGG",
+      "AGAAA"
+    ],
+    [
+      "M..MM",
+      "AAAAA",
+      "LAALA"
+    ],
+    [
+      "M...M",
+      "LDLDL",
+      "LLLLL"
+    ],
+    [
+      "M.H..",
+      "LLLLL",
+      "LLLLL"
+    ],
+    [
+      "JJ...",
+      "ALLAL",
+      "LLLAL"
+    ],
+    [
+      "LLJJJ",
+      "F.ILL",
+      ".KILL"
+    ],
+    [
+      "B.LLL",
+      "...F.",
+      ".E..#"
+    ],
+    [
+      "..L.L",
+      "..N.N",
+      "....."
+    ]
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "stone_wall_stairs_l1",
+  "version": 2,
+  "size": [5,7,5],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T05:36:01.076Z",
+    "description": "Stone wall, walk stairs, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 81 blocks vs 60. A straight module with a stone stair flight on the town side up to the walk. Merlons tile across joints: half merlon, crenel, merlon, crenel, merlon (the next module starts with its half merlon).",
+    "changes": "Quality check round 1: the merlon pattern changed across the whole set so modules tile end to end (a cobblestone-slab half merlon at x 0, merlons at x 2 and 4: neighbours now alternate high / low instead of two merlons side by side). The L2 torch moved onto the merlon at x 2; the slab that half-filled a crenel in L3 is removed.",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "batch3",
+      "tier3",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:cobblestone",
+    "A": "minecraft:cobblestone_slab[type=bottom,waterlogged=false]",
+    "B": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "C": "minecraft:mossy_cobblestone",
+    "D": "minecraft:stone_brick_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "E": "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "F": "minecraft:stone_bricks"
+  },
+  "layers": [
+    [
+      "BBBBB",
+      "###CC",
+      "#C###",
+      "D#CC#",
+      "....."
+    ],
+    [
+      ".....",
+      "#####",
+      "F##F#",
+      ".DFFF",
+      "....."
+    ],
+    [
+      ".....",
+      "F.F.F",
+      "FFFFF",
+      "..DFF",
+      "....."
+    ],
+    [
+      ".....",
+      "FFFFF",
+      "FFFFF",
+      "...D#",
+      "....."
+    ],
+    [
+      "EEEEE",
+      "#FF#F",
+      "FFF#F",
+      "....D",
+      "....."
+    ],
+    [
+      "FFFFF",
+      ".....",
+      ".....",
+      ".....",
+      "....."
+    ],
+    [
+      "A.F.F",
+      ".....",
+      ".....",
+      ".....",
+      "....."
+    ]
+  ]
+}

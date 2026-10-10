@@ -1,4 +1,9 @@
-"""Keep (landmark), v5: the v4 plan made into a place clay soldiers live in, after Carlton's note on v4 ("some of the
+"""Keep (landmark), v6: v5 polished after Carlton's note on v5 ("much better just needs some polishing and add some
+small details and its golden"). Plan, size, symmetry and rooms are v5's; v6 only adds small details (see CHANGES). The
+Studio file can hold at most 89 block states per level (KEYS in make_batch2_structures.py) and L3 uses all 89: a new
+block state there needs another one taken out.
+
+v5: the v4 plan made into a place clay soldiers live in, after Carlton's note on v4 ("some of the
 areas seem inaccessible and don't seem like they really fit; remember soldiers will actually use this place"), and
 steep cone roofs on every turret and tower (the stepped caps read as pagoda, not medieval).
 
@@ -446,6 +451,7 @@ def keep():
             if (x, 1, z) not in s.blocks:
                 s.put(x, 1, z, 'red_carpet')
     for x in (HX0 - 2, HX1 + 2):                                     # a lantern post by each side door
+        s.put(x, 0, SIDE_DOOR + 1, 'cobblestone')
         s.put(x, 1, SIDE_DOOR + 1, 'dark_oak_fence'); s.put(x, 2, SIDE_DOOR + 1, 'dark_oak_fence')
         s.put(x, 3, SIDE_DOOR + 1, 'lantern', hanging='false', waterlogged='false')
     for x in (HX0 - 1, HX1 + 1):
@@ -791,16 +797,24 @@ def keep():
     return connect(s)
 
 
-CHANGES = ('For your note that some areas were unreachable and did not fit: every place can now be walked to from the '
-           'gate (checked block by block). The side gardens have gateways from the forecourt and the great hall has '
-           'side doors into them, so the hall is no longer reachable only through the keep. The curtain has a real '
-           'wall walk on a corbelled ledge; the corner towers are hollow with a door at the bottom, a winding stair '
-           'to both wall walks and a lookout at the top; the gatehouse has a guard chamber over the gate, entered '
-           'from the wall walks, with a stair to its battlements. Rethought what each space is for: kitchen and '
-           'armory now sit by the hall\'s side doors, storehouse and guardroom (bunks) by the gate next to the well '
-           'and forge, a flower garden beside the keep on the west and a training yard with straw targets on the '
-           'east. Turret and tower roofs are now steep cones (one overhang ring, narrowing upward, slab and '
-           'flagpole), not stepped caps.')
+CHANGES = ("Polish for Carlton's v5 note: same plan, size and rooms, only small details added. "
+           'Level 1 (keep): a stone belt course of upside-down stairs at the upper floor line (it is the sill of every '
+           'upper window), spruce shutters on the front windows and on the middle side windows of both floors, a '
+           'lantern on a stone bracket over both doors and torches on the front door posts, poppies and bushes in '
+           'the corners of the apron; on the roof deck a watch fire, barrels and a chest by the parapet and two '
+           'lantern posts at the stair head; in the king\'s chamber a barrel wardrobe, a night stand with a lantern '
+           'and a table for two. '
+           'Level 2 (royal court): red carpet across the great hall at the side-door aisle and in front of the dais, '
+           'flower beds (poppy, cornflower, oxeye daisy) under the hall windows and between the back buttresses, '
+           'lantern posts by both side doors, flowers at the forecourt lantern posts; the keep door banners moved '
+           'up above the new belt course. '
+           'Level 3 (castle): buttresses on the long curtain walls and on the front and back stretches, corbels '
+           '(machicolations) under every merlon and a string course round the towers and gatehouse, red banners and '
+           'vines on the corner towers, low vines on the curtain, lanterns on the merlons, under the gate arch, in '
+           'every tower lookout and under the wall-walk ledge over the gardens and training yard, crates by the '
+           'well and forge, barrels and a chopping block in the back wards, shutters on the lean-to windows and '
+           'flower boxes under the storehouse and guardroom windows. Every room is still reached on foot (no '
+           'ladders), checked with the flood fill.')
 
 STRUCTURES = [dict(path='keep', name='Keep', tier=4, zone='keep', role='keep', group='keep', terrain='skirt',
                    door='front', make=keep, max_height=20,
