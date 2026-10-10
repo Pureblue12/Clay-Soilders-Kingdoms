@@ -1,0 +1,52 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "farm_field_carrots_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T03:21:07.938Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 64,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 128,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.359375,
+          "types": 8,
+          "dominant": {
+            "name": "dirt",
+            "share": 0.375
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Carrot field module: a fenced plot either side of a water trench with barrels and lanterns; plainer than the wheat field.",
+        "problems": [
+          "It's the same plot as the wheat field without the scarecrow: give each crop module one thing of its own (a carrot crate and rabbit-proof fence, a potato sack pile and a digging fork).",
+          "The fence sits on a raised plank rim, so the field is a step above the ground; check soldiers can walk in."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}
