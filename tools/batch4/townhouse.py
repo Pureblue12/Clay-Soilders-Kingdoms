@@ -19,7 +19,7 @@ def townhouse(width=5, depth=6):
     a chest, windows in both gables, torches, a step at the door.
     L2 (lived in): shutters and flower boxes on the ground windows, two lanterns under the jetty, a bench by the door,
     rugs, shelves and a pot upstairs, brick shoulders on the chimney, a log pile and barrels on the right side.
-    L3 (the town look): flower boxes on the jetty windows, smoke from the chimney, a dark oak flower boxes under the back gable windows, a fenced back garden (composter, flowers, a bench, a bush), a lantern post and banner at the front,
+    L3 (the town look): flower boxes (soil in trapdoor boxes) under the front and back gable windows, smoke from the chimney, a fenced back garden (composter, flowers, a bench, a bush), a lantern post and banner at the front,
     vines on the stone walls."""
     W, D, H = width + 4, depth + 5, 9
     s = Structure('townhouse', (W, H, D), palette='oak_a2')
@@ -80,6 +80,9 @@ def townhouse(width=5, depth=6):
     for y in (6, 7):
         P(s, mid, y, jz, 'dark_oak_log', axis='y')        # king post
         P(s, mid, y, z1, 'dark_oak_log', axis='y')
+    for x, z in ((x0, z0 + 1), (x1, z0 + 1), (x1, z0 + 3)):              # little windows in the knee walls
+        s.remove(x, knee, z)
+        P(s, x, knee, z, 'glass_pane')
     uwin = [(mid - 1, 6, jz), (mid + 1, 6, jz), (mid - 1, 6, z1), (mid + 1, 6, z1)]
     # brick chimney against the left wall, up past the eaves
     for y in (0, 1, 2):                                    # a stepped breast: two deep at the bottom
@@ -148,26 +151,30 @@ def townhouse(width=5, depth=6):
 
     # ------------------------------------------------------------------ L3: the town look
     s.at(3, 'flourish3')
-    for x, f in ((mid - 1, 'cornflower'), (mid + 1, 'oxeye_daisy')):
-        P(s, x, 4, jz - 1, 'spruce_slab', **SLAB_TOP)                 # a box on the beam end
-        P(s, x, 5, jz - 1, f)
+    # flower boxes on the beam ends under the front and back gable windows: soil, trapdoor ends, flowers
+    for bz, flowers in ((jz - 1, ('cornflower', 'fern', 'oxeye_daisy')), (z1 + 1, ('allium', 'fern', 'azure_bluet'))):
+        for x, f in zip((mid - 1, mid, mid + 1), flowers):
+            P(s, x, 4, bz, 'coarse_dirt')
+            P(s, x, 5, bz, f)
+        P(s, mid - 2, 4, bz, 'spruce_trapdoor', facing='west', **OPEN)
+        P(s, mid + 2, 4, bz, 'spruce_trapdoor', facing='east', **OPEN)
     P(s, chim_x, 8, cz, 'campfire', facing='north', lit='true', signal_fire='false', waterlogged='false')
-    for x, f in ((mid - 1, 'allium'), (mid + 1, 'azure_bluet')):     # flower boxes under the back gable windows
-        P(s, x, 4, z1 + 1, 'spruce_slab', **SLAB_TOP)
-        P(s, x, 5, z1 + 1, f)
-    # back garden behind the house: a fenced plot of two rows, open on the right side
+    # back garden behind the house: a fenced plot of two rows (a gate on the right, decoration only: the garden
+    # needs no visits)
     gz0, gz1 = z1 + 1, D - 1                                       # 8 (under the back eave) .. 10 (fence)
     for x in range(x0 - 1, x1 + 2):
         P(s, x, 0, gz1, 'spruce_fence')
     for z in (gz0, gz0 + 1):
         P(s, x0 - 1, 0, z, 'spruce_fence')
+    P(s, x1 + 1, 0, gz0 + 1, 'spruce_fence')
+    P(s, x1 + 1, 0, gz0, 'spruce_fence_gate', facing='east', open='false', powered='false', in_wall='false')
     P(s, x0, 0, gz0, 'composter', level='3')
     P(s, mid, 0, gz0, 'spruce_stairs', facing='north', **STAIR)     # a bench against the back wall
     P(s, x1, 0, gz0, 'oak_leaves', **LEAVES)
     P(s, x1, 1, gz0, 'oak_leaves', **LEAVES)
     for x, f in ((x0, 'allium'), (x0 + 1, 'cornflower'), (mid, 'oxeye_daisy'), (x1 - 1, 'azure_bluet'), (x1, 'poppy')):
         P(s, x, 0, gz1 - 1, f)
-    P(s, x0 + 1, 0, gz0, 'flower_pot'); s.decorate(x0 + 1, 0, gz0, 'potted_plant', plant='fern')
+    P(s, x0 + 1, 0, gz0, 'fern')
     # lantern post and banner at the front
     for y in (0, 1):
         P(s, x0 - 1, y, 0, 'spruce_fence')

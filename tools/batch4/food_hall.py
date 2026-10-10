@@ -18,7 +18,7 @@ def food_hall(width=7, depth=11):
     the kitchen corner (smoker, barrels, a chest) by the kitchen door, the bar on the left (a counter and kegs),
     torches.
     L2 (open for business): a projecting sign on a bracket, lanterns under the front gable and on a chain over the
-    door, chandeliers over the table, shutters, red banners on the front, smoke from the chimney, firewood at the
+    door, chandeliers over the table, shutters, red banners on the front, firewood at the
     hearth and by the kitchen door, a step at the kitchen door, plates on the table.
     L3 (the beer garden): a little terrace on the left with two outdoor tables and benches under a lantern post,
     flower boxes under the windows, candles on the long table, kegs and a crate outside the kitchen, flowers and
@@ -66,7 +66,7 @@ def food_hall(width=7, depth=11):
     for x in (mid - 1, mid, mid + 1):
         for y in (0, 1, 2, 3):
             P(s, x, y, z1 + 1, 'bricks')
-    for y in range(4, 8):
+    for y in range(4, 9):                                  # up to the top of the ridge cap
         P(s, mid, y, z1 + 1, 'bricks')
     # timber-framed gables: a tie beam, a king post, plaster panels, two little gable windows
     for z in (z0, z1):
@@ -142,7 +142,6 @@ def food_hall(width=7, depth=11):
     P(s, mid + 1, 3, z0 - 1, 'red_wall_banner', facing='north')
     for x in (mid - 1, mid + 1):
         s.decorate(x, 3, z0 - 1, 'banner_pattern', banner='red_wall_banner', note='a tankard')
-    P(s, mid, 8, z1 + 1, 'campfire', facing='north', lit='true', signal_fire='false', waterlogged='false')  # smoke
     for x in (mid - 2, mid + 2):                                       # firewood beside the chimney breast
         P(s, x, 0, z1 + 1, 'spruce_log', axis='z'); P(s, x, 0, z1 + 2, 'spruce_log', axis='z')
         P(s, x, 1, z1 + 1, 'spruce_log', axis='z')
@@ -179,11 +178,13 @@ def food_hall(width=7, depth=11):
     for z, f in ((z0 + 1, 'poppy'), (z0 + 2, 'cornflower'), (z0 + 5, 'oxeye_daisy')):
         P(s, x1 + 1, 0, z, 'coarse_dirt'); P(s, x1 + 1, 1, z, f)
         P(s, x1 + 2, 0, z, 'spruce_trapdoor', facing='east', **OPEN)
+    for z, f in ((z0, 'north'), (z0 + 3, 'south'), (z0 + 4, 'north'), (z0 + 6, 'south')):   # box ends
+        P(s, x1 + 1, 0, z, 'spruce_trapdoor', facing=f, **OPEN)
     # kegs and a crate outside the kitchen
     P(s, x1 + 2, 0, kdoor + 1, 'barrel', facing='east', open='false')
     P(s, x1 + 2, 0, kdoor + 2, 'barrel', facing='up', open='true')
     s.decorate(x1 + 2, 1, kdoor + 2, 'item', item='minecraft:potato', note='potatoes in the open barrel')
-    P(s, x1 + 1, 0, kdoor - 2, 'hay_block', axis='y')
+    P(s, x1 + 2, 0, kdoor - 2, 'hay_block', axis='y')
     for x, z in ((x0 - 1, z1), (x1 + 1, z1 + 1), (x0 - 2, z1 - 1)):
         A(s, x, 0, z, 'oak_leaves', **LEAVES)
     for x, z, f in ((x0 - 1, z0, 'allium'), (mid - 1, z0 - 1, 'poppy'), (mid + 1, z0 - 1, 'dandelion'),
@@ -196,5 +197,5 @@ STRUCTURES = [dict(path='food_hall', name='Tavern / food hall', tier=4, zone='in
                    terrain='skirt', door='front', make=food_hall, changes='First version.',
                    description='Over budget: 504 blocks vs 345 (first build 417 vs 280). Long timber food hall: one long table with benches under a dormer, a big brick hearth and chimney at '
                                'the far end, a kitchen corner (smoker) by a side door and a bar of kegs; L2 a '
-                               'projecting sign, lanterns, chandeliers, banners and smoke; L3 a beer-garden terrace, '
+                               'projecting sign, lanterns, chandeliers, banners and a chimney up to the ridge; L3 a beer-garden terrace, '
                                'candles, flower boxes and kegs by the kitchen.')]

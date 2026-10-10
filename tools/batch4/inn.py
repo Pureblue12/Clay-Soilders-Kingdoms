@@ -23,9 +23,9 @@ def inn(width=7, depth=9):
     L3 (welcoming): a porch roof on posts over the front door with lanterns, flower boxes, a red banner, chimney smoke,
     a "Welcome" signpost by the road (sign text: decoration step), barrels and a crate of luggage, flowers and
     bushes."""
-    W, D, H = width + 5, depth + 4, 9
+    W, D, H = width + 5, depth + 6, 9
     s = Structure('inn', (W, H, D), palette='oak_a2')
-    x0, x1, z0, z1 = 2, 1 + width, 2, 1 + depth           # 2..8, 2..10
+    x0, x1, z0, z1 = 2, 1 + width, 4, 3 + depth           # 2..8, 4..12 (z 0..2: porch and path)
     mid = (x0 + x1) // 2                                   # 5
     top = 4                                                # last layer under the roof plates (the upper floor)
     hz = z0 + 4                                            # 6: hearth row
@@ -86,6 +86,20 @@ def inn(width=7, depth=9):
     gable_roof(s, x0, x1, z0, z1, top, front=1, back=1, cap=None, gable='white_terracotta',
                skip={(chim, top + 1, hz)})
     P(s, mid, 0, z0 - 1, 'cobblestone_stairs', facing='south', **STAIR)   # step at the door
+    for z in range(0, z0 - 1):                                          # a stepping-stone path to the road
+        P(s, mid, 0, z, 'cobblestone_slab', **SLAB)
+    for x in (x0 + 1, x1 - 1):                                          # planter boxes under the front windows
+        P(s, x, 0, z0 - 1, 'coarse_dirt')
+        P(s, x, 0, z0 - 2, 'spruce_trapdoor', facing='north', **OPEN)
+    # sills (upside-down stairs) under the side and back windows
+    P(s, x0 - 1, 1, z0 + 1, 'spruce_stairs', facing='east', **TOP)
+    P(s, x0 - 1, 1, z1 - 1, 'spruce_stairs', facing='east', **TOP)
+    P(s, x1 + 1, 1, z0 + 2, 'spruce_stairs', facing='west', **TOP)
+    P(s, mid, 1, z1 + 1, 'spruce_stairs', facing='north', **TOP)
+    # kegs and a bench by the door
+    P(s, x0 - 1, 0, z0, 'barrel', facing='up', open='false')
+    P(s, x0 - 1, 0, z0 - 1, 'barrel', facing='east', open='false')
+    P(s, x1, 0, z0 - 1, 'spruce_stairs', facing='north', **STAIR)
 
     # ------------------------------------------------------------------ L1 fittings
     s.at(1, 'fittings')
@@ -137,7 +151,7 @@ def inn(width=7, depth=9):
     P(s, x1 + 1, 0, lz0, 'cauldron')                                   # the trough (water: decoration step)
     s.decorate(x1 + 1, 0, lz0, 'water', note='fill the trough')
     P(s, x1 + 1, 3, lz0 + 2, 'lantern', **HANG)                          # under the lean-to roof
-    for z in (z0, z0 + 1, z0 + 2):                                     # hitching rail by the road
+    for z in (z0, z0 + 1, z0 + 2, z0 + 3):                             # hitching rail, joined to the stable post
         P(s, x1 + 3, 0, z, 'spruce_fence')
     # projecting sign: fence bracket under the right front eave, the sign hanging below
     P(s, x1 + 1, 4, z0, 'spruce_fence')
@@ -161,26 +175,27 @@ def inn(width=7, depth=9):
     s.at(3, 'flourish3')
     for x in (mid - 1, mid + 1):                                        # porch over the door
         for y in (0, 1, 2):
-            P(s, x, y, 0, 'spruce_fence')
+            P(s, x, y, z0 - 2, 'spruce_fence')
     for x in (mid - 1, mid, mid + 1):
-        for z in (0, 1):
+        for z in (z0 - 2, z0 - 1):
             P(s, x, 3, z, 'spruce_slab', **SLAB)
-    P(s, mid, 2, 0, 'lantern', **HANG)
+    P(s, mid, 2, z0 - 2, 'lantern', **HANG)
     for x, f in ((x0 + 1, 'poppy'), (x1 - 1, 'cornflower')):
-        P(s, x, 0, z0 - 1, 'coarse_dirt'); P(s, x, 1, z0 - 1, f)
-        P(s, x, 0, z0 - 2, 'spruce_trapdoor', facing='north', **OPEN)
+        P(s, x, 1, z0 - 1, f)                                           # flowers in the planter boxes
     P(s, x0 - 1, 3, z0 + 1, 'red_wall_banner', facing='west')
     s.decorate(x0 - 1, 3, z0 + 1, 'banner_pattern', banner='red_wall_banner', note='a bed and a tankard')
     P(s, chim, 8, hz, 'campfire', facing='north', lit='true', signal_fire='false', waterlogged='false')
     # "Welcome" signpost by the road (front left corner)
     for y in (0, 1):
-        P(s, 0, y, 0, 'spruce_fence')
-    P(s, 0, 2, 0, 'oak_sign', rotation='0', waterlogged='false')
-    s.decorate(0, 2, 0, 'sign_text', lines=['', 'Welcome', 'travellers', ''])
-    # luggage by the door: a barrel, a chest, a bench
-    P(s, x0 - 1, 0, z0, 'barrel', facing='up', open='false')
+        P(s, 0, y, 1, 'spruce_fence')
+    P(s, 0, 2, 1, 'oak_sign', rotation='8', waterlogged='false')
+    s.decorate(0, 2, 1, 'sign_text', lines=['', 'Welcome', 'travellers', ''])
+    # luggage by the door: a chest, a barrel of apples
+    P(s, x0 - 1, 1, z0, 'barrel', facing='up', open='true')
+    s.decorate(x0 - 1, 1, z0, 'item', item='minecraft:apple', note='apples in the open barrel')
     P(s, x0, 0, z0 - 1, 'chest', facing='south', type='single', waterlogged='false')
-    P(s, x1, 0, z0 - 1, 'spruce_stairs', facing='north', **STAIR)       # bench beside the right window
+    for x, f in ((mid - 2, 'oxeye_daisy'), (mid + 2, 'allium')):         # flowers along the path
+        P(s, x, 0, 1, f)
     for x, z in ((0, z1), (x1 + 1, z1 + 1), (x0 - 1, z1 + 1)):
         A(s, x, 0, z, 'oak_leaves', **LEAVES)
     for x, z, f in ((0, z0 + 2, 'allium'), (0, z0 + 3, 'oxeye_daisy'), (mid - 1, z1 + 1, 'poppy'),

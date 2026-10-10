@@ -7,7 +7,11 @@ parapet carried out on upside-down stair corbels, and a 2-wide walk on top.
 Every module shares one profile, so the pieces join seamlessly:
   - z = 0 is the OUTSIDE (the parapet on its corbels), z = 1..2 the wall body; the town side is z = 3 and up.
   - The body is 5 high (y 0..4): the walk is its top, soldiers stand on it at y = 5 (WALK). The parapet is 1 high
-    (y 5) with merlons at even x (y 6), so two modules side by side meet merlon to merlon.
+    (y 5). Merlons (y 6) follow one rule in every module so the pieces tile: a half merlon (a slab) at x = 0, then
+    crenel, merlon, crenel, merlon (merlons at even x > 0). A module is odd in length, so its last column (a merlon)
+    meets the next module's half merlon: the parapet alternates high / low across every joint. Placed around a town,
+    a module's x = 0 end is its counter-clockwise end; the corner module and the gate fit that order
+    (tools: scratch row check in build/batch3/).
   - The stepped module ends 1 higher (stand at y 6) and the stairs module climbs from the ground to the walk.
 """
 from make_batch1_structures import Structure
@@ -40,19 +44,33 @@ def body(s, x, z, top, y0=0):
 
 def parapet(s, x, z, base, face, merlon, corbel=None):
     """Outside column of the wall at (x, z): a battered plinth stair at the foot, a corbel at y = base - 1, the parapet
-    at base and (if merlon) a merlon above it. face is the direction the outside faces ('north' or 'west')."""
+    at base and on top what `merlon` says ('merlon', 'half', None; True = 'merlon'). face is the direction the
+    outside faces ('north' or 'west')."""
     into = {'north': 'south', 'west': 'east'}[face]
     put_id(s, x, 0, z, 'cobblestone_stairs', facing=into, **STAIR)
     corbel = base - 1 if corbel is None else corbel
     put_id(s, x, corbel, z, 'stone_brick_stairs', facing=into, **TOP)
     for y in range(corbel + 1, base + 1):
         put_id(s, x, y, z, 'stone_bricks')
-    if merlon:
-        put_id(s, x, base + 1, z, 'stone_bricks')
+    battlement(s, x, z, base, 'merlon' if merlon is True else merlon or None)
 
 
 def vine(s, x, y, z, side):
     put_id(s, x, y, z, 'vine', **{**NO_VINE, side: 'true'})
+
+
+def crenel(x):
+    """The shared merlon rule: 'half' at x = 0, a merlon at even x > 0, a crenel (gap) at odd x."""
+    return 'half' if x == 0 else 'merlon' if x % 2 == 0 else None
+
+
+def battlement(s, x, z, base, kind):
+    """The block on top of the parapet at (x, base + 1, z): a stone brick merlon, a half merlon (cobblestone slab:
+    KNOWN-OK, so level 1 can have it; it reads as an old repair like the cobblestone patches) or nothing."""
+    if kind == 'merlon':
+        put_id(s, x, base + 1, z, 'stone_bricks')
+    elif kind == 'half':
+        put_id(s, x, base + 1, z, 'cobblestone_slab', **SLAB)
 
 
 def stone_wall_straight(length=5):
@@ -61,7 +79,7 @@ def stone_wall_straight(length=5):
     for x in range(length):
         for z in (1, 2):
             body(s, x, z, WALK - 1)
-        parapet(s, x, 0, WALK, 'north', x % 2 == 0)
+        parapet(s, x, 0, WALK, 'north', crenel(x))
     for x in (1, 3):                                                 # arrow-slit niches in the outer face
         s.remove(x, 2, 1)
     s.at(2, 'flourish2')
@@ -70,26 +88,24 @@ def stone_wall_straight(length=5):
     # a plain red banner on the outer face under the corbels (pattern by the decoration step), torches on the walk
     put_id(s, 2, 3, 0, 'red_wall_banner', facing='north')
     s.decorate(2, 3, 0, 'banner_pattern', banner='red_wall_banner', note='kingdom colours')
-    for x in (0, 4):
+    for x in (2, 4):
         put_id(s, x, WALK + 1, 1, 'wall_torch', facing='south')       # on the merlons' inner face
-    put_id(s, 2, WALK, 2, 'stone_brick_wall')                        # a lamp post on the inner edge of the walk
-    put_id(s, 2, WALK + 1, 2, 'lantern', **LANTERN)
+    put_id(s, 3, WALK, 2, 'stone_brick_wall')                        # a lamp post on the inner edge of the walk
+    put_id(s, 3, WALK + 1, 2, 'lantern', **LANTERN)
     s.at(3, 'flourish3')
-    # weather: ivy up the outer face, moss on the walk and the parapet, cracked and mossy caps on the merlons
+    # weather: ivy up the outer face, moss on the walk; a store of arrows on the walk
     for y in (1, 2):
         vine(s, 0, y, 0, 'south'); vine(s, 4, y, 0, 'south')
-    vine(s, 1, 1, 0, 'south')
-    for x in (1, 3):
+    vine(s, 1, 1, 0, 'south'); vine(s, 2, 1, 0, 'south')
+    for x in (0, 2):
         put_id(s, x, WALK, 1, 'moss_carpet')
-    put_id(s, 3, WALK + 1, 0, 'stone_brick_slab', **SLAB)            # a half merlon (weathered)
-    put_id(s, 1, WALK + 1, 0, 'mossy_cobblestone_wall')
-    put_id(s, 3, WALK, 2, 'barrel', facing='up', open='false')       # a store of arrows on the walk
-    s.decorate(3, WALK + 1, 2, 'item', item='minecraft:arrow', note='arrows in the barrel')
+    put_id(s, 1, WALK, 2, 'barrel', facing='up', open='false')
+    s.decorate(1, WALK + 1, 2, 'item', item='minecraft:arrow', note='arrows in the barrel')
     return connect(s)
 
 
 def stone_wall_stepped(length=5):
-    """The walk rises 1 block in the middle (a stair on the walk); the parapet and corbels step with it."""
+    """The walk rises 1 block in the middle (a stair on the walk); the parapet and its corbels step up with it."""
     s = Structure('stone_wall_stepped', (length, 8, 3), palette='oak_a2')
     mid = length // 2
     s.at(1, 'shell')
@@ -100,7 +116,7 @@ def stone_wall_stepped(length=5):
             body(s, x, z, top)
             if x == mid:
                 put_id(s, x, WALK, z, 'stone_brick_stairs', facing='east', **STAIR)   # the step up the walk
-        parapet(s, x, 0, WALK + 1 if high else WALK, 'north', x % 2 == 0, corbel=WALK - 1)
+        parapet(s, x, 0, WALK + 1 if high else WALK, 'north', crenel(x))   # corbel one under the parapet: it steps too
     for x in (1, 3):                                                 # arrow-slit niches
         s.remove(x, 2, 1)
     s.at(2, 'flourish2')
@@ -108,22 +124,24 @@ def stone_wall_stepped(length=5):
         put_id(s, x, 2, 1, 'iron_bars')
     put_id(s, 2, 3, 0, 'red_wall_banner', facing='north')
     s.decorate(2, 3, 0, 'banner_pattern', banner='red_wall_banner', note='kingdom colours')
-    put_id(s, 0, WALK + 1, 1, 'wall_torch', facing='south')
-    put_id(s, 4, WALK + 2, 1, 'wall_torch', facing='south')
-    put_id(s, 4, WALK + 1, 2, 'stone_brick_wall')
-    put_id(s, 4, WALK + 2, 2, 'lantern', **LANTERN)
+    for x in (2, 4):
+        put_id(s, x, WALK + 2, 1, 'wall_torch', facing='south')
+    put_id(s, 1, WALK, 2, 'stone_brick_wall')                        # lamp post on the low part of the walk
+    put_id(s, 1, WALK + 1, 2, 'lantern', **LANTERN)
     s.at(3, 'flourish3')
     for y in (1, 2, 3):
         vine(s, 0, y, 0, 'south')
-    vine(s, 4, 1, 0, 'south'); vine(s, 4, 2, 0, 'south')
-    put_id(s, 1, WALK, 1, 'moss_carpet'); put_id(s, 3, WALK + 1, 1, 'moss_carpet')
-    put_id(s, 3, WALK + 2, 0, 'stone_brick_slab', **SLAB)
-    put_id(s, 1, WALK + 1, 0, 'mossy_cobblestone_wall')
+    vine(s, 4, 1, 0, 'south'); vine(s, 4, 2, 0, 'south'); vine(s, 3, 1, 0, 'south')
+    put_id(s, 0, WALK, 1, 'moss_carpet'); put_id(s, 3, WALK + 1, 1, 'moss_carpet')
+    put_id(s, 4, WALK + 1, 2, 'barrel', facing='up', open='false')   # arrows at the top of the step
+    s.decorate(4, WALK + 2, 2, 'item', item='minecraft:arrow', note='arrows in the barrel')
     return connect(s)
 
 
 def stone_wall_corner():
-    """Outside corner: parapets on the front (z = 0) and the left (x = 0), a solid corner pier rising one higher."""
+    """Outside corner: parapets on the front (z = 0) and the left (x = 0), a solid corner pier rising one higher.
+    Merlons, going clockwise round a town: [module ends on a merlon] z 2 crenel, z 1 merlon, the pier, x 1 crenel,
+    x 2 merlon [the next module starts with its half merlon]."""
     s = Structure('stone_wall_corner', (3, 8, 3), palette='oak_a2')
     s.at(1, 'shell')
     for x in (1, 2):
@@ -132,35 +150,37 @@ def stone_wall_corner():
     for x in (1, 2):
         parapet(s, x, 0, WALK, 'north', x == 2)
     for z in (1, 2):
-        parapet(s, 0, z, WALK, 'west', z == 2)
+        parapet(s, 0, z, WALK, 'west', z == 1)
     for y in range(0, WALK + 2):                                     # corner pier, footing to merlon
         put_id(s, 0, y, 0, masonry(0, y, 0) if y < 2 else 'stone_bricks')
     put_id(s, 0, WALK + 2, 0, 'stone_brick_stairs', facing='south', **STAIR)   # it rises 1 higher, a sloped cap
+    s.remove(2, 2, 1); s.remove(1, 2, 2)                             # arrow-slit niches on both faces
     s.at(2, 'flourish2')
-    put_id(s, 1, WALK + 1, 1, 'wall_torch', facing='south')
-    put_id(s, 2, WALK, 2, 'stone_brick_wall'); put_id(s, 2, WALK + 1, 2, 'lantern', **LANTERN)
+    put_id(s, 2, WALK + 1, 1, 'wall_torch', facing='south')          # on the merlon at x 2
     put_id(s, 1, WALK + 1, 0, 'red_banner', rotation='10')            # a flag on the corner between the merlons
     s.decorate(1, WALK + 1, 0, 'banner_pattern', banner='red_banner', note='kingdom colours')
+    put_id(s, 2, 2, 1, 'iron_bars'); put_id(s, 1, 2, 2, 'iron_bars')
     s.at(3, 'flourish3')
     for y in (1, 2, 3):
         vine(s, 1, y, 0, 'south')
     for y in (1, 2):
         vine(s, 0, y, 1, 'east')
-    put_id(s, 1, WALK, 2, 'moss_carpet')
+    put_id(s, 1, WALK, 2, 'moss_carpet'); put_id(s, 2, WALK, 2, 'moss_carpet')
     return connect(s)
 
 
 def stone_wall_gate(width=7):
     """Gate: two towers (2 x 4) flank an arched opening 3 wide and 3 high (no fence gate: soldiers can't open them).
     The walk crosses over the arch and through both towers at the wall's height (stand at y 5), roofed over inside
-    the towers. The towers stand out beyond the wall face on the outside (z = 0, flush with the parapet) and on the
-    town side (z = 3); z = 4 is the town-side apron (banners, lights)."""
+    the towers; the towers end in stone merlons 2 above the wall's. The towers stand out beyond the wall face on the
+    outside (z = 0, flush with the parapet) and on the town side (z = 3); z = 4 is the town-side apron."""
     s = Structure('stone_wall_gate', (width, 9, 5), palette='oak_a2')
     towers = ((0, 1), (width - 2, width - 1))
     gx0, gx1 = 2, width - 3                                          # the passage
     mid = width // 2
     s.at(1, 'shell')
     for tx in towers:
+        outer, inner = (tx[0], tx[1]) if tx[0] == 0 else (tx[1], tx[0])
         for x in tx:
             for z in range(4):
                 body(s, x, z, WALK - 1)                              # solid up to the walk
@@ -169,15 +189,13 @@ def stone_wall_gate(width=7):
                     put_id(s, x, y, z, 'stone_bricks')
             for z in range(4):
                 put_id(s, x, WALK + 2, z, 'stone_bricks')            # the roof over the walk
-        outer = tx[0] if tx[0] == 0 else tx[1]
-        for z in range(4):                                           # a small gable roof on each tower, ridge front-back
-            put_id(s, tx[0], WALK + 3, z, 'spruce_stairs', facing='east', **STAIR)
-            put_id(s, tx[1], WALK + 3, z, 'spruce_stairs', facing='west', **STAIR)
-        s.remove(outer, 2, 0); s.remove(outer, WALK + 1, 0)          # arrow slits: ground floor and walk level
+        for x, z in ((outer, 0), (inner, 1), (outer, 2), (inner, 3)):   # merlons on the tower top, chequered
+            put_id(s, x, WALK + 3, z, 'stone_bricks')
+        s.remove(inner, 2, 0); s.remove(inner, WALK + 1, 0)          # arrow slits beside the arch (not on the corner)
     for x in range(gx0, gx1 + 1):
         for z in (1, 2):
             body(s, x, z, WALK - 1, y0=3)                            # the lintel over the passage
-        parapet(s, x, 0, WALK, 'north', x == mid)
+        parapet(s, x, 0, WALK, 'north', x == mid)                    # tower, crenel, merlon, crenel, tower
         s.remove(x, 0, 0)                                            # no plinth in the gateway
     for z in (1, 2):                                                 # the arch: upside-down stairs in the top corners
         put_id(s, gx0, 2, z, 'stone_brick_stairs', facing='west', **TOP)
@@ -191,10 +209,9 @@ def stone_wall_gate(width=7):
     put_id(s, mid, 3, 0, 'red_wall_banner', facing='north')          # banner over the arch (pattern: decoration step)
     s.decorate(mid, 3, 0, 'banner_pattern', banner='red_wall_banner', note='kingdom colours')
     for tx in towers:
-        outer = tx[0] if tx[0] == 0 else tx[1]
+        outer, inner = (tx[0], tx[1]) if tx[0] == 0 else (tx[1], tx[0])
         for y in (2, WALK + 1):                                      # bars in the arrow slits
-            put_id(s, outer, y, 0, 'iron_bars')
-        inner = tx[1] if tx[0] == 0 else tx[0]
+            put_id(s, inner, y, 0, 'iron_bars')
         put_id(s, inner, 3, 4, 'red_wall_banner', facing='south')    # banners on the town side
         s.decorate(inner, 3, 4, 'banner_pattern', banner='red_wall_banner', note='kingdom colours')
     put_id(s, mid, 2, 1, 'lantern', **HANGING)                       # lanterns hanging in the arch
@@ -203,15 +220,15 @@ def stone_wall_gate(width=7):
         put_id(s, x + (-1 if x < mid else 1), 0, 4, 'stone_brick_wall')
         put_id(s, x + (-1 if x < mid else 1), 1, 4, 'lantern', **LANTERN)
     s.at(3, 'flourish3')
-    # a raised portcullis on the town side of the arch: two rows of iron bars between the towers, clear of the passage
+    # a raised portcullis on the town side of the arch: two rows of iron bars under a stone lintel between the towers
     for x in range(gx0, gx1 + 1):
         for y in (3, 4):
             put_id(s, x, y, 3, 'iron_bars')
-    for tx in towers:                                                # ivy on the tower fronts and town sides
-        outer = tx[0] if tx[0] == 0 else tx[1]
+        put_id(s, x, WALK, 3, 'stone_bricks')
+    for tx in towers:                                                # ivy on the towers' town sides
         inner = tx[1] if tx[0] == 0 else tx[0]
-        for y in (1, 2, 3):
-            vine(s, inner, y, 4, 'north') if y < 3 else None
+        for y in (1, 2):
+            vine(s, inner, y, 4, 'north')
     put_id(s, mid, WALK + 2, 0, 'red_banner', rotation='8')          # a flag on the merlon over the gate
     s.decorate(mid, WALK + 2, 0, 'banner_pattern', banner='red_banner', note='kingdom colours')
     for x in (gx0, gx1):                                             # moss on the walk over the arch
@@ -229,7 +246,7 @@ def stone_wall_stairs(length=5):
     for x in range(length):
         for z in (1, 2):
             body(s, x, z, WALK - 1)
-        parapet(s, x, 0, WALK, 'north', x % 2 == 0)
+        parapet(s, x, 0, WALK, 'north', crenel(x))
     for x in (1, 3):
         s.remove(x, 2, 1)
     s.at(1, 'fittings')
@@ -245,7 +262,7 @@ def stone_wall_stairs(length=5):
     put_id(s, 0, 0, 4, 'stone_brick_wall'); put_id(s, 0, 1, 4, 'lantern', **LANTERN)   # lamp post at the foot
     put_id(s, 4, 3, 4, 'red_wall_banner', facing='south')            # banner on the side of the flight
     s.decorate(4, 3, 4, 'banner_pattern', banner='red_wall_banner', note='kingdom colours')
-    put_id(s, 0, WALK + 1, 1, 'wall_torch', facing='south')
+    put_id(s, 2, WALK + 1, 1, 'wall_torch', facing='south')
     s.at(3, 'flourish3')
     for x in (3, 4):                                                 # supplies stacked against the flight
         put_id(s, x, 0, 4, 'barrel', facing='up', open='false')
@@ -255,7 +272,6 @@ def stone_wall_stairs(length=5):
     for y in (1, 2):
         vine(s, 0, y, 0, 'south'); vine(s, 4, y, 0, 'south')
     put_id(s, 2, WALK, 2, 'moss_carpet'); put_id(s, 3, WALK, 1, 'moss_carpet')
-    put_id(s, 3, WALK + 1, 0, 'stone_brick_slab', **SLAB)
     return connect(s)
 
 

@@ -1,25 +1,25 @@
 """Chapel (tier 4, look A): a small stone chapel with a bell cote rising from its front gable (docs/STRUCTURES.md,
 "Chapel"). Terrain: ground_level (layer 0 is the stone base course and floor, resting on the ground).
 
-Layout (9 wide x 13 deep, front z = 0): walls x 1..7, z 1..10 (7 x 10; the nave inside is 5 x 8), 3 high on the base
+Layout (11 wide x 16 deep, front z = 0): walls x 2..8, z 5..13; z 0..3 in front is the churchyard path (L3) (7 x 10; the nave inside is 5 x 8), 3 high on the base
 course: a cobblestone plinth course at y 1 (some mossy), stone bricks above. Stone buttresses at the four corners and
 halfway along both sides, under the eaves. A spruce stair gable roof (dark oak eaves on spruce top plates, a dark ridge
 finished with slabs) with one block of overhang at the sides and the back; the front gable is a stone parapet with
 stone brick coping that rises past the roof into the bell cote: two stone piers carrying a little stone roof and a
 finial (the signature), 13 tall, so it needs scaffolding.
-- Front: the door (spruce, 2 tall) under a stone hood on two jambs, a step, a tall window in the gable, shuttered from inside.
+- Front: the door (spruce, 2 tall) under a stone hood on two jambs, a step, a tall window in the gable (unglazed until L3, open
+  shutters beside it).
 - Sides: three lancet windows each (glass panes, 2 high).
 - Inside: an aisle from the door to the altar, two rows of pews (spruce stairs) on each side, the altar (a stone table
   at the back, a white cloth on it), the priest's chest, torches on the walls.
 Level 2 (the chapel in use): the bell in the cote, a red runner down the aisle, the lectern (pulpit) by the altar,
 candles on the altar, lanterns on chains from the roof beams and at the door, flower boxes under the side windows,
 flowers by the door, a bench outside.
-Level 3 (the feast-day chapel): stained glass in both tall gable windows (front and back), banners on the inner walls and beside the
-door (patterns by the decoration step), more candles at the pews, flower pots, vines and moss on the buttresses, a
-lantern post and flowers along the path.
-
-Note: the two gable windows are closed by trapdoor shutters set one block inside at levels 1 and 2 (levels only add
-blocks, and the brief puts the coloured glass at level 3, so the window opening itself stays free until then)."""
+Level 3 (the feast-day chapel): the churchyard front, seen from afar: a low cobblestone wall along the front with a
+lych gate (spruce posts, a small gable roof, a lantern under its beam, banners), side walls ending in lantern
+piers, four old headstones, a stone slab path from it to the door, lantern
+posts and flowers beside the path; stained glass in both tall gable windows, banners on the inner walls and beside the
+door (patterns by the decoration step), candles at the front pews, flower pots on the buttresses."""
 from make_batch1_structures import Structure
 from batch3.ws_kit import P, A, STAIR, TOP, SLAB, OPEN, HANG, STAND, LEAVES, connect, noise, gable_roof
 
@@ -28,12 +28,12 @@ GABLE_WINDOW = (4, 5, 6)
 
 
 def chapel():
-    W, D = 11, 12
+    W, D = 11, 16
     s = Structure('chapel', (W, 13, D), palette='oak_a2')
-    x0, x1, z0, z1 = 2, 8, 1, 9
+    x0, x1, z0, z1 = 2, 8, 5, 13                  # z 0..3: the churchyard path and lych gate (L3)
     mid = 5
     top = 3                                          # walls y 1..3
-    lancets = (3, 7)
+    lancets = (z0 + 2, z0 + 6)
     s.at(1, 'shell')
     # base course and floor
     for x in range(x0, x1 + 1):
@@ -69,8 +69,8 @@ def chapel():
     for i in range(half - 1):                        # coping on the gable slopes (x 1, 2 and 6, 7)
         P(s, x0 + i, top + 3 + i, z0, 'stone_brick_stairs', facing='east', **STAIR)
         P(s, x1 - i, top + 3 + i, z0, 'stone_brick_stairs', facing='west', **STAIR)
-    for z in (z0, z1):                               # tall gable windows (front and back), shuttered from inside
-        for y in GABLE_WINDOW:                       # until the stained glass comes at level 3
+    for z in (z0, z1):                               # tall gable windows (front and back): unglazed, with open
+        for y in GABLE_WINDOW:                       # shutters, until the stained glass comes at level 3
             s.remove(mid, y, z)
     # the bell cote: two piers on the gable top, a stone roof, a finial
     cy = top + 1 + half + 1                          # 8: the first layer above the ridge
@@ -98,16 +98,18 @@ def chapel():
     for x in (mid - 1, mid + 1):
         P(s, x, 0, z0 - 1, 'cobblestone')
         P(s, x, 1, z0 - 1, 'stone_bricks'); P(s, x, 2, z0 - 1, 'stone_bricks')
-    P(s, mid - 1, 3, z0 - 1, 'stone_brick_stairs', facing='west', **STAIR)
-    P(s, mid + 1, 3, z0 - 1, 'stone_brick_stairs', facing='east', **STAIR)
+    P(s, mid - 1, 3, z0 - 1, 'stone_brick_stairs', facing='west', **TOP)    # flat tops: the L2 lanterns stand on them
+    P(s, mid + 1, 3, z0 - 1, 'stone_brick_stairs', facing='east', **TOP)
     P(s, mid, 3, z0 - 1, 'stone_brick_stairs', facing='south', **TOP)
     P(s, mid, 0, z0 - 1, 'cobblestone_stairs', facing='south', **STAIR)      # the step
     s.door(mid, 1, z0, 'north', block='spruce_door')
 
     s.at(1, 'fittings')
-    for z, f in ((z0 + 1, 'south'), (z1 - 1, 'north')):                     # the gable windows' inner shutters
-        for y in GABLE_WINDOW:
-            P(s, mid, y, z, 'spruce_trapdoor', facing=f, **OPEN)
+    for z, f in ((z0 - 1, 'north'), (z1 + 1, 'south')):                     # open shutters beside the gable windows
+        for x in (mid - 1, mid + 1):
+            for y in GABLE_WINDOW[1:]:
+                A(s, x, y, z, 'spruce_trapdoor', facing=f, **OPEN)
+    A(s, mid, top + 3, z1 + 1, 'spruce_planks')                              # closes the back barge board under the ridge
     for z in lancets:
         for x in (x0, x1):
             for y in (2, 3):
@@ -169,15 +171,53 @@ def chapel():
     for x in (x0 + 1, x1 - 1):                                               # candles at the front pews
         P(s, x, 1, z0 + 1, 'candle', candles='2', lit='true', waterlogged='false')
     # flowers, bushes and a lantern post along the path
-    for x, z, b in ((0, 0, 'leaves'), (W - 1, 0, 'leaves'), (0, D - 1, 'leaves'), (W - 1, D - 1, 'fern'),
-                    (2, D - 1, 'poppy'), (6, D - 1, 'azure_bluet')):
+    # the churchyard: a low wall along the front with a lych gate (spruce posts, a little gable roof, a lantern
+    # under the beam), a stone path from it to the door, lantern posts and flowers beside the path
+    gz = 1
+    for x in list(range(0, mid - 2)) + list(range(mid + 3, W)):
+        P(s, x, 0, gz, 'cobblestone_wall')
+    for x in (mid - 2, mid + 2):
+        for y in (0, 1, 2):
+            P(s, x, y, gz, 'spruce_log', axis='y')
+    for x in range(mid - 1, mid + 2):                                         # the tie beam
+        P(s, x, 3, gz, 'spruce_log', axis='x')
+    for z in (gz - 1, gz, gz + 1):                                            # a steep gable roof, ridge front to back
+        for i in range(2):
+            P(s, mid - 2 + i, 3 + i, z, 'spruce_stairs', facing='east', **STAIR)
+            P(s, mid + 2 - i, 3 + i, z, 'spruce_stairs', facing='west', **STAIR)
+        P(s, mid, 4, z, 'dark_oak_planks')
+        P(s, mid, 5, z, 'spruce_slab', **SLAB)
+    for z in (gz - 1, gz + 1):                                                # king posts under the ridge
+        P(s, mid, 3, z, 'spruce_fence')
+    P(s, mid, 2, gz, 'lantern', **HANG)
+    for z in range(gz + 1, z0):                                               # the churchyard wall's sides
+        for x in (0, W - 1):
+            P(s, x, 0, z, 'stone_bricks' if z == z0 - 1 else 'cobblestone_wall')
+    for x in (0, W - 1):                                                      # piers at the ends, lanterns on them
+        P(s, x, 1, z0 - 1, 'lantern', **STAND)
+    for x in (mid - 2, mid + 2):                                              # banners on the gate posts
+        P(s, x, 1, gz - 1, 'red_wall_banner', facing='north')
+        s.decorate(x, 1, gz - 1, 'banner_pattern', banner='red_wall_banner', note='the kingdom colours')
+    # old graves in the churchyard, either side of the path
+    P(s, 1, 0, 2, 'stone_brick_stairs', facing='south', **STAIR)
+    P(s, W - 2, 0, 2, 'cobblestone_stairs', facing='south', **STAIR)
+    P(s, 2, 0, 2, 'mossy_stone_brick_stairs', facing='south', **STAIR)
+    P(s, W - 3, 0, 2, 'stone_brick_stairs', facing='south', **STAIR)
+    for z in range(0, z0 - 1):
+        for x in (mid - 1, mid, mid + 1):
+            P(s, x, 0, z, 'mossy_cobblestone_slab' if noise(x, 0, z, 8) < 0.3 else 'cobblestone_slab', **SLAB)
+    for x in (1, W - 2):
+        for y in (0, 1):
+            P(s, x, y, 3, 'spruce_fence')
+        P(s, x, 2, 3, 'lantern', **STAND)
+    for x, z, b in ((mid - 2, 3, 'poppy'), (mid + 2, 3, 'azure_bluet'), (mid - 2, 2, 'oxeye_daisy'),
+                    (mid + 2, 2, 'cornflower'), (0, D - 1, 'leaves'),
+                    (W - 1, D - 1, 'fern'), (2, D - 1, 'poppy'), (6, D - 1, 'azure_bluet'), (0, 0, 'fern'),
+                    (W - 1, 0, 'dandelion')):
         if b == 'leaves':
             A(s, x, 0, z, 'oak_leaves', **LEAVES)
         else:
             A(s, x, 0, z, b)
-    for y in (0, 1):
-        P(s, W - 1, y, 1, 'spruce_fence')
-    P(s, W - 1, 2, 1, 'lantern', **STAND)
     for x in (x0 - 1, x1 + 1):                                               # flower pots on the middle buttresses
         P(s, x, 3, (z0 + z1) // 2, 'flower_pot')
         s.decorate(x, 3, (z0 + z1) // 2, 'potted_plant', plant='white_tulip')
@@ -186,9 +226,14 @@ def chapel():
 
 
 STRUCTURES = [dict(path='chapel', name='Chapel', tier=4, zone='inner', role='religious', group='chapel',
-                   terrain='ground_level', door='front', make=chapel, max_height=13, changes='First version.',
+                   terrain='ground_level', door='front', make=chapel, max_height=13, changes='Quality check round 1: lanterns on the door hood now stand on flat (upside-down) '
+                           'stair tops; the gable windows are unglazed with open shutters beside them (no inner '
+                           'shutters hiding the L3 stained glass); the back barge board hole is closed; L3 adds a '
+                           'walled churchyard front: a low wall with a lych gate and banners, side walls with lantern piers, old headstones, a stone path to the door and lantern posts '
+                           '(the box grew 4 rows at the front).',
                    description='Needs scaffolding: 13 tall (the bell cote; the nave roof is 9). Over budget: 440 blocks vs 210 (first build 370 vs 170; 7 wide instead of 5, for two pews a side). Stone chapel (stone '
                                'bricks on a cobblestone plinth, buttresses, spruce gable roof) whose front gable rises '
-                               'into a bell cote; door under a stone hood, lancet windows, pews, an altar; L2 adds the '
-                               'bell, runner, lectern, candles, lanterns, flower boxes; L3 stained glass oculi, banners, '
-                               'more candles and flowers.')]
+                               'into a bell cote; door under a stone hood, lancet windows, shuttered gable windows, pews, an altar; L2 adds the '
+                               'bell, runner, lectern, candles, lanterns, flower boxes; L3 the churchyard front (a low '
+                               'churchyard wall with a lych gate, old headstones, a stone path, lantern posts), stained glass in the gable windows, '
+                               'banners, candles and flowers.')]

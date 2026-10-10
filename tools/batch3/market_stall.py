@@ -21,10 +21,11 @@ def market_stall():
     white wool valance one step lower, so the awning slopes down to the front in three steps.
 
     Level 1: posts, plank counter with a trapdoor front, the striped carpet awning, goods at the front corners (a
-    barrel and a lidded crate either side of the counter), a sack of grain (hay) on the counter, a trade sign on the
+    barrel either side of the counter, one with a flower pot, one with grain, a lidded crate behind), a sack of grain
+    (hay) on the counter, a trade sign on the
     left post, the trader's chest and a barrel at the back.
     Level 2 (open for trade): the red and white wool front edge, lanterns hung under its corners, produce on the
-    front crates (pumpkin, melon), more grain by the side, a shelf over the stock (apples by the decoration step).
+    front edge (a pumpkin under the right lantern, a melon beside the right barrel), more grain by the side, a shelf over the stock (apples by the decoration step).
     Level 3 (the shop): a lantern post with the shop sign by the street (text by the decoration step), a banner on the
     right post, a stool for a customer, a barrel and a scraps bin at the back, a bush and flowers."""
     s = Structure('market_stall', (7, 5, 6), palette='oak_a2')
@@ -53,6 +54,9 @@ def market_stall():
     put_id(s, mid, 1, zc, 'hay_block', axis='x')                             # a sack of grain on the counter
     for x in (x0 - 1, x1 + 1):                                               # goods at the front corners
         put_id(s, x, 0, zc, 'barrel', facing='up', open='false')
+    put_id(s, x0 - 1, 1, zc, 'flower_pot')                                   # a flower pot on the left one
+    s.decorate(x0 - 1, 1, zc, 'potted_plant', plant='red_tulip')
+    put_id(s, x1 + 1, 1, zc, 'hay_block', axis='z')                          # grain on the right one
     put_id(s, x1 + 1, 0, zc + 1, 'barrel', facing='up', open='false')        # a lidded crate behind the right one
     put_id(s, x1 + 1, 1, zc + 1, 'spruce_trapdoor', facing='north', **SHUT)
     put_id(s, x0, 1, zc - 1, 'oak_wall_sign', facing='north', waterlogged='false')   # trade sign on the left post
@@ -65,8 +69,8 @@ def market_stall():
         put_id(s, x, 2, zc - 1, 'red_wool' if x % 2 else 'white_wool')
     for x in (x0 - 1, x1 + 1):                                   # lanterns hung under its corners
         put_id(s, x, 1, zc - 1, 'lantern', **HANG)
-    put_id(s, x0 - 1, 1, zc, 'pumpkin')                          # produce on the front crates
-    put_id(s, x1 + 1, 1, zc, 'melon')
+    put_id(s, x1 + 1, 0, zc - 1, 'pumpkin')                      # produce out at the front edge, under the lantern
+    put_id(s, x1 + 2, 0, zc, 'melon')                            # and beside the right barrel
     put_id(s, x1 + 1, 0, zc + 2, 'hay_block', axis='z')          # more grain stacked by the side
     put_id(s, mid, 2, zb, 'spruce_trapdoor', facing='north', **SHELF)       # shelf over the stock
     s.decorate(mid, 2, zb, 'item', item='minecraft:apple', note='apples on the shelf')
@@ -92,11 +96,10 @@ def market_stall():
 
 STRUCTURES = [dict(path='market_stall', name='Market stall', tier=3, zone='inner', role='market',
                    group='market_stall', terrain='flexible', door=None, make=market_stall,
-                   changes='Quality check: the awning is now one block thick (spruce trapdoor boards with red and '
-                           'white carpet stripes instead of two layers of solid blue wool) and slopes down to the '
-                           'front; level 2 adds a red and white wool front edge one step lower. Goods moved to the '
-                           'front corners and level 1 now has goods too (barrels, a crate, grain on the counter, a '
-                           'trade sign).',
+                   changes='Quality check round 2: level 1 is less bare: a flower pot (tulip by the decoration step) and a '
+                           'bale of grain on the front barrels at the counter edge; level 2 puts a pumpkin out at the front '
+                           'edge and a melon beside the stall. (Round 1: one-block-thick sloped red and white '
+                           'awning instead of solid blue wool, goods at the front, goods on level 1.)',
                    description='Over budget: 83 blocks vs 17 (and 3 x 3 instead of 3 x 2, so the trader has a '
                                'spot behind the counter). Spruce-post stall with a plank counter under a thin, sloped '
                                'awning of red and white carpet stripes on trapdoor boards; trader enters from the '
