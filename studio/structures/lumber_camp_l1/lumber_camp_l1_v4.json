@@ -4,14 +4,14 @@
   "version": 4,
   "size": [16,8,11],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:03:27.877Z",
     "description": "Lumber camp (sawmill), level 1 of 3: shell and fittings (what soldiers build first). A miniature sawmill (16 x 11): a short open mill shed (dark oak frame on cobblestone feet, oak roof with dark oak eaves and trim) with the saw bench in the middle, a sash-saw frame whose belt drives the blade on the carriage line; the grindstone (workstation). L1 the shed, the saw and plank stacks; L2 a waterwheel on the end and the log yard; L3 a crane over the logs, a drying rack, a sign and saplings.",
     "changes": "About a third smaller (16 x 11, a shorter and lower hall) and each level now adds its own big piece: L1 the shed and saw, L2 the waterwheel and log yard, L3 the crane, drying rack and sign.",
     "parent": 3,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T04:11:21.280Z",
     "tags": [
       "revise1",
       "tier1",
