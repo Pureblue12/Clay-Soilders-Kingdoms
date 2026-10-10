@@ -1,0 +1,65 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "lumber_camp_l3",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:22:59.988Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 64,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: moss_carpet, stonecutter, oak_sapling."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 312,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3942307692307692,
+          "types": 24,
+          "dominant": {
+            "name": "spruce_slab",
+            "share": 0.28205128205128205
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Lumber camp level 3: almost the same as level 2 with a sapling and leaves added.",
+        "problems": [
+          "Carlton asked for \"a saw mill style instead of this puny thing\": it is still a small lean-to shed that is hard to read. Make the saw the centrepiece: a long open mill hall with the saw bench in the middle, a log yard of stacked logs on one side and a plank stack on the other.",
+          "The roof is a single slope of one plank colour, flush with the walls: a proper gable or a lean-to with dark eaves and one block of overhang.",
+          "Everything is the same brown: add a cobblestone base under the posts and a dark frame against lighter infill.",
+          "Level 3 only adds a sapling and leaves over level 2: give it its own feature (a log cart, a second saw, a covered log store)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

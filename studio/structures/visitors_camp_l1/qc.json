@@ -1,0 +1,53 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "visitors_camp_l1",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:23:00.569Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 61,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 132,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.45454545454545453,
+          "types": 20,
+          "dominant": {
+            "name": "green_wool",
+            "share": 0.18181818181818182
+          },
+          "height": 4,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Visitors' camp level 1: tents round a fire ring with crates and carts; no longer sunk, but the wool tents are bright lumps and nothing grows.",
+        "problems": [
+          "The bright blue and cyan wool tents clash with the timber-and-stone style: use white, brown or green wool with spruce poles, or striped (two colours) canvas.",
+          "The tents are solid stepped wool lumps: give them an open front with a fence pole and a bedroll or carpet inside.",
+          "Level 3 barely differs from level 2 (a few flowers): give it its own feature (a market stall with an awning, a horse post with a cart, a washing line)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}
