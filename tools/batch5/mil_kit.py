@@ -64,7 +64,6 @@ def cone(s, x0, z0, x1, z1, y, stairs='spruce_stairs', body='spruce_planks', eav
         yy += 2
     cx, cz = (x0 + x1) // 2, (z0 + z1) // 2
     P(s, cx, yy, cz, body)
-    P(s, cx, yy + 1, cz, stairs, facing='north', half='bottom', shape='straight', waterlogged='false')
     return yy + 1
 
 
