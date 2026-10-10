@@ -58,8 +58,9 @@ const CONNECTS = (n: string) => n.endsWith('_fence') || n.endsWith('_pane') || n
 export function categoryOf(s: StructureFile): Category {
   const tags = s.meta.tags ?? [];
   const n = s.name;
+  // wall and palisade pieces (their gates too) are modules; a gate tag alone means a gatehouse
+  if (tags.includes('module') || /^(wall|palisade)/.test(n)) return 'module';
   if (tags.includes('landmark') || tags.includes('keep') || tags.includes('gate') || /^keep/.test(n)) return 'landmark';
-  if (tags.includes('module') || /^(wall|palisade)/.test(n) && !/gate/.test(n)) return 'module';
   if (/^(bench|signpost|notice_board|hitching_post|flower_bed|fire_pit)/.test(n)) return 'prop';
   return 'common';
 }
