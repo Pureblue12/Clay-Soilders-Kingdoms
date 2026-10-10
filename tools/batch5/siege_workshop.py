@@ -1,88 +1,116 @@
 """Siege workshop (tier 6, docs/STRUCTURES.md "Siege workshop"): a big open-sided timber shed in the outer zone where
-engineers build siege engines; a catapult stands half-built in the middle (its arm is the signature).
+engineers build siege engines; a catapult stands half-built in its open front, half out in the yard (the signature).
 
-Layout (x 0..12, z 0..12; front z = 0, the open gable end the engines roll out of):
-  - The shed: oak log posts on cobblestone pads at x 2 / x 8 and z 1, 4, 8, 11, knee braces under dark oak top plates,
-    a spruce stair gable roof (dark oak eaves and ridge, slab cap) with one block of overhang, 9 tall. Open on the
-    front and the left side; the back gable end is closed with spruce planks between the posts.
-  - A tool store lean-to on the right (x 9..11, z 3..9): spruce plank walls under a slab roof, open to the shed.
-  - Floor: trodden earth and gravel (terrain flexible), a timber deck under the engine.
-  - Inside (L1): the catapult's chassis on its deck (two log rails, cross beams, trapdoor wheels), the crafting table
-    (workstation) at the back with the tool chest, barrels of pitch and nails, a log pile and a plank stack, a
-    sawhorse; log piles outside under the left eaves.
-Level 2 (the engine takes shape): the catapult's A-frame, axle and throwing arm with its cup (the signature), a
-counterweight, banners on the front gable, a tool rack in the store, a timber crane over the deck.
-Level 3 (the war shop): a battering ram hanging in its frame under the left eaves, lanterns on chains from the tie
-beams, a pile of stone shot, a cart, flowers at the posts, banner patterns (decoration step).
+Layout (x 0..14, z 0..12; front z = 0, the open gable end the engines roll out of):
+  - The shed (x 4..10, z 3..11): oak log posts on stone brick plinths at x 4 / x 10 and z 3, 7, 11, knee braces under
+    dark oak top plates, a spruce stair gable roof (dark oak eaves and ridge, slab cap) with one block of overhang,
+    9 tall. The front gable is open below a raised tie beam (y 5) with braces, plaster and a king post above it; the
+    back wall is stone with a plaster gable in a dark oak frame. Open on both long sides.
+  - The tool store (west, x 0..3, z 4..10): a catslide lean-to carrying the main roof's slope down to a low stone
+    wall, stone end walls, open to the shed.
+  - The yard in front (z 0..2): a cobble and gravel apron the engine stands on; log piles under the east eaves; a bush
+    and flowers on the grass.
+  - Inside (L1): the catapult's chassis on the apron and deck (rails, cross beams, trapdoor wheels) with its A-frame,
+    stop bar and axle; the crafting table (workstation) at the back with the tool chest, barrels, shelves, a sawhorse.
+Level 2 (the engine takes shape): the throwing arm and its cup on the catapult, held by a hoist chain from the tie beam;
+banners on the front posts, shelves and a grindstone in the store.
+Level 3 (the war shop): a long battering ram hanging in its frame on the east side, lanterns under the middle tie
+beam and in the store, a pile of stone shot, barrels, more flowers, an axe over the bench (decoration step).
 """
 from make_batch1_structures import Structure
 from batch3.ws_kit import P, A, STAIR, TOP, SLAB, SLAB_TOP, OPEN, SHELF, HANG, STAND, connect, noise, gable_roof
+from batch5.mil_kit import masonry
 
-W, D, H = 13, 13, 9
-X0, X1, Z0, Z1 = 2, 8, 1, 11
-POSTS_Z = (1, 4, 8, 11)
-MID = 5
+W, D, H = 15, 13, 9
+X0, X1, Z0, Z1 = 4, 10, 3, 11
+POSTS_Z = (3, 7, 11)
+MID = 7
+LOG_Y = dict(axis='y')
 
 
 def siege_workshop():
     s = Structure('siege_workshop', (W, H, D), palette='oak_a2')
     s.at(1, 'shell')
-    # floor: trodden earth and gravel, a timber deck under the engine
+    # floor: trodden earth and gravel, a plank deck under the engine's back half, a cobble apron in front
     for x in range(X0, X1 + 1):
         for z in range(Z0, Z1 + 1):
-            if 3 <= x <= 7 and 3 <= z <= 9:
-                P(s, x, 0, z, 'spruce_planks' if x in (3, 7) or z in (3, 9) else 'oak_planks')
-            elif not (x in (X0, X1) and z in POSTS_Z):
+            if x in (X0, X1) and z in POSTS_Z:
+                continue
+            if 5 <= x <= 9 and z <= 6:
+                P(s, x, 0, z, 'spruce_planks' if x in (5, 9) or z == 6 else 'oak_planks')
+            else:
                 n = noise(x, 0, z, 12)
-                P(s, x, 0, z, 'gravel' if n < 0.3 else 'coarse_dirt' if n < 0.75 else 'dirt')
-    # posts on pads, top plates, knee braces
+                P(s, x, 0, z, 'gravel' if n < 0.4 else 'coarse_dirt' if n < 0.75 else 'cobblestone')
+    for x in range(5, 10):
+        for z in range(0, Z0):
+            P(s, x, 0, z, 'gravel' if noise(x, 0, z, 5) < 0.35 else 'cobblestone')
+    # posts on stone plinths, top plates, knee braces
     for x in (X0, X1):
         for z in POSTS_Z:
-            P(s, x, 0, z, 'cobblestone')
-            for y in (1, 2, 3):
-                P(s, x, y, z, 'oak_log', axis='y')
+            P(s, x, 0, z, 'cobblestone'); P(s, x, 1, z, 'stone_bricks')
+            P(s, x, 2, z, 'oak_log', **LOG_Y); P(s, x, 3, z, 'oak_log', **LOG_Y)
         for z in range(Z0, Z1 + 1):
             P(s, x, 4, z, 'dark_oak_log', axis='z')
         for z in POSTS_Z:
             for dz, f in ((-1, 'south'), (1, 'north')):
                 if Z0 <= z + dz <= Z1 and (z + dz) not in POSTS_Z:
                     P(s, x, 3, z + dz, 'oak_stairs', facing=f, **TOP)
-    for z in (Z0, Z1):                                               # tie beams across the gable ends
-        for x in range(X0 + 1, X1):
-            P(s, x, 4, z, 'dark_oak_log', axis='x')
-    for x in range(X0 + 1, X1):                                      # back wall between the corner posts
+    # the front: a tie beam raised to y 5 with braces, plaster and a king post above it (the engine's doorway)
+    for x in range(X0 + 1, X1):
+        P(s, x, 5, Z0, 'dark_oak_log', axis='x')
+    P(s, X0 + 1, 4, Z0, 'dark_oak_stairs', facing='west', **TOP)
+    P(s, X1 - 1, 4, Z0, 'dark_oak_stairs', facing='east', **TOP)
+    P(s, MID - 1, 6, Z0, 'white_terracotta'); P(s, MID + 1, 6, Z0, 'white_terracotta')
+    P(s, MID, 6, Z0, 'dark_oak_log', **LOG_Y)
+    # a tie beam across the middle bay (lanterns hang from it at L3)
+    for x in range(X0 + 1, X1):
+        P(s, x, 4, 7, 'dark_oak_log', axis='x')
+    # the back wall: stone up to the plates, a dark oak tie beam, a plaster gable with a king post
+    for x in range(X0 + 1, X1):
         for y in (1, 2, 3):
-            P(s, x, y, Z1, 'spruce_planks')
-    P(s, MID, 2, Z1, 'oak_log', axis='y'); P(s, MID, 1, Z1, 'oak_log', axis='y'); P(s, MID, 3, Z1, 'oak_log', axis='y')
-    gable_roof(s, X0, X1, Z0, Z1, 3, front=1, back=1, gable='spruce_planks', corbels=False, gable_at=(Z1,))
-    s.remove(MID, 5, Z1)                                             # a window in the back gable
-    # the tool store lean-to on the right: x 9..11, z 3..9
-    for z in range(3, 10):
-        if (X1 + 1, 0, z) not in s.blocks:
-            P(s, X1 + 1, 0, z, 'coarse_dirt')
-        P(s, X1 + 2, 0, z, 'coarse_dirt')
-        P(s, 11, 0, z, 'cobblestone')
-        for y in (1, 2):
-            P(s, 11, y, z, 'oak_log' if z in (3, 9) else 'spruce_planks', **({'axis': 'y'} if z in (3, 9) else {}))
-    for x in (X1 + 1, X1 + 2):
-        P(s, x, 0, 9, 'cobblestone')
-        for y in (1, 2):
-            P(s, x, y, 9, 'spruce_planks')
-    for x in range(X1 + 1, W):
-        for z in range(2, 11):
-            P(s, x, 3, z, 'spruce_slab', **SLAB)
-    s.remove(11, 2, 6)                                               # a window in the store
+            P(s, x, y, Z1, masonry(x, y, Z1, 9))
+        P(s, x, 4, Z1, 'dark_oak_log', axis='x')
+    s.remove(MID, 2, Z1)
+    P(s, MID, 5, Z1, 'dark_oak_log', **LOG_Y); P(s, MID, 6, Z1, 'dark_oak_log', **LOG_Y)
+    P(s, MID, 1, Z1 + 1, 'spruce_stairs', facing='north', **TOP)     # a window in the back wall: sill and shutters
+    for x in (MID - 1, MID + 1):
+        P(s, x, 2, Z1 + 1, 'spruce_trapdoor', facing='south', **OPEN)
+    gable_roof(s, X0, X1, Z0, Z1, 3, front=1, back=1, gable='white_terracotta', corbels=False, gable_at=(Z1,))
+    # the tool store: a catslide lean-to on the west (x 0..3, z 4..10)
+    for z in range(4, 11):
+        P(s, 1, 0, z, 'cobblestone'); P(s, 1, 1, z, masonry(1, 2, z, 4))
+        if z not in (4, 10):
+            for x in (2, 3):
+                P(s, x, 0, z, 'spruce_planks')
+    for z in (4, 10):
+        for x, top in ((2, 2), (3, 3)):
+            P(s, x, 0, z, 'cobblestone')
+            for y in range(1, top + 1):
+                P(s, x, y, z, masonry(x, y, z, 4))
+    for z in range(Z0, Z1 + 1):
+        P(s, 2, 3, z, 'spruce_stairs', facing='east', **STAIR)
+        P(s, 1, 2, z, 'spruce_stairs', facing='east', **STAIR)
+        P(s, 0, 1, z, 'dark_oak_stairs', facing='east', **STAIR)
 
     # ------------------------------------------------------------------ L1 fittings
     s.at(1, 'fittings')
-    P(s, 11, 2, 6, 'glass_pane')
-    # the catapult's chassis: two log rails, cross beams, trapdoor wheels
-    for z in range(4, 9):
-        P(s, 4, 1, z, 'stripped_oak_log', axis='z'); P(s, 6, 1, z, 'stripped_oak_log', axis='z')
-    for z in (4, 8):
-        P(s, MID, 1, z, 'stripped_oak_log', axis='x')
-    for z in (5, 7):
-        P(s, 3, 1, z, 'spruce_trapdoor', facing='west', **OPEN); P(s, 7, 1, z, 'spruce_trapdoor', facing='east', **OPEN)
+    # the catapult in the open front, half out on the apron: dark rails, cross beams, trapdoor wheels
+    for z in range(0, 7):
+        P(s, MID - 1, 1, z, 'dark_oak_log', axis='z'); P(s, MID + 1, 1, z, 'dark_oak_log', axis='z')
+    for z in (0, 6):
+        P(s, MID, 1, z, 'spruce_slab', **SLAB)
+    for z in (1, 5):
+        P(s, MID - 2, 1, z, 'spruce_trapdoor', facing='west', **OPEN)
+        P(s, MID + 2, 1, z, 'spruce_trapdoor', facing='east', **OPEN)
+    # its A-frame out in the yard: two fence uprights braced fore and aft, the stop bar across the top; the axle inside
+    for x in (MID - 1, MID + 1):
+        P(s, x, 2, 2, 'spruce_fence'); P(s, x, 3, 2, 'spruce_fence')
+        P(s, x, 2, 1, 'spruce_stairs', facing='south', **STAIR)
+        P(s, x, 2, 3, 'spruce_stairs', facing='north', **STAIR)
+    for x in range(MID - 1, MID + 2):
+        P(s, x, 4, 2, 'dark_oak_log', axis='x')
+        P(s, x, 2, 5, 'stripped_spruce_log', axis='x')
+    P(s, MID, 2, Z1, 'glass_pane')
     # the workbench at the back: crafting table (workstation), tool chest, barrels, shelves
     P(s, MID, 1, 10, 'crafting_table')
     P(s, MID - 1, 1, 10, 'chest', facing='north', type='single', waterlogged='false')
@@ -90,69 +118,81 @@ def siege_workshop():
     P(s, MID + 2, 1, 10, 'barrel', facing='up', open='false')
     for x in (MID - 1, MID + 1):
         P(s, x, 3, 10, 'spruce_trapdoor', facing='north', **SHELF)
-    # a log pile and a plank stack inside on the left, a sawhorse
-    for z in (9, 10):
-        P(s, 3, 1, z, 'oak_log', axis='z')
-    P(s, 3, 2, 10, 'oak_log', axis='z')
-    P(s, 3, 1, 2, 'oak_planks'); P(s, 3, 2, 2, 'oak_slab', **SLAB)
-    # log piles outside under the left eaves
-    for z in (2, 3, 5, 6, 7):
-        P(s, 1, 0, z, 'oak_log', axis='z')
-    for z in (2, 3, 6):
-        P(s, 1, 1, z, 'oak_log', axis='z')
-    # light: torches on the posts
-    for (x, z, f) in ((X0, 4, 'east'), (X1, 4, 'west'), (X0, 8, 'east'), (X1, 8, 'west')):
-        P(s, x + (1 if f == 'east' else -1), 2, z, 'wall_torch', facing=f)
-    # the store: chests and barrels along its wall
-    for z, b in ((4, 'barrel'), (5, 'chest'), (7, 'chest'), (8, 'barrel')):
-        P(s, 10, 1, z, b, **({'facing': 'up', 'open': 'false'} if b == 'barrel' else
-                             {'facing': 'west', 'type': 'single', 'waterlogged': 'false'}))
-    P(s, 6, 2, 2, 'oak_slab', **SLAB); P(s, 7, 2, 2, 'oak_slab', **SLAB)   # the sawhorse's top
+    # a sawhorse with a plank on it, a plank stack
+    P(s, 5, 1, 8, 'oak_fence'); P(s, 5, 1, 9, 'oak_fence')
+    P(s, 5, 2, 8, 'oak_slab', **SLAB); P(s, 5, 2, 9, 'oak_slab', **SLAB)
+    P(s, 9, 1, 8, 'oak_planks'); P(s, 9, 1, 9, 'oak_planks'); P(s, 9, 2, 9, 'oak_slab', **SLAB)
+    # light: torches on the middle posts
+    P(s, X0 + 1, 2, 7, 'wall_torch', facing='east'); P(s, X1 - 1, 2, 7, 'wall_torch', facing='west')
+    # the store: chests and barrels along its low wall
+    for z, b in ((5, 'barrel'), (6, 'chest'), (8, 'chest'), (9, 'barrel')):
+        P(s, 2, 1, z, b, **({'facing': 'up', 'open': 'false'} if b == 'barrel' else
+                            {'facing': 'east', 'type': 'single', 'waterlogged': 'false'}))
+    # log piles under the east eaves
+    for z in (4, 5, 6, 8, 9):
+        P(s, 11, 0, z, 'oak_log', axis='z')
+    for z in (4, 5, 8):
+        P(s, 11, 1, z, 'oak_log', axis='z')
+    # life: a bush at the front corners, flowers on the grass
+    P(s, 3, 0, 1, 'oak_leaves', persistent='true', distance='1', waterlogged='false')
+    P(s, 11, 0, 1, 'oak_leaves', persistent='true', distance='1', waterlogged='false')
+    for (x, z) in ((3, 2), (4, 1), (11, 2), (10, 1)):
+        P(s, x, 0, z, 'poppy')
 
     # ------------------------------------------------------------------ L2: the engine takes shape
     s.at(2, 'flourish2')
-    for x in (4, 6):                                                 # the A-frame on the rails
-        P(s, x, 2, 6, 'oak_fence'); P(s, x, 3, 6, 'oak_fence')
-    P(s, MID, 3, 6, 'stripped_oak_log', axis='x')                   # the axle
-    P(s, MID, 4, 7, 'spruce_stairs', facing='south', **STAIR)        # the throwing arm, rising to the back
-    P(s, MID, 5, 8, 'spruce_stairs', facing='south', **STAIR)
-    P(s, MID, 5, 9, 'spruce_slab', **SLAB_TOP)
-    P(s, MID, 6, 9, 'cauldron')                                      # the cup
-    P(s, MID, 3, 5, 'spruce_slab', **SLAB_TOP)                       # the short arm and its counterweight
-    P(s, MID, 2, 5, 'barrel', facing='up', open='false')
-    for x in (X0, X1):                                               # banners on the front corner posts
-        P(s, x, 3, 0, 'red_wall_banner', facing='north')
-        s.decorate(x, 3, 0, 'banner_pattern', banner='red_wall_banner', note='the engineers\' colours')
-    for z in (4, 5, 7, 8):                                           # tools on the store wall
-        P(s, 10, 2, z, 'spruce_trapdoor', facing='west', **SHELF)
-    P(s, 10, 1, 6, 'barrel', facing='up', open='false')
-    P(s, 9, 1, 3, 'oak_planks'); P(s, 9, 2, 3, 'oak_planks'); P(s, 9, 1, 8, 'hay_block', axis='y')
+    for (y, z) in ((3, 4), (4, 3), (5, 2)):                          # the throwing arm, up from the axle over the bar
+        P(s, MID, y, z, 'spruce_stairs', facing='north', **STAIR)
+    P(s, MID, 5, 1, 'cauldron')                                      # the cup, out under the sky
+    P(s, MID, 2, 6, 'barrel', facing='north', open='false')          # the winch drum's rope barrel at the tail
+    P(s, MID - 1, 2, 6, 'spruce_fence'); P(s, MID + 1, 2, 6, 'spruce_fence')
+    for x in (X0, X1):                                               # banners on the front posts
+        P(s, x, 3, Z0 - 1, 'red_wall_banner', facing='north')
+        s.decorate(x, 3, Z0 - 1, 'banner_pattern', banner='red_wall_banner', note='the engineers\' colours')
+    P(s, 3, 2, 5, 'spruce_trapdoor', facing='south', **SHELF)       # shelves on the store's end walls
+    P(s, 3, 2, 9, 'spruce_trapdoor', facing='north', **SHELF)
+    P(s, 3, 1, 7, 'grindstone', face='floor', facing='east')         # the store's grindstone
+    P(s, 6, 1, 9, 'barrel', facing='up', open='false')              # pitch and nails by the bench
+    P(s, 8, 1, 9, 'oak_planks'); P(s, 8, 2, 9, 'oak_slab', **SLAB)
 
     # ------------------------------------------------------------------ L3: the war shop
     s.at(3, 'flourish3')
-    # a battering ram hanging in its frame under the left eaves (x 0..1, z 8..11)
-    for z in (8, 11):
-        P(s, 0, 0, z, 'spruce_fence'); P(s, 0, 1, z, 'spruce_fence'); P(s, 0, 2, z, 'spruce_fence')
-    for z in range(8, 12):
-        P(s, 0, 3, z, 'spruce_log', axis='z')
-    for z in (9, 10):
-        P(s, 0, 2, z, 'chain', axis='y')
-        P(s, 0, 1, z, 'dark_oak_log', axis='z')
-    for x in (MID,):
-        P(s, x, 3, Z0, 'chain', axis='y'); P(s, x, 2, Z0, 'lantern', **HANG)
-    P(s, 9, 2, 6, 'lantern', **HANG)                                 # in the store, from its roof
-    # stone shot by the engine, a cart at the front, flowers at the posts
-    for (x, z) in ((4, 2), (5, 2)):
-        P(s, x, 1, z, 'cobblestone_slab', **SLAB)                    # stone shot waiting by the deck
-    P(s, 12, 0, 1, 'barrel', facing='up', open='false')
-    P(s, 12, 0, 2, 'barrel', facing='up', open='false'); P(s, 12, 1, 1, 'barrel', facing='up', open='false')
+    # a long battering ram hanging in its frame on the east side (x 12..14, z 3..11)
+    for z in (5, 9):                                                 # two trestles: fence legs, a log bar, a chain
+        for x in (12, 14):
+            P(s, x, 0, z, 'cobblestone'); P(s, x, 1, z, 'spruce_fence'); P(s, x, 2, z, 'spruce_fence')
+        for x in (12, 13, 14):
+            P(s, x, 3, z, 'spruce_log', axis='x')
+        P(s, 13, 2, z, 'chain', axis='y')
+    for z in range(6, 9):                                            # a ridge beam ties the trestles
+        P(s, 13, 3, z, 'spruce_fence')
+    for z in range(4, 12):
+        P(s, 13, 1, z, 'dark_oak_log', axis='z')
+    P(s, 13, 1, 3, 'polished_andesite')                              # the ram's capped head
+    # lanterns under the middle tie beam and in the store
+    P(s, MID - 1, 3, 7, 'lantern', **HANG); P(s, MID + 1, 3, 7, 'lantern', **HANG)
+    P(s, 2, 2, 7, 'lantern', **HANG)
+    # a pile of stone shot by the engine
+    P(s, 3, 0, 0, 'andesite'); P(s, 4, 0, 0, 'andesite'); P(s, 2, 0, 0, 'andesite'); P(s, 3, 1, 0, 'andesite_slab', type='bottom', waterlogged='false')
+    # barrels and a cart wheel by the ram, more flowers
+    P(s, 0, 0, 1, 'barrel', facing='up', open='false'); P(s, 1, 0, 1, 'barrel', facing='up', open='false')
+    P(s, 0, 1, 1, 'barrel', facing='up', open='false')
+    for (x, z, f) in ((12, 2, 'dandelion'), (14, 2, 'poppy'), (12, 12, 'dandelion'), (0, 2, 'poppy'), (0, 12, 'dandelion')):
+        P(s, x, 0, z, f)
+    P(s, 14, 0, 12, 'oak_leaves', persistent='true', distance='1', waterlogged='false')
     s.decorate(MID, 2, 10, 'item_frame', item='minecraft:iron_axe', facing='north', note='an axe over the workbench')
     return connect(s)
 
 
 STRUCTURES = [dict(path='siege_workshop', name='Siege workshop', tier=6, zone='outer', role='military',
                    group='siege_workshop', terrain='flexible', door=None, make=siege_workshop,
-                   changes='First version.',
-                   description='Over budget: 460 blocks vs 300. Open-sided timber shed where engineers build siege engines: a half-built catapult '
-                               'on its deck (L2 raises its A-frame and throwing arm), crafting table, log piles, a '
-                               'tool store lean-to; L3 a battering ram in its frame and lanterns on chains.')]
+                   changes='Quality-check notes: the catapult now stands in the open front, half out on a cobble apron, '
+                           'with its A-frame, stop bar and axle already at L1 and the arm, cup and hoist chain at L2; '
+                           'the front tie beam is raised to y 5 (braced) and the front gable closed above it with '
+                           'plaster and a king post; the back gable is stone and plaster with no hole; the floating '
+                           'sawhorse slabs now sit on fence legs; the tool store is a sloped catslide lean-to with '
+                           'stone walls; stone plinths under the posts, a bush and flowers on the grass at L1; L3 has '
+                           'a long ram (8 logs and a capped head) hanging on chains in its own frame on the east side.',
+                   description='Over budget: about 480 blocks vs 300. Open-sided timber shed where engineers build '
+                               'siege engines: a catapult in the open front (L2 adds its arm and cup), crafting table, '
+                               'log piles, a catslide tool store; L3 a long battering ram in its frame, lanterns.')]
