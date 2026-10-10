@@ -161,6 +161,86 @@
           "back"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T09:06:17.013Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 98,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: iron_bars, red_wall_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "211 blocks, over the module budget of 60 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "13 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          },
+          {
+            "level": "warn",
+            "check": "door",
+            "message": "No door on the front half (z = 0 is the front, toward the easel)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 211,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.26540284360189575,
+          "types": 17,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.45023696682464454
+          },
+          "height": 13,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "artefacts": "Last round's problems are fixed. The front torch is gone, and the iron bars at (3,6,1) now sit in an empty window. The platform lantern moved off the stair exit to (4,8,2), so (2,8,3) is clear. The hanging lantern (3,6,0) has the gallery planks (3,7,0) above it. The banners (2,5,0)/(4,5,0)/(3,4,6) and the door torches (2,2,6)/(4,2,6) all hang on solid stone.",
+          "levels": "The timber hoarding on the front (dark oak brackets at y6, a planked gallery at y7 z0 with a spruce fence railing) plus the red banners stand out clearly in the front and iso views. This is a real new feature over L1, not just props.",
+          "roof": "The top is crenellated and the timber hoarding rail adds a second material. The roof-overhang warning is the usual one for wall pieces.",
+          "life": "Lanterns and banners, but no plants yet."
+        },
+        "summary": "L2 adds a timber hoarding on the front (gallery on dark oak brackets with a fence railing), red banners on both faces, iron bars in the slits, torches flanking the door and a lantern over the slit.",
+        "problems": [
+          "Minor: the hoarding is only 1 deep, with the planks (1..5,7,0) and the fence railing on the same row (1..5,8,0), so there is no room to stand on it. It reads fine as a hoarding from outside. If it is meant to be used, push the railing out to z-1 or open the crenels behind it.",
+          "Minor: the iron bars in the side windows (1,2,3) and (5,2,3) look straight into the solid wall body at (0,2,3)/(6,2,3), so they are blind. Fill them or move them to z4.",
+          "Joining matches stone_wall_straight_l2 v2 block for block (profile at x0/x6, walk floor y4, headroom y5-6). Fixed.",
+          "Reachability: fine. 72 of 73 standing places are reached; only (2,5,4) beside the stair is not."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

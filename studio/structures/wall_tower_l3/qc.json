@@ -158,6 +158,81 @@
           "front"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T09:06:17.587Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 100,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: vine, iron_bars, red_wall_banner, moss_carpet, dark_oak_fence, red_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "294 blocks, over the module budget of 60 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "13 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          },
+          {
+            "level": "warn",
+            "check": "door",
+            "message": "No door on the front half (z = 0 is the front, toward the easel)."
+          }
+        ],
+        "stats": {
+          "blocks": 294,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.3877551020408163,
+          "types": 23,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.3231292517006803
+          },
+          "height": 13,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "roof": "Fixed. A dark oak plank wall plate at y9 (x1..5 ring) sits on the merlons and crenels, and a dark oak stair eave reaches 1 block out all round (x0/x6, z0/z6). The spruce courses at y10 (5x5 ring, dark oak plank deck inside) and y11 (3x3 ring) each rest on solid blocks below. The pole (3,11,3) stands on planks (3,10,3) and carries a red banner at y12. It is 45 degrees and two-tone, so it is no longer one flat colour.",
+          "artefacts": "The torch fix carried through: (4,6,4) is on (4,6,5). The vines at (2,1,6),(4,1,6),(2,3,6),(4,3,6) attach to the back wall, the hanging lantern (3,6,0) has (3,7,0) above it, and nothing floats.",
+          "life": "Vines and hay by the door, moss carpet on the platform, lanterns and banners.",
+          "levels": "The cone roof with its flag changes the silhouette completely, so this is clearly different from L2."
+        },
+        "summary": "L3 roofs the archer platform with a two-tone cone (dark oak wall plate and eave, spruce courses, banner on a pole) and adds vines, hay, barrels and moss on top of L2's hoarding and banners.",
+        "problems": [
+          "Minor: the wall plate at y9 closes the crenels on top, leaving 1-high slots at y8 such as (4,8,5) and (5,8,4). That is acceptable for a roofed tower, but the archers' openings are now very low.",
+          "Minor (carried from L1/L2): the blind barred side windows at (1,2,3)/(5,2,3) face the wall body.",
+          "Joining matches stone_wall_straight_l3 v2 block for block. The eave at x0/x6 y9 overhangs the neighbouring wall's walk well above head height (y5-6), so nothing collides. Fixed.",
+          "Reachability: fine. The walk, stair, walk room and platform are reached. The places not reached are the cone slopes (y10-12, 48 places), the merlon tops (0,7,1)/(6,7,1), the low crenels (4,8,5)/(5,8,4) and (2,5,4)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

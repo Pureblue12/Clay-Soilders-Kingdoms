@@ -154,6 +154,83 @@
           "front"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T09:06:16.452Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 83,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "185 blocks, over the module budget of 60 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "13 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          },
+          {
+            "level": "warn",
+            "check": "door",
+            "message": "No door on the front half (z = 0 is the front, toward the easel)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 185,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.1891891891891892,
+          "types": 11,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.5135135135135135
+          },
+          "height": 13,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "artefacts": "Last round's floating torch is gone: (3,6,2) is now air and the walk-room torch hangs on solid stone, (4,6,4) facing north on (4,6,5). The door torch (3,3,4) hangs on (3,3,5), which is also solid.",
+          "roof": "This is a wall piece, so 'roof' means its top: a corbel ring of upside-down stairs at y7, merlons at y8 and an archer platform. The roof-overhang warning is the usual one for wall pieces.",
+          "shape": "Mostly a box, but the end columns carry the wall profile and the front stands 1 block forward of the wall face, which breaks it up a little.",
+          "life": "No plants or outside lights at L1. That fits a bare first stage.",
+          "detail": "Sound shell with cobble patches, a slit and corbels, but few small blocks outside. That is fine for L1 because L2 and L3 add the dressing.",
+          "levels": "L1 is the bare stone shell, L2 adds the timber hoarding and L3 adds the cone roof, so all three are easy to tell apart."
+        },
+        "summary": "L1 is the bare stone tower shell. The wall walk runs through it at y4/y5, there is a stone stair up to the walk room and the archer platform, and the end columns (x0, x6) now carry stone_wall_straight's profile.",
+        "problems": [
+          "Joining checked block by block against stone_wall_straight v2 (L1-L3): tower x0 against wall x0, and tower x6 against wall x4, with box z1..3 matching wall z0..2. Footing stair, body, corbel at y4, parapet at y5, half merlon (cobblestone slab) at x0 and full merlon at x6 all match. Walk floor y4, standing height y5 and headroom y5-6 are identical in both lanes, so there is no gap and no step. Only the cobble/stone-brick/mossy mix differs, which is cosmetic. Fixed.",
+          "The z offset (place the box 1 block forward of the wall line) is only written in the description. It is not a meta field, so a layout tool won't know it unless it reads the text. Consider a structured placement offset.",
+          "Minor: the side windows (1,2,3) and (5,2,3) now face the solid wall body at (0,2,3)/(6,2,3), so they are blind niches. Fill them with stone bricks or move them to z4 (x1/x5 at z4 face open air).",
+          "Reachability: fine. 77 of 79 standing places are reached; the only two missed are the blind niche (1,2,3) and (2,5,4) beside the stair. The walk, stair, walk room and platform are all reached."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }
