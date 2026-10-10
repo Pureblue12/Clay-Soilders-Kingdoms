@@ -61,6 +61,78 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:51:26.325Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 90,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: grass_block, azure_bluet, stone, rail, stonecutter, polished_andesite, dandelion, cornflower, smooth_stone, andesite, stone_brick_slab, red_wall_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "644 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 644,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.2593167701863354,
+          "types": 43,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.15527950310559005
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 1,
+          "levels": 2
+        },
+        "notes": {
+          "roof": "Main shed fine (the automatic overhang warning is a false alarm); the new stone-cutting shed has a nearly flat plank roof with no pitch.",
+          "scale": "The treadwheel reads as a square oak-plank box with an axle from the side, not a wheel (Carlton: round things round).",
+          "levels": "Twice the site: terraced back bench with a stair path, treadwheel crane with a tall mast and long boom, cart track, stone-cutting shed, dressed stone stacks. Clearly different from L2, as Carlton asked."
+        },
+        "summary": "The big works: doubles the site with a terraced pit, a treadwheel crane with a long spruce boom, a cart track to the road, an open stone-cutting shed and stacks of dressed stone.",
+        "problems": [
+          "Treadwheel (around x14..17 y2..6 z9..13) is a square oak frame: make it read round, e.g. stairs/slabs on the corners of the rim or a stepped octagonal outline with the axle in the middle.",
+          "Stone-cutting shed roof is flat planks/slabs: give it a low pitched or lean-to slope with stairs so it matches the main shed.",
+          "Flush piece (meta.groundLayer 0): noted only.",
+          "Reachability: every terrace, the cutting shed and the track are reached; unreached are the booms (x9..17 y8 z11, x4..9 y7 z10), the treadwheel top and roof slopes, which is right."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "front",
+          "right"
+        ]
+      }
     }
   }
 }

@@ -61,6 +61,71 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:51:25.294Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 90,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: stone, stonecutter, dandelion, cornflower, andesite, stone_brick_slab."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 303,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.28052805280528054,
+          "types": 34,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.2376237623762376
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Crane, rock benches, stonecutter, tool rack and rubble are the new job, but the pit itself is still mostly flat cobble/gravel with low walls.",
+          "roof": "Automatic 'no overhang' warning is a false alarm: the shed roof overhangs on all sides in the renders.",
+          "levels": "The log crane with spruce jib, chain and hanging stone plus the walled pit benches make it clearly different from L1."
+        },
+        "summary": "Working quarry: adds the small log crane with a spruce jib and hanging stone, the first rock benches and walls, a stonecutter, a tool rack and rubble.",
+        "problems": [
+          "Flush piece (meta.groundLayer 0): noted only.",
+          "Pit floor is still large flat cobble/gravel areas: break them with a few more cut blocks, slabs, a mined face with andesite/gravel, or tools so it doesn't read bare.",
+          "Reachability: all work areas reached; unreached are roof slopes, the crane jib top (x4..9 y7 z10) and tops of rock benches, which is right."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "front"
+        ]
+      }
     }
   }
 }
