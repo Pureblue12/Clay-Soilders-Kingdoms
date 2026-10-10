@@ -152,7 +152,7 @@ def guard_quarters():
 STRUCTURES = [dict(path='guard_quarters', name="King's guard quarters", tier=6, zone='keep', role='military',
                    group='guard_quarters', terrain='ground_level', door='front', make=guard_quarters,
                    changes='First version.',
-                   description='Compact stone barracks house for 8 guards (the brief\'s 7 x 9): mess room with long '
+                   description='Over budget: 461 blocks vs 350 (first build 415 vs 290). Compact stone barracks house for 8 guards (the brief\'s 7 x 9): mess room with long '
                                'table, hearth and weapon rack below, 8 beds in two rows under the roof by a stair, a '
                                'guard post under the jettied plaster gable; L2 banners, lanterns, shutters; L3 a drill '
                                'corner with a straw dummy and target.')]
