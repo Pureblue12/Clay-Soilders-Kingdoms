@@ -114,8 +114,8 @@ def stone_wall_stepped(length=5):
     put_id(s, 4, WALK + 2, 2, 'lantern', **LANTERN)
     s.at(3, 'flourish3')
     for y in (1, 2, 3):
-        vine(s, 1, y, 0, 'south')
-    vine(s, 4, 1, 0, 'south')
+        vine(s, 0, y, 0, 'south')
+    vine(s, 4, 1, 0, 'south'); vine(s, 4, 2, 0, 'south')
     put_id(s, 1, WALK, 1, 'moss_carpet'); put_id(s, 3, WALK + 1, 1, 'moss_carpet')
     put_id(s, 3, WALK + 2, 0, 'stone_brick_slab', **SLAB)
     put_id(s, 1, WALK + 1, 0, 'mossy_cobblestone_wall')
@@ -261,16 +261,16 @@ def stone_wall_stairs(length=5):
 
 _COMMON = dict(tier=3, zone='wall', role='defense', group='stone_wall', terrain='stepped', door=None)
 STRUCTURES = [
-    dict(path='stone_wall_straight', name='Stone wall, straight', make=stone_wall_straight, **_COMMON,
-         description='5 long stone wall on a battered cobblestone footing, crenellated parapet on corbels, 2-wide walk '
+    dict(path='stone_wall_straight', name='Stone wall, straight', changes='First version.', make=stone_wall_straight, **_COMMON,
+         description='Over budget: 83 blocks vs 60. 5 long stone wall on a battered cobblestone footing, crenellated parapet on corbels, 2-wide walk '
                      '(stand at 5). Outside is the front (z 0).'),
-    dict(path='stone_wall_stepped', name='Stone wall, stepped', make=stone_wall_stepped, **_COMMON,
-         description='Like the straight module, but the walk rises 1 block (stand at 5, then 6) up a stair in the middle.'),
-    dict(path='stone_wall_corner', name='Stone wall, corner', make=stone_wall_corner, **_COMMON,
+    dict(path='stone_wall_stepped', name='Stone wall, stepped', changes='First version.', make=stone_wall_stepped, **_COMMON,
+         description='Over budget: 91 blocks vs 60. Like the straight module, but the walk rises 1 block (stand at 5, then 6) up a stair in the middle.'),
+    dict(path='stone_wall_corner', name='Stone wall, corner', changes='First version.', make=stone_wall_corner, **_COMMON,
          description='Outside corner joining two straight modules, with a corner pier.'),
-    dict(path='stone_wall_gate', name='Stone wall gate', make=stone_wall_gate,
+    dict(path='stone_wall_gate', name='Stone wall gate', changes='First version.', make=stone_wall_gate,
          **{**_COMMON, 'role': 'gate', 'group': 'gate'},
-         description='Two small towers and an arched opening 3 wide (no fence gate); the walk crosses over it.'),
-    dict(path='stone_wall_stairs', name='Stone wall, walk stairs', make=stone_wall_stairs, **_COMMON,
-         description='A straight module with a stone stair flight on the town side up to the walk.'),
+         description='Over budget: 179 blocks vs 60. Its wall line is z 0..2 like the others, the towers also reach z 3. Two small towers and an arched opening 3 wide (no fence gate); the walk crosses over it.'),
+    dict(path='stone_wall_stairs', name='Stone wall, walk stairs', changes='First version.', make=stone_wall_stairs, **_COMMON,
+         description='Over budget: 100 blocks vs 60. A straight module with a stone stair flight on the town side up to the walk.'),
 ]

@@ -34,12 +34,15 @@ def ring_stairs(s, x0, z0, x1, z1, y, block, half='bottom'):
 def wall_tower():
     s = Structure('wall_tower', (5, 13, 6), palette='oak_a2')
     s.at(1, 'shell')
-    for y in range(0, ROOF + 1):                                     # the tower walls, 5 x 5
+    for y in range(0, ROOF):                                         # the tower walls, 5 x 5
         for x in range(5):
             for z in range(5):
                 if x in (0, 4) or z in (0, 4):
                     corner = x in (0, 4) and z in (0, 4)
-                    put_id(s, x, y, z, 'stone_bricks' if corner and y > 1 else masonry(x, y, z, seed=7))
+                    band = y == WALK - 1 and not corner        # a cobblestone band at the walk floor
+                    put_id(s, x, y, z, 'cobblestone' if band else
+                           'stone_bricks' if corner and y > 1 else masonry(x, y, z, seed=7))
+    ring_stairs(s, 0, 0, 4, 4, ROOF, 'stone_brick_stairs', half='top')   # top course: a shadow line under the merlons
     s.fill(1, 0, 1, 3, 0, 3, 'cobblestone')                          # ground floor
     for x, z in ((1, 1), (2, 1), (3, 1), (1, 3), (2, 3), (3, 3)):    # walk-room floor (holes over the stairwell)
         put_id(s, x, WALK - 1, z, 'stone_bricks')
@@ -79,13 +82,13 @@ def wall_tower():
     put_id(s, 2, ROOF + 1, 2, 'lantern', **LANTERN)                  # a lantern in the middle of the platform
     put_id(s, 3, ROOF + 1, 3, 'barrel', facing='up', open='false')
     s.at(3, 'flourish3')
-    # the cone roof on the merlons (archers shoot between them): dark eaves, two steep spruce courses, a finial
-    ring_stairs(s, 0, 0, 4, 4, ROOF + 2, 'dark_oak_stairs')
+    # a pointed roof on the merlons (archers shoot between them): spruce courses at 45 degrees, a flag on top
+    ring_stairs(s, 0, 0, 4, 4, ROOF + 2, 'spruce_stairs')
     ring_stairs(s, 1, 1, 3, 3, ROOF + 3, 'spruce_stairs')
-    ring_stairs(s, 1, 1, 3, 3, ROOF + 4, 'spruce_stairs')
     put_id(s, 2, ROOF + 3, 2, 'spruce_planks')
-    put_id(s, 2, ROOF + 4, 2, 'spruce_planks')
-    put_id(s, 2, ROOF + 5, 2, 'spruce_fence')
+    put_id(s, 2, ROOF + 4, 2, 'dark_oak_fence')
+    put_id(s, 2, ROOF + 5, 2, 'red_banner', rotation='8')
+    s.decorate(2, ROOF + 5, 2, 'banner_pattern', banner='red_banner', note='kingdom colours')
     for x in (1, 3):                                                 # moss on the platform
         put_id(s, x, ROOF + 1, 1, 'moss_carpet')
     for y in (1, 2, 3):                                              # ivy beside the door
@@ -97,7 +100,7 @@ def wall_tower():
 
 
 STRUCTURES = [dict(path='wall_tower', name='Wall tower', tier=3, zone='wall', role='defense', group='wall_tower',
-                   terrain='ground_level', door='back', make=wall_tower, max_height=13,
-                   description='Needs scaffolding: 13 tall (level 3 cone roof; levels 1 and 2 are 9 tall). Square stone '
+                   terrain='ground_level', door='back', changes='First version.', make=wall_tower, max_height=13,
+                   description='Needs scaffolding: 13 tall (level 3 cone roof; levels 1 and 2 are 9 tall). Over budget: 205 blocks vs 160. Square stone '
                                'tower the wall walk runs through (stand at 5); a door on the town side and a stone stair '
                                'up to the walk room and the archer platform on the roof.')]

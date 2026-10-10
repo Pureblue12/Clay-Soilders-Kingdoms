@@ -1,0 +1,116 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "stone_wall_gate_l3",
+  "version": 1,
+  "size": [7,9,5],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T04:42:38.650Z",
+    "description": "Stone wall gate, level 3 of 3: L2 plus flourish 3. Over budget: 179 blocks vs 60. Its wall line is z 0..2 like the others, the towers also reach z 3. Two small towers and an arched opening 3 wide (no fence gate); the walk crosses over it. Not yet builder-tested: iron_bars, moss_carpet, red_banner, red_wall_banner, stone_brick_wall, vine. Decoration step adds: banner_pattern.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch3",
+      "tier3",
+      "wall",
+      "gate"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:cobblestone",
+    "B": "minecraft:hay_block[axis=y]",
+    "C": "minecraft:iron_bars[east=false,north=false,south=false,waterlogged=false,west=true]",
+    "D": "minecraft:iron_bars[east=false,north=false,south=true,waterlogged=false,west=true]",
+    "E": "minecraft:iron_bars[east=true,north=false,south=false,waterlogged=false,west=false]",
+    "F": "minecraft:iron_bars[east=true,north=false,south=true,waterlogged=false,west=false]",
+    "G": "minecraft:iron_bars[east=true,north=true,south=false,waterlogged=false,west=true]",
+    "H": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "I": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "J": "minecraft:moss_carpet",
+    "K": "minecraft:mossy_cobblestone",
+    "L": "minecraft:red_banner[rotation=8]",
+    "M": "minecraft:red_wall_banner[facing=north]",
+    "N": "minecraft:red_wall_banner[facing=south]",
+    "O": "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "P": "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "Q": "minecraft:stone_brick_stairs[facing=east,half=top,shape=straight,waterlogged=false]",
+    "R": "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "S": "minecraft:stone_brick_stairs[facing=west,half=top,shape=straight,waterlogged=false]",
+    "T": "minecraft:stone_brick_wall[east=none,north=low,south=none,up=true,waterlogged=false,west=none]",
+    "U": "minecraft:stone_bricks",
+    "V": "minecraft:vine[east=false,north=true,south=false,up=false,west=false]",
+    "W": "minecraft:wall_torch[facing=east]",
+    "X": "minecraft:wall_torch[facing=north]",
+    "Y": "minecraft:wall_torch[facing=west]"
+  },
+  "layers": [
+    [
+      "AA...KK",
+      "AA...AA",
+      "AK...KK",
+      "KA...KK",
+      "TB...#T"
+    ],
+    [
+      "AAW.YUU",
+      "AA...UU",
+      "UA...AU",
+      "AA...AU",
+      "HV...VH"
+    ],
+    [
+      "FU...UD",
+      "UUSIQUU",
+      "UUSIQAU",
+      "UA...UU",
+      ".V...V."
+    ],
+    [
+      "UU.M.UU",
+      "UUUUUUU",
+      "UUUUUUU",
+      "UUGGGAU",
+      ".N...N."
+    ],
+    [
+      "UURRRAU",
+      "AUUAUUA",
+      "UUUAUUU",
+      "UUGGGUU",
+      "......."
+    ],
+    [
+      "UUUUUUU",
+      "..J.J..",
+      ".......",
+      "UU...UU",
+      "......."
+    ],
+    [
+      "EU.U.UC",
+      ".......",
+      ".X...X.",
+      "UU...UU",
+      "......."
+    ],
+    [
+      "UU.L.UU",
+      "UU...UU",
+      "UU...UU",
+      "UU...UU",
+      "......."
+    ],
+    [
+      "OP...OP",
+      "OP...OP",
+      "OP...OP",
+      "OP...OP",
+      "......."
+    ]
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "stone_wall_stairs_l2",
+  "version": 1,
+  "size": [5,7,5],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T04:42:39.529Z",
+    "description": "Stone wall, walk stairs, level 2 of 3: L1 plus flourish 2. Over budget: 100 blocks vs 60. A straight module with a stone stair flight on the town side up to the walk. Not yet builder-tested: iron_bars, red_wall_banner, stone_brick_wall. Decoration step adds: banner_pattern.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch3",
+      "tier3",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:cobblestone",
+    "A": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "B": "minecraft:iron_bars[east=true,north=false,south=true,waterlogged=false,west=true]",
+    "C": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "D": "minecraft:mossy_cobblestone",
+    "E": "minecraft:red_wall_banner[facing=north]",
+    "F": "minecraft:red_wall_banner[facing=south]",
+    "G": "minecraft:stone_brick_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "H": "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "I": "minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none]",
+    "J": "minecraft:stone_bricks",
+    "K": "minecraft:wall_torch[facing=south]"
+  },
+  "layers": [
+    [
+      "AAAAA",
+      "###DD",
+      "#D###",
+      "G#DD#",
+      "I...."
+    ],
+    [
+      ".....",
+      "#####",
+      "J##J#",
+      ".GJJJ",
+      "C...."
+    ],
+    [
+      ".....",
+      "JBJBJ",
+      "JJJJJ",
+      "..GJJ",
+      "....."
+    ],
+    [
+      "..E..",
+      "JJJJJ",
+      "JJJJJ",
+      "...G#",
+      "....F"
+    ],
+    [
+      "HHHHH",
+      "#JJ#J",
+      "JJJ#J",
+      "....G",
+      "....."
+    ],
+    [
+      "JJJJJ",
+      ".....",
+      ".....",
+      ".....",
+      "....."
+    ],
+    [
+      "J.J.J",
+      "K....",
+      ".....",
+      ".....",
+      "....."
+    ]
+  ]
+}
