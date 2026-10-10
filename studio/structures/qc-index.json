@@ -245,25 +245,25 @@
     "checkedAt": "2026-10-10T03:34:31.823Z"
   },
   "fire_pit_l1": {
-    "version": 5,
+    "version": 6,
     "verdict": "pass",
     "score": 80,
     "round": 1,
-    "checkedAt": "2026-10-10T05:31:01.659Z"
+    "checkedAt": "2026-10-10T08:48:16.710Z"
   },
   "fire_pit_l2": {
+    "version": 6,
+    "verdict": "pass",
+    "score": 90,
+    "round": 1,
+    "checkedAt": "2026-10-10T08:48:18.244Z"
+  },
+  "fire_pit_l3": {
     "version": 5,
     "verdict": "pass",
     "score": 90,
     "round": 1,
-    "checkedAt": "2026-10-10T05:31:02.214Z"
-  },
-  "fire_pit_l3": {
-    "version": 4,
-    "verdict": "pass",
-    "score": 90,
-    "round": 1,
-    "checkedAt": "2026-10-10T05:31:02.747Z"
+    "checkedAt": "2026-10-10T08:48:20.541Z"
   },
   "flower_bed_l1": {
     "version": 2,

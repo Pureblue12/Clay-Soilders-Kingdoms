@@ -240,6 +240,72 @@
           "top"
         ]
       }
+    },
+    "5": {
+      "version": 5,
+      "checkedAt": "2026-10-10T08:48:20.541Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 90,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: short_grass, cauldron, dandelion, fern, dark_oak_fence, dark_oak_slab."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "137 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 137,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.7737226277372263,
+          "types": 25,
+          "dominant": {
+            "name": "oak_leaves",
+            "share": 0.35036496350364965
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "purpose": "Carlton's shade-tree note is met: the hand-built oak with a ragged three-clump crown overhangs the left and back benches, the fire ring stays open to the sky",
+          "artefacts": "Two of last round's wood problems are fixed: oak_wood at (x2,y3,z7), (x2,y4,z7) and (x2,y5,z7) makes the trunk continuous and joins the back branch. But the three floating leaves are still there (only corner contact): (x2,y4,z2), and the pair (x5,y4,z6)+(x6,y4,z6)",
+          "roof": "Fire pit itself needs no roof; the firewood shelter roof is still flat dark oak slabs",
+          "levels": "Clearly different from L2: the young oak has grown into a big shade tree with lanterns hanging from its branches, plus the dark oak firewood shelter",
+          "life": "Lanterns hang correctly: (x1,y4,z4) under oak_wood, (x4,y4,z7) under oak_wood, (x7,y1,z7) under a slab"
+        },
+        "summary": "Level 3 grows the young oak into a big custom shade tree whose branches reach over the left and back benches, with lanterns hanging from them, and adds a dark oak firewood shelter. v5 fixes the trunk and branch joins but not the floating leaves.",
+        "problems": [
+          "Still floating (corner contact only, not fixed from last round): oak_leaves at (x2,y4,z2); attach it by a face (e.g. a leaf at (x2,y5,z2) or (x1,y4,z2)) or remove it",
+          "Still floating: the leaf pair (x5,y4,z6) and (x6,y4,z6) touches the crown only diagonally; add a leaf at (x5,y5,z6) or (x5,y4,z7), or remove the pair",
+          "Not fixed (small): the firewood shelter roof (dark oak slabs, x6..8, y2, z7..8) is flat; one row of stairs would make it read as a lean-to",
+          "Reachability: all ground places reached; the only unreached places are on top of leaves, which is fine"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }
