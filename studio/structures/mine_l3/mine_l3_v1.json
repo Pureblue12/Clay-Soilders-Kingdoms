@@ -4,14 +4,14 @@
   "version": 1,
   "size": [11,7,11],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:40:45.873Z",
     "description": "Mine (stage 1), level 3 of 3: L2 plus flourish 3. Over budget: 280 blocks vs 170 (first build 222 vs 70: the spoil mound is most of it). Stage 1 only (headframe and winch house are later stages). Builders never dig: a timber-framed adit, 3 wide and 2 high, runs 6 blocks into a built rocky spoil mound; miners dig down from its end. L2 adds the rail track, a hood over the entrance, lanterns, a tool rack, an ore bin and gravel spoil heaps; L3 sign, banners, lantern posts, moss, flowers and bushes on the mound. Not yet builder-tested: cornflower, dandelion, fern, moss_carpet, rail, red_wall_banner. Decoration step adds: item, item_frame, minecart, sign_text.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:06:20.062Z",
     "tags": [
       "batch3",
       "tier3",
