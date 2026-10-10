@@ -4,14 +4,14 @@
   "version": 4,
   "size": [9,9,11],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "add some flowers around it to l2 and l3 and your golden",
     "author": "claude",
     "created": "2026-10-10T04:06:29.338Z",
     "description": "Pens and stables, level 3 of 3: L2 plus flourish 3. Fenced paddock with a gateway (open gap; fence gates are decoration) before an open-sided log stable with two stalls and a feed trough; L2 adds the hay loft, tack corner and water trough, L3 a farrier corner, weathervane, banners and flower boxes. Wants level ground. Not yet builder-tested: anvil, cauldron, dandelion, lightning_rod, moss_carpet, red_wall_banner, spruce_fence_gate. Decoration step adds: armor_stand, potted_plant, water_cauldron.",
     "changes": "The stable's dirt floor now sits in the ground, level with the grass (nothing else changed: the paddock and everything around it stand on the grass as before).",
     "parent": 3,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T04:12:25.123Z",
     "tags": [
       "batch2",
       "tier2",
