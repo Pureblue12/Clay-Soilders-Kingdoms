@@ -4,14 +4,14 @@
   "version": 1,
   "size": [3,9,3],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:58:38.725Z",
     "description": "Banner pole, level 2 of 3: L1 plus flourish 2. Over budget: 25 blocks vs 4 (a stone plinth and a crossbar so it is not a bare pole). Tall spruce pole on a stone brick plinth with a crossbar and two hanging lanterns (L1); L2 the kingdom's red banner on top and two white banners on the crossbar; L3 two red banners on the back, a plaque, banner patterns (decoration step). Not yet builder-tested: red_banner, white_wall_banner.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:06:55.923Z",
     "tags": [
       "batch4",
       "tier4",
