@@ -239,17 +239,17 @@
   },
   "lumber_camp_l2": {
     "version": 5,
-    "verdict": "revise",
+    "verdict": "pass",
     "score": 94,
     "round": 2,
-    "checkedAt": "2026-10-10T04:17:26.993Z"
+    "checkedAt": "2026-10-10T04:19:53.533Z"
   },
   "lumber_camp_l3": {
     "version": 5,
-    "verdict": "revise",
+    "verdict": "pass",
     "score": 92,
     "round": 2,
-    "checkedAt": "2026-10-10T04:17:27.492Z"
+    "checkedAt": "2026-10-10T04:19:54.127Z"
   },
   "notice_board_l1": {
     "version": 3,

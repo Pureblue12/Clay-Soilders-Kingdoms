@@ -83,3 +83,10 @@ test('reports: saved next to the versions, rounds follow the parent, the index k
   store.saveNewVersion(s);
   assert.equal(roundFor(store, 'hut', 3), 1); // the parent passed: a fresh start
 });
+
+test('decoration-step blocks (meta.decorationBlocks or listed by the reviewer) are not a buildability fail', () => {
+  const s = make('pond', { '#': 'stone', w: 'water[level=0]' }, [['#w#']]);
+  assert.ok(checks(s).includes('fail:buildability'));
+  assert.ok(!checks({ ...s, meta: { ...s.meta, decorationBlocks: [[1, 0, 0, 'water']] } }).includes('fail:buildability'));
+  assert.ok(!autoCheck(s, [[1, 0, 0]]).issues.some((i) => i.level === 'fail' && i.check === 'buildability'));
+});

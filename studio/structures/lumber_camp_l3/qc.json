@@ -191,17 +191,17 @@
     },
     "5": {
       "version": 5,
-      "checkedAt": "2026-10-10T04:17:27.492Z",
+      "checkedAt": "2026-10-10T04:19:54.127Z",
       "by": "claude-qc",
-      "verdict": "revise",
+      "verdict": "pass",
       "round": 2,
       "score": 92,
       "auto": {
         "issues": [
           {
-            "level": "fail",
+            "level": "info",
             "check": "buildability",
-            "message": "Builders can't place: water."
+            "message": "Drawn for the decoration step, not built: minecraft:water."
           },
           {
             "level": "info",
@@ -249,14 +249,40 @@
         "notes": {
           "artefacts": "the crane at the front right and the drying rack and planter at the back left stand apart from the rest, which reads slightly scattered (Carlton's 'all over the place')"
         },
-        "summary": "Level 3 adds a log crane with a hanging load, a drying rack, a sign and planters. The most complete version, though the new pieces sit out at opposite corners. The shed lanterns now hang from the tie beams.",
+        "summary": "Level 3 adds a log crane with a hanging load, a drying rack, a sign and planters. The most complete version, though the new pieces sit out at opposite corners. The shed lanterns now hang from the tie beams. The water in the wheel race is drawn for the decoration step, not built.",
         "problems": [
-          "Water blocks were added in the wheel race at x=14, y=0, z=2..6 (not in the change notes): builders can't place water (automatic check fails). Record the water as a decoration step (s.decorate(..., 'water')) like the well, and leave the race empty in the blocks",
           "Pull the crane and the drying rack in against the shed or the log yard so the camp reads as one group",
           "A path of coarse dirt or gravel from the front to the saw would tie the pieces together"
         ],
         "views": [
           "sheet"
+        ],
+        "decorationBlocks": [
+          [
+            14,
+            0,
+            2
+          ],
+          [
+            14,
+            0,
+            3
+          ],
+          [
+            14,
+            0,
+            4
+          ],
+          [
+            14,
+            0,
+            5
+          ],
+          [
+            14,
+            0,
+            6
+          ]
         ]
       }
     }

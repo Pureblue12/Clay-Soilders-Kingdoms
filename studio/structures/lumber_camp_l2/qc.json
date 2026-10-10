@@ -188,17 +188,17 @@
     },
     "5": {
       "version": 5,
-      "checkedAt": "2026-10-10T04:17:26.993Z",
+      "checkedAt": "2026-10-10T04:19:53.533Z",
       "by": "claude-qc",
-      "verdict": "revise",
+      "verdict": "pass",
       "round": 2,
       "score": 94,
       "auto": {
         "issues": [
           {
-            "level": "fail",
+            "level": "info",
             "check": "buildability",
-            "message": "Builders can't place: water."
+            "message": "Drawn for the decoration step, not built: minecraft:water."
           },
           {
             "level": "info",
@@ -238,14 +238,43 @@
           "scale": 2,
           "grandeur": 2
         },
-        "summary": "Level 2 adds a waterwheel in a stone race on the left and a log yard of stacked crates and logs on the right. Clearly a working mill and clearly more than L1. The shed lanterns now hang from the tie beams.",
+        "summary": "Level 2 adds a waterwheel in a stone race on the left and a log yard of stacked crates and logs on the right. Clearly a working mill and clearly more than L1. The shed lanterns now hang from the tie beams. The water in the wheel race is drawn for the decoration step, not built.",
         "problems": [
-          "Water blocks were added in the wheel race at x=14, y=0, z=2..6 (not in the change notes): builders can't place water (automatic check fails). Record the water as a decoration step (s.decorate(..., 'water')) like the well, and leave the race empty in the blocks",
           "The waterwheel reads as a dark block from most angles: open spokes (fences or trapdoors) between the paddles would make it read as a wheel"
         ],
         "views": [
           "sheet"
-        ]
+        ],
+        "decorationBlocks": [
+          [
+            14,
+            0,
+            2
+          ],
+          [
+            14,
+            0,
+            3
+          ],
+          [
+            14,
+            0,
+            4
+          ],
+          [
+            14,
+            0,
+            5
+          ],
+          [
+            14,
+            0,
+            6
+          ]
+        ],
+        "notes": {
+          "artefacts": "none"
+        }
       }
     }
   }

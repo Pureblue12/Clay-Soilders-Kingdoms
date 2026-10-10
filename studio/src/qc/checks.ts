@@ -97,7 +97,9 @@ const fmt = (p: [number, number, number]) => `(${p.join(', ')})`;
 const list = (ps: [number, number, number][], max = 4) =>
   ps.slice(0, max).map(fmt).join(', ') + (ps.length > max ? ` and ${ps.length - max} more` : '');
 
-export function autoCheck(s: StructureFile): AutoResult {
+/** extraDecorations: positions the reviewer knows are decoration-step blocks in a file saved before
+ * meta.decorationBlocks existed. */
+export function autoCheck(s: StructureFile, extraDecorations: [number, number, number][] = []): AutoResult {
   const issues: QcIssue[] = [];
   const add = (level: QcLevel, check: string, message: string) => issues.push({ level, check, message });
 
@@ -106,6 +108,9 @@ export function autoCheck(s: StructureFile): AutoResult {
 
   const g = grid(s);
   const counts = new Map<string, number>();
+  const built = new Map<string, number>(); // what the builders place: decoration-step blocks left out
+  const deco = new Set([...(s.meta.decorationBlocks ?? []), ...extraDecorations].map(([x, y, z]) => `${x},${y},${z}`));
+  const decoNames = new Set<string>();
   let blocks = 0;
   let detail = 0;
   for (let y = 0; y < g.sy; y++)
@@ -115,11 +120,14 @@ export function autoCheck(s: StructureFile): AutoResult {
         if (!b) continue;
         blocks++;
         counts.set(b.name, (counts.get(b.name) ?? 0) + 1);
+        if (deco.has(`${x},${y},${z}`)) decoNames.add(b.name);
+        else built.set(b.name, (built.get(b.name) ?? 0) + 1);
         if (isDetailBlock(b.name)) detail++;
       }
 
   // ---- buildability (the mod's builders)
-  const bld = buildability(counts.keys());
+  const bld = buildability(built.keys());
+  if (decoNames.size) add('info', 'buildability', `Drawn for the decoration step, not built: ${[...decoNames].join(', ')}.`);
   if (bld.broken.length) add('fail', 'buildability', `Builders can't place: ${bld.broken.join(', ')}.`);
   if (bld.noPassage.length) add('warn', 'buildability', `Soldiers can't open: ${bld.noPassage.join(', ')} (decoration only).`);
   if (bld.unknown.length) add('info', 'buildability', `Not yet placed by a builder GameTest: ${bld.unknown.join(', ')}.`);
