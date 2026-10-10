@@ -4,14 +4,14 @@
   "version": 3,
   "size": [11,9,10],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T05:35:06.906Z",
     "description": "Stonemason, level 3 of 3: L2 plus flourish 3. Over budget: 331 blocks vs 125 (first build 277 vs 90; the walled, paved yard is most of it). Flush piece (ground_layer 0: the mod does not support it yet). Walled stone yard round an open stone brick shed under a spruce gable roof: grindstone, cutting bench, rough and dressed stone, a banker; L2 adds the stonecutter and a stand of half-cut blocks along the front wall; L3 a statue in progress with its scaffold, banner, flowers. Not yet builder-tested: andesite_wall, chiseled_stone_bricks, cornflower, dandelion, fern, gray_wall_banner, moss_carpet, polished_andesite, polished_andesite_stairs, smooth_stone_slab, stone_brick_slab, stone_brick_wall, stone_button, stonecutter. Decoration step adds: banner_pattern, item, potted_plant, sign_text.",
     "changes": "Quality check round 2: the lanterns under the front gable hang from the corbels (z 2) again; every L3 flower pot gets its own plant from the decoration step (tulip, cornflower, daisy, fern). Round 1: half-timbered gables (dark oak tie beam and king post) and a 2-row front overhang over the bay; L1 yard filled (water and tool barrels, a sledge, a half-dressed block, lanterns on the gate piers from L1); L2 adds shutters and stone corbels on the long side walls; L3 flowers no longer stand on gravel (flower pots on the stacks and wall instead).",
     "parent": 2,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T08:58:24.747Z",
     "tags": [
       "batch4",
       "tier4",
