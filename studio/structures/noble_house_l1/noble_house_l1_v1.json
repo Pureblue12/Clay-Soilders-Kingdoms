@@ -4,14 +4,14 @@
   "version": 1,
   "size": [16,9,13],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T08:50:26.379Z",
     "description": "Noble house, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 553 blocks vs 420 (first build 442 vs 310). A stone and timber manor, its long side to the street: stone ground course, white plaster in a dark oak frame, a spruce gable roof with half-timbered gables, a front cross gable and a back dormer, a brick chimney on the left gable. Inside: hall, study, dining table and kitchen below, three bedrooms under the roof (staircase, side door to the garden). L2 a balcony on stone brick porch columns, lanterns, shutters, flower boxes, banners, bookshelves and a lectern, garden flowers and lantern posts; L3 a walled garden with lantern pillars and an obelisk, bushes, pots, candles, carpets, vines.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T09:12:50.566Z",
     "tags": [
       "batch5",
       "tier5",
