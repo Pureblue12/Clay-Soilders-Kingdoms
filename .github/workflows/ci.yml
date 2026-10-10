@@ -1,0 +1,46 @@
+# Builds the mod and runs the required GameTest suite (tools/suite.sh) on every push to main and every pull request.
+# Same check as the local rule "tools/suite.sh && git commit", so a red run here means the suite or the build failed.
+name: Build and test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# A newer push to the same branch cancels the older run.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  suite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      # Caches Gradle, Minecraft and NeoForge downloads between runs.
+      - uses: gradle/actions/setup-gradle@v4
+
+      # Generated resources (recipes, models, lang, loot, data maps) are not in the repo; make them first.
+      - name: Generate resources
+        run: ./gradlew :neoforge:runData
+
+      - name: GameTests and build
+        run: tools/suite.sh
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: suite-logs
+          path: |
+            build/suite.log
+            build/build.log
+          if-no-files-found: ignore
