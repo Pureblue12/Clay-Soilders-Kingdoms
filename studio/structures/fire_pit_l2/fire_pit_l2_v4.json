@@ -1,0 +1,85 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "fire_pit_l2",
+  "version": 4,
+  "size": [9,3,9],
+  "meta": {
+    "status": "rejected",
+    "notes": "see l3",
+    "author": "claude",
+    "created": "2026-10-10T04:03:26.722Z",
+    "description": "Fire pit, level 2 of 3: L1 plus flourish 2. An unlit campfire (it never burns) in a stone ring with a cooking spit, three spruce log benches, a woodpile, a chopping stump, supplies, poppies and a lantern post; level 2 a pot, a second lantern, cushions and plants; level 3 a dark oak firewood shelter with a hanging lantern. Not yet builder-tested: cauldron, dandelion, fern, short_grass. Decoration step adds: potted_plant.",
+    "changes": "The lone stepping stones are now one joined stone path in from the front with a wider mouth, and leaf bushes and more poppies grow round the edge.",
+    "parent": 3,
+    "reviewedAt": "2026-10-10T04:14:56.315Z",
+    "tags": [
+      "revise1",
+      "tier1",
+      "inner",
+      "decoration"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:brown_carpet",
+    "B": "minecraft:campfire[facing=north,lit=false,signal_fire=false,waterlogged=false]",
+    "C": "minecraft:cauldron",
+    "D": "minecraft:chain[axis=x,waterlogged=false]",
+    "E": "minecraft:chain[axis=y,waterlogged=false]",
+    "F": "minecraft:chest[facing=east,type=single,waterlogged=false]",
+    "G": "minecraft:cobblestone",
+    "H": "minecraft:cobblestone_slab[type=bottom,waterlogged=false]",
+    "I": "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "J": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "K": "minecraft:dandelion",
+    "L": "minecraft:fern",
+    "M": "minecraft:flower_pot",
+    "N": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "O": "minecraft:mossy_cobblestone",
+    "P": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "Q": "minecraft:oak_log[axis=y]",
+    "R": "minecraft:oak_pressure_plate",
+    "S": "minecraft:poppy",
+    "T": "minecraft:red_carpet",
+    "U": "minecraft:short_grass",
+    "V": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "W": "minecraft:spruce_log[axis=x]",
+    "X": "minecraft:spruce_log[axis=z]"
+  },
+  "layers": [
+    [
+      "...HHHS.V",
+      "UQS.H....",
+      "#...H.C.K",
+      "FX.HIH.XP",
+      ".X.OBG.XL",
+      "UX.HJH.XS",
+      "S........",
+      "P..WWW..X",
+      "V.UP...XX"
+    ],
+    [
+      "........V",
+      ".R.......",
+      "M........",
+      ".A.....A.",
+      ".T.VEV.T.",
+      ".A.....A.",
+      ".........",
+      "....T....",
+      "V.......X"
+    ],
+    [
+      "........N",
+      ".........",
+      ".........",
+      ".........",
+      "...VDV...",
+      ".........",
+      ".........",
+      ".........",
+      "N........"
+    ]
+  ]
+}

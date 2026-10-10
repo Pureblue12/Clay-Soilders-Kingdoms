@@ -207,6 +207,72 @@
           "sheet"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T03:41:21.304Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 97,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "buildability",
+            "message": "Soldiers can't open: oak_fence_gate (decoration only)."
+          },
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: fletching_table, moss_carpet, dandelion."
+          },
+          {
+            "level": "warn",
+            "check": "door",
+            "message": "No door on the front half (z = 0 is the front, toward the easel)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 210,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.49047619047619045,
+          "types": 37,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.14285714285714285
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Clearly the richest level: lamp posts at the front corners, a lumber rack and goods on display in the yard, flower boxes and an awning at the back. Easy to tell apart from L2, which was Carlton's note.",
+        "problems": [
+          "Could still use a small path from the front bay to the display"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

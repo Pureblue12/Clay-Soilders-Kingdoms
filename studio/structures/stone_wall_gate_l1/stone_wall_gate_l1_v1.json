@@ -1,0 +1,101 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "stone_wall_gate_l1",
+  "version": 1,
+  "size": [7,9,5],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T04:42:37.758Z",
+    "description": "Stone wall gate, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 179 blocks vs 60. Its wall line is z 0..2 like the others, the towers also reach z 3. Two small towers and an arched opening 3 wide (no fence gate); the walk crosses over it.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch3",
+      "tier3",
+      "wall",
+      "gate"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:cobblestone",
+    "A": "minecraft:mossy_cobblestone",
+    "B": "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "C": "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "D": "minecraft:stone_brick_stairs[facing=east,half=top,shape=straight,waterlogged=false]",
+    "E": "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "F": "minecraft:stone_brick_stairs[facing=west,half=top,shape=straight,waterlogged=false]",
+    "G": "minecraft:stone_bricks",
+    "H": "minecraft:wall_torch[facing=east]",
+    "I": "minecraft:wall_torch[facing=north]",
+    "J": "minecraft:wall_torch[facing=west]"
+  },
+  "layers": [
+    [
+      "##...AA",
+      "##...##",
+      "#A...AA",
+      "A#...AA",
+      "......."
+    ],
+    [
+      "##H.JGG",
+      "##...GG",
+      "G#...#G",
+      "##...#G",
+      "......."
+    ],
+    [
+      ".G...G.",
+      "GGF.DGG",
+      "GGF.D#G",
+      "G#...GG",
+      "......."
+    ],
+    [
+      "GG...GG",
+      "GGGGGGG",
+      "GGGGGGG",
+      "GG...#G",
+      "......."
+    ],
+    [
+      "GGEEE#G",
+      "#GG#GG#",
+      "GGG#GGG",
+      "GG...GG",
+      "......."
+    ],
+    [
+      "GGGGGGG",
+      ".......",
+      ".......",
+      "GG...GG",
+      "......."
+    ],
+    [
+      ".G.G.G.",
+      ".......",
+      ".I...I.",
+      "GG...GG",
+      "......."
+    ],
+    [
+      "GG...GG",
+      "GG...GG",
+      "GG...GG",
+      "GG...GG",
+      "......."
+    ],
+    [
+      "BC...BC",
+      "BC...BC",
+      "BC...BC",
+      "BC...BC",
+      "......."
+    ]
+  ]
+}

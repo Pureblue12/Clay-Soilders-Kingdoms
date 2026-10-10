@@ -83,3 +83,25 @@ test('reports: saved next to the versions, rounds follow the parent, the index k
   store.saveNewVersion(s);
   assert.equal(roundFor(store, 'hut', 3), 1); // the parent passed: a fresh start
 });
+
+test('decoration-step blocks (meta.decorationBlocks or listed by the reviewer) are not a buildability fail', () => {
+  const s = make('pond', { '#': 'stone', w: 'water[level=0]' }, [['#w#']]);
+  assert.ok(checks(s).includes('fail:buildability'));
+  assert.ok(!checks({ ...s, meta: { ...s.meta, decorationBlocks: [[1, 0, 0, 'water']] } }).includes('fail:buildability'));
+  assert.ok(!autoCheck(s, [[1, 0, 0]]).issues.some((i) => i.level === 'fail' && i.check === 'buildability'));
+});
+
+test('a flower needs dirt or grass under it; layer 0 and tall plants are fine', () => {
+  const ok = make('bed', { d: 'dirt', f: 'poppy', g: 'grass_block' }, [['dg', '..'], ['ff', '..']]);
+  assert.ok(!checks(ok).includes('fail:plant-soil'));
+  const slab = make('box', { s: 'spruce_slab[type=top]', f: 'poppy' }, [['s'], ['f']]);
+  assert.ok(checks(slab).includes('fail:plant-soil'));
+  const ground = make('lawn', { f: 'poppy' }, [['f']]);
+  assert.ok(!checks(ground).includes('fail:plant-soil'));
+});
+
+test('with groundLayer 0, a flower one layer up over an empty cell stands on the grass', () => {
+  const s = make('yard', { '#': 'stone_bricks', f: 'poppy' }, [['#.'], ['.f']]);
+  assert.ok(checks(s).includes('fail:plant-soil'));
+  assert.ok(!checks({ ...s, meta: { ...s.meta, groundLayer: 0 } }).includes('fail:plant-soil'));
+});

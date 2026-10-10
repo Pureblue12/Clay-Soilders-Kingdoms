@@ -1,0 +1,117 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "farm_l1",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:21:05.766Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 58,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "15 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          }
+        ],
+        "stats": {
+          "blocks": 250,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.396,
+          "types": 19,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.264
+          },
+          "height": 15,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 1,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 0
+        },
+        "summary": "Farm level 1: a small plain farmhouse with a chimney; not yet the big detailed farmer's hut Carlton asked for.",
+        "problems": [
+          "Carlton asked for \"one single big hut that a farmer lives in, lots of detail\": the farmhouse is a small plain box at level 1. Make it bigger (two storeys or a long hall with a lean-to), with a stone base, timber frame and flower boxes from level 1.",
+          "The farm should read as a farm at level 1: a tool rack, a cart, sacks or a small kitchen garden by the door.",
+          "The roof is one oak colour and flush at the gable ends: dark eaves, a slab ridge, one block of overhang."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:34:30.687Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 72,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "475 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "15 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          }
+        ],
+        "stats": {
+          "blocks": 475,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3157894736842105,
+          "types": 28,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.1936842105263158
+          },
+          "height": 15,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Farm level 1: now a big two-storey farmhouse with a stone ground floor, a timber-framed upper floor and a chimney; the farmer's hut Carlton asked for, still plain round the base.",
+        "problems": [
+          "No plants or garden at level 1: a flower box or a small vegetable bed by the door.",
+          "The roof is one oak colour and flush at the gable ends: dark eaves, a slab ridge and a block of overhang would finish it.",
+          "475 blocks, over the common budget (on purpose; Carlton decides)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

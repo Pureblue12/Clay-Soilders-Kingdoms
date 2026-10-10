@@ -1,0 +1,121 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "cottage_l2",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:18:44.029Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 81,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: dandelion, azure_bluet."
+          },
+          {
+            "level": "warn",
+            "check": "connections",
+            "message": "1 fence/pane/wall block(s) have no north/east/south/west set although a neighbour would connect, so they show as lone posts: (5, 1, 4)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 273,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5018315018315018,
+          "types": 31,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.2454212454212454
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Cottage level 2: porch, flower boxes, lanterns and a path make it charming; the roof is still one flat oak colour.",
+        "problems": [
+          "Levels 2 and 3 look almost the same (level 3 only adds a wood pile at the back): give level 3 its own visible feature, such as a jettied upper gable, a lean-to woodshed or a garden fence with a gate (Carlton's carpenter and watchtower notes).",
+          "The roof is one oak colour and flush at the gable ends: dark oak eaves, a slab ridge and one block of overhang at the front and back.",
+          "One fence inside at (5, 1, 4) still shows as a lone post (Carlton: \"fences also still seems bugged\"); and on level 3 the fences at (1, 0, 0) and (7, 0, 0).",
+          "The pale squares in the gables read as blank patches, not windows; use glass panes with trapdoor shutters."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:27:33.389Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 92,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: dandelion, azure_bluet."
+          }
+        ],
+        "stats": {
+          "blocks": 297,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5488215488215489,
+          "types": 30,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.15151515151515152
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 1,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Cottage level 2: porch, flower boxes, a garden fence and lanterns; a charming cottage.",
+        "problems": [
+          "Wood is all browns; a white plaster panel or two would lift it."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

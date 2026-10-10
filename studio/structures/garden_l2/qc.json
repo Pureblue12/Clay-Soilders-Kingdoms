@@ -1,0 +1,180 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "garden_l2",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:42:24.429Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 58,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cauldron."
+          }
+        ],
+        "stats": {
+          "blocks": 111,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5585585585585585,
+          "types": 13,
+          "dominant": {
+            "name": "cobblestone_stairs",
+            "share": 0.2882882882882883
+          },
+          "height": 5,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 0
+        },
+        "notes": {
+          "artefacts": "two of Carlton's three notes (bigger, different flowers) are not addressed"
+        },
+        "summary": "Level 2 adds hedges round two beds, lanterns and a composter, but the beds are still all poppies and the garden is still small.",
+        "problems": [
+          "Carlton asked for different flowers: the beds are all red poppies. Mix 4 or 5 kinds (cornflower, allium, oxeye daisy, azure bluet, red and orange tulips, lilac or rose bush as tall flowers) in rows per bed",
+          "Carlton asked for it to be bigger: it is still about 9 x 9. Go to 11 x 11 or 13 x 13 with more beds or a centre feature",
+          "Add a trellis, a bench under a tree or a small pond so L2 has a centre of interest",
+          "It now stands on a one-block cobblestone plinth with a stair step, which fixes the sinking. Check that Carlton is happy with a raised plinth; a garden floor level with the grass (beds edged by logs or a low fence) would look more natural"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T04:05:56.077Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 94,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: grass_block, azalea, flowering_azalea, cornflower, orange_tulip, pink_tulip, dandelion, azure_bluet, allium, red_tulip, oxeye_daisy, lily_of_the_valley, white_tulip, birch_log, cherry_log, flowering_azalea_leaves, azalea_leaves, birch_leaves, cherry_leaves."
+          }
+        ],
+        "stats": {
+          "blocks": 329,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.547112462006079,
+          "types": 28,
+          "dominant": {
+            "name": "coarse_dirt",
+            "share": 0.22188449848024316
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "summary": "A proper cottage garden: a cherry and a birch in the corners, azalea bushes, a flowering arbor at the entrance, benches on three sides and many kinds of flowers in curved borders.",
+        "problems": [
+          "Layer 0 is now level with the grass (meta.groundLayer 0): in game the builders never dig or replace ground, so the mod side still has to support setting paths and beds into the lawn before this can be built as drawn"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T04:22:15.099Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 89,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Drawn for the decoration step, not built: minecraft:water, minecraft:lily_pad."
+          },
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: grass_block, stone_brick_slab, azalea, flowering_azalea_leaves, blue_orchid, dandelion, flowering_azalea, mossy_cobblestone_slab, pink_tulip, cornflower, orange_tulip, allium, azure_bluet, oxeye_daisy, red_tulip, white_tulip, birch_log, birch_wood, lily_of_the_valley, cherry_wood, cherry_log, azalea_leaves, cherry_leaves, birch_leaves."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "622 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 622,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.6672025723472669,
+          "types": 36,
+          "dominant": {
+            "name": "cherry_leaves",
+            "share": 0.21543408360128619
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {
+          "artefacts": "dark holes in the cherry crown",
+          "roof": "no roof, not needed"
+        },
+        "summary": "Two big shade trees (a cherry and a birch) with real trunks and wide crowns now arch over the benches and the walk, as Carlton asked, with a lily pond, an arbor and many kinds of flowers.",
+        "problems": [
+          "The cherry crown shows dark holes on its front and sides (black blotches in the front and right views): fill the gaps in the outer leaf layer so the crown reads as solid blossom",
+          "The crowns now cover about half the garden from above; keep them, but make sure the sundial and the pond stay visible from the front (they are)"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

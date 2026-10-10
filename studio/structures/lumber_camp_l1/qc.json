@@ -1,0 +1,221 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "lumber_camp_l1",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:22:58.831Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 47,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 220,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4090909090909091,
+          "types": 13,
+          "dominant": {
+            "name": "spruce_slab",
+            "share": 0.36818181818181817
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 1,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 0
+        },
+        "summary": "Lumber camp level 1: a small lean-to work shed with a lifting frame; still hard to tell it is a saw mill.",
+        "problems": [
+          "Carlton asked for \"a saw mill style instead of this puny thing\": it is still a small lean-to shed that is hard to read. Make the saw the centrepiece: a long open mill hall with the saw bench in the middle, a log yard of stacked logs on one side and a plank stack on the other.",
+          "The roof is a single slope of one plank colour, flush with the walls: a proper gable or a lean-to with dark eaves and one block of overhang.",
+          "Everything is the same brown: add a cobblestone base under the posts and a dark frame against lighter infill.",
+          "Level 3 only adds a sapling and leaves over level 2: give it its own feature (a log cart, a second saw, a covered log store)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:35:51.502Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "360 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 360,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.37777777777777777,
+          "types": 18,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.19444444444444445
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 1,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Lumber camp level 1: now a long open saw-mill hall with a dark-eaved gable roof, a saw bench, a lifting crane, a log yard and plank stacks; reads as a saw mill.",
+        "problems": [
+          "Almost everything is brown wood; a cobblestone base under the posts all round would ground it.",
+          "Level 3 adds only more stacks and saplings over level 2; a covered log store or a log cart would make it its own."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T04:12:17.028Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 219,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4520547945205479,
+          "types": 16,
+          "dominant": {
+            "name": "spruce_planks",
+            "share": 0.1735159817351598
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Smaller now (16 x 11), as Carlton asked: an open saw shed with a steep roof, the saw bench, logs on trestles and plank stacks. Reads as a saw mill.",
+        "problems": [
+          "No plants or lights at L1: a lantern on a post and a bush at a corner",
+          "The roof's open ends are bare: a gable board or bargeboard trim at each end"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "5": {
+      "version": 5,
+      "checkedAt": "2026-10-10T04:17:26.485Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 219,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4520547945205479,
+          "types": 16,
+          "dominant": {
+            "name": "spruce_planks",
+            "share": 0.1735159817351598
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Smaller now (16 x 11), as Carlton asked: an open saw shed with a steep roof, the saw bench, logs on trestles and plank stacks. Reads as a saw mill.",
+        "problems": [
+          "No plants or lights at L1: a lantern on a post and a bush at a corner",
+          "The roof's open ends are bare: a gable board or bargeboard trim at each end"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

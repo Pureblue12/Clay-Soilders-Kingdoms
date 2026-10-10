@@ -1,0 +1,53 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "hitching_post_l2",
+  "version": 3,
+  "size": [5,3,3],
+  "meta": {
+    "status": "approved",
+    "notes": "",
+    "author": "claude-qc",
+    "created": "2026-10-10T03:31:53.745Z",
+    "description": "Hitching post, level 2 of 2: L1 plus flourish 2. Two dark oak posts and a fence rail with a lantern and stacked hay; level 2 adds a trough, barrel, bush and flowers. Not yet builder-tested: cauldron, dandelion. Decoration step adds: water_cauldron.",
+    "changes": "Quality check round 3: level 1 gets a tether chain hanging from the rail and a bush",
+    "parent": 2,
+    "reviewedAt": "2026-10-10T03:40:50.953Z",
+    "tags": [
+      "batch2",
+      "tier2",
+      "inner",
+      "decoration"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:cauldron",
+    "B": "minecraft:chain[axis=y]",
+    "C": "minecraft:dandelion",
+    "D": "minecraft:dark_oak_log[axis=y]",
+    "E": "minecraft:hay_block[axis=x]",
+    "F": "minecraft:hay_block[axis=z]",
+    "G": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "H": "minecraft:oak_fence[east=true,north=false,south=false,waterlogged=false,west=true]",
+    "I": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "J": "minecraft:poppy"
+  },
+  "layers": [
+    [
+      "I..A.",
+      "D.B.D",
+      "E#JCI"
+    ],
+    [
+      ".....",
+      "DHHHD",
+      "F...."
+    ],
+    [
+      ".....",
+      "G...G",
+      "....."
+    ]
+  ]
+}

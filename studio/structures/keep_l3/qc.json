@@ -1,0 +1,194 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "keep_l3",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:25:56.552Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 86,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: vine, candle, iron_bars, red_wall_banner, cracked_stone_bricks, mossy_stone_bricks, red_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "1830 blocks, over the landmark budget of 1800 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "variety",
+            "message": "stone_bricks is 56 % of the build: break it up with a second material."
+          }
+        ],
+        "stats": {
+          "blocks": 1830,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.2284153005464481,
+          "types": 28,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.5639344262295082
+          },
+          "height": 16,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "summary": "Keep level 3: the same as level 2 with vines climbing the walls.",
+        "problems": [
+          "Level 3 only adds vines over level 2: give it its own feature, such as timber hoardings (wooden galleries) on the towers or steep dark conical roofs on two of them.",
+          "It is grey stone brick almost everywhere (56 to 58 %): a dark oak timber element (hoarding, gate canopy, roof) would tie it to the rest of the kingdom's look.",
+          "On level 1 the tower tops are open boxes; even a simple slab cap or a stair parapet would make them look finished."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T04:11:54.771Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 92,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: dark_oak_fence, anvil, blast_furnace, oxeye_daisy, cornflower, dark_oak_slab, mossy_stone_bricks, cracked_stone_bricks, candle, red_wall_banner, gold_block, red_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "3717 blocks, over the landmark budget of 1800 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 3717,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.2806026365348399,
+          "types": 43,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.3435566316922249
+          },
+          "height": 19,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {
+          "roof": "turret caps pagoda-like"
+        },
+        "summary": "A real castle: a curtain wall with four corner towers and a gatehouse round the keep and great hall, red banners along the walls, kitchen, barracks, a well and gardens inside. One symmetric plan, no longer all over the place.",
+        "problems": [
+          "The turret caps are stepped tiers with a wide flared skirt, which reads more like a pagoda than a medieval tower: make them steep cones (a stair ring with one block of overhang, then 3 or 4 rings narrowing by one each step, finished with a slab and the flagpole), so they are taller than they are wide",
+          "The courtyard buildings are hard to see from outside; a lantern or banner on the gatehouse would bring some life to the front",
+          "Our QC renders of a structure this big are washed out by fog (renderer, not the build); judged from the near parts"
+        ],
+        "views": [
+          "sheet",
+          "iso"
+        ]
+      }
+    },
+    "5": {
+      "version": 5,
+      "checkedAt": "2026-10-10T04:34:55.889Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 97,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Drawn for the decoration step, not built: minecraft:water."
+          },
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: anvil, blast_furnace, dark_oak_fence, oxeye_daisy, smithing_table, dark_oak_slab, mossy_stone_bricks, cracked_stone_bricks, target, candle, red_wall_banner, gold_block, red_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "4570 blocks, over the landmark budget of 1800 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 4570,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.26411378555798687,
+          "types": 47,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.3474835886214442
+          },
+          "height": 20,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "summary": "A full castle that makes sense for soldiers: curtain wall with a real wall walk, hollow corner towers with stairs, a gatehouse with a guard chamber, kitchen and armory by the hall, storehouse, guardroom, well and forge by the gate, a flower garden and a training yard. Steep spire roofs, symmetric and coherent.",
+        "problems": [
+          "Reachability (flood fill from the ground outside, soldiers half a block tall, jump 1, drop 3, ladders climb): every floor, room, wall walk and tower top is reached; only the roof cones, the tie beams under the hall roof and the tops of log piles and the low forecourt wall are not, which is right",
+          "More life on the outside would help: a few vines or banners on the corner towers"
+        ],
+        "views": [
+          "sheet",
+          "iso"
+        ]
+      }
+    }
+  }
+}

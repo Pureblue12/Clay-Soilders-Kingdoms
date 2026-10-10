@@ -1,6 +1,6 @@
 # Quality check rubric (the reviewer's checklist)
 
-The reviewer scores every new version on the eleven criteria below, 0 (no), 1 (partly) or 2 (yes), after looking at
+The reviewer scores every new version on the ten criteria below, 0 (no), 1 (partly) or 2 (yes), after looking at
 the renders. The criteria, weights and pass mark live in code (`src/qc/rubric.ts`); this file says what each one means
 and how to judge it. Background: `RESEARCH.md`. Building rules: `../STYLE.md` (it wins where they disagree).
 
@@ -9,18 +9,24 @@ for fixes, up to 3 rounds; after that it goes to Carlton anyway with the problem
 
 ## Carlton's taste comes first
 
-Carlton is the only one who approves. Judge as he would. What his notes so far say (2026-10-10):
+Carlton is the only one who approves. Judge as he would. On 2026-10-10 he asked the reviewer to keep his three most
+common notes in mind on every judgment: **not enough detail**, **levels that look the same**, and **small pieces at the
+wrong size or shape**. He also said "bigger and grander" is not something to judge on. What his notes so far say:
 
 - **Detail, detail, detail.** His most common note is "not much in terms of detail" (bench, cottage, fire pit,
   visitors' camp, house v2 "a little more detail such as decorations"). Bare is the fastest way to a reject.
 - **Effort and creativity.** "What is this minimal effort trash" (a 2-block signpost); "boring, add different dirt and
   blocks, be creative" (road); "look up examples online".
-- **Grand when the role is grand.** The keep "should get bigger, more grand"; the windmill "too small, I'd like to see a
-  bigger more detailed version"; "a saw mill style instead of this puny thing".
+- **Right size and shape for small pieces.** The well v3 was "too big, base square, want it circular, middle ground";
+  the visitors' camp tents looked like stairs. A prop is small and in its real shape. (Size alone is not judged:
+  Carlton dropped "bigger and grander" as a criterion, and being over the block budget never counts against a
+  structure unless the extra is clearly filler.)
 - **It must read as what it is.** "Can't even tell what's going on here."
 - **Levels must look different.** On the carpenter v3 (2026-10-10): "Better, would like to see more detail from the l2
-  to l3 to differentiate from each other." Moving extras down into level 1 to pass makes the levels look the same:
-  add to level 1, and keep l2 and l3 each clearly richer.
+  to l3 to differentiate from each other"; on the stables v2 the levels must differ in function. L2 and L3 must each
+  add a clearly visible new feature or job (a lean-to, a gate, a workshop, a second use), not just a few more props.
+  Moving extras down into level 1 to pass makes the levels look the same: add to level 1, and keep l2 and l3 each
+  clearly richer.
 - **No glitches.** Holes where there shouldn't be any, "a couch on the roof", fences that don't connect, logs on their
   side.
 - **His reference picture** (`reference/carlton-timber-house.png`): a two-storey timber-frame house with a stone base
@@ -49,9 +55,8 @@ or read `src/render/scene.ts` (`groundLayer` default -1 means fixed). Score what
 | `materials` | 2 | | Style A: cobblestone or stone brick base, spruce or dark oak frame, oak plank or white terracotta infill, dark roof. 3 to 5 main blocks. All one wood colour = 0. Clashing colours = 0. | iso, top |
 | `shape` | 2 | | Not a plain box: a jetty, a lean-to, a porch, a dormer, a chimney, roof parts at two heights, some asymmetry. | iso, iso_back, top |
 | `life` | 1 | | Flowers, leaves, vines at the base and in boxes, lanterns, a path, a fence or garden. | iso, slope |
-| `scale` | 1 | | Soldiers are half a block tall: a cottage is about 5 x 7 with 3-high walls; landmarks clearly bigger than houses. Use the scale markers (player 1.8, soldier 0.5). | iso, front |
-| `levels` | 2 | yes | Each level adds something you can see at a glance: l2 a new part or props, l3 more again (flowers, lanterns, signs, a lean-to). Compare the sheets of every level of the family. Nearly identical levels = 0. Single structures: 2. | every level's sheet |
-| `grandeur` | 1 | | Big and special enough for its role. A windmill has sails and a tall tower; a keep towers over houses; a saw mill has a saw, logs and a yard. | iso |
+| `scale` | 2 | | Right size and shape for what it is. Soldiers are half a block tall: a cottage is about 5 x 7 with 3-high walls. Small pieces small and in their real shape: a well small and round, not big and square; a tent that reads as a tent, not stairs. Use the scale markers (player 1.8, soldier 0.5). Being big is not a fault. | iso, front, top |
+| `levels` | 2 | yes | L2 and L3 each add a clearly visible new feature or job (a lean-to, a gate, a workshop, a second use), seen at a glance. Only a few more props = 1. Nearly identical levels = 0. Compare the sheets of every level of the family. Single structures: 2. | every level's sheet |
 
 Small props (benches, signposts, posts) still get all ten scores: "shape" means an interesting silhouette (a hanging
 sign on a chain, a bench with armrests and a flower pot), "scale" whether a soldier could use it.
@@ -62,7 +67,7 @@ The review file is JSON (`npm run qc -- record <name> -v N --visual review.json`
 
 ```json
 {
-  "scores": { "detail": 1, "artefacts": 2, "purpose": 2, "depth": 1, "roof": 0, "materials": 2, "shape": 1, "life": 0, "scale": 2, "levels": 2, "grandeur": 1 },
+  "scores": { "detail": 1, "artefacts": 2, "purpose": 2, "depth": 1, "roof": 0, "materials": 2, "shape": 1, "life": 0, "scale": 2, "levels": 2 },
   "notes": { "roof": "flush with the walls on the left and right" },
   "summary": "One sentence Carlton can read in the panel: what it is and how good it looks.",
   "problems": ["What to fix, most important first, concrete enough to act on", "..."],

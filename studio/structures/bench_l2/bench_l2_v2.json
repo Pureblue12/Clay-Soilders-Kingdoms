@@ -1,0 +1,64 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "bench_l2",
+  "version": 2,
+  "size": [11,4,3],
+  "meta": {
+    "status": "approved",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T03:07:14.311Z",
+    "description": "Bench, level 2 of 2: L1 plus flourish 2. Bench nook: three-seat oak stair bench with sign armrests between two planters, a leaf hedge and spruce posts behind, a cobblestone apron and lantern posts; L2 adds a pergola roof with a hanging lantern and more greenery. Not yet builder-tested: flowering_azalea_leaves. Decoration step adds: sign_text.",
+    "changes": "Rebuilt from two bare stairs into a bench nook: a three-seat bench with sign armrests, planters with flowers at both ends, a hedge and posts behind, a stone apron and a lantern post; level 2 adds a little pergola roof with a hanging lantern, a shaped flowering hedge, a second lantern post and flowers.",
+    "parent": 1,
+    "reviewedAt": "2026-10-10T03:32:39.520Z",
+    "tags": [
+      "revise1",
+      "tier1",
+      "inner",
+      "decoration"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:coarse_dirt",
+    "A": "minecraft:cobblestone_slab[type=bottom,waterlogged=false]",
+    "B": "minecraft:flowering_azalea_leaves[distance=1,persistent=true,waterlogged=false]",
+    "C": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "D": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "E": "minecraft:oak_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "F": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "G": "minecraft:oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "H": "minecraft:oak_wall_sign[facing=east,waterlogged=false]",
+    "I": "minecraft:oak_wall_sign[facing=west,waterlogged=false]",
+    "J": "minecraft:poppy",
+    "K": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "L": "minecraft:spruce_planks",
+    "M": "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "N": "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]",
+    "O": "minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]",
+    "P": "minecraft:spruce_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]"
+  },
+  "layers": [
+    [
+      "EO.AAAAA.OE",
+      "P#NIGGGHP#N",
+      "FFFKFFFKFFF"
+    ],
+    [
+      "E.........E",
+      ".J.......J.",
+      "FFFKFBFKFFF"
+    ],
+    [
+      "C.........C",
+      ".....D.....",
+      "...K...K..."
+    ],
+    [
+      "...........",
+      "..MMMMMMM..",
+      "..LLLLLLL.."
+    ]
+  ]
+}

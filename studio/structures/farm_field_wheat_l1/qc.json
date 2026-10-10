@@ -1,0 +1,144 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "farm_field_wheat_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T03:21:07.439Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 72,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 135,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3925925925925926,
+          "types": 11,
+          "dominant": {
+            "name": "dirt",
+            "share": 0.34814814814814815
+          },
+          "height": 5,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Wheat field module: a fenced plot either side of a water trench, with a scarecrow, hay bales, a composter and lanterns; matches Carlton's module idea.",
+        "problems": [
+          "The fence sits on a raised plank rim, so the field is a step above the ground; check soldiers can walk in through the openings."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:34:32.364Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 72,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 135,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3925925925925926,
+          "types": 12,
+          "dominant": {
+            "name": "dirt",
+            "share": 0.34814814814814815
+          },
+          "height": 5,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Wheat field module: fenced plots either side of a water trench with a scarecrow, hay and a composter.",
+        "problems": [
+          "The field sits a step up on a plank rim; check soldiers can walk in through the openings."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T04:12:56.776Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 158,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4810126582278481,
+          "types": 15,
+          "dominant": {
+            "name": "dirt",
+            "share": 0.2974683544303797
+          },
+          "height": 5,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "no roof, not needed"
+        },
+        "summary": "Two farmland beds either side of a water channel inside a plank fence, with a plank path down one side, hay bales, a tool rack, lantern posts, poppies and a bush. Simple and tidy, as Carlton asked.",
+        "problems": [
+          "The crops and the channel water come from planting and the decoration step, so the viewer shows bare farmland (fine)"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

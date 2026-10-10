@@ -1,0 +1,158 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "commons_l1",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:41:47.433Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 58,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 240,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.42916666666666664,
+          "types": 17,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.31666666666666665
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 1,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Bigger now (13 x 13) and on the grass, but level 1 is mostly a bare grey cobblestone square with a well, two planters and a picnic table in the corners.",
+        "problems": [
+          "The floor is one grey cobblestone with a few mossy spots: pave it in a pattern (stone brick border, gravel or coarse dirt paths crossing to the well, andesite or polished patches) so the square isn't one flat colour",
+          "The middle and the edges are empty: put benches along two sides facing the well and a small fire pit or water trough so L1 already reads as a meeting place",
+          "The well roof is a flat plank lid: give it a small pitched roof of stairs like the well module, with a lantern"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T04:06:19.970Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 2,
+      "score": 39,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 210,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.18571428571428572,
+          "types": 7,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.4523809523809524
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 0,
+          "artefacts": 1,
+          "purpose": 1,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 0
+        },
+        "notes": {
+          "artefacts": "four bare dirt cubes as planters and an empty stepped plinth: it looks unfinished"
+        },
+        "summary": "Level 1 is now a small round stone plaza with an empty stepped plinth and four bare dirt planters. Smaller and barer than the last version, while Carlton asked for slightly bigger and more detail on all three levels.",
+        "problems": [
+          "Carlton's note: slightly bigger and more detail on all 3. L1 is now the smallest and barest it has been: keep the 13 x 13 size or larger and give L1 at least benches facing the plinth, lantern posts and plants in the planters",
+          "The planters are bare dirt cubes: plant them (flowers, a small bush) or use coarse dirt with grass; if the plants come from the decoration step, say so in the description",
+          "The plinth is empty at L1: put a simple centrepiece on it (a lantern post, a well or a flagpole) so the square has a focus before the statue arrives in L2"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T04:14:44.601Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 3,
+      "score": 78,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 247,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3076923076923077,
+          "types": 12,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.38461538461538464
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "no roof at this level"
+        },
+        "summary": "Level 1 now reads as a square: benches round a stepped plinth with a plaque, lantern posts at the corners and poppies in the planters. Much better than the bare version.",
+        "problems": [
+          "Carlton asked for slightly bigger: the plaza is still about 11 across; one more ring of paving would help",
+          "The plinth's top is still empty at L1; a lantern or a flagpole would give it a focus until the statue arrives"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,188 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "garden_l1",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:42:23.940Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 56,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 97,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4948453608247423,
+          "types": 9,
+          "dominant": {
+            "name": "cobblestone_stairs",
+            "share": 0.32989690721649484
+          },
+          "height": 5,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 0
+        },
+        "notes": {
+          "artefacts": "two of Carlton's three notes (bigger, different flowers) are not addressed"
+        },
+        "summary": "Same 9 x 9 garden: four dirt beds of red poppies, a deck with a chest and a bench. Carlton's notes about size and different flowers aren't addressed yet.",
+        "problems": [
+          "Carlton asked for different flowers: the beds are all red poppies. Mix 4 or 5 kinds (cornflower, allium, oxeye daisy, azure bluet, red and orange tulips, lilac or rose bush as tall flowers) in rows per bed",
+          "Carlton asked for it to be bigger: it is still about 9 x 9. Go to 11 x 11 or 13 x 13 with more beds or a centre feature",
+          "It now stands on a one-block cobblestone plinth with a stair step, which fixes the sinking. Check that Carlton is happy with a raised plinth; a garden floor level with the grass (beds edged by logs or a low fence) would look more natural"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T04:05:55.476Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "flat-wall",
+            "message": "The back is flat: 100 % of it at one depth and 100 % one block. Add posts, sills, a beam, flower boxes."
+          },
+          {
+            "level": "warn",
+            "check": "flat-wall",
+            "message": "The left is flat: 100 % of it at one depth and 100 % one block. Add posts, sills, a beam, flower boxes."
+          },
+          {
+            "level": "warn",
+            "check": "flat-wall",
+            "message": "The right is flat: 100 % of it at one depth and 100 % one block. Add posts, sills, a beam, flower boxes."
+          }
+        ],
+        "stats": {
+          "blocks": 188,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.34574468085106386,
+          "types": 6,
+          "dominant": {
+            "name": "coarse_dirt",
+            "share": 0.3882978723404255
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Much bigger (15 x 15) and set level into the lawn as Carlton asked: a hedge ring, gravel and stone paths in a round walk to a sundial, and soil beds. At this first level the beds are still only red poppies.",
+        "problems": [
+          "Put two or three flower kinds in the L1 beds already (the dozen kinds can stay for L2 and L3)",
+          "Layer 0 is now level with the grass (meta.groundLayer 0): in game the builders never dig or replace ground, so the mod side still has to support setting paths and beds into the lawn before this can be built as drawn"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T04:22:14.575Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Drawn for the decoration step, not built: minecraft:water."
+          },
+          {
+            "level": "warn",
+            "check": "flat-wall",
+            "message": "The back is flat: 100 % of it at one depth and 100 % one block. Add posts, sills, a beam, flower boxes."
+          },
+          {
+            "level": "warn",
+            "check": "flat-wall",
+            "message": "The left is flat: 100 % of it at one depth and 100 % one block. Add posts, sills, a beam, flower boxes."
+          },
+          {
+            "level": "warn",
+            "check": "flat-wall",
+            "message": "The right is flat: 100 % of it at one depth and 100 % one block. Add posts, sills, a beam, flower boxes."
+          }
+        ],
+        "stats": {
+          "blocks": 213,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3333333333333333,
+          "types": 8,
+          "dominant": {
+            "name": "coarse_dirt",
+            "share": 0.3192488262910798
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "no roof, not needed"
+        },
+        "summary": "17 x 17 and level with the lawn: hedge ring, a round walk to the sundial, soil beds and the new lily pond in the front corner. The beds are still all red poppies at this level.",
+        "problems": [
+          "Carlton keeps asking for more and different flowers: put two or three kinds in the L1 beds already",
+          "The pond's water and lily pads are decoration-step blocks (listed in meta.decorationBlocks; fine)"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

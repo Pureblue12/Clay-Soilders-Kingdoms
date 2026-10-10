@@ -1,0 +1,67 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "market_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:03:47.649Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 72,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "485 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 485,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3422680412371134,
+          "types": 17,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.2020618556701031
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "Barrels, trapdoor counters, chests and plank benches give the stalls something, but the square itself is plain paving and a bare cross stub.",
+          "roof": "Stall roofs are flat two-tier wool awnings: right for market stalls, but no pitch or trim.",
+          "shape": "Four identical stalls in a strict mirror; the stub cross is the only centrepiece.",
+          "life": "No lanterns, plants or flowers yet (they come at L2/L3); only mossy cobblestone in the paving.",
+          "grandeur": "Reads as a modest market; the cross is too small to anchor the square at this level."
+        },
+        "summary": "Level 1 is the shell: a 15 x 15 paved square with gravel aisles, four closed wooden stalls with red-white and brown-white awnings, benches and a small stepped stone cross. Clean and readable, but plain.",
+        "problems": [
+          "Note only: meta.groundLayer 0, the paving replaces the grass (builders can't do that yet).",
+          "Description says 620 blocks; this level has 485 (620 is the L3 count).",
+          "Reachability: 196 of 280 standing places reached; the unreached ones are only the stall awning tops (y 4..5) and barrel tops, which is fine. The square, aisles and every stall front are reached."
+        ],
+        "views": [
+          "sheet",
+          "iso"
+        ]
+      }
+    }
+  }
+}

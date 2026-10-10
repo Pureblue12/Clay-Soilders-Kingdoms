@@ -1,0 +1,70 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "inn_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:07:49.751Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 67,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "419 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 419,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.36515513126491644,
+          "types": 24,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.1957040572792363
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 1,
+          "depth": 2,
+          "roof": 2,
+          "materials": 1,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "Inside is well furnished (hearth, two tables, bar of kegs, six beds up a staircase) but the outside is only a door, plain windows and corner posts: no sills, no props, nothing small on any face.",
+          "purpose": "From outside it reads as a generic two-storey house; only the interior says inn.",
+          "depth": "Stone-brick plinth, oak corner posts, dark oak beam band and roof overhang break every face.",
+          "roof": "Steep spruce roof with dark oak eaves, a dark oak plank ridge, 1-block overhang at the eaves and the gables.",
+          "materials": "Cobble/mossy cobble, stone bricks, oak logs, dark oak logs, spruce roof, oak floors, white terracotta gable and brick chimney: about 8 materials. White terracotta reads pink-beige rather than plaster.",
+          "shape": "A plain rectangle with a chimney; the upper storey is inside the roof, so the outline is a box with a roof.",
+          "life": "Only mossy cobble; no plants, lanterns, path or fence outside."
+        },
+        "summary": "L1 is the shell: a stone common room with hearth, tables and a keg bar, and six beds in the attic storey up a staircase, under a steep spruce roof with a brick chimney.",
+        "problems": [
+          "Exterior is bare at L1: give this level its own outside detail that L2/L3 don't already add, e.g. slab or stair window sills under the front windows (3,2,1) and (7,2,1) and the side windows, and a short cobble/gravel path continuing from the step at (5,0,1).",
+          "Nothing outside says 'inn' at L1 (sign and stable only come at L2); a bench or a pair of kegs beside the door would help purpose without stealing L2's extras.",
+          "Reachability: common room, staircase and upper floor are reached (159 of 227 places); the unreached places are roof slopes and the chimney top/shoulders, which is fine."
+        ],
+        "views": [
+          "sheet",
+          "front",
+          "iso"
+        ]
+      }
+    }
+  }
+}

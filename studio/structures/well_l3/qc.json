@@ -1,0 +1,287 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "well_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T03:14:01.143Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 25,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: moss_carpet."
+          },
+          {
+            "level": "warn",
+            "check": "too-small",
+            "message": "Only 28 blocks: too bare for a common (at least 50). Carlton wants more detail, not less."
+          }
+        ],
+        "stats": {
+          "blocks": 28,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.7142857142857143,
+          "types": 8,
+          "dominant": {
+            "name": "oak_slab",
+            "share": 0.32142857142857145
+          },
+          "height": 4,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 0,
+          "purpose": 1,
+          "depth": 0,
+          "roof": 0,
+          "materials": 1,
+          "shape": 0,
+          "life": 1,
+          "scale": 1,
+          "grandeur": 0
+        },
+        "notes": {
+          "artefacts": "cobblestone_wall posts without properties render as '?'"
+        },
+        "summary": "Well level 3: a 3 x 3 cobblestone ring with a slab lid; too small and plain, and the wall posts show as placeholder blocks.",
+        "problems": [
+          "Far too small and bare for the kingdom's water source (23 to 28 blocks): build a 5 x 5 well with a raised two-course stone basin, posts, a windlass beam with a rope or chain and a proper roof.",
+          "The cobblestone wall posts have no connection properties and show as \"?\" placeholder blocks; use log posts instead.",
+          "The flat oak slab lid reads as a box: give it a steep gable roof with dark eaves and ridge.",
+          "Give each level its own extras (a trough and a bucket barrel at level 2, bushes, flowers and moss at level 3)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:15:25.723Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: dandelion, cauldron, moss_carpet."
+          }
+        ],
+        "stats": {
+          "blocks": 67,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.582089552238806,
+          "types": 17,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.208955223880597
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 2,
+          "scale": 1,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "steep and well trimmed, but far too big for the small basin"
+        },
+        "summary": "Well level 3: now a real well with posts, windlass and a steep roof, but the roof dwarfs the small 3 x 3 basin.",
+        "problems": [
+          "The roof is two blocks wider than the 3 x 3 basin on every side, so the well looks top-heavy (a mushroom): widen the basin to 5 x 5 under the same kind of roof.",
+          "Level 1 has no life at all; fine for a first level, but the levels above should keep adding plants and props."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:16:10.489Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 86,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: dandelion, cauldron, moss_carpet."
+          }
+        ],
+        "stats": {
+          "blocks": 113,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5398230088495575,
+          "types": 17,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.24778761061946902
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "scale": 2,
+          "grandeur": 1,
+          "detail": 2,
+          "life": 2
+        },
+        "summary": "Well level 3: a finished village well with trough, barrel, pots, bushes, flowers, moss on the rim and a front step.",
+        "problems": [
+          "The full dark plank ridge reads a little heavy; a slab ridge would be lighter."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T03:53:22.041Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 92,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: flowering_azalea_leaves, cauldron, moss_carpet, lever."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 87,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5172413793103449,
+          "types": 15,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.22988505747126436
+          },
+          "height": 6,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Level 3 dresses it: lanterns on the front corners, flowering azalea, a cauldron water tub, flower pots and moss. A charming village well; the front post still hides the basin.",
+        "problems": [
+          "From the front a dark oak post stands right in the middle of the basin and rises above the ridge, hiding the well: put the two posts on the left and right of the basin with the windlass axle between them, or turn the roof so the posts are at the sides",
+          "The water is a decoration step (known, the viewer shows grass in the pool); fine"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "5": {
+      "version": 5,
+      "checkedAt": "2026-10-10T04:06:38.128Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 97,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: flowering_azalea_leaves, cauldron, moss_carpet, lever, dark_oak_slab."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 77,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5194805194805194,
+          "types": 16,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.2597402597402597
+          },
+          "height": 6,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Level 3 dresses it with moss on the rim, flowering azalea, a cauldron water tub, flower pots and a lantern on each side. A charming village well.",
+        "problems": [
+          "Flower pots look empty in the viewer: their plants come from the decoration step (known)"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

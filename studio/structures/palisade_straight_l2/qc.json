@@ -1,0 +1,105 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "palisade_straight_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T03:47:51.804Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 67,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "connections",
+            "message": "13 fence/pane/wall block(s) have no north/east/south/west set although a neighbour would connect, so they show as lone posts: (0, 0, 1), (1, 0, 1), (2, 0, 1) and 10 more."
+          }
+        ],
+        "stats": {
+          "blocks": 39,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.5641025641025641,
+          "types": 5,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.4358974358974359
+          },
+          "height": 6,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Five sharpened spruce stakes with a slab walk on oak fence posts behind. Reads as a palisade; plain and all one wood.",
+        "problems": [
+          "The oak fence posts under the walk stand as lone unjoined posts, and the sharpened fence points would grow arms into the taller stakes beside them: brace the posts to the stakes and keep the points as lone points",
+          "Almost all spruce log (58 %): a cobblestone footing under the stakes would tie it to the stone base of the other buildings",
+          "Levels 2 and 3 only add torches and a bit of moss: give each level something you can see (stores under the walk, hanging lanterns, a banner)"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:49:57.099Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 89,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 37,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.5405405405405406,
+          "types": 9,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.32432432432432434
+          },
+          "height": 6,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Sharpened spruce stakes on a cobblestone footing, a slab walk on braced posts behind. Level 2 adds barrels and hay stored under the walk.",
+        "problems": [
+          "The outside face is one flat plane of logs: an odd stake set half a block forward (a log on a slab) or a second, lower row would give it depth"
+        ],
+        "views": [
+          "iso",
+          "front"
+        ]
+      }
+    }
+  }
+}

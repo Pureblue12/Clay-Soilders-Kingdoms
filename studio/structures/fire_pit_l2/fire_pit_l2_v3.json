@@ -1,0 +1,84 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "fire_pit_l2",
+  "version": 3,
+  "size": [9,3,9],
+  "meta": {
+    "status": "rejected",
+    "notes": "add a custom tree that overhangs for shade",
+    "author": "claude",
+    "created": "2026-10-10T03:29:28.029Z",
+    "description": "Fire pit, level 2 of 3: L1 plus flourish 2. An unlit campfire (it never burns) in a stone ring with a cooking spit, three spruce log benches, a woodpile, a chopping stump, supplies, poppies and a lantern post; level 2 a pot, a second lantern, cushions and plants; level 3 a dark oak firewood shelter with a hanging lantern. Not yet builder-tested: cauldron, dandelion, fern, short_grass. Decoration step adds: potted_plant.",
+    "changes": "Benches and woodpile in dark spruce instead of pale logs; level 1 now has the woodpile, a chopping stump, supplies and poppies round the fire; level 3 adds its own feature, a dark oak firewood shelter with a hanging lantern. The campfire stays unlit.",
+    "parent": 2,
+    "reviewedAt": "2026-10-10T04:13:59.547Z",
+    "tags": [
+      "revise1",
+      "tier1",
+      "inner",
+      "decoration"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:brown_carpet",
+    "B": "minecraft:campfire[facing=north,lit=false,signal_fire=false,waterlogged=false]",
+    "C": "minecraft:cauldron",
+    "D": "minecraft:chain[axis=x,waterlogged=false]",
+    "E": "minecraft:chain[axis=y,waterlogged=false]",
+    "F": "minecraft:chest[facing=east,type=single,waterlogged=false]",
+    "G": "minecraft:cobblestone",
+    "H": "minecraft:cobblestone_slab[type=bottom,waterlogged=false]",
+    "I": "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "J": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "K": "minecraft:dandelion",
+    "L": "minecraft:fern",
+    "M": "minecraft:flower_pot",
+    "N": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "O": "minecraft:mossy_cobblestone",
+    "P": "minecraft:oak_log[axis=y]",
+    "Q": "minecraft:oak_pressure_plate",
+    "R": "minecraft:poppy",
+    "S": "minecraft:red_carpet",
+    "T": "minecraft:short_grass",
+    "U": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "V": "minecraft:spruce_log[axis=x]",
+    "W": "minecraft:spruce_log[axis=z]"
+  },
+  "layers": [
+    [
+      "....H.R.U",
+      "TPR......",
+      "#...H.C.K",
+      "FW.HIH.W.",
+      ".W.OBG.WL",
+      "TW.HJH.WR",
+      "R........",
+      "...VVV..W",
+      "U.T....WW"
+    ],
+    [
+      "........U",
+      ".Q.......",
+      "M........",
+      ".A.....A.",
+      ".S.UEU.S.",
+      ".A.....A.",
+      ".........",
+      "....S....",
+      "U.......W"
+    ],
+    [
+      "........N",
+      ".........",
+      ".........",
+      ".........",
+      "...UDU...",
+      ".........",
+      ".........",
+      ".........",
+      "N........"
+    ]
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "food_hall_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:07:39.169Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "417 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 417,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4196642685851319,
+          "types": 22,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.22062350119904076
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 1,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "Good inside (long table with benches, hearth, smoker corner, kegs) and trapdoor shutters, but the outside is plain for a 13x15 hall: no boxes, lanterns or props yet.",
+          "purpose": "The floor plan reads as a tavern (long table, kegs, hearth); from outside it is just a big timber house until L2's sign.",
+          "roof": "Steep spruce roof, 1-block dark oak eave all round (x3/x11 and z1/z13 at y4), slab ridge, dormer; no overhang warning on this level.",
+          "life": "No plants or lanterns at L1; only a mossy patch in the plinth.",
+          "materials": "Cobble/stone-brick base, dark oak frame, white terracotta infill, spruce roof, brick chimney: clean Style A."
+        },
+        "summary": "The shell of a long timber food hall: stone plinth, dark oak frame, steep spruce roof with a dormer, an outside brick chimney at the back, and inside a long table, hearth, smoker and kegs.",
+        "problems": [
+          "Chimney ends at y7 (z13), one below the ridge (y8): raise it one or two blocks so it clears the roof line (L2/L3 put a campfire on it at y8, level with the ridge).",
+          "Reach: 162 of 270 standing places reached; the unreached ones are roof slopes, the ridge and two chimney-side brick tops at y4 z13: the whole floor and every room are reached, fine."
+        ],
+        "views": [
+          "sheet",
+          "front",
+          "iso_back"
+        ]
+      }
+    }
+  }
+}

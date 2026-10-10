@@ -92,6 +92,9 @@ export class Store {
     return JSON.parse(fs.readFileSync(this.file(name, v), 'utf8')) as StructureFile;
   }
 
+  /** Branch activity (gitsync.branchWork) for structures nobody marked with work.json: rejected -> "Revising". */
+  branchWork: () => Map<string, { branch: string; since: string }> = () => new Map();
+
   summary(name: string): StructureSummary {
     const versions = this.versions(name).map((v) => {
       const s = this.load(name, v);
@@ -114,7 +117,12 @@ export class Store {
     });
     const latest = versions[versions.length - 1];
     const approved = [...versions].reverse().find((v) => v.status === 'approved');
-    const work = latest.status === 'rejected' ? this.work(name) : null;
+    let work = latest.status === 'rejected' ? this.work(name) : null;
+    const onBranch = latest.status === 'rejected' && !work ? this.branchWork().get(name) : undefined;
+    if (onBranch) {
+      work = { state: 'revising', by: `Claude (branch ${onBranch.branch})`, since: onBranch.since,
+        note: 'changes on a GitHub branch that is not merged yet' };
+    }
     const stage: Stage =
       latest.status === 'approved' ? 'approved' : latest.status === 'pending' ? 'review' : work ? 'revising' : 'queued';
     return {
@@ -206,6 +214,14 @@ export class Store {
 
   versionFile(name: string, version: number) {
     return this.file(name, version);
+  }
+
+  /** "Apply to all levels": the SAME version number of every level that has it (keep_l1 v2 -> keep_l2 v2, keep_l3 v2).
+   *  Never "the latest": a newer version can arrive from GitHub while Carlton looks at an older one. */
+  levelTargets(name: string, version: number): [string, number][] {
+    return this.levels(name)
+      .filter((n) => n === name || this.versions(n).includes(version))
+      .map((n) => [n, version] as [string, number]);
   }
 
   /** The levels of a structure family: bench_l1, bench_l2, ... for "bench_l2" (just [name] without a _lN suffix). */

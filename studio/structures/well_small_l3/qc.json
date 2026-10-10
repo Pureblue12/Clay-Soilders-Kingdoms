@@ -1,0 +1,70 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "well_small_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:51:02.071Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 92,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Drawn for the decoration step, not built: minecraft:water."
+          },
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: azure_bluet, oxeye_daisy, fern, cauldron, moss_carpet."
+          },
+          {
+            "level": "warn",
+            "check": "too-small",
+            "message": "Only 46 blocks: too bare for a common (at least 50). Carlton wants more detail, not less."
+          }
+        ],
+        "stats": {
+          "blocks": 46,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.7391304347826086,
+          "types": 20,
+          "dominant": {
+            "name": "oak_fence",
+            "share": 0.15217391304347827
+          },
+          "height": 6,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "flat stacked hood, as on L1"
+        },
+        "summary": "Adds vines, flowers, a cauldron and a bush: an old, well-used village well.",
+        "problems": [
+          "The water in the shaft is in meta.decorationBlocks"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

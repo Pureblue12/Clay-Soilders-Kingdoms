@@ -1,0 +1,212 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "keep_l1",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:25:55.500Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 75,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "variety",
+            "message": "stone_bricks is 58 % of the build: break it up with a second material."
+          }
+        ],
+        "stats": {
+          "blocks": 1704,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.20422535211267606,
+          "types": 19,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.5821596244131455
+          },
+          "height": 16,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "summary": "Keep level 1: a big four-towered stone keep with a gate, windows and a throne hall; grand, though the tower tops look like open boxes.",
+        "problems": [
+          "Level 3 only adds vines over level 2: give it its own feature, such as timber hoardings (wooden galleries) on the towers or steep dark conical roofs on two of them.",
+          "It is grey stone brick almost everywhere (56 to 58 %): a dark oak timber element (hoarding, gate canopy, roof) would tie it to the rest of the kingdom's look.",
+          "On level 1 the tower tops are open boxes; even a simple slab cap or a stair parapet would make them look finished."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:45:48.594Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 67,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "variety",
+            "message": "stone_bricks is 58 % of the build: break it up with a second material."
+          }
+        ],
+        "stats": {
+          "blocks": 1713,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.20607122008172796,
+          "types": 22,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.5761821366024519
+          },
+          "height": 16,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "artefacts": "Carlton's newest note (bigger, a grand hall and a throne for the king, levels more different) is not addressed yet"
+        },
+        "summary": "A solid square stone brick keep with four corner towers, a plinth and a dark oak door frame. The new tower caps read as flat wooden lids with a stick in the middle, and it does not yet have the grand hall and throne Carlton asked for.",
+        "problems": [
+          "Carlton's newest note: make it bigger, with a grand hall and a throne for the king (a raised dais with a stair throne, red carpet runner, banners and chandeliers), and make each level add a clear function, not just decoration",
+          "The tower caps look like flat brown lids with a single fence post: use steep dark oak or spruce stair cones (at least 3 steps high) or keep the battlements open with a flagpole and banner",
+          "Still almost all grey stone brick and no life: a few vines, a banner over the door, lanterns by the entrance"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T04:11:53.573Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 78,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 1171,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.28351836037574724,
+          "types": 22,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.44918872758326217
+          },
+          "height": 19,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "stepped flared turret caps, pagoda-like"
+        },
+        "summary": "A compact, symmetric stone keep with four corner turrets under dark caps, battlements and a central door. Tidy and coherent, clearly the seed the bigger levels grow from.",
+        "problems": [
+          "The turret caps are stepped tiers with a wide flared skirt, which reads more like a pagoda than a medieval tower: make them steep cones (a stair ring with one block of overhang, then 3 or 4 rings narrowing by one each step, finished with a slab and the flagpole), so they are taller than they are wide",
+          "Nothing alive yet: a banner over the door or two lanterns either side would help L1",
+          "Our QC renders of a structure this big are washed out by fog (renderer, not the build); judged from the near parts"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "5": {
+      "version": 5,
+      "checkedAt": "2026-10-10T04:34:54.786Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 83,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 1143,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.2659667541557305,
+          "types": 22,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.46019247594050744
+          },
+          "height": 20,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "The compact symmetric keep with four turrets, now under steep dark cones with flagpoles that read as medieval spires. Every room can be walked to.",
+        "problems": [
+          "Still nothing alive at L1: a banner over the door or two lanterns either side",
+          "Reachability (flood fill from the ground outside, soldiers half a block tall, jump 1, drop 3, ladders climb): every floor, room, wall walk and tower top is reached; only the roof cones, the tie beams under the hall roof and the tops of log piles and the low forecourt wall are not, which is right"
+        ],
+        "views": [
+          "sheet",
+          "iso"
+        ]
+      }
+    }
+  }
+}

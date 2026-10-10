@@ -1,0 +1,85 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "fire_pit_l3",
+  "version": 1,
+  "size": [9,3,9],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T03:11:21.387Z",
+    "description": "Fire pit, level 3 of 3: L2 plus flourish 3. An unlit campfire (it never burns) in a ring of cobblestone slabs and steps with a cooking spit, three log benches and a lantern post; level 2 a pot, a woodpile, a stump and stepping stones; level 3 cushions, candles and plants. Not yet builder-tested: candle, cauldron, dandelion, fern, short_grass, stone_slab. Decoration step adds: potted_plant.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "revise1",
+      "tier1",
+      "inner",
+      "decoration"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:brown_carpet",
+    "B": "minecraft:campfire[facing=north,lit=false,signal_fire=false,waterlogged=false]",
+    "C": "minecraft:candle[candles=3,lit=false,waterlogged=false]",
+    "D": "minecraft:cauldron",
+    "E": "minecraft:chain[axis=x,waterlogged=false]",
+    "F": "minecraft:chain[axis=y,waterlogged=false]",
+    "G": "minecraft:cobblestone",
+    "H": "minecraft:cobblestone_slab[type=bottom,waterlogged=false]",
+    "I": "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "J": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "K": "minecraft:dandelion",
+    "L": "minecraft:fern",
+    "M": "minecraft:flower_pot",
+    "N": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "O": "minecraft:mossy_cobblestone",
+    "P": "minecraft:oak_log[axis=y]",
+    "Q": "minecraft:oak_log[axis=z]",
+    "R": "minecraft:oak_pressure_plate",
+    "S": "minecraft:red_carpet",
+    "T": "minecraft:short_grass",
+    "U": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "V": "minecraft:stone_slab[type=bottom,waterlogged=false]",
+    "W": "minecraft:stripped_oak_log[axis=x]",
+    "X": "minecraft:stripped_oak_log[axis=z]"
+  },
+  "layers": [
+    [
+      "....V...U",
+      "TP.......",
+      "#...V.D.K",
+      ".X.HIH.X.",
+      ".X.OBG.XL",
+      "TX.HJH.X.",
+      ".........",
+      "...WWW..Q",
+      "U.T....QQ"
+    ],
+    [
+      "........U",
+      ".R.......",
+      "M........",
+      ".A.....A.",
+      ".S.UFU.S.",
+      ".A.....A.",
+      ".........",
+      "....S....",
+      "U.......Q"
+    ],
+    [
+      "........N",
+      ".........",
+      ".........",
+      ".........",
+      "...UEU...",
+      ".........",
+      ".........",
+      ".........",
+      "N.......C"
+    ]
+  ]
+}

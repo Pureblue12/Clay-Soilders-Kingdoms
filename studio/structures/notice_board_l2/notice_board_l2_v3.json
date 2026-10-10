@@ -1,0 +1,53 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "notice_board_l2",
+  "version": 3,
+  "size": [4,4,2],
+  "meta": {
+    "status": "approved",
+    "notes": "",
+    "author": "claude-qc",
+    "created": "2026-10-10T03:31:52.594Z",
+    "description": "Notice board, level 2 of 2: L1 plus flourish 2. Two dark oak posts with a spruce plank board under a small gable roof; level 2 pins two signs, a lantern, a barrel and flowers. Decoration step adds: potted_plant, sign_text.",
+    "changes": "Quality check round 3: level 1 gets one notice, a hanging lantern and a bush, so it reads as a notice board at once; level 2 keeps its two notices, lantern, barrel and flowers",
+    "parent": 2,
+    "reviewedAt": "2026-10-10T03:40:31.343Z",
+    "tags": [
+      "batch2",
+      "tier2",
+      "inner",
+      "decoration"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:dark_oak_log[axis=y]",
+    "B": "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "C": "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "D": "minecraft:flower_pot",
+    "E": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "F": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "G": "minecraft:oak_wall_sign[facing=north,waterlogged=false]",
+    "H": "minecraft:poppy",
+    "I": "minecraft:spruce_planks"
+  },
+  "layers": [
+    [
+      "DHF#",
+      "A..A"
+    ],
+    [
+      ".G..",
+      "AIIA"
+    ],
+    [
+      "EGGE",
+      "AIIA"
+    ],
+    [
+      "CCCC",
+      "BBBB"
+    ]
+  ]
+}

@@ -1,0 +1,165 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "hitching_post_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T03:29:43.422Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 33,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cauldron."
+          },
+          {
+            "level": "fail",
+            "check": "too-small",
+            "message": "Only 8 blocks: too bare for a prop (at least 10). Carlton wants more detail, not less."
+          }
+        ],
+        "stats": {
+          "blocks": 8,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.625,
+          "types": 4,
+          "dominant": {
+            "name": "coarse_dirt",
+            "share": 0.375
+          },
+          "height": 2,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 1,
+          "depth": 0,
+          "roof": 1,
+          "materials": 1,
+          "shape": 0,
+          "life": 0,
+          "scale": 1,
+          "grandeur": 0
+        },
+        "summary": "Hitching post level 2: adds a cauldron trough; still minimal and raised.",
+        "problems": [
+          "Far too small (7 to 8 blocks; the automatic check fails it): give it two log posts with a rail between, a lantern and hay.",
+          "The trampled dirt pad stands as a raised block (the mod builds layer 0 on top of the ground)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:31:51.506Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cauldron, dandelion."
+          }
+        ],
+        "stats": {
+          "blocks": 16,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.75,
+          "types": 9,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.25
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Hitching post level 2: adds a water trough, barrel, bush, flowers and a second lantern.",
+        "problems": [
+          "A small spruce slab roof over the rail would make it more special."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:32:39.241Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cauldron, dandelion."
+          }
+        ],
+        "stats": {
+          "blocks": 18,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.7777777777777778,
+          "types": 10,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.2222222222222222
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Hitching post level 2: adds a water trough, barrel, flowers and a second lantern.",
+        "problems": [
+          "A small slab roof over the rail would make it more special."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

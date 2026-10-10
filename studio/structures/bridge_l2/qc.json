@@ -1,0 +1,61 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "bridge_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:51:10.723Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 97,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Drawn for the decoration step, not built: minecraft:water."
+          }
+        ],
+        "stats": {
+          "blocks": 160,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.375,
+          "types": 12,
+          "dominant": {
+            "name": "spruce_fence",
+            "share": 0.1875
+          },
+          "height": 5,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {
+          "roof": "no roof on a bridge"
+        },
+        "summary": "Adds lanterns on every rail post. Clearly different from L1 at night and by day.",
+        "problems": [
+          "The water is in meta.decorationBlocks",
+          "Reachability: every place is reached"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

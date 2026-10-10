@@ -1,0 +1,281 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "lumber_camp_l2",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:22:59.435Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 56,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: stonecutter."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 294,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3979591836734694,
+          "types": 21,
+          "dominant": {
+            "name": "spruce_slab",
+            "share": 0.29591836734693877
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Lumber camp level 2: adds the stone mill race and a saw, so it starts to read as a mill; still small and all one brown.",
+        "problems": [
+          "Carlton asked for \"a saw mill style instead of this puny thing\": it is still a small lean-to shed that is hard to read. Make the saw the centrepiece: a long open mill hall with the saw bench in the middle, a log yard of stacked logs on one side and a plank stack on the other.",
+          "The roof is a single slope of one plank colour, flush with the walls: a proper gable or a lean-to with dark eaves and one block of overhang.",
+          "Everything is the same brown: add a cobblestone base under the posts and a dark frame against lighter infill.",
+          "Level 3 only adds a sapling and leaves over level 2: give it its own feature (a log cart, a second saw, a covered log store)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:35:52.055Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 89,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: stonecutter."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "415 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 415,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.37349397590361444,
+          "types": 24,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.1686746987951807
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 1,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "summary": "Lumber camp level 2: adds a waterwheel on a stone race, benches and more stock; a proper water-powered saw mill.",
+        "problems": [
+          "Almost everything is brown wood; a cobblestone base under the posts all round would ground it.",
+          "Level 3 adds only more stacks and saplings over level 2; a covered log store or a log cart would make it its own."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T04:12:36.782Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 89,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: stonecutter."
+          },
+          {
+            "level": "fail",
+            "check": "floating",
+            "message": "2 block(s) touch nothing that leads down to layer 0 (in game, layer 0 sits on top of the ground, so these hang in the air): (5, 3, 4), (9, 3, 4)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 294,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.37755102040816324,
+          "types": 23,
+          "dominant": {
+            "name": "spruce_planks",
+            "share": 0.1292517006802721
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "summary": "Level 2 adds a waterwheel in a stone race on the left and a log yard of stacked crates and logs on the right. Clearly a working mill and clearly more than L1.",
+        "problems": [
+          "The two hanging lanterns inside the shed at (5, 3, 4) and (9, 3, 4) have nothing above them (air up to the roof): in game they drop off. Hang them on a chain from the roof beam or put them on the posts",
+          "The waterwheel reads as a dark block from most angles: open spokes (fences or trapdoors) between the paddles would make it read as a wheel",
+          "Water in the race comes from the decoration step (fine)"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "5": {
+      "version": 5,
+      "checkedAt": "2026-10-10T04:19:53.533Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 94,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Drawn for the decoration step, not built: minecraft:water."
+          },
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: stonecutter."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 299,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3712374581939799,
+          "types": 24,
+          "dominant": {
+            "name": "spruce_planks",
+            "share": 0.12709030100334448
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "summary": "Level 2 adds a waterwheel in a stone race on the left and a log yard of stacked crates and logs on the right. Clearly a working mill and clearly more than L1. The shed lanterns now hang from the tie beams. The water in the wheel race is drawn for the decoration step, not built.",
+        "problems": [
+          "The waterwheel reads as a dark block from most angles: open spokes (fences or trapdoors) between the paddles would make it read as a wheel"
+        ],
+        "views": [
+          "sheet"
+        ],
+        "decorationBlocks": [
+          [
+            14,
+            0,
+            2
+          ],
+          [
+            14,
+            0,
+            3
+          ],
+          [
+            14,
+            0,
+            4
+          ],
+          [
+            14,
+            0,
+            5
+          ],
+          [
+            14,
+            0,
+            6
+          ]
+        ],
+        "notes": {
+          "artefacts": "none"
+        }
+      }
+    }
+  }
+}

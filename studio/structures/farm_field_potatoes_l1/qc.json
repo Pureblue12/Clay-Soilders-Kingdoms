@@ -1,0 +1,145 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "farm_field_potatoes_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T03:21:08.504Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 64,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 129,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3643410852713178,
+          "types": 10,
+          "dominant": {
+            "name": "dirt",
+            "share": 0.37209302325581395
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Potato field module: the same fenced plot as the carrots with a chest and barrel; plainer than the wheat field.",
+        "problems": [
+          "It's the same plot as the wheat field without the scarecrow: give each crop module one thing of its own (a carrot crate and rabbit-proof fence, a potato sack pile and a digging fork).",
+          "The fence sits on a raised plank rim, so the field is a step above the ground; check soldiers can walk in."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:34:33.445Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 78,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 162,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3333333333333333,
+          "types": 15,
+          "dominant": {
+            "name": "dirt",
+            "share": 0.36419753086419754
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Potato field module: a fenced plot with a grass-roofed stone root cellar beside it; clearly its own module.",
+        "problems": [
+          "The field sits a step up on a plank rim; check soldiers can walk in."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T04:12:57.341Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 83,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 198,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5606060606060606,
+          "types": 16,
+          "dominant": {
+            "name": "dirt",
+            "share": 0.24242424242424243
+          },
+          "height": 4,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "the lean-to roof is flat; fine for its size"
+        },
+        "summary": "The same tidy fenced field, now with a small timber lean-to over a pile of potato sacks with a sign instead of the cobblestone and dirt lump Carlton didn't understand. Reads clearly.",
+        "problems": [
+          "The lean-to roof is flat: a row of stairs would give it a slope like the other buildings"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

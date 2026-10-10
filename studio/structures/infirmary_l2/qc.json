@@ -1,0 +1,76 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "infirmary_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:10:28.441Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 89,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cauldron, cornflower, brewing_stand, allium, candle, brick_stairs, white_wall_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "415 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 415,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4674698795180723,
+          "types": 36,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.19759036144578312
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "Window boxes with trapdoor fronts, a slab door canopy with two hanging lanterns, candles, flower pots, a white carpet aisle and chain-hung lanterns over the ward.",
+          "purpose": "Brewing stand and cauldron by the beds and the white banner over the door make it read as a place of healing.",
+          "depth": "Window boxes and the canopy help the front, but the side and back walls are still one flat plane.",
+          "roof": "Same roof as L1; overhang warning is a false alarm (1 block all round). Gap under the front ridge at (5,6,1) remains.",
+          "life": "Flowers in boxes and lanterns at the door; no ground planting yet."
+        },
+        "summary": "L1 plus brewing stand and cauldron, candles, hanging lanterns, window boxes, a door canopy and a banner: the ward now looks lived in and its purpose shows from the door.",
+        "problems": [
+          "Front barge board hole under the ridge at (5,6,1) carried over from L1.",
+          "Side (x=2, x=8) and back walls stay flat; only the east-side window box at (9,1,4) breaks them.",
+          "Reachability: ward, aisle and lean-to reached; unreached are only roof slopes, window-box tops (3,2,1),(7,2,1),(9,2,4), the canopy top and shelf tops. Fine."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

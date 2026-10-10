@@ -111,3 +111,24 @@ test('levels: a family is every name_lN, sorted by level; notes-only reviews kee
   assert.equal(store.load('house', 1).meta.status, 'rejected');
   assert.equal(store.load('house', 1).meta.notes, 'too plain, add flowers');
 });
+
+test('a rejected structure that an unmerged branch is changing shows as revising', () => {
+  const store = new Store(fs.mkdtempSync(path.join(os.tmpdir(), 'studio-')));
+  store.saveNewVersion(sample());
+  store.setReview('tiny', 1, 'rejected', 'more detail');
+  assert.equal(store.summary('tiny').stage, 'queued');
+  store.branchWork = () => new Map([['tiny', { branch: 'claude/x', since: '2026-10-10T03:00:00.000Z' }]]);
+  assert.equal(store.summary('tiny').stage, 'revising');
+  assert.match(store.summary('tiny').work!.by, /claude\/x/);
+  store.setReview('tiny', 1, 'approved', '');
+  assert.equal(store.summary('tiny').stage, 'approved'); // a branch never changes a decided structure
+});
+
+test('apply to all levels uses the same version number, never a newer one that just arrived', () => {
+  const store = new Store(fs.mkdtempSync(path.join(os.tmpdir(), 'studio-')));
+  for (const n of ['keep_l1', 'keep_l2', 'keep_l3']) store.saveNewVersion({ ...sample(), name: n });
+  for (const n of ['keep_l1', 'keep_l2', 'keep_l3']) store.saveNewVersion({ ...sample(), name: n });
+  store.saveNewVersion({ ...sample(), name: 'keep_l2' }); // keep_l2 v3 arrives while Carlton looks at v2
+  assert.deepEqual(store.levelTargets('keep_l1', 2), [['keep_l1', 2], ['keep_l2', 2], ['keep_l3', 2]]);
+  assert.deepEqual(store.levelTargets('keep_l2', 3), [['keep_l2', 3]]);
+});

@@ -1,0 +1,106 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "training_yard_l1",
+  "version": 1,
+  "size": [9,5,10],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T04:42:40.392Z",
+    "description": "Training yard, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 186 blocks vs 85 (first build 134 vs 60; the curb and floor are most of it). Fenced gravel drill yard (9 x 10): melee dummies on the left, an archery lane with hay butts on the right, a bench and weapon store by the entrance; targets, dummy heads and lanterns from L2, the drill master's shelter and flowers from L3.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch3",
+      "tier3",
+      "inner",
+      "military"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:chest[facing=west,type=single,waterlogged=false]",
+    "B": "minecraft:coarse_dirt",
+    "C": "minecraft:cobblestone",
+    "D": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "E": "minecraft:gravel",
+    "F": "minecraft:hay_block[axis=x]",
+    "G": "minecraft:hay_block[axis=y]",
+    "H": "minecraft:mossy_cobblestone",
+    "I": "minecraft:oak_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "J": "minecraft:oak_fence[east=false,north=false,south=false,waterlogged=false,west=true]",
+    "K": "minecraft:oak_fence[east=false,north=true,south=true,waterlogged=false,west=false]",
+    "L": "minecraft:oak_fence[east=false,north=true,south=true,waterlogged=false,west=true]",
+    "M": "minecraft:oak_fence[east=true,north=false,south=false,waterlogged=false,west=false]",
+    "N": "minecraft:oak_fence[east=true,north=false,south=false,waterlogged=false,west=true]",
+    "O": "minecraft:oak_fence[east=true,north=true,south=false,waterlogged=false,west=true]",
+    "P": "minecraft:spruce_log[axis=y]",
+    "Q": "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "R": "minecraft:torch"
+  },
+  "layers": [
+    [
+      "....D....",
+      "HCCCCCHCC",
+      "HEBEEBEEC",
+      "CEEEEEEEC",
+      "CEEBBBEBH",
+      "CEBBBEBEC",
+      "CEBEEEEEH",
+      "HEBEBBEBC",
+      "CBEEEBEEC",
+      "CCHCCCCHC"
+    ],
+    [
+      ".........",
+      "PNNJ.MNNP",
+      "KQ.....AK",
+      "KQI....#L",
+      "K.......K",
+      "K.I.....K",
+      "K.......K",
+      "K.......K",
+      "K....FFFL",
+      "PNNNPOOOP"
+    ],
+    [
+      ".........",
+      "P.......P",
+      ".........",
+      "..G......",
+      ".........",
+      "..G......",
+      ".........",
+      ".........",
+      "......F..",
+      "P...P...P"
+    ],
+    [
+      ".........",
+      "R.......R",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "R.......R"
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "........."
+    ]
+  ]
+}

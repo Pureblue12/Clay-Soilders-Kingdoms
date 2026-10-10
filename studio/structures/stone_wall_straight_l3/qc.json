@@ -1,0 +1,64 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "stone_wall_straight_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:58:27.670Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 86,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: vine, iron_bars, red_wall_banner, moss_carpet, stone_brick_wall, mossy_cobblestone_wall, stone_brick_slab."
+          }
+        ],
+        "stats": {
+          "blocks": 83,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3253012048192771,
+          "types": 15,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.42168674698795183
+          },
+          "height": 7,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "Adds vines on the front, moss carpet on the walk, a barrel, a mossy wall and a slab in the crenels.",
+          "depth": "Front has footing, corbels and slits; the inner (back, z2) face is a flat 5-high slab of brick with only cobble patches.",
+          "roof": "Joins checked against the shared profile (walk top y4 / stand y5, parapet y5, merlons at even x at y6): both open ends (x0, x4) carry the full body, an open 2-wide walk at z1-z2 and merlons at x0 and x4, so pieces join cleanly. Because the module is 5 wide, every join puts two merlons side by side (x4 + next x0); that is common to all stone_wall_* pieces, not a mismatch.",
+          "life": "Vines, moss carpet, lantern, torches."
+        },
+        "summary": "L2 plus weathering and use: vines down the front, moss carpet on the walk, a mossy cobblestone wall and a slab filling the crenels, and a barrel by the lamp post.",
+        "problems": [
+          "None blocking. Barrel (x3 z2 y5) plus post (x2 z2) leave the walk 1 wide (z1) over x2-x3; fine for soldiers.",
+          "Inner (back) face still flat (minor)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

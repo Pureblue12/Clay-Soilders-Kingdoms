@@ -1,0 +1,193 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "keep_l2",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:25:56.046Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 83,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: red_wall_banner, cracked_stone_bricks, mossy_stone_bricks, red_banner."
+          },
+          {
+            "level": "warn",
+            "check": "variety",
+            "message": "stone_bricks is 58 % of the build: break it up with a second material."
+          }
+        ],
+        "stats": {
+          "blocks": 1783,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.20807627593942793,
+          "types": 24,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.5787997756590016
+          },
+          "height": 16,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "summary": "Keep level 2: crenellations, red banners and a watch turret make it a proper castle keep.",
+        "problems": [
+          "Level 3 only adds vines over level 2: give it its own feature, such as timber hoardings (wooden galleries) on the towers or steep dark conical roofs on two of them.",
+          "It is grey stone brick almost everywhere (56 to 58 %): a dark oak timber element (hoarding, gate canopy, roof) would tie it to the rest of the kingdom's look.",
+          "On level 1 the tower tops are open boxes; even a simple slab cap or a stair parapet would make them look finished."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T04:11:54.161Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 92,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: dark_oak_fence, dark_oak_slab, mossy_stone_bricks, cracked_stone_bricks, candle, red_wall_banner, gold_block, red_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "2065 blocks, over the landmark budget of 1800 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 2065,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.3021791767554479,
+          "types": 34,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.3699757869249395
+          },
+          "height": 19,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {
+          "roof": "turret caps pagoda-like; the great hall's steep gable roof is good"
+        },
+        "summary": "Level 2 adds the great hall Carlton asked for behind the keep, with a steep dark roof and the throne on a dais inside, a walled forecourt in front and red banners on the turrets. Symmetric and clearly bigger than L1.",
+        "problems": [
+          "The turret caps are stepped tiers with a wide flared skirt, which reads more like a pagoda than a medieval tower: make them steep cones (a stair ring with one block of overhang, then 3 or 4 rings narrowing by one each step, finished with a slab and the flagpole), so they are taller than they are wide",
+          "Our QC renders of a structure this big are washed out by fog (renderer, not the build); judged from the near parts"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "5": {
+      "version": 5,
+      "checkedAt": "2026-10-10T04:34:55.350Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 97,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: dark_oak_fence, dark_oak_slab, cracked_stone_bricks, mossy_stone_bricks, candle, red_wall_banner, gold_block, red_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "1986 blocks, over the landmark budget of 1800 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 1986,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.29154078549848944,
+          "types": 34,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.3766364551863041
+          },
+          "height": 20,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {
+          "roof": "the automatic roof warning is a miss on this compound plan: the hall roof overhangs its long sides"
+        },
+        "summary": "Level 2 adds the walled forecourt and the great hall with the throne, now with side doors into the gardens so it isn't reached only through the keep. Steep cones on the turrets.",
+        "problems": [
+          "Reachability (flood fill from the ground outside, soldiers half a block tall, jump 1, drop 3, ladders climb): every floor, room, wall walk and tower top is reached; only the roof cones, the tie beams under the hall roof and the tops of log piles and the low forecourt wall are not, which is right"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

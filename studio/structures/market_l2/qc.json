@@ -1,0 +1,70 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "market_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:03:48.206Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 92,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: lectern, melon, pumpkin, red_banner, white_banner, red_wool, white_wool, yellow_wool, chiseled_stone_bricks, stone_brick_wall."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "562 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 562,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3736654804270463,
+          "types": 29,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.17437722419928825
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {
+          "detail": "Open stalls with goods (melons, pumpkins, hay), hanging lanterns, wall signs, lectern scale, strongbox, lantern posts and banner poles.",
+          "roof": "Flat stepped wool awnings; the yellow fringe on two awnings adds colour but there is still no pitch.",
+          "life": "Lanterns and produce; no plants yet (L3).",
+          "grandeur": "The tall chiseled cross head with hanging lanterns now anchors the square."
+        },
+        "summary": "Level 2 opens the stalls for trade and makes the square a proper market: a tall cross head with lanterns, a weighing lectern, a strongbox, goods on the counters, lantern posts and banner poles at the entrances.",
+        "problems": [
+          "Note only: meta.groundLayer 0, the paving replaces the grass.",
+          "Reachability: 180 of 282 standing places reached; unreached are awning tops (y 4..5) and the two cross-step tops at (6,6,7) and (8,6,7), which are fine. All stalls, counters and aisles are reached."
+        ],
+        "views": [
+          "sheet",
+          "iso"
+        ]
+      }
+    }
+  }
+}

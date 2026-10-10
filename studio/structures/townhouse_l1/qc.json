@@ -1,0 +1,62 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "townhouse_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:07:43.726Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 267,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3595505617977528,
+          "types": 20,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.20224719101123595
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "Inside is furnished (hearth furnace, slab table and stair chair, barrels, chest, 3 beds, torches), but the outside is bare: no shutters, sills, lanterns or planters until L2.",
+          "depth": "Ground floor has posts, a cobble plinth and the front jetty on brackets, but both long sides of the upper storey are a flat band of white terracotta between two log beams with no window or break.",
+          "roof": "45 degrees, 1-block overhang all round, dark oak ridge and eave course, top-stair gable trim. The bottom dark oak stair beside the top spruce stair at the gable corners (x1/x7, y6, z0 and z8) curls the eave a little, acceptable.",
+          "shape": "Front jetty, side brick chimney with a stepped base, roof overhangs: not a plain box, though it reads boxy from the sides.",
+          "life": "Only one mossy cobblestone; no plants, lanterns or path. Expected for the shell level.",
+          "scale": "5 x 6 ground floor, walls 3 high, two storeys: right for a narrow townhouse."
+        },
+        "summary": "The shell: stone-brick ground floor on a cobble plinth with a furnished kitchen-living room and staircase, a jettied dark oak and plaster upper storey with 3 beds, spruce roof and a brick chimney.",
+        "problems": [
+          "Upper storey long sides (x2 and x6, y5, z1..z7) are blank white terracotta with no windows: the bedroom has light only through the gable panes at y6; add a window or a post to break each side.",
+          "Reachability: 93 of 131 standing places reached; the unreached ones are roof slopes, the chimney top and a barrel top. Both floors and the staircase are reached, so this is fine."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "front"
+        ]
+      }
+    }
+  }
+}

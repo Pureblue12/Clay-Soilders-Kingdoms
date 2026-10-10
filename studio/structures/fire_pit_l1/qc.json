@@ -1,0 +1,158 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "fire_pit_l1",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:24:43.008Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 61,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 27,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.5925925925925926,
+          "types": 9,
+          "dominant": {
+            "name": "stripped_oak_log",
+            "share": 0.3333333333333333
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Fire pit level 1: a stone hearth with a cooking spit, three log benches and a lamp post; no longer sunk, and the fire stays unlit.",
+        "problems": [
+          "Level 1 is bare round the edges (no plants); the log benches are pale stripped birch that doesn't match the dark timber of the other buildings: spruce or oak logs.",
+          "Level 3 only adds red carpets on the benches and a few plants over level 2: give it its own feature (a cooking pot on a tripod, a woodpile shelter)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:45:35.819Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 2,
+      "score": 64,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "41 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 41,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.6097560975609756,
+          "types": 14,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.3170731707317073
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Dark spruce log benches round a stone fire ring with an unlit campfire and a spit, a woodpile, a stump and a lamp post. Better colours; the ground round it is still bare grass with stray stones.",
+        "problems": [
+          "The lone cobblestone blocks in front of the ring and beside the bench look like stray blocks: join them into a short stepping path to the fire, or use gravel or coarse dirt patches round the ring instead",
+          "Round the edges it is still bare: a few ferns, short grass or a bush behind the benches"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T04:13:10.371Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 3,
+      "score": 81,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "47 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 47,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.6595744680851063,
+          "types": 15,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.2765957446808511
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "no roof, not needed"
+        },
+        "summary": "Dark log benches round a stone fire ring with an unlit campfire and a spit, now with one joined stone path in from the front, leaf bushes and poppies round the edge, a woodpile and a lamp post.",
+        "problems": [
+          "The benches could have a little more variety (one stump seat or a crate) so the four sides don't look alike"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

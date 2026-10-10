@@ -1,0 +1,75 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "stone_wall_gate_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:58:20.574Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 72,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: stone_brick_wall, vine, iron_bars, red_wall_banner, moss_carpet, red_banner."
+          },
+          {
+            "level": "warn",
+            "check": "too-small",
+            "message": "Only 179 blocks: too bare for a landmark (at least 200). Carlton wants more detail, not less."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 179,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.30726256983240224,
+          "types": 15,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.5083798882681564
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 2,
+          "scale": 1,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "Raised iron-bar portcullis on the town side, banner on the central merlon, vines, hay, barrel, lanterns on wall posts, moss on the walk.",
+          "roof": "Tower caps unchanged: flat spruce stair pairs, no overhang.",
+          "grandeur": "Nicely dressed but still a small gate; the towers do not dominate the wall."
+        },
+        "summary": "L2 plus a raised portcullis, a banner on the central merlon, vines, hay, a barrel and moss on the walk; the most lived-in level.",
+        "problems": [
+          "Tower caps (y8 spruce stair pairs) still look like flat boards; give them a proper top.",
+          "Towers should rise a few blocks higher to read as a landmark gate.",
+          "Portcullis bars (2..4,3..4,3) hang in open air with nothing above at (2..4,5,3); a lintel at y5 z3 between the towers would make it look supported.",
+          "Reachability: walk at y5 has no stair in this piece; reached from a neighbouring wall_tower - fine for a module."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

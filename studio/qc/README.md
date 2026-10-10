@@ -3,10 +3,14 @@
 Every new structure version is checked by a reviewer before Carlton looks at it. Carlton asked for it to be fully
 automatic and to judge by his taste. It never approves or rejects anything: only Carlton does that, in the Studio.
 
-- **Automatic checks** (`src/qc/checks.ts`, no AI): floating blocks, doors and beds missing a half, fences that won't
+- **Automatic checks** (`src/qc/checks.ts`, no AI): floating blocks, doors and beds missing a half, flowers with no dirt or grass under them, fences that won't
   connect, too few blocks, too few detail blocks, one block everywhere, flat walls, a roof without overhang, a door on
   the back, block budget, height over builder reach, the buildability validator.
-- **Visual review** (an AI looking at renders): eleven criteria scored 0 to 2, weighted by Carlton's past notes
+- Blocks listed in `meta.decorationBlocks` (`[x, y, z, kind]`: water, lily pads the mod adds in its decoration step,
+  drawn in the Studio file only) don't count for buildability. For a file saved before that field existed, the review
+  JSON can list the positions (`"decorationBlocks": [[x, y, z], ...]`) after checking them against the generator's
+  `decorate()` calls.
+- **Visual review** (an AI looking at renders): ten criteria scored 0 to 2, weighted by Carlton's past notes
   (`RUBRIC.md`, `src/qc/rubric.ts`). Research behind it: `RESEARCH.md`.
 - **Verdict:** pass (score 70+, no "must" criterion at 0, no failed automatic check), revise (sent back with a list
   of fixes), or handed over (still failing after 3 rounds: Carlton sees it with the problems listed).
@@ -49,6 +53,9 @@ Rules:
   revises it; the quality check only looks at pending versions.
 - Don't fail a structure for known viewer bugs (`RUBRIC.md`, "Known viewer problems").
 - Commit only `studio/structures/`, `studio/tools`-style generator changes and nothing in the mod.
+
+For big buildings soldiers use (keep, castle, town hall), `python3 tools/qc_reach.py <version.json>` flood-fills from
+the ground outside and lists the standing places soldiers can't reach (roof tops show up too; judge by eye).
 
 Run `npm run qc -- check <name|file.json>` while building to catch the automatic problems before saving.
 `npm run qc -- status` lists the newest report of every structure.

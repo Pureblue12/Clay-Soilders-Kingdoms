@@ -1,0 +1,62 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "graveyard_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:10:17.605Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 75,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 115,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.33043478260869563,
+          "types": 8,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.2956521739130435
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "Clean shell: headstones (mixed stairs and wall posts), two spruce benches, stone cross on a plinth; no lanterns, pots or plants yet, so it reads a little bare.",
+          "depth": "Full-block stone brick piers stand proud of the thin low cobblestone wall and throw shadows; the cross plinth and benches add relief.",
+          "roof": "No roof (yard): judged on the walls and gate. Walls have no coping and the gate is just two 2-high piers with nothing over them.",
+          "shape": "Plain rectangle with a symmetric cross-shaped gravel path; the empty back-left plot (kept for the L2 yew) gives a little asymmetry.",
+          "life": "Only the gravel paths; no plants yet.",
+          "scale": "9 x 12 yard: right for a village churchyard.",
+          "grandeur": "Modest; fine for a first build."
+        },
+        "summary": "Walled churchyard shell: low cobblestone wall with stone brick piers, cross-shaped gravel paths, six graves with headstones, two benches and a stone cross at the back. groundLayer 0 (flush with the grass), which the mod does not support yet.",
+        "problems": [
+          "Reachability: 80 of 86 standing places reached, all paths and graves walkable; the 6 unreached are pier and cross-arm tops, fine.",
+          "Note: meta.groundLayer 0 (flush piece), not supported by the mod yet."
+        ],
+        "views": [
+          "sheet",
+          "iso"
+        ]
+      }
+    }
+  }
+}

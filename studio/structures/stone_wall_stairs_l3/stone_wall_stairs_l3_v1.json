@@ -1,0 +1,94 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "stone_wall_stairs_l3",
+  "version": 1,
+  "size": [5,7,5],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T04:42:39.942Z",
+    "description": "Stone wall, walk stairs, level 3 of 3: L2 plus flourish 3. Over budget: 100 blocks vs 60. A straight module with a stone stair flight on the town side up to the walk. Not yet builder-tested: iron_bars, moss_carpet, red_wall_banner, stone_brick_slab, stone_brick_wall, vine. Decoration step adds: banner_pattern, potted_plant.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch3",
+      "tier3",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:cobblestone",
+    "B": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "C": "minecraft:flower_pot",
+    "D": "minecraft:hay_block[axis=y]",
+    "E": "minecraft:iron_bars[east=true,north=false,south=true,waterlogged=false,west=true]",
+    "F": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "G": "minecraft:moss_carpet",
+    "H": "minecraft:mossy_cobblestone",
+    "I": "minecraft:red_wall_banner[facing=north]",
+    "J": "minecraft:red_wall_banner[facing=south]",
+    "K": "minecraft:stone_brick_slab[type=bottom,waterlogged=false]",
+    "L": "minecraft:stone_brick_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "M": "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "N": "minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none]",
+    "O": "minecraft:stone_bricks",
+    "P": "minecraft:vine[east=false,north=false,south=true,up=false,west=false]",
+    "Q": "minecraft:wall_torch[facing=south]"
+  },
+  "layers": [
+    [
+      "BBBBB",
+      "AAAHH",
+      "AHAAA",
+      "LAHHA",
+      "NCD##"
+    ],
+    [
+      "P...P",
+      "AAAAA",
+      "OAAOA",
+      ".LOOO",
+      "F...#"
+    ],
+    [
+      "P...P",
+      "OEOEO",
+      "OOOOO",
+      "..LOO",
+      "....."
+    ],
+    [
+      "..I..",
+      "OOOOO",
+      "OOOOO",
+      "...LA",
+      "....J"
+    ],
+    [
+      "MMMMM",
+      "AOOAO",
+      "OOOAO",
+      "....L",
+      "....."
+    ],
+    [
+      "OOOOO",
+      "...G.",
+      "..G..",
+      ".....",
+      "....."
+    ],
+    [
+      "O.OKO",
+      "Q....",
+      ".....",
+      ".....",
+      "....."
+    ]
+  ]
+}

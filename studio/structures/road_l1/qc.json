@@ -1,0 +1,118 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "road_l1",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:24:41.278Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 28,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "too-small",
+            "message": "Only 30 blocks: too bare for a common (at least 50). Carlton wants more detail, not less."
+          },
+          {
+            "level": "fail",
+            "check": "detail",
+            "message": "Only 0 % of the blocks are detail blocks (stairs, slabs, trapdoors, fences, lanterns, flowers...). Aim for 20 %+."
+          }
+        ],
+        "stats": {
+          "blocks": 30,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0,
+          "types": 5,
+          "dominant": {
+            "name": "coarse_dirt",
+            "share": 0.3
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 0,
+          "artefacts": 0,
+          "purpose": 1,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 0,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 0
+        },
+        "summary": "Road level 1: a varied gravel, dirt and cobblestone patch, but it stands a full block above the grass like a platform.",
+        "problems": [
+          "Still raised a whole block above the grass, which is exactly Carlton's note (\"road is above ground now\"). A road has to replace the ground: set meta.groundLayer 0 so layer 0 is level with the grass (the mod side then needs to dig the path in), or make it one layer of slabs/carpet-height blocks.",
+          "Level 1 has no detail blocks at all (the automatic check fails it): add the kerb slabs and a lamp from level 1."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:45:15.219Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 2,
+      "score": 50,
+      "auto": {
+        "issues": [
+          {
+            "level": "fail",
+            "check": "too-small",
+            "message": "Only 24 blocks: too bare for a common (at least 50). Carlton wants more detail, not less."
+          }
+        ],
+        "stats": {
+          "blocks": 24,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 1,
+          "types": 5,
+          "dominant": {
+            "name": "cobblestone_slab",
+            "share": 0.6666666666666666
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 1,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 0
+        },
+        "notes": {
+          "artefacts": "the earth stretches show as grass in the viewer (known, decoration step); with them missing level 1 reads as a broken H of cobblestone"
+        },
+        "summary": "Now half a block high, which answers Carlton's note as far as the mod allows, but level 1 is only 24 cobblestone slabs in an H with big gaps, a lamp post and a few poppies.",
+        "problems": [
+          "Level 1 is too bare (automatic check: 24 blocks): fill the road with the mixed slabs from level 2 already (stone, andesite, mossy, mud brick) so L1 is a whole road, and keep the earth stretches for the decoration step",
+          "Put kerb slabs or a row of coarse dirt along both edges in L1 so the road has a clear border"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

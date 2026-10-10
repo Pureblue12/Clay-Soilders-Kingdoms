@@ -1,0 +1,178 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "fire_pit_l2",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:24:43.597Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 75,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: stone_slab, cauldron."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "39 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 39,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.5897435897435898,
+          "types": 13,
+          "dominant": {
+            "name": "stripped_oak_log",
+            "share": 0.23076923076923078
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Fire pit level 2: adds a cauldron, crates, a chopping block and stepping stones; a lived-in cooking spot.",
+        "problems": [
+          "Level 1 is bare round the edges (no plants); the log benches are pale stripped birch that doesn't match the dark timber of the other buildings: spruce or oak logs.",
+          "Level 3 only adds red carpets on the benches and a few plants over level 2: give it its own feature (a cooking pot on a tripod, a woodpile shelter)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:45:36.359Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 72,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: short_grass, cauldron, dandelion, fern."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "58 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 58,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.7241379310344828,
+          "types": 21,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.22413793103448276
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Level 1 plus red cushions on the benches, a cauldron, a second lamp post and a cooking pot. Reads as a cosy gathering spot.",
+        "problems": [
+          "The lone cobblestone blocks in front of the ring and beside the bench look like stray blocks: join them into a short stepping path to the fire, or use gravel or coarse dirt patches round the ring instead"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T04:13:10.968Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 81,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: short_grass, cauldron, dandelion, fern."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "64 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 64,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.75,
+          "types": 22,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.203125
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "no roof, not needed"
+        },
+        "summary": "Level 1 plus red cushions on the benches, a cauldron and a second lamp post. A cosy gathering place.",
+        "problems": [
+          "L2's changes are small (cushions, a cauldron): a cooking pot on a tripod or a log seat ring would set it further apart from L1"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

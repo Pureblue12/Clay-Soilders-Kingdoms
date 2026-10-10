@@ -1,0 +1,93 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "well_l3",
+  "version": 5,
+  "size": [5,6,5],
+  "meta": {
+    "status": "rejected",
+    "notes": "still not cirucular and have the rim only be 1 block tall",
+    "author": "claude",
+    "created": "2026-10-10T03:55:47.172Z",
+    "description": "Well, level 3 of 3: L2 plus flourish 3. Round stone well: octagon cobblestone basin with stair-rounded corners, dark oak posts and windlass with a chain; L2 adds the spruce gable roof and crank, L3 flowers, a water tub, moss and lanterns. 5 x 5 x 6, water by the decoration step. Not yet builder-tested: cauldron, dark_oak_slab, flowering_azalea_leaves, lever, moss_carpet. Decoration step adds: item, potted_plant, water, water_cauldron.",
+    "changes": "Turned the roof so it slopes to the front: the posts stand left and right of the basin, so the well is no longer hidden behind a post from the front. The roof is narrower and higher (over the axle only), so the rim is open. L1 adds a barrel, L2 a lantern under a gable bracket, L3 two more lanterns.",
+    "parent": 4,
+    "reviewedAt": "2026-10-10T04:13:17.161Z",
+    "tags": [
+      "batch2",
+      "tier1",
+      "core",
+      "water"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:cauldron",
+    "B": "minecraft:chain[axis=y]",
+    "C": "minecraft:cobblestone",
+    "D": "minecraft:cobblestone_stairs[facing=east,half=bottom,shape=outer_left,waterlogged=false]",
+    "E": "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=outer_left,waterlogged=false]",
+    "F": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=outer_left,waterlogged=false]",
+    "G": "minecraft:cobblestone_stairs[facing=west,half=bottom,shape=outer_left,waterlogged=false]",
+    "H": "minecraft:dark_oak_log[axis=x]",
+    "I": "minecraft:dark_oak_log[axis=y]",
+    "J": "minecraft:dark_oak_slab[type=bottom,waterlogged=false]",
+    "K": "minecraft:dark_oak_stairs[facing=east,half=top,shape=straight,waterlogged=false]",
+    "L": "minecraft:dark_oak_stairs[facing=north,half=top,shape=straight,waterlogged=false]",
+    "M": "minecraft:dark_oak_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "N": "minecraft:dark_oak_stairs[facing=west,half=top,shape=straight,waterlogged=false]",
+    "O": "minecraft:flower_pot",
+    "P": "minecraft:flowering_azalea_leaves[distance=1,persistent=true,waterlogged=false]",
+    "Q": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "R": "minecraft:lever[face=wall,facing=north,powered=false]",
+    "S": "minecraft:moss_carpet",
+    "T": "minecraft:mossy_cobblestone",
+    "U": "minecraft:spruce_slab[type=top,waterlogged=false]",
+    "V": "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "W": "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]"
+  },
+  "layers": [
+    [
+      "FCCTG",
+      "CC.CC",
+      "C...T",
+      "TC.CC",
+      "DTCCE"
+    ],
+    [
+      "OCCC#",
+      "T...C",
+      "I.B.I",
+      "C...T",
+      "PCCCA"
+    ],
+    [
+      ".S.S.",
+      "R...Q",
+      "INBKI",
+      "Q...Q",
+      ".S.S."
+    ],
+    [
+      ".....",
+      "L...L",
+      "IHHHI",
+      "M...M",
+      "....."
+    ],
+    [
+      ".....",
+      "WWWWW",
+      "I.U.I",
+      "VVVVV",
+      "....."
+    ],
+    [
+      ".....",
+      ".....",
+      "JJJJJ",
+      ".....",
+      "....."
+    ]
+  ]
+}

@@ -5,11 +5,11 @@
   "size": [5,3,5],
   "meta": {
     "status": "rejected",
-    "notes": "missing textures also whatever is on hte side of it is sunk into ground",
+    "notes": "road is above ground now at the same level as posts.",
     "author": "generator",
     "created": "2026-10-10T01:37:40.078Z",
     "description": "Imported from road_l2.nbt",
-    "reviewedAt": "2026-10-10T02:28:47.109Z",
+    "reviewedAt": "2026-10-10T03:16:05.290Z",
     "parent": null
   },
   "palette": {

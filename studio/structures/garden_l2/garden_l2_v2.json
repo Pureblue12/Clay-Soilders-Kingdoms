@@ -1,0 +1,103 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "garden_l2",
+  "version": 2,
+  "size": [9,5,9],
+  "meta": {
+    "status": "rejected",
+    "notes": "larger have it in the ground like level with the ground I want diffrent types of flowers and trees I really want this pretty if need be do some research online idc I jsut want it prettty more flowrrs and such",
+    "author": "claude",
+    "created": "2026-10-10T03:33:59.491Z",
+    "description": "Garden (level 1), level 2 of 3: L1 plus flourish 2. A 9 x 9 ornamental garden on a low stepped floor: gravel cross, log-framed poppy beds, a bench and a tool chest; later levels add hedges, a bird bath, a leafy pergola and an urn. Not yet builder-tested: cauldron. Decoration step adds: water.",
+    "changes": "Now sits on the grass instead of sinking into it: the same garden on one flat floor (gravel paths, soil beds framed by logs, a spruce deck) with a step of cobblestone stairs all round; small additions: a bird bath, a lantern under the pergola.",
+    "parent": 1,
+    "reviewedAt": "2026-10-10T03:41:44.964Z",
+    "tags": [
+      "batch2",
+      "tier2",
+      "inner",
+      "civic"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:cauldron",
+    "A": "minecraft:chest[facing=west,type=single,waterlogged=false]",
+    "B": "minecraft:coarse_dirt",
+    "C": "minecraft:cobblestone",
+    "D": "minecraft:cobblestone_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "E": "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=outer_left,waterlogged=false]",
+    "F": "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=outer_right,waterlogged=false]",
+    "G": "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "H": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=outer_left,waterlogged=false]",
+    "I": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=outer_right,waterlogged=false]",
+    "J": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "K": "minecraft:cobblestone_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "L": "minecraft:cobblestone_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none]",
+    "M": "minecraft:gravel",
+    "N": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "O": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "P": "minecraft:oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "Q": "minecraft:poppy",
+    "R": "minecraft:spruce_planks",
+    "S": "minecraft:stripped_spruce_log[axis=x]",
+    "T": "minecraft:stripped_spruce_log[axis=z]"
+  },
+  "layers": [
+    [
+      "HJJJJJJJI",
+      "DSSSMSSSK",
+      "DTBBMBBTK",
+      "DTBBMBBTK",
+      "DMMMCMMMK",
+      "DBBBMRRRK",
+      "DBBBMRRRK",
+      "DCCCMRRRK",
+      "FGGGGGGGE"
+    ],
+    [
+      ".........",
+      ".OOO.OOO.",
+      ".OQQ.QQO.",
+      ".OQQ.QQO.",
+      ".........",
+      ".QLQ.....",
+      ".QQ....A.",
+      "..PP..P..",
+      "........."
+    ],
+    [
+      ".........",
+      "...N.N...",
+      ".........",
+      ".........",
+      ".........",
+      "..#......",
+      ".........",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "........."
+    ]
+  ]
+}

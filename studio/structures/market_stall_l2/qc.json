@@ -1,0 +1,127 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "market_stall_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:51:08.888Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 50,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: melon, pumpkin, cake."
+          },
+          {
+            "level": "warn",
+            "check": "too-small",
+            "message": "Only 48 blocks: too bare for a common (at least 50). Carlton wants more detail, not less."
+          }
+        ],
+        "stats": {
+          "blocks": 48,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.1875,
+          "types": 12,
+          "dominant": {
+            "name": "blue_wool",
+            "share": 0.3125
+          },
+          "height": 4,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 0,
+          "materials": 0,
+          "shape": 1,
+          "life": 1,
+          "scale": 1,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "solid two-layer wool block",
+          "materials": "neon blue and cyan wool"
+        },
+        "summary": "Adds pumpkins, melons, hay, cake and lanterns: now it reads as a market stall.",
+        "problems": [
+          "The canopy is two full layers of solid blue and light-blue wool, bigger and heavier than the stall under it: from every view the stall is a bright blue box. Make the awning one block thick (or wool on the front edge and carpet/trapdoors behind), sloping down to the front",
+          "Colours: the saturated blue/cyan clashes with the medieval palette of every other structure. Use red and white like the butcher's awning, or brown/white, yellow/white",
+          "The counter and goods sit deep under the canopy and are half hidden; push the goods to the front edge so they show"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T05:02:43.888Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 83,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: pumpkin, melon, red_wool, white_wool."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "71 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 71,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.5774647887323944,
+          "types": 14,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.19718309859154928
+          },
+          "height": 5,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "Still a little heavy: the back canopy is wool on a full plank layer (two blocks thick); a single layer would look lighter. Not blocking."
+        },
+        "summary": "Adds a deeper front awning, pumpkins, melons, hay and lanterns at the counter corners.",
+        "problems": [
+          "Round 1 fixes are in: red and white stripes instead of neon blue, and the front awning is one layer stepping down from the back. Still a little heavy: the back canopy is wool on a full plank layer (two blocks thick); a single layer would look lighter. Not blocking."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

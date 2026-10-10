@@ -348,9 +348,15 @@ function escapeHtml(s: string) {
   return s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
 }
 
-/** "Apply to all levels": reviews and notes go to the latest version of every level (bench_l1, bench_l2, ...). */
+/** "Apply to all levels": reviews and notes go to the SAME version number of every level (Store.levelTargets). */
 function allLevelsOn(s: StructureSummary) {
   return state.allLevels && s.levels.length > 1;
+}
+
+/** The levels that have the version on screen, and the ones that don't (they are left alone). */
+function levelTargets(s: StructureSummary, version: number) {
+  const has = (n: string) => n === s.name || !!state.list.find((x) => x.name === n)?.versions.some((v) => v.version === version);
+  return { hit: s.levels.filter(has), missing: s.levels.filter((n) => !has(n)) };
 }
 
 function renderLevelsToggle(s: StructureSummary) {
@@ -358,10 +364,12 @@ function renderLevelsToggle(s: StructureSummary) {
   b.hidden = s.levels.length < 2;
   b.classList.toggle('on', state.allLevels);
   b.textContent = state.allLevels ? 'Apply to all levels: ON' : 'Apply to all levels: off';
-  b.title = `Approve, reject and notes also go to the latest version of ${s.levels.join(', ')}`;
+  const t = levelTargets(s, state.version);
+  b.title = `Approve, reject and notes also go to v${state.version} of ${s.levels.join(', ')}`;
   const hint = $('#levels-hint');
   hint.hidden = !allLevelsOn(s);
-  hint.textContent = `Goes to ${s.levels.join(', ')} (latest versions)`;
+  hint.textContent = `Goes to v${state.version} of ${t.hit.join(', ')}` +
+    (t.missing.length ? ` (not ${t.missing.join(', ')}: no v${state.version})` : '');
 }
 
 /** Approve / reject / pending. Sends the notes in the box too. */
@@ -374,7 +382,7 @@ async function review(status: Status) {
   files.delete(`${s.name}@${state.version}`);
   await refreshList();
   renderReview();
-  const names = r.saved.length > 1 ? `${r.saved.length} levels (${r.saved.map((x) => x.name).join(', ')})` : `${s.name} v${state.version}`;
+  const names = r.saved.map((x) => `${x.name} v${x.version}`).join(', ');
   toast(r.git.message ? `${names}: ${status}. ${r.git.message}` : `${names}: ${status}`, !r.git.ok);
 }
 

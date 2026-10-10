@@ -1,0 +1,89 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "well_l1",
+  "version": 2,
+  "size": [5,7,5],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude-qc",
+    "created": "2026-10-10T03:13:59.542Z",
+    "description": "Well, level 1 of 3: shell and fittings (what soldiers build first). Stone well: two-course cobblestone basin, dark oak posts and windlass beam with a chain, steep spruce gable roof; 5 x 5, water by the decoration step. Decoration step adds: water.",
+    "changes": "Quality check round 2: rebuilt as a 5 x 5 well (generator tools/batch2/well.py): two-course mossy cobblestone basin, dark oak posts and windlass beam with a chain and crank, steep spruce gable roof with dark oak eaves and ridge; level 2 adds a trough, bucket barrel, pots and a lantern; level 3 bushes, flowers, a step and moss",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier1",
+      "core",
+      "water"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:chain[axis=y]",
+    "A": "minecraft:cobblestone",
+    "B": "minecraft:dark_oak_log[axis=x]",
+    "C": "minecraft:dark_oak_log[axis=y]",
+    "D": "minecraft:dark_oak_planks",
+    "E": "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "F": "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "G": "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "H": "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "I": "minecraft:mossy_cobblestone",
+    "J": "minecraft:oak_fence[east=false,north=false,south=false,waterlogged=false,west=true]",
+    "K": "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "L": "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]"
+  },
+  "layers": [
+    [
+      ".....",
+      ".AAA.",
+      ".A.A.",
+      ".AAA.",
+      "....."
+    ],
+    [
+      ".....",
+      ".AAI.",
+      ".A.A.",
+      ".IAA.",
+      "....."
+    ],
+    [
+      ".....",
+      ".....",
+      ".C.C.",
+      ".....",
+      "....."
+    ],
+    [
+      ".....",
+      ".....",
+      ".C#C.",
+      ".....",
+      "....."
+    ],
+    [
+      "GGGGG",
+      ".....",
+      ".C#CJ",
+      ".....",
+      "FFFFF"
+    ],
+    [
+      ".....",
+      "LLLLL",
+      ".BBB.",
+      "KKKKK",
+      "....."
+    ],
+    [
+      ".....",
+      ".....",
+      "EDDDH",
+      ".....",
+      "....."
+    ]
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "inn_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:07:52.818Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 92,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: allium, oxeye_daisy, cauldron, azure_bluet, fern, dandelion, cornflower, oak_sign, oak_hanging_sign, red_wall_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "509 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 509,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4656188605108055,
+          "types": 42,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.18271119842829076
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 1,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "Porch on fence posts with a hanging lantern, flower boxes either side of the step, a bench, luggage chest and barrel, a Welcome signpost, a wall banner, smoking chimney.",
+          "purpose": "Clearly a roadside inn: sign, signpost, porch, stable.",
+          "materials": "Still three woods plus white terracotta and bricks; acceptable but busy.",
+          "life": "Flowers in boxes and round the base, leaf bushes at the back corners, lanterns, fence and signpost."
+        },
+        "summary": "L3 adds a slab porch over the door with a lantern, flower boxes, a Welcome signpost, a bench and luggage by the door, flowers and bushes round the base, a red banner and a smoking chimney top.",
+        "problems": [
+          "The loose fence rail at (11,0,2)-(11,0,4) from L2 is still unattached (see L2).",
+          "Reachability: rooms, upper floor and stable reached (148 of 227); unreached are roof slopes, the porch roof (x4-6 y4 z0-1), the stable roof and chimney, which is fine."
+        ],
+        "views": [
+          "sheet",
+          "front",
+          "iso"
+        ]
+      }
+    }
+  }
+}

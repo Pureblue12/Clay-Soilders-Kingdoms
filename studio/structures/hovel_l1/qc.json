@@ -1,0 +1,63 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "hovel_l1",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T04:07:52.424Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 44,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "too-small",
+            "message": "Only 30 blocks: too bare for a common (at least 50). Carlton wants more detail, not less."
+          }
+        ],
+        "stats": {
+          "blocks": 30,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5333333333333333,
+          "types": 6,
+          "dominant": {
+            "name": "oak_slab",
+            "share": 0.4
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 0,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 0,
+          "materials": 1,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 0
+        },
+        "notes": {
+          "roof": "flat plank lid flush with the walls",
+          "purpose": "Carlton's note on v1: 'otherwise good', only the sinking was wrong"
+        },
+        "summary": "Unchanged tiny oak hovel (now sitting on the grass): log corners, plank walls, a flat plank roof, a bed and a chest inside. Carlton called it good apart from the sinking, but by the rubric it is very plain.",
+        "problems": [
+          "Flat plank roof flush with the walls: a low pitched roof of stairs with one block of overhang would lift it most",
+          "All one oak colour: spruce or dark oak for the corner logs and the roof would match the rest of the village",
+          "Only if Carlton wants more: a flower or a barrel by the door"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

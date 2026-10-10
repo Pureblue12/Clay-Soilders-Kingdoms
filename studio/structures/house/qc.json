@@ -1,0 +1,124 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "house",
+  "reports": {
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:21:05.213Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 86,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: moss_carpet, bookshelf, vine, azure_bluet, candle."
+          },
+          {
+            "level": "warn",
+            "check": "connections",
+            "message": "1 fence/pane/wall block(s) have no north/east/south/west set although a neighbour would connect, so they show as lone posts: (3, 1, 4)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 278,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5179856115107914,
+          "types": 35,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.20503597122302158
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "House: a charming timber-framed house with a porch, flower boxes, a log pile and garden fence; Carlton's \"more decorations\" note is answered.",
+        "problems": [
+          "One fence at (3, 1, 4) still shows as a lone post.",
+          "The roof is one oak colour and flush at the gable ends: dark eaves, a slab ridge and a block of overhang front and back would finish it."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T03:27:35.594Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 92,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: moss_carpet, bookshelf, vine, azure_bluet, candle."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 282,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.524822695035461,
+          "types": 36,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.12411347517730496
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "House: timber-framed house with dark eaves, porch, flower boxes, log pile and garden fence; the lone fence is fixed.",
+        "problems": [
+          "The gable ends are still flush (no overhang front and back)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

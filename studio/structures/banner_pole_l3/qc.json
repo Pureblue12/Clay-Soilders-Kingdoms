@@ -1,0 +1,61 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "banner_pole_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:06:24.168Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 92,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: white_wall_banner, red_wall_banner, red_banner."
+          }
+        ],
+        "stats": {
+          "blocks": 25,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.92,
+          "types": 10,
+          "dominant": {
+            "name": "spruce_fence",
+            "share": 0.28
+          },
+          "height": 9,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {
+          "artefacts": "with red wall banners added at (0,6,2) and (2,6,2) behind them, the lanterns at (0,5,1) and (2,5,1) are boxed in between two banners and barely visible from any side",
+          "life": "no plants; colour comes from banners only"
+        },
+        "summary": "Adds two red banners on the back of the crossbar and a plaque (wall sign) on the log base; full colour on both faces, the grandest version.",
+        "problems": [
+          "Lanterns (0,5,1) and (2,5,1) are sandwiched between the white banners (0,6,0)/(2,6,0) and red banners (0,6,2)/(2,6,2): visible only as a glimpse from the sides. Widen the crossbar or relocate the lanterns (e.g. hang them from crossbar ends outside the banners)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

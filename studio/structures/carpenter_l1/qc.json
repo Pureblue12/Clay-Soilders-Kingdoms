@@ -180,6 +180,62 @@
           "sheet"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T03:41:20.208Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 75,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "door",
+            "message": "No door on the front half (z = 0 is the front, toward the easel)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 156,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.38461538461538464,
+          "types": 21,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.19230769230769232
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "The bare workshop shell as before: dark oak frame, plaster panels, spruce roof with dark eaves, a sawhorse and log pile. Fine as the first level; the dressing comes in L2 and L3.",
+        "problems": [
+          "The side walls are still flat plaster panels between the posts: a sill row or mid-post would add depth"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

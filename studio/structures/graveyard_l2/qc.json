@@ -1,0 +1,74 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "graveyard_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:10:18.185Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 92,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: polished_andesite_stairs, dark_oak_leaves, spruce_leaves."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 193,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.533678756476684,
+          "types": 17,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.17616580310880828
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {
+          "detail": "Lychgate with a hanging lantern, standing lanterns on the side piers, a new grave and headstone, plus the L1 benches, cross and headstones.",
+          "artefacts": "The yew canopy swallows the cross: leaves at (3,2,10), (2,3,10) and (3,4,10) wrap the west arm and top of the cross (wall arm at (3,3,10)), so from the front only half the cross shows. The trunk is only 2 logs ((2,1,9),(2,2,9)) and leaves start at y2, so the tree reads as a shapeless blob over the back-left graves.",
+          "roof": "Lychgate roof: 45 degree spruce stairs, slab ridge, dark oak gable, fence trim, and one block of overhang front and back (z0 and z2 past the posts at z1). The automatic 'no overhang' warning is a false alarm for a gate roof; it has no side overhang because the eaves sit on the posts, acceptable for a lychgate.",
+          "shape": "Lychgate at the front and the yew at the back corner break the flat yard at two heights; good asymmetry.",
+          "life": "Yew and lanterns; no flowers yet.",
+          "grandeur": "The lychgate makes the entrance read as a proper churchyard."
+        },
+        "summary": "L1 plus a spruce lychgate with a hanging lantern over the entrance, a dark oak/spruce yew in the back-left corner, lanterns on the side piers and a new grave; clearly richer than L1.",
+        "problems": [
+          "Yew canopy covers the cross's west arm and top: pull the leaves at (3,2,10), (2,3,10), (3,4,10) and (3,5,10 area) back to x<=2, or move the tree one block west/south so the cross stands clear.",
+          "Yew trunk is 2 logs with leaves from y2: raise the trunk to 3 (add a log at (2,3,9)) and start the canopy at y3 so it reads as a tree, not a hedge blob over the graves.",
+          "Reachability: 80 of 115 standing places reached; every path, grave and bench is reachable. Unreached are the lychgate roof, tree tops and pier tops, fine."
+        ],
+        "views": [
+          "sheet",
+          "iso_back",
+          "front"
+        ]
+      }
+    }
+  }
+}

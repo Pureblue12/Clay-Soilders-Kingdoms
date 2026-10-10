@@ -1,0 +1,105 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "farm_field_wheat_l1",
+  "version": 2,
+  "size": [11,5,9],
+  "meta": {
+    "status": "rejected",
+    "notes": "ever so slightly wider with more detail surrounding it please keep it simple nothing crazy",
+    "author": "claude",
+    "created": "2026-10-10T03:27:21.305Z",
+    "description": "Farm field: wheat, level 1 of 1: shell and fittings (what soldiers build first). A raised field bed, one level: dirt in two blocks of 4 rows each side of an open trench, oak log border and fence with an entrance at the front centre, plank boardwalk and composter in front. Builders place the dirt; farmers till it into farmland and the decoration step adds the trench water and the wheat (builders can place neither water, farmland nor crops). Modules tile side by side and around the farmhouse. A scarecrow stands in the left bed; hay by the path. Decoration step adds: crop, farmland, water.",
+    "changes": "A step up from the boardwalk at the entrance, so soldiers can walk into the field; the scarecrow and hay mark it as the wheat field.",
+    "parent": 1,
+    "reviewedAt": "2026-10-10T03:44:18.781Z",
+    "tags": [
+      "revise1",
+      "tier1",
+      "outer",
+      "farm"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:brown_carpet",
+    "A": "minecraft:coarse_dirt",
+    "B": "minecraft:cobblestone",
+    "C": "minecraft:composter",
+    "D": "minecraft:dirt",
+    "E": "minecraft:hay_block[axis=x]",
+    "F": "minecraft:hay_block[axis=y]",
+    "G": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "H": "minecraft:oak_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "I": "minecraft:oak_fence[east=false,north=false,south=false,waterlogged=false,west=true]",
+    "J": "minecraft:oak_fence[east=false,north=true,south=false,waterlogged=false,west=true]",
+    "K": "minecraft:oak_fence[east=false,north=true,south=true,waterlogged=false,west=false]",
+    "L": "minecraft:oak_fence[east=false,north=true,south=true,waterlogged=false,west=true]",
+    "M": "minecraft:oak_fence[east=true,north=false,south=false,waterlogged=false,west=false]",
+    "N": "minecraft:oak_fence[east=true,north=false,south=false,waterlogged=false,west=true]",
+    "O": "minecraft:oak_fence[east=true,north=false,south=true,waterlogged=false,west=false]",
+    "P": "minecraft:oak_fence[east=true,north=true,south=false,waterlogged=false,west=false]",
+    "Q": "minecraft:oak_log[axis=x]",
+    "R": "minecraft:oak_log[axis=z]",
+    "S": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=true]",
+    "T": "minecraft:spruce_fence[east=true,north=false,south=false,waterlogged=false,west=false]",
+    "U": "minecraft:spruce_slab[type=bottom,waterlogged=false]",
+    "V": "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]"
+  },
+  "layers": [
+    [
+      "CUUUUVUUUEF",
+      "QQQQQBQQQQQ",
+      "RDDDD.DDDDR",
+      "RDDDD.DDDDR",
+      "RDDDD.DDDDR",
+      "RDADD.DDDDR",
+      "RDDDD.DDDDR",
+      "RDDDD.DDDDR",
+      "QQQQQBQQQQQ"
+    ],
+    [
+      "..........E",
+      "ONNNI.MNNNL",
+      "K.........K",
+      "K.........K",
+      "K.........K",
+      "K.H.......K",
+      "K.........K",
+      "K.........K",
+      "PNNNNNNNNNJ"
+    ],
+    [
+      "...........",
+      "G.........G",
+      "...........",
+      "...........",
+      "...........",
+      ".TFS.......",
+      "...........",
+      "...........",
+      "..........."
+    ],
+    [
+      "...........",
+      "...........",
+      "...........",
+      "...........",
+      "...........",
+      "..F........",
+      "...........",
+      "...........",
+      "..........."
+    ],
+    [
+      "...........",
+      "...........",
+      "...........",
+      "...........",
+      "...........",
+      "..#........",
+      "...........",
+      "...........",
+      "..........."
+    ]
+  ]
+}

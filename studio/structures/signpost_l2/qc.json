@@ -1,0 +1,119 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "signpost_l2",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:18:46.768Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 86,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: moss_carpet."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "36 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 36,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.7222222222222222,
+          "types": 11,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.1388888888888889
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 1,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Signpost level 2: adds a hanging board under the crossbar; otherwise the same as level 1.",
+        "problems": [
+          "Put real oak signs (arrows) on the post at two heights, pointing different ways.",
+          "Make level 2 differ more from level 1 (a small roof cap over the lantern, a notice, a bench)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:27:35.023Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 92,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: moss_carpet."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "45 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 45,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.7777777777777778,
+          "types": 11,
+          "dominant": {
+            "name": "oak_wall_sign",
+            "share": 0.2222222222222222
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Signpost level 2: adds a crossbar with chains, a hanging lantern and a hanging board; clearly richer than level 1.",
+        "problems": [
+          "45 blocks, over the prop budget; Carlton decides."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

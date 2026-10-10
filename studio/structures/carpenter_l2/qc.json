@@ -209,6 +209,68 @@
           "sheet"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T03:41:20.761Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 89,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: fletching_table."
+          },
+          {
+            "level": "warn",
+            "check": "door",
+            "message": "No door on the front half (z = 0 is the front, toward the easel)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 173,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.42196531791907516,
+          "types": 31,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.17341040462427745
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "The workshop now looks used: fletching table, grindstone and chopping block in the open bay, crates and planks by the door, a lantern over the entrance. Clearly more than L1.",
+        "problems": [
+          "Outside is still mostly bare at this level: one flower or a barrel at the back corner would help",
+          "Side walls stay flat plaster between posts"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

@@ -1,0 +1,110 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "palisade_stepped_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T03:47:49.591Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 67,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "connections",
+            "message": "15 fence/pane/wall block(s) have no north/east/south/west set although a neighbour would connect, so they show as lone posts: (0, 0, 1), (1, 0, 1), (2, 0, 1) and 12 more."
+          },
+          {
+            "level": "warn",
+            "check": "variety",
+            "message": "Only 4 block types: mix materials (STYLE.md palette)."
+          }
+        ],
+        "stats": {
+          "blocks": 41,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.5365853658536586,
+          "types": 4,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.4634146341463415
+          },
+          "height": 6,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Like the straight piece, with the walk rising in half steps. Same plain look.",
+        "problems": [
+          "The oak fence posts under the walk stand as lone unjoined posts, and the sharpened fence points would grow arms into the taller stakes beside them: brace the posts to the stakes and keep the points as lone points",
+          "Almost all spruce log (58 %): a cobblestone footing under the stakes would tie it to the stone base of the other buildings",
+          "Levels 2 and 3 only add torches and a bit of moss: give each level something you can see (stores under the walk, hanging lanterns, a banner)"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:49:54.874Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 78,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 36,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.4722222222222222,
+          "types": 6,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.3888888888888889
+          },
+          "height": 6,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "The straight piece with the walk rising in half steps; cobblestone footing, braced posts. The plain first level.",
+        "problems": [
+          "The outside face is one flat plane of logs: an odd stake set half a block forward (a log on a slab) or a second, lower row would give it depth"
+        ],
+        "views": [
+          "iso",
+          "front"
+        ]
+      }
+    }
+  }
+}

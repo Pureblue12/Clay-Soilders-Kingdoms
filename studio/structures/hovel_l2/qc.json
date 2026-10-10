@@ -1,0 +1,63 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "hovel_l2",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T04:07:52.937Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 53,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "too-small",
+            "message": "Only 35 blocks: too bare for a common (at least 50). Carlton wants more detail, not less."
+          }
+        ],
+        "stats": {
+          "blocks": 35,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5428571428571428,
+          "types": 10,
+          "dominant": {
+            "name": "oak_slab",
+            "share": 0.34285714285714286
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 0,
+          "materials": 1,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 0
+        },
+        "notes": {
+          "roof": "flat plank lid flush with the walls",
+          "purpose": "Carlton's note on v1: 'otherwise good', only the sinking was wrong"
+        },
+        "summary": "Unchanged tiny oak hovel (now sitting on the grass): log corners, plank walls, a flat plank roof, a bed and a chest inside, with a lean-to and a lamp post on the higher levels. Carlton called it good apart from the sinking, but by the rubric it is very plain.",
+        "problems": [
+          "Flat plank roof flush with the walls: a low pitched roof of stairs with one block of overhang would lift it most",
+          "All one oak colour: spruce or dark oak for the corner logs and the roof would match the rest of the village",
+          "Only if Carlton wants more: a flower or a barrel by the door"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

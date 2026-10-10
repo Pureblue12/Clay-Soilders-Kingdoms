@@ -1,0 +1,82 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "wall_tower_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:58:18.142Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: iron_bars, red_wall_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "170 blocks, over the module budget of 60 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "13 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          },
+          {
+            "level": "warn",
+            "check": "door",
+            "message": "No door on the front half (z = 0 is the front, toward the easel)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 170,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.2411764705882353,
+          "types": 13,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.4588235294117647
+          },
+          "height": 13,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 1,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "Adds iron-bar windows, a red banner over the door and torches beside it; the side faces are still bare.",
+          "life": "Torches by the door count as light; still no plants."
+        },
+        "summary": "L1 plus iron-bar windows, a red wall banner over the town-side door and door torches; visibly more finished than L1.",
+        "problems": [
+          "Same narrow west walk entrance as L1: (0,5,2) and (0,6,2) are solid, so the walk is 1 wide where it enters from the west.",
+          "Reachability: fine - 50 of 51 reached; only (1,5,3) beside the stair is not."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

@@ -101,7 +101,7 @@ async function showFor(name: string, version: number) {
     const older = Object.values(reports).filter((x) => x.version < version).sort((a, b) => b.version - a.version)[0];
     el.className = `qc ${open ? 'open' : ''}`;
     el.innerHTML = `<button class="qc-head"><span>Quality check</span><span class="qc-badge none">Not checked yet</span></button>
-      <div class="qc-body muted">${older ? `v${older.version} was ${LABEL[older.verdict].toLowerCase()} (${older.score}/100). ` : ''}The reviewer checks new versions automatically, about once an hour.</div>`;
+      <div class="qc-body muted">${older ? `v${older.version} was ${LABEL[older.verdict].toLowerCase()} (${older.score}/100). ` : ''}The reviewer checks each new version automatically, right after it arrives.</div>`;
     return;
   }
   el.className = `qc ${r.verdict} ${open ? 'open' : ''}`;

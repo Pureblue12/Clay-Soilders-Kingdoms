@@ -1,0 +1,71 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "barracks_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:58:13.927Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 69,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "388 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 388,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.41237113402061853,
+          "types": 20,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.21391752577319587
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "Interior is well furnished (six beds with footlockers, hearth, arms store), but the outside has only two torches, plain glass panes and the hay dummy: no sills, shutters, boxes or lanterns.",
+          "depth": "Dark oak posts, cobble plinth and the eave overhang work on the long sides; both gables and the back wall are flat.",
+          "roof": "Steep with overhang and dark oak eaves, but the slopes and both gable triangles are one flat spruce colour with no gable trim or ridge accent.",
+          "shape": "A long box; the brick chimney is the only break.",
+          "life": "Only moss on the plinth and torches; no plants, path is a single step."
+        },
+        "summary": "Long stone-and-timber bunkhouse with six beds along a centre aisle, a hearth and arms store; reads as a barracks inside, but the outside is plain.",
+        "problems": [
+          "Back wall (z=12, x=2..5, y=2..3) is solid white terracotta with no window or post: add a window or a middle timber post.",
+          "Both gables (z=2 and z=12, y=5..7) are plain spruce planks: add a dark oak tie beam / king post or a contrasting trim along the verges.",
+          "Front and side windows have no sills or shutters: add trapdoor shutters or a slab sill under the glass panes (y=2 on x=1/x=7 and front z=2).",
+          "No plants at the base: a few flowers or leaf bushes along the plinth would lift it (L1 shell can stay modest, but needs something).",
+          "Reach: all rooms and the aisle are reached; only roof slopes and the hay dummy top are unreached (fine)."
+        ],
+        "views": [
+          "sheet",
+          "front",
+          "back",
+          "iso"
+        ]
+      }
+    }
+  }
+}

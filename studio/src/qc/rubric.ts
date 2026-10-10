@@ -30,12 +30,10 @@ export const CRITERIA: Criterion[] = [
     look: 'Not a box: a jetty, a lean-to, a porch, a chimney or roof parts at two heights. Some asymmetry.' },
   { id: 'life', label: 'Life', weight: 1,
     look: 'Plants, flowers, vines or leaves at the base and in boxes; lanterns; a path or a fence.' },
-  { id: 'scale', label: 'Scale', weight: 1,
-    look: 'Right size for soldiers (cottage about 5 x 7, walls 3 high); landmarks clearly bigger than houses.' },
+  { id: 'scale', label: 'Scale', weight: 2,
+    look: 'Right size and shape for what it is: a cottage about 5 x 7 with walls 3 high; small pieces small and in their real shape (a well small and round, not big and square; a tent that reads as a tent, not stairs).' },
   { id: 'levels', label: 'Levels differ', weight: 2, must: true,
-    look: 'Each level clearly adds to the one before (new props, a new part, more trim): l1, l2 and l3 tell apart at a glance. A structure without levels scores 2.' },
-  { id: 'grandeur', label: 'Ambition', weight: 1,
-    look: 'Big and special enough for its role: a windmill looks like a windmill, a keep looks grand.' },
+    look: 'L2 and L3 each add a clearly visible new feature or job (a lean-to, a gate, a workshop, a second use), not just a few more props: l1, l2 and l3 tell apart at a glance. A structure without levels scores 2.' },
 ];
 
 export const PASS_SCORE = 70;
@@ -50,6 +48,9 @@ export interface VisualReview {
   /** What to fix, most important first. Becomes the brief for the next version. */
   problems: string[];
   views?: string[]; // which renders the reviewer looked at
+  /** Positions of decoration-step blocks in a file saved before meta.decorationBlocks existed (the reviewer checked
+   * them against the generator's decorate() calls). Not needed for newer files. */
+  decorationBlocks?: [number, number, number][];
 }
 
 export interface QcReport {

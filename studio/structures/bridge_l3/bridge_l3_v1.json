@@ -1,0 +1,289 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "bridge_l3",
+  "version": 1,
+  "size": [5,5,13],
+  "meta": {
+    "status": "rejected",
+    "notes": "Shelf this has the same problems ase roads where it needs to be built dynamically based upon the situation",
+    "author": "claude",
+    "created": "2026-10-10T04:40:50.670Z",
+    "description": "Wooden bridge, level 3 of 3: L2 plus flourish 3. Over budget: 143 blocks vs 96 (first build 115 vs 80). Wooden bridge, 3 wide and 11 long, oak deck on dark oak stringers and two spruce log trestle piers in the river, cobblestone abutments with two-step stair approaches, spruce fence rails; the water is a decoration step. L2 adds lanterns on the tall posts, wall cheeks and corbels; L3 banners at both ends, moss and flower pots. Piers stand at the water line here: in the world they must reach the river bed. Not yet builder-tested: moss_carpet, red_banner. Decoration step adds: item, potted_plant, water.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": "2026-10-10T05:02:12.316Z",
+    "tags": [
+      "batch3",
+      "tier3",
+      "inner",
+      "utility"
+    ],
+    "decorationBlocks": [
+      [
+        0,
+        0,
+        2,
+        "water"
+      ],
+      [
+        1,
+        0,
+        2,
+        "water"
+      ],
+      [
+        2,
+        0,
+        2,
+        "water"
+      ],
+      [
+        3,
+        0,
+        2,
+        "water"
+      ],
+      [
+        4,
+        0,
+        2,
+        "water"
+      ],
+      [
+        1,
+        0,
+        3,
+        "water"
+      ],
+      [
+        2,
+        0,
+        3,
+        "water"
+      ],
+      [
+        3,
+        0,
+        3,
+        "water"
+      ],
+      [
+        1,
+        0,
+        5,
+        "water"
+      ],
+      [
+        2,
+        0,
+        5,
+        "water"
+      ],
+      [
+        3,
+        0,
+        5,
+        "water"
+      ],
+      [
+        0,
+        0,
+        6,
+        "water"
+      ],
+      [
+        1,
+        0,
+        6,
+        "water"
+      ],
+      [
+        2,
+        0,
+        6,
+        "water"
+      ],
+      [
+        3,
+        0,
+        6,
+        "water"
+      ],
+      [
+        4,
+        0,
+        6,
+        "water"
+      ],
+      [
+        1,
+        0,
+        7,
+        "water"
+      ],
+      [
+        2,
+        0,
+        7,
+        "water"
+      ],
+      [
+        3,
+        0,
+        7,
+        "water"
+      ],
+      [
+        1,
+        0,
+        9,
+        "water"
+      ],
+      [
+        2,
+        0,
+        9,
+        "water"
+      ],
+      [
+        3,
+        0,
+        9,
+        "water"
+      ],
+      [
+        0,
+        0,
+        10,
+        "water"
+      ],
+      [
+        1,
+        0,
+        10,
+        "water"
+      ],
+      [
+        2,
+        0,
+        10,
+        "water"
+      ],
+      [
+        3,
+        0,
+        10,
+        "water"
+      ],
+      [
+        4,
+        0,
+        10,
+        "water"
+      ]
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:cobblestone",
+    "A": "minecraft:cobblestone_wall[east=none,north=low,south=none,up=true,waterlogged=false,west=none]",
+    "B": "minecraft:cobblestone_wall[east=none,north=none,south=low,up=true,waterlogged=false,west=none]",
+    "C": "minecraft:dark_oak_log[axis=x]",
+    "D": "minecraft:dark_oak_log[axis=z]",
+    "E": "minecraft:flower_pot",
+    "F": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "G": "minecraft:moss_carpet",
+    "H": "minecraft:mossy_cobblestone",
+    "I": "minecraft:oak_planks",
+    "J": "minecraft:oak_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "K": "minecraft:oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "L": "minecraft:red_banner[rotation=0]",
+    "M": "minecraft:red_banner[rotation=8]",
+    "N": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "O": "minecraft:spruce_fence[east=false,north=false,south=true,waterlogged=false,west=false]",
+    "P": "minecraft:spruce_fence[east=false,north=true,south=false,waterlogged=false,west=false]",
+    "Q": "minecraft:spruce_fence[east=false,north=true,south=true,waterlogged=false,west=false]",
+    "R": "minecraft:spruce_log[axis=y]",
+    "S": "minecraft:spruce_planks",
+    "T": "minecraft:spruce_stairs[facing=north,half=top,shape=straight,waterlogged=false]",
+    "U": "minecraft:spruce_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "V": "minecraft:water[level=0]"
+  },
+  "layers": [
+    [
+      "HKKK#",
+      "###H#",
+      "VVVVV",
+      "UVVVU",
+      "RCRCR",
+      "TVVVT",
+      "VVVVV",
+      "UVVVU",
+      "RCRCR",
+      "TVVVT",
+      "VVVVV",
+      "H####",
+      "#JJJ#"
+    ],
+    [
+      "B...B",
+      "DKKKD",
+      "DIIID",
+      "DIIID",
+      "DSSSD",
+      "DIIID",
+      "DIIID",
+      "DIIID",
+      "DSSSD",
+      "DIIID",
+      "DIIID",
+      "DJJJD",
+      "A...A"
+    ],
+    [
+      "M...M",
+      "O...O",
+      "Q...Q",
+      "QG..Q",
+      "Q...Q",
+      "Q...Q",
+      "Q..GQ",
+      "Q...Q",
+      "Q...Q",
+      "Q.G.Q",
+      "QG..Q",
+      "P...P",
+      "L...L"
+    ],
+    [
+      ".....",
+      "N...N",
+      ".....",
+      ".....",
+      "N...N",
+      ".....",
+      ".....",
+      ".....",
+      "N...N",
+      ".....",
+      ".....",
+      "N...N",
+      "....."
+    ],
+    [
+      ".....",
+      "F...F",
+      ".....",
+      ".....",
+      "E...F",
+      ".....",
+      ".....",
+      ".....",
+      "F...E",
+      ".....",
+      ".....",
+      "F...F",
+      "....."
+    ]
+  ]
+}

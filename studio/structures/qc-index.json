@@ -1,44 +1,1052 @@
 {
-  "carpenter_l1": {
-    "version": 3,
+  "bakery_l1": {
+    "version": 1,
     "verdict": "pass",
-    "score": 75,
-    "round": 3,
-    "checkedAt": "2026-10-10T02:59:36.691Z"
+    "score": 83,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:50:59.226Z"
   },
-  "carpenter_l2": {
-    "version": 3,
+  "bakery_l2": {
+    "version": 1,
     "verdict": "pass",
-    "score": 75,
-    "round": 3,
-    "checkedAt": "2026-10-10T02:59:37.189Z"
+    "score": 94,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:50:59.784Z"
   },
-  "carpenter_l3": {
-    "version": 3,
+  "bakery_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 100,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:51:00.339Z"
+  },
+  "banner_pole_l1": {
+    "version": 1,
     "verdict": "pass",
     "score": 75,
     "round": 1,
-    "checkedAt": "2026-10-10T02:59:37.669Z"
+    "checkedAt": "2026-10-10T05:06:23.000Z"
+  },
+  "banner_pole_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:06:23.587Z"
+  },
+  "banner_pole_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:06:24.168Z"
+  },
+  "barracks_l1": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 69,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:13.927Z"
+  },
+  "barracks_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 72,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:14.576Z"
+  },
+  "barracks_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 81,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:15.219Z"
+  },
+  "bench_l1": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 75,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:18:45.118Z"
+  },
+  "bench_l2": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 86,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:18:45.702Z"
+  },
+  "bridge_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 83,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:51:10.128Z"
+  },
+  "bridge_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 97,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:51:10.723Z"
+  },
+  "bridge_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 100,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:51:11.346Z"
+  },
+  "butcher_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:50:57.572Z"
+  },
+  "butcher_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:50:58.132Z"
+  },
+  "butcher_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 100,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:50:58.698Z"
+  },
+  "carpenter_l1": {
+    "version": 4,
+    "verdict": "pass",
+    "score": 75,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:41:20.208Z"
+  },
+  "carpenter_l2": {
+    "version": 4,
+    "verdict": "pass",
+    "score": 89,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:41:20.761Z"
+  },
+  "carpenter_l3": {
+    "version": 4,
+    "verdict": "pass",
+    "score": 97,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:41:21.304Z"
+  },
+  "chapel_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 86,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:10:09.878Z"
+  },
+  "chapel_l2": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 86,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:10:10.398Z"
+  },
+  "chapel_l3": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 89,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:10:10.938Z"
+  },
+  "commons_l1": {
+    "version": 4,
+    "verdict": "pass",
+    "score": 78,
+    "round": 3,
+    "checkedAt": "2026-10-10T04:14:44.601Z"
+  },
+  "commons_l2": {
+    "version": 4,
+    "verdict": "pass",
+    "score": 97,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:14:45.134Z"
+  },
+  "commons_l3": {
+    "version": 4,
+    "verdict": "pass",
+    "score": 100,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:14:45.743Z"
+  },
+  "cottage_l1": {
+    "version": 3,
+    "verdict": "pass",
+    "score": 78,
+    "round": 2,
+    "checkedAt": "2026-10-10T03:27:32.867Z"
+  },
+  "cottage_l2": {
+    "version": 3,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:27:33.389Z"
+  },
+  "cottage_l3": {
+    "version": 3,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:27:33.903Z"
+  },
+  "farm_field_carrots_l1": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 75,
+    "round": 2,
+    "checkedAt": "2026-10-10T03:34:32.919Z"
+  },
+  "farm_field_potatoes_l1": {
+    "version": 3,
+    "verdict": "pass",
+    "score": 83,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:12:57.341Z"
+  },
+  "farm_field_wheat_l1": {
+    "version": 3,
+    "verdict": "pass",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:12:56.776Z"
+  },
+  "farm_l1": {
+    "version": 3,
+    "verdict": "pass",
+    "score": 72,
+    "round": 2,
+    "checkedAt": "2026-10-10T03:34:30.687Z"
+  },
+  "farm_l2": {
+    "version": 3,
+    "verdict": "pass",
+    "score": 89,
+    "round": 2,
+    "checkedAt": "2026-10-10T03:34:31.262Z"
+  },
+  "farm_l3": {
+    "version": 3,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:34:31.823Z"
+  },
+  "fire_pit_l1": {
+    "version": 4,
+    "verdict": "pass",
+    "score": 81,
+    "round": 3,
+    "checkedAt": "2026-10-10T04:13:10.371Z"
+  },
+  "fire_pit_l2": {
+    "version": 4,
+    "verdict": "pass",
+    "score": 81,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:13:10.968Z"
+  },
+  "fire_pit_l3": {
+    "version": 3,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:13:11.527Z"
+  },
+  "flower_bed_l1": {
+    "version": 2,
+    "verdict": "revise",
+    "score": 50,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:07:53.929Z"
+  },
+  "food_hall_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:07:39.169Z"
+  },
+  "food_hall_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 94,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:07:40.421Z"
+  },
+  "food_hall_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 97,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:07:41.789Z"
+  },
+  "garden_l1": {
+    "version": 4,
+    "verdict": "pass",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:22:14.575Z"
+  },
+  "garden_l2": {
+    "version": 4,
+    "verdict": "pass",
+    "score": 89,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:22:15.099Z"
+  },
+  "garden_l3": {
+    "version": 4,
+    "verdict": "pass",
+    "score": 89,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:22:15.668Z"
+  },
+  "graveyard_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 75,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:10:17.605Z"
+  },
+  "graveyard_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:10:18.185Z"
+  },
+  "graveyard_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 94,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:10:18.744Z"
+  },
+  "hitching_post_l1": {
+    "version": 3,
+    "verdict": "pass",
+    "score": 78,
+    "round": 3,
+    "checkedAt": "2026-10-10T03:32:38.713Z"
+  },
+  "hitching_post_l2": {
+    "version": 3,
+    "verdict": "pass",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:32:39.241Z"
+  },
+  "house": {
+    "version": 4,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:27:35.594Z"
+  },
+  "hovel_l1": {
+    "version": 2,
+    "verdict": "revise",
+    "score": 44,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:07:52.424Z"
+  },
+  "hovel_l2": {
+    "version": 2,
+    "verdict": "revise",
+    "score": 53,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:07:52.937Z"
+  },
+  "hovel_l3": {
+    "version": 2,
+    "verdict": "revise",
+    "score": 56,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:07:53.444Z"
+  },
+  "infirmary_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 72,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:10:27.907Z"
+  },
+  "infirmary_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 89,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:10:28.441Z"
+  },
+  "infirmary_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 86,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:10:29.033Z"
+  },
+  "inn_l1": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 67,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:07:49.751Z"
+  },
+  "inn_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 89,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:07:50.974Z"
+  },
+  "inn_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:07:52.818Z"
+  },
+  "keep_l1": {
+    "version": 5,
+    "verdict": "pass",
+    "score": 83,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:34:54.786Z"
+  },
+  "keep_l2": {
+    "version": 5,
+    "verdict": "pass",
+    "score": 97,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:34:55.350Z"
+  },
+  "keep_l3": {
+    "version": 5,
+    "verdict": "pass",
+    "score": 97,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:34:55.889Z"
+  },
+  "lamp_post_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 75,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:06:21.462Z"
+  },
+  "lamp_post_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:06:21.976Z"
+  },
+  "lamp_post_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 94,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:06:22.474Z"
+  },
+  "lumber_camp_l1": {
+    "version": 5,
+    "verdict": "pass",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:17:26.485Z"
+  },
+  "lumber_camp_l2": {
+    "version": 5,
+    "verdict": "pass",
+    "score": 94,
+    "round": 2,
+    "checkedAt": "2026-10-10T04:19:53.533Z"
+  },
+  "lumber_camp_l3": {
+    "version": 5,
+    "verdict": "pass",
+    "score": 92,
+    "round": 2,
+    "checkedAt": "2026-10-10T04:19:54.127Z"
+  },
+  "market_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 72,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:03:47.649Z"
+  },
+  "market_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:03:48.206Z"
+  },
+  "market_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 94,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:03:48.829Z"
+  },
+  "market_stall_l1": {
+    "version": 2,
+    "verdict": "revise",
+    "score": 67,
+    "round": 2,
+    "checkedAt": "2026-10-10T05:02:43.223Z"
+  },
+  "market_stall_l2": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 83,
+    "round": 2,
+    "checkedAt": "2026-10-10T05:02:43.888Z"
+  },
+  "market_stall_l3": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 92,
+    "round": 2,
+    "checkedAt": "2026-10-10T05:02:44.517Z"
+  },
+  "mine_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 72,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:51:04.502Z"
+  },
+  "mine_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 86,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:51:05.074Z"
+  },
+  "mine_l3": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 89,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:09:39.399Z"
+  },
+  "notice_board_l1": {
+    "version": 3,
+    "verdict": "pass",
+    "score": 78,
+    "round": 3,
+    "checkedAt": "2026-10-10T03:32:37.558Z"
+  },
+  "notice_board_l2": {
+    "version": 3,
+    "verdict": "pass",
+    "score": 83,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:32:38.114Z"
+  },
+  "palisade_corner_l1": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 78,
+    "round": 2,
+    "checkedAt": "2026-10-10T03:49:52.222Z"
+  },
+  "palisade_corner_l2": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 81,
+    "round": 2,
+    "checkedAt": "2026-10-10T03:49:52.766Z"
+  },
+  "palisade_gate_l1": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 78,
+    "round": 2,
+    "checkedAt": "2026-10-10T03:49:53.292Z"
+  },
+  "palisade_gate_l2": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:49:53.835Z"
+  },
+  "palisade_gate_l3": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:49:54.377Z"
+  },
+  "palisade_stepped_l1": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 78,
+    "round": 2,
+    "checkedAt": "2026-10-10T03:49:54.874Z"
+  },
+  "palisade_stepped_l2": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 89,
+    "round": 2,
+    "checkedAt": "2026-10-10T03:49:55.388Z"
+  },
+  "palisade_stepped_l3": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 89,
+    "round": 2,
+    "checkedAt": "2026-10-10T03:49:55.936Z"
+  },
+  "palisade_straight_l1": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 78,
+    "round": 2,
+    "checkedAt": "2026-10-10T03:49:56.497Z"
+  },
+  "palisade_straight_l2": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 89,
+    "round": 2,
+    "checkedAt": "2026-10-10T03:49:57.099Z"
+  },
+  "palisade_straight_l3": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 89,
+    "round": 2,
+    "checkedAt": "2026-10-10T03:49:57.684Z"
+  },
+  "quarry_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 86,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:51:02.708Z"
+  },
+  "quarry_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:51:03.372Z"
+  },
+  "quarry_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 94,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:51:03.926Z"
+  },
+  "road_l1": {
+    "version": 3,
+    "verdict": "revise",
+    "score": 50,
+    "round": 2,
+    "checkedAt": "2026-10-10T03:45:15.219Z"
+  },
+  "road_l2": {
+    "version": 3,
+    "verdict": "pass",
+    "score": 78,
+    "round": 2,
+    "checkedAt": "2026-10-10T03:45:15.831Z"
+  },
+  "road_l3": {
+    "version": 3,
+    "verdict": "pass",
+    "score": 81,
+    "round": 2,
+    "checkedAt": "2026-10-10T03:45:16.414Z"
+  },
+  "signpost_l1": {
+    "version": 3,
+    "verdict": "pass",
+    "score": 83,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:27:34.482Z"
+  },
+  "signpost_l2": {
+    "version": 3,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:27:35.023Z"
+  },
+  "smithy_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:50:54.129Z"
+  },
+  "smithy_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:50:54.727Z"
+  },
+  "smithy_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 100,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:50:55.351Z"
+  },
+  "stables_l1": {
+    "version": 5,
+    "verdict": "pass",
+    "score": 83,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:15:54.267Z"
+  },
+  "stables_l2": {
+    "version": 5,
+    "verdict": "pass",
+    "score": 97,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:15:54.793Z"
+  },
+  "stables_l3": {
+    "version": 5,
+    "verdict": "pass",
+    "score": 100,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:15:55.317Z"
+  },
+  "stone_wall_corner_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 75,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:21.170Z"
+  },
+  "stone_wall_corner_l2": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 67,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:21.729Z"
+  },
+  "stone_wall_corner_l3": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:22.355Z"
+  },
+  "stone_wall_gate_l1": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 53,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:19.363Z"
+  },
+  "stone_wall_gate_l2": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 61,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:19.924Z"
+  },
+  "stone_wall_gate_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 72,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:20.574Z"
+  },
+  "stone_wall_stairs_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 81,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:22.951Z"
+  },
+  "stone_wall_stairs_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 83,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:23.527Z"
+  },
+  "stone_wall_stairs_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 94,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:24.167Z"
+  },
+  "stone_wall_stepped_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:24.778Z"
+  },
+  "stone_wall_stepped_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 89,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:25.391Z"
+  },
+  "stone_wall_stepped_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:25.972Z"
+  },
+  "stone_wall_straight_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 72,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:26.557Z"
+  },
+  "stone_wall_straight_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 83,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:27.116Z"
+  },
+  "stone_wall_straight_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 86,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:27.670Z"
+  },
+  "stonemason_l1": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 67,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:09:37.582Z"
+  },
+  "stonemason_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 83,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:09:38.135Z"
+  },
+  "stonemason_l3": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 86,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:09:38.690Z"
+  },
+  "storehouse_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:51:06.310Z"
+  },
+  "storehouse_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 97,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:51:06.926Z"
+  },
+  "storehouse_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 100,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:51:07.587Z"
+  },
+  "tannery_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:50:55.923Z"
+  },
+  "tannery_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 86,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:50:56.469Z"
+  },
+  "tannery_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 94,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:50:57.037Z"
+  },
+  "townhouse_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:07:43.726Z"
+  },
+  "townhouse_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 89,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:07:45.690Z"
+  },
+  "townhouse_l3": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 81,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:07:48.190Z"
+  },
+  "training_yard_l1": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 64,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:15.838Z"
+  },
+  "training_yard_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:16.436Z"
+  },
+  "training_yard_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 81,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:17.016Z"
+  },
+  "visitors_camp_l1": {
+    "version": 3,
+    "verdict": "revise",
+    "score": 67,
+    "round": 2,
+    "checkedAt": "2026-10-10T03:44:50.004Z"
+  },
+  "visitors_camp_l2": {
+    "version": 3,
+    "verdict": "revise",
+    "score": 67,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:44:50.531Z"
+  },
+  "visitors_camp_l3": {
+    "version": 3,
+    "verdict": "pass",
+    "score": 72,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:44:51.051Z"
+  },
+  "wall_tower_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 75,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:17.585Z"
+  },
+  "wall_tower_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:18.142Z"
+  },
+  "wall_tower_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:58:18.741Z"
   },
   "watchtower_l1": {
-    "version": 3,
+    "version": 4,
     "verdict": "pass",
-    "score": 75,
-    "round": 3,
-    "checkedAt": "2026-10-10T03:01:27.891Z"
+    "score": 81,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:52:29.548Z"
   },
   "watchtower_l2": {
-    "version": 3,
+    "version": 4,
     "verdict": "pass",
-    "score": 75,
-    "round": 3,
-    "checkedAt": "2026-10-10T03:01:28.482Z"
+    "score": 94,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:52:30.065Z"
   },
   "watchtower_l3": {
-    "version": 3,
+    "version": 4,
+    "verdict": "pass",
+    "score": 94,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:52:30.591Z"
+  },
+  "well_l1": {
+    "version": 5,
+    "verdict": "pass",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:06:37.091Z"
+  },
+  "well_l2": {
+    "version": 5,
+    "verdict": "pass",
+    "score": 83,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:06:37.607Z"
+  },
+  "well_l3": {
+    "version": 5,
+    "verdict": "pass",
+    "score": 97,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:06:38.128Z"
+  },
+  "well_small_l1": {
+    "version": 1,
     "verdict": "pass",
     "score": 75,
-    "round": 3,
-    "checkedAt": "2026-10-10T03:01:28.990Z"
+    "round": 1,
+    "checkedAt": "2026-10-10T04:51:00.917Z"
+  },
+  "well_small_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 83,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:51:01.505Z"
+  },
+  "well_small_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T04:51:02.071Z"
   }
 }

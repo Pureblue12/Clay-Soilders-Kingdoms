@@ -1,0 +1,176 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "fire_pit_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T03:24:44.133Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: stone_slab, short_grass, cauldron, dandelion, fern, candle."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "54 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 54,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.7037037037037037,
+          "types": 21,
+          "dominant": {
+            "name": "stripped_oak_log",
+            "share": 0.16666666666666666
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Fire pit level 3: level 2 plus red cushions on the benches, candles and a few plants.",
+        "problems": [
+          "Level 1 is bare round the edges (no plants); the log benches are pale stripped birch that doesn't match the dark timber of the other buildings: spruce or oak logs.",
+          "Level 3 only adds red carpets on the benches and a few plants over level 2: give it its own feature (a cooking pot on a tripod, a woodpile shelter)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:45:36.875Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: short_grass, cauldron, dandelion, fern, dark_oak_fence, dark_oak_slab."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "69 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 69,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.7681159420289855,
+          "types": 23,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.18840579710144928
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Level 3 adds a dark oak firewood shelter with a lantern, which finally sets it apart from level 2.",
+        "problems": [
+          "The lone cobblestone blocks in front of the ring and beside the bench look like stray blocks: join them into a short stepping path to the fire, or use gravel or coarse dirt patches round the ring instead",
+          "The shelter roof is flat: one row of stairs would give it a lean-to slope"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T04:13:11.527Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 92,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: short_grass, cauldron, dandelion, fern, dark_oak_fence, dark_oak_slab."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "75 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 75,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.7866666666666666,
+          "types": 24,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.17333333333333334
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Level 3 adds a dark oak firewood shelter with a lantern at the back corner, clearly the finished version.",
+        "problems": [
+          "The shelter roof is flat: one row of stairs would give it a lean-to slope"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

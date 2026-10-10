@@ -4,14 +4,14 @@
   "version": 1,
   "size": [9,5,9],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "should be slightly bigger and more detail on all 3",
     "author": "claude",
     "created": "2026-10-10T01:57:40.241Z",
     "description": "Commons (level 1), level 3 of 3: L2 plus flourish 3. A 9 x 9 village green on a road junction: gravel paths to a fire pit, the well, three benches; later levels add lanterns, flower beds and banners. Not yet builder-tested: allium, cornflower, dandelion, moss_carpet, oxeye_daisy, white_banner. Decoration step adds: banner_pattern, potted_plant, water.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T03:05:07.394Z",
     "tags": [
       "batch2",
       "tier2",

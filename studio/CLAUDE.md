@@ -31,14 +31,17 @@ The owner never types git commands for reviews (`src/server/gitsync.ts`):
 - The open page also pulls and redraws the list every 30 s, so new versions and stage changes show up without a reload.
 - Notes save as Carlton types (0.8 s after he stops, and when he leaves the box); typed notes are committed together
   20 s after the last change (`commitLater`), approve / reject at once.
-- "Apply to all levels" (toggle in the review panel, remembered in the browser): approve, reject and notes go to the
-  latest version of every level of the family (`bench_l1`, `bench_l2`, ...; `Store.levels`) in one commit.
+- "Apply to all levels" (toggle in the review panel, remembered in the browser): approve, reject and notes go to the SAME
+  version number of every level that has it (`Store.levelTargets`; never "latest": a newer version can arrive while
+  Carlton looks at an older one) in one commit.
 
 ## Revision queue (stages)
 
 Each structure shows what happens next (`STAGES` in `src/format/structure.ts`, worked out in `Store.summary`):
 **Needs your review** (latest version pending), **Queued for revision** (latest rejected, nobody on it),
-**Revising** (latest rejected and `structures/<name>/work.json` says who is on it), **Approved**.
+**Revising** (latest rejected, and `structures/<name>/work.json` says who is on it, or a GitHub branch that isn't
+merged yet and had a commit in the last 24 h changes its files: `gitsync.branchWork`, scanned after each pull),
+**Approved**. So pushing a branch with the new version is enough for "Revising"; `work` shows it before that.
 - `npm run studio -- queue` lists the rejected structures with Carlton's notes: start every session with it (after a
   pull). `--all` also lists the ones waiting for his review.
 - Before revising one: `npm run studio -- work <name> --by <you> --note "plan"`. It writes `work.json`, commits and

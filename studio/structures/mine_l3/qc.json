@@ -1,0 +1,70 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "mine_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:09:39.399Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 89,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: rail, red_wall_banner, moss_carpet, cornflower, fern, dandelion."
+          },
+          {
+            "level": "fail",
+            "check": "plant-soil",
+            "message": "Plant with no dirt or grass under it (can't be placed in game; use a flower pot, or dirt under it) at (1, 2, 8), (3, 3, 9), (4, 4, 5), (6, 4, 9)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 279,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3906810035842294,
+          "types": 25,
+          "dominant": {
+            "name": "cobblestone_stairs",
+            "share": 0.1935483870967742
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {
+          "materials": "the mound now has bushes and flowers on top, which helps; the stepped cobblestone sides still look built"
+        },
+        "summary": "Adds banners, lamp posts and greenery on the mound.",
+        "problems": [
+          "Reachability: every place is reached"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

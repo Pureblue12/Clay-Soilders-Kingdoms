@@ -204,7 +204,7 @@ async function main() {
       }
       const errors = checkVisual(visual);
       if (errors.length) fail('bad review file:\n' + errors.map((e) => '  ' + e).join('\n'));
-      const auto = autoCheck(s);
+      const auto = autoCheck(s, visual.decorationBlocks ?? []);
       const round = roundFor(store, name, version);
       const { verdict, score, why } = verdictOf(auto, visual, round);
       const report: QcReport = { version, checkedAt: new Date().toISOString(), by: str(args, 'by') ?? 'claude-qc', verdict, round, score, auto, visual };

@@ -1,0 +1,103 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "signpost_l1",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:18:46.237Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 29,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.6551724137931034,
+          "types": 9,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.1724137931034483
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 1,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Signpost level 1: a dark log post on a flowered dirt and stone base with a fence crossbar and a hanging lantern; the signs themselves are hard to read as signs.",
+        "problems": [
+          "Put real oak signs (arrows) on the post at two heights, pointing different ways, so it reads as a signpost.",
+          "Level 2 only adds one hanging board: give it something clearly new (a small roof cap, a notice, a bench)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:27:34.482Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 83,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "31 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 31,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.6774193548387096,
+          "types": 8,
+          "dominant": {
+            "name": "oak_wall_sign",
+            "share": 0.25806451612903225
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Signpost level 1: a dark log post on a flowered base with four direction boards at two heights and a lantern on top; reads as a signpost now.",
+        "problems": [
+          "Over the prop budget by one block; Carlton decides."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}
