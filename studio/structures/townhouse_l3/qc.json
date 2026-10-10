@@ -1,0 +1,69 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "townhouse_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:07:48.190Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 81,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: brick_stairs, allium, cornflower, oxeye_daisy, azure_bluet, red_tulip, vine, red_wall_banner."
+          }
+        ],
+        "stats": {
+          "blocks": 339,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4749262536873156,
+          "types": 41,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.1592920353982301
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 0,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "artefacts": "flowers at (3,5,0), (5,5,0), (3,5,8), (5,5,8) stand on top spruce slabs; flowers need dirt or grass under them, so builders can't place them in game. Use potted flowers, or put coarse dirt / rooted dirt in the box with the flower on it",
+          "detail": "Back garden with fence, composter, bush and five flowers, lantern post at the front, wall banner, vines, chimney smoke campfire.",
+          "life": "Garden, vines, bush, flowers front and back, lantern post.",
+          "depth": "Upper storey long sides still flat plaster with no window."
+        },
+        "summary": "L2 plus a fenced back garden with flowers, composter and bush, vines on the chimney side, a lantern post, a red banner, jetty flower boxes and a smoking chimney top.",
+        "problems": [
+          "Flowers on spruce slabs are invalid: (3,5,0), (5,5,0), (3,5,8), (5,5,8). Make the boxes from coarse dirt (or rooted dirt) faced with open trapdoors, or use potted flowers on the slabs.",
+          "Garden fence is open on the east side (x7, z8..z9, only (7,0,10) has a fence): close it or add a fence gate.",
+          "Empty flower pot on the ground at (3,0,8) in the garden: fill it (potted plant) or drop it.",
+          "Upper storey long sides (x2 and x6, y5) are still windowless plaster.",
+          "Reachability: 87 of 129 reached; unreached are roof slopes, chimney top, a barrel top, the flower-box slabs and the bush top. Both floors reached. Fine."
+        ],
+        "views": [
+          "sheet",
+          "iso_back",
+          "front"
+        ]
+      }
+    }
+  }
+}

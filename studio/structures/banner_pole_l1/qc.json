@@ -1,0 +1,55 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "banner_pole_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:06:23.000Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 75,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 19,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.8947368421052632,
+          "types": 6,
+          "dominant": {
+            "name": "spruce_fence",
+            "share": 0.3684210526315789
+          },
+          "height": 9,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "T-shaped pole with two hanging lanterns on a stepped stone brick plinth; sparse but tidy shell",
+          "purpose": "without banners it reads as a twin-lantern street post, which is fine for the shell level",
+          "shape": "fully symmetric T",
+          "roof": "crossbar top is bare until L2 adds the banner"
+        },
+        "summary": "A tall spruce fence pole on a stone brick plinth with stairs and slab corners, topped by a crossbar with two hanging lanterns.",
+        "problems": [],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

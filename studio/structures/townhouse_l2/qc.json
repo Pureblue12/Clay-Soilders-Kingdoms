@@ -1,0 +1,65 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "townhouse_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:07:45.690Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 89,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: brick_stairs, red_tulip."
+          }
+        ],
+        "stats": {
+          "blocks": 303,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.41254125412541254,
+          "types": 30,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.1782178217821782
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "Shutters on every ground-floor window, trapdoor planters with poppy and tulip by the door, hanging lanterns under the jetty, log pile with barrel, bench, carpets, wall shelves and an upstairs lantern.",
+          "depth": "Shutters add depth to the ground floor, but the upper storey long sides are still a flat plaster band with no window.",
+          "roof": "Unchanged from L1: steep, overhang, finished ridge and gable trim.",
+          "life": "Two planters and lanterns; no path or fence yet."
+        },
+        "summary": "L1 plus the dressing: shutters, flower planters by the doorstep, lanterns under the jetty, a log pile and bench on the east side, chimney base stairs and more furniture inside.",
+        "problems": [
+          "The hanging lanterns at (3,3,1) and (5,3,1) hang right in front of the ground-floor windows at (3,2,2) and (5,2,2); consider moving them over the door or onto the brackets beside the windows.",
+          "Upper storey long sides (x2 and x6, y5) are still windowless plaster (carried over from L1).",
+          "Reachability: same as L1, 93 of 131 reached; only roof slopes, chimney top and a barrel top are unreached. Fine."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "chapel_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:10:09.878Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 86,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "370 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "13 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 370,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3945945945945946,
+          "types": 17,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.3567567567567568
+          },
+          "height": 13,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {
+          "detail": "Good bones (buttresses with stair caps, door hood, lancet windows, pews, altar) but the outside has no small props yet; fine for a shell level.",
+          "roof": "Roof warning is a false alarm: dark oak eaves overhang 1 at x1/x9 and the roof runs 1 past the back gable (z10); the front has no overhang because the gable rises into the bell cote. Steep spruce roof, slab ridge, dark oak eave row.",
+          "life": "Only some mossy cobblestone; no plants, path or lanterns outside.",
+          "materials": "Cobblestone plinth, stone bricks, spruce roof with dark oak eaves: coherent."
+        },
+        "summary": "Level 1 is the stone chapel shell: buttressed nave on a cobblestone plinth, stepped front gable rising into an empty bell cote, hooded door, glazed lancets, pews either side of an aisle and a stone altar.",
+        "problems": [
+          "Exterior is bare at this level (no lights or greenery outside); acceptable for L1, L2 adds them.",
+          "Reachability: interior floor and pews are reached; unreached places are only roof slopes, eaves, buttress caps, the door-hood top, the gable louvre slots and the bell cote top. Fine."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "iso_back"
+        ]
+      }
+    }
+  }
+}

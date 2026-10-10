@@ -1,0 +1,61 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "lamp_post_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:06:22.474Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 94,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: red_tulip."
+          }
+        ],
+        "stats": {
+          "blocks": 20,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.9,
+          "types": 10,
+          "dominant": {
+            "name": "spruce_fence",
+            "share": 0.25
+          },
+          "height": 6,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {
+          "artefacts": "same unjoined fence at (1,4,1) (south=false) carried over from L2",
+          "life": "tulip at (2,0,0) and leaf bush at (0,0,2) round off the foot"
+        },
+        "summary": "Adds a street-name wall sign on the post, a red tulip and a small leaf bush at the foot; the most finished, lived-in version.",
+        "problems": [
+          "Fence state mismatch carried over: spruce_fence at (1,4,1) needs south=true to join the arm at (1,4,2)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

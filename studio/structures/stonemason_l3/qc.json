@@ -1,0 +1,78 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "stonemason_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:09:38.690Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 86,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: polished_andesite, stone_brick_slab, smooth_stone_slab, andesite_wall, chiseled_stone_bricks, oxeye_daisy, azure_bluet, stonecutter, dandelion, cornflower, fern, stone_brick_wall, polished_andesite_stairs, moss_carpet, gray_wall_banner, stone_button."
+          },
+          {
+            "level": "fail",
+            "check": "plant-soil",
+            "message": "Plant with no dirt or grass under it (can't be placed in game; use a flower pot, or dirt under it) at (9, 1, 4), (8, 1, 6)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 312,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4166666666666667,
+          "types": 44,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.16666666666666666
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "Statue in progress inside its scaffold, banner, potted plant and flowers on top of L2's stand and stonecutter.",
+          "purpose": "Statue under scaffolding makes it unmistakably a mason's yard.",
+          "roof": "Eaves overhang the long sides (warning partly a false alarm); gables flush and untrimmed.",
+          "life": "Bushes, flowers at the shed's foot, moss, a potted plant: good.",
+          "depth": "Bushes soften the long side wall, but the wall itself is still flat."
+        },
+        "summary": "L2 plus a statue being carved inside a scaffold in the yard corner, a banner, bushes, flowers and moss round the shed; the most lived-in level.",
+        "problems": [
+          "Gables have no overhang or trim (all levels): extend the roof past each gable or add verge trim.",
+          "Long side wall of the shed is still a flat stone face behind the bushes: one post or beam would fix it.",
+          "Reachability fine: roof slopes, ridge, an interior trapdoor top, an oak_leaves top at (0,2,9) and a few wall-top spots unreached; floor and yard all reached."
+        ],
+        "views": [
+          "sheet",
+          "front",
+          "iso_back"
+        ]
+      }
+    }
+  }
+}

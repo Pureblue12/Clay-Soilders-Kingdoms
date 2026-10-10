@@ -4,14 +4,14 @@
   "version": 1,
   "size": [11,8,11],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "l2 and l3 should diffrieancite fron eachother better ",
     "author": "claude",
     "created": "2026-10-10T04:40:42.713Z",
     "description": "Quarry, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 274 blocks vs 88 (the flush yard and quarry-floor paving is 70 of them). Flush piece (ground_layer 0: the mod does not support it yet). Cobblestone shed with a spruce gable roof by a gravel yard of cut blocks and a broken-rock quarry floor the quarrymen dig down from (builders never dig); L2 adds the log crane over the cut, the worked rock face, the stonecutter and a tool rack; L3 rubble piles, sign, banner, lanterns, flowers.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:12:19.494Z",
     "tags": [
       "batch3",
       "tier3",

@@ -1,0 +1,71 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "stonemason_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:09:37.582Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 67,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 262,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3320610687022901,
+          "types": 19,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.1984732824427481
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 1,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "The yard is mostly bare paving with coarse dirt patches; a barrel, a few stone stacks and the grindstone are all that is in it.",
+          "purpose": "Reads as a walled stone yard with a shed, but the mason's work barely shows yet: no tools, no cut stone laid out, nothing that says 'stone' over 'storage'.",
+          "roof": "Dark oak eaves do stick out past the long side walls, so the overhang warning is half a false alarm; but the gables are flush with no overhang, the gable fill is plain spruce planks and there is no gable trim.",
+          "life": "No plants, lanterns or flowers; only coarse dirt.",
+          "depth": "Dark oak corner posts help, but the long side wall (iso back) and the back gable are flat stone with one window.",
+          "materials": "Stone brick, cobble, dark oak, spruce: a clean palette.",
+          "shape": "Shed plus yard with an off-centre gap and stone piles: good asymmetry."
+        },
+        "summary": "L1 is the shell: an open stone-brick shed under a spruce gable roof inside a low walled, paved yard, with a grindstone, a barrel and rough stone piles.",
+        "problems": [
+          "The yard is too empty for a working stone yard: add a few small things even at L1 (a cut-stone pile of slabs/stairs by the shed door, a stone_button or lever as a mallet on the banker, a lantern on a gate post).",
+          "The gables (front and back, z=0 and z=9 side of the roof) have no overhang and no trim: push the roof one block past each gable or add a dark oak stair/trapdoor trim along the verge.",
+          "The long side wall of the shed (iso back view) is one flat cobble/stone brick face: break it with a dark oak post or beam in the middle, or a window sill.",
+          "Reachability fine: only roof slopes, the ridge and three single wall-top spots are unreached; floor and yard are all reached."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "front"
+        ]
+      }
+    }
+  }
+}

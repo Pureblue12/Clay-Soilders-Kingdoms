@@ -1,0 +1,56 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "lamp_post_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:06:21.462Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 75,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 11,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.8181818181818182,
+          "types": 5,
+          "dominant": {
+            "name": "cobblestone_stairs",
+            "share": 0.36363636363636365
+          },
+          "height": 6,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "one hanging lantern on an arm, stepped cobblestone cross foot and dark oak foot block; plain but right for a first level",
+          "depth": "the plus-shaped stair foot is the only relief",
+          "roof": "top is a bare fence end above the arm"
+        },
+        "summary": "A slim spruce fence lamp post on a dark oak foot and a plus-shaped cobblestone stair base, with one arm and a hanging lantern. Reads clearly as a street lamp.",
+        "problems": [
+          "Optional: the post top ends in a bare fence (1,4,1); fine for L1 since L2 caps it with a lantern."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

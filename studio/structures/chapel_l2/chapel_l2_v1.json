@@ -4,14 +4,14 @@
   "version": 1,
   "size": [11,13,12],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "Not much diffreientating l2 and l3 add more detail",
     "author": "claude",
     "created": "2026-10-10T05:05:11.368Z",
     "description": "Chapel, level 2 of 3: L1 plus flourish 2. Needs scaffolding: 13 tall (the bell cote; the nave roof is 9). Over budget: 440 blocks vs 210 (first build 370 vs 170; 7 wide instead of 5, for two pews a side). Stone chapel (stone bricks on a cobblestone plinth, buttresses, spruce gable roof) whose front gable rises into a bell cote; door under a stone hood, lancet windows, pews, an altar; L2 adds the bell, runner, lectern, candles, lanterns, flower boxes; L3 stained glass oculi, banners, more candles and flowers. Not yet builder-tested: bell, candle, cornflower, dandelion, lectern, lily_of_the_valley, oxeye_daisy. Decoration step adds: item.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:07:40.894Z",
     "tags": [
       "batch4",
       "tier4",

@@ -1,0 +1,80 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "chapel_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:10:10.398Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 86,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: lily_of_the_valley, lectern, cornflower, oxeye_daisy, dandelion, candle, bell."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "415 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "13 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 415,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4457831325301205,
+          "types": 29,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.3180722891566265
+          },
+          "height": 13,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 0,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {
+          "artefacts": "the standing lanterns at (4,4,0) and (6,4,0) sit on bottom-half stone brick stairs (facing west/east); a stair's top only covers half the block, so it can't hold a lantern and it drops in game. Put a full block, a top slab or a top-half stair under them, or hang them",
+          "roof": "Roof warning is a false alarm: 1-block overhang at both eaves and the back gable.",
+          "life": "Window flower boxes and front planters with flowers; no path yet.",
+          "detail": "Flower boxes, red runner, lectern, altar candles, chain-hung lanterns and a side bench give it real detail."
+        },
+        "summary": "Level 2 adds the bell with its chain, trapdoor flower boxes under the side windows, front planters, a bench, a red aisle runner, a lectern, altar candles and lanterns inside and over the door.",
+        "problems": [
+          "Lanterns at (4,4,0) and (6,4,0) stand on bottom stone_brick_stairs (door hood ends at (4,3,0) facing west and (6,3,0) facing east); a stair's top face has no centre support, so in game they pop off. Put them on a full block (e.g. make the hood ends stone bricks or top-half stairs) or hang them from a wall-side chain instead.",
+          "Reachability: interior floor, runner and pews are reached; unreached places are roofs, buttress caps, the outside flower boxes (window boxes, fine), the bell top and the gable slots. Fine."
+        ],
+        "views": [
+          "sheet",
+          "front"
+        ]
+      }
+    }
+  }
+}

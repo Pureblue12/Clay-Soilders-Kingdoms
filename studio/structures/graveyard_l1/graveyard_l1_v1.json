@@ -4,14 +4,14 @@
   "version": 1,
   "size": [9,7,12],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T05:05:13.691Z",
     "description": "Graveyard, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 227 blocks vs 105 (first build 115 vs 70). Flush piece (ground_layer 0: the mod does not support it yet). Walled churchyard (cobblestone wall, stone brick piers) with gravel paths, graves on both sides, a stone cross and benches; L2 adds the yew, a lychgate over the entrance, lanterns and a new grave; L3 flowers, candles, moss and vines, a fresh grave.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:08:44.614Z",
     "tags": [
       "batch4",
       "tier4",
