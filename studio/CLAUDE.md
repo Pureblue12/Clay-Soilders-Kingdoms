@@ -29,6 +29,10 @@ The owner never types git commands for reviews (`src/server/gitsync.ts`):
 - Approve, reject, notes and rollback commit only that one version file (`Studio review: <name> vN <status>`) and push.
 - The toast says what happened; failures (offline, conflict) stay local and show in red. `STUDIO_GIT=off` turns it off.
 - The open page also pulls and redraws the list every 30 s, so new versions and stage changes show up without a reload.
+- Notes save as Carlton types (0.8 s after he stops, and when he leaves the box); typed notes are committed together
+  20 s after the last change (`commitLater`), approve / reject at once.
+- "Apply to all levels" (toggle in the review panel, remembered in the browser): approve, reject and notes go to the
+  latest version of every level of the family (`bench_l1`, `bench_l2`, ...; `Store.levels`) in one commit.
 
 ## Revision queue (stages)
 

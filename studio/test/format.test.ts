@@ -99,3 +99,15 @@ test('stages: review, queued after a reject, revising while an agent works, revi
   store.setReview('tiny', 2, 'approved', '');
   assert.equal(store.summary('tiny').stage, 'approved');
 });
+
+test('levels: a family is every name_lN, sorted by level; notes-only reviews keep the status', () => {
+  const store = new Store(fs.mkdtempSync(path.join(os.tmpdir(), 'studio-')));
+  for (const n of ['bench_l2', 'bench_l10', 'bench_l1', 'benches_l1', 'house']) store.saveNewVersion({ ...sample(), name: n });
+  assert.deepEqual(store.levels('bench_l2'), ['bench_l1', 'bench_l2', 'bench_l10']);
+  assert.deepEqual(store.levels('house'), ['house']);
+  assert.deepEqual(store.summary('benches_l1').levels, ['benches_l1']);
+  store.setReview('house', 1, 'rejected', 'too plain');
+  store.setReview('house', 1, null, 'too plain, add flowers');
+  assert.equal(store.load('house', 1).meta.status, 'rejected');
+  assert.equal(store.load('house', 1).meta.notes, 'too plain, add flowers');
+});
