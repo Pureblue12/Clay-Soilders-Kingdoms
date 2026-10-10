@@ -1,0 +1,59 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "smithy_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:50:54.727Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 92,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: anvil, smithing_table, blast_furnace, cauldron, iron_bars."
+          }
+        ],
+        "stats": {
+          "blocks": 250,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.416,
+          "types": 26,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.18
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {},
+        "summary": "The working smithy: anvil, forge and grindstone in the open bay, smoke on the chimney, a lantern and sign. Reads as a smithy at a glance.",
+        "problems": [
+          "Reachability (flood fill from the ground outside): every floor and room is reached; only roof slopes and the tops of furniture are not, which is right",
+          "From outside L2 differs from L1 only by the smoke, grindstone and lantern; fine, but a quench barrel or ore pile by the door would make the step clearer"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

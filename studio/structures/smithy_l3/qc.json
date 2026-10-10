@@ -1,0 +1,58 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "smithy_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:50:55.351Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 100,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: coal_block, raw_iron_block, fern, anvil, black_carpet, smithing_table, blast_furnace, cauldron, cornflower, dandelion, iron_bars, red_wall_banner."
+          }
+        ],
+        "stats": {
+          "blocks": 296,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4831081081081081,
+          "types": 37,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.16554054054054054
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {},
+        "summary": "Adds the ore lean-to, weapon rack, flower box, bushes and lamp posts. A lively, finished smithy.",
+        "problems": [
+          "Reachability (flood fill from the ground outside): every floor and room is reached; only roof slopes and the tops of furniture are not, which is right"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

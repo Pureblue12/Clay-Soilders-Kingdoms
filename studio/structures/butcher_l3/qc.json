@@ -1,0 +1,58 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "butcher_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:50:58.698Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 100,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cornflower, fern, oxeye_daisy, cauldron, dandelion, red_wall_banner, red_wool, white_wool."
+          }
+        ],
+        "stats": {
+          "blocks": 245,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4897959183673469,
+          "types": 37,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.1673469387755102
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {},
+        "summary": "Adds the fenced side yard with hay and troughs, banners, flowers and lamp posts.",
+        "problems": [
+          "Reachability (flood fill from the ground outside): every floor and room is reached; only roof slopes and the tops of furniture are not, which is right"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

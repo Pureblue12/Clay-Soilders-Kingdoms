@@ -1,0 +1,63 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "market_stall_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:51:09.495Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 58,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: melon, pumpkin, red_wall_banner, cake."
+          }
+        ],
+        "stats": {
+          "blocks": 61,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3442622950819672,
+          "types": 20,
+          "dominant": {
+            "name": "blue_wool",
+            "share": 0.2459016393442623
+          },
+          "height": 4,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 0,
+          "materials": 0,
+          "shape": 1,
+          "life": 1,
+          "scale": 1,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "solid two-layer wool block",
+          "materials": "neon blue and cyan wool"
+        },
+        "summary": "Adds crates, a lamp post, a bush and flowers around it.",
+        "problems": [
+          "The canopy is two full layers of solid blue and light-blue wool, bigger and heavier than the stall under it: from every view the stall is a bright blue box. Make the awning one block thick (or wool on the front edge and carpet/trapdoors behind), sloping down to the front",
+          "Colours: the saturated blue/cyan clashes with the medieval palette of every other structure. Use red and white like the butcher's awning, or brown/white, yellow/white",
+          "The counter and goods sit deep under the canopy and are half hidden; push the goods to the front edge so they show"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

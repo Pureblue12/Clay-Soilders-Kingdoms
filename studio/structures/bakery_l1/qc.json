@@ -1,0 +1,52 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "bakery_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:50:59.226Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 83,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 214,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3691588785046729,
+          "types": 21,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.18691588785046728
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {},
+        "summary": "Plaster and timber cottage with a brick bread oven bulging out of the back gable and its chimney. The oven makes it a bakery already.",
+        "problems": [
+          "Reachability (flood fill from the ground outside): every floor and room is reached; only roof slopes and the tops of furniture are not, which is right"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

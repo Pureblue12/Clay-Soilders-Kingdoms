@@ -1,0 +1,58 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "bakery_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:51:00.339Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 100,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: oxeye_daisy, cornflower, fern, dandelion, white_wool, brick_stairs, red_wall_banner, brick_slab."
+          }
+        ],
+        "stats": {
+          "blocks": 269,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.483271375464684,
+          "types": 40,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.14869888475836432
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {},
+        "summary": "Adds the side porch with counter, the hay and grain stack by the oven, a lamp post and bushes.",
+        "problems": [
+          "Reachability (flood fill from the ground outside): every floor and room is reached; only roof slopes and the tops of furniture are not, which is right"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

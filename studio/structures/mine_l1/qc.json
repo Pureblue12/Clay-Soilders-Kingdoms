@@ -1,0 +1,61 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "mine_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:51:04.502Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 72,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 222,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.27927927927927926,
+          "types": 12,
+          "dominant": {
+            "name": "cobblestone_stairs",
+            "share": 0.24324324324324326
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "materials": "the mound is nearly all cobblestone in neat steps, so it looks like a man-made pile, not a hillside; mix in stone, andesite, gravel and coarse dirt, and grass or moss on top",
+          "roof": "the automatic roof warning is a miss: the mound has no walls"
+        },
+        "summary": "Timber-framed adit into a cobblestone mound, crates at the side. Reads as a mine entrance.",
+        "problems": [
+          "Reachability: every place is reached"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}
