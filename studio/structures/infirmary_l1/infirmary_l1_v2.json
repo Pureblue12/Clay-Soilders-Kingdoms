@@ -4,14 +4,14 @@
   "version": 2,
   "size": [11,9,13],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "Still needs a red cross to indicates its a hospital",
     "author": "claude",
     "created": "2026-10-10T05:21:09.626Z",
     "description": "Infirmary, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 448 blocks vs 285 (first build 379 vs 235). White plaster ward in a dark oak frame under a spruce gable roof: six beds (three on each side, heads to the wall, a window over each), bedside tables, a hearth, herb barrels and shelves, a lean-to herb store; L2 adds the brewing stand and cauldron, candles, lanterns, flower boxes, a door canopy and the banner; L3 a herb garden, herb pots, more banners, a bench and a lantern post.",
     "changes": "Quality check round 1: the hole in the front barge board under the ridge is closed (every level); the L3 bench by the front now faces away from the wall.",
     "parent": 1,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:26:06.758Z",
     "tags": [
       "batch4",
       "tier4",
