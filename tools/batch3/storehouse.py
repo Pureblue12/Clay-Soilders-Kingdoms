@@ -82,7 +82,10 @@ def storehouse():
             for z in range(Z0, Z1 + 1):
                 if not (x in (X0, X1) or z in (Z0, Z1)):
                     continue
-                P(s, x, y, z, 'dark_oak_log' if (x, z) in posts else 'white_terracotta', axis='y')
+                if (x, z) in posts:
+                    P(s, x, y, z, 'dark_oak_log', axis='y')
+                else:
+                    P(s, x, y, z, 'white_terracotta')
     windows = [(X0, 5, z) for z in (4, 8, 12)] + [(X1, 5, z) for z in (4, 8, 12)] + [(4, 5, Z0), (8, 5, Z0),
                                                                                    (4, 5, Z1), (8, 5, Z1)]
     for w in windows:
@@ -303,15 +306,8 @@ def storehouse():
 
 STRUCTURES = [dict(path='storehouse', name='Storehouse', tier=3, zone='inner', role='storage', group='storehouse',
                    terrain='skirt', door='front', make=storehouse, max_height=13,
-                   changes='Carlton: "needs to be larger, add a cellar, more chests, should scale with levels". Much '
-                           'bigger (hall 9 by 13 instead of 8 by 9) and on two floors plus a loft. The cellar: the '
-                           'mod cannot build below the ground (no layers under 0, builders never dig), so it is a '
-                           'raised stone undercroft: the hall stands on it one storey up (reached by an outside stone '
-                           'stair), and a railed stair inside goes down to it; carts also get in through a back door '
-                           'at ground level. No ladders. Storage grows per level: L1 12 chests and 16 barrels; '
-                           'L2 28 chests and 61 barrels (racks of barrels on their sides, everything two high, '
-                           'the cellar lined); L3 adds the loft under the roof full of chests (its own stair), fills '
-                           'the cellar and adds a goods lean-to and a wood yard outside: 76 chests and 71 barrels. 13 tall: marked as needing scaffolding.',
+                   changes='Fix: the plaster infill was saved as white terracotta with an axis, which terracotta does not have (the mod would '
+                           'reject the block). Now plain white terracotta at every level. Nothing else changed from v2.',
                    description='Needs scaffolding: 13 tall (over the 9 rule; the roof is within reach from the hall '
                                'floor at y 3, so the planner may need little or none). Over budget on purpose (Carlton: bigger, more '
                                'storage). Jettied timber hall (plaster in a dark oak frame, spruce roof) on a stone '
