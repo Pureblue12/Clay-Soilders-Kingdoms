@@ -1,0 +1,80 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "market_stall_l1",
+  "version": 3,
+  "size": [7,5,6],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T05:12:20.429Z",
+    "description": "Market stall, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 83 blocks vs 17 (and 3 x 3 instead of 3 x 2, so the trader has a spot behind the counter). Spruce-post stall with a plank counter under a thin, sloped awning of red and white carpet stripes on trapdoor boards; trader enters from the side; L1 has barrels, a crate, grain and a trade sign; L2 adds the striped wool front edge, lanterns, produce, grain and a shelf; L3 the sign post, banner, stool, back barrel, scraps bin and flowers. Decoration step adds: potted_plant, sign_text.",
+    "changes": "Quality check round 2: level 1 is less bare: a flower pot (tulip by the decoration step) and a bale of grain on the front barrels at the counter edge; level 2 puts a pumpkin out at the front edge and a melon beside the stall. (Round 1: one-block-thick sloped red and white awning instead of solid blue wool, goods at the front, goods on level 1.)",
+    "parent": 2,
+    "reviewedAt": null,
+    "tags": [
+      "batch3",
+      "tier3",
+      "inner",
+      "market"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:chest[facing=north,type=single,waterlogged=false]",
+    "B": "minecraft:flower_pot",
+    "C": "minecraft:hay_block[axis=x]",
+    "D": "minecraft:hay_block[axis=z]",
+    "E": "minecraft:oak_wall_sign[facing=north,waterlogged=false]",
+    "F": "minecraft:red_carpet",
+    "G": "minecraft:spruce_log[axis=y]",
+    "H": "minecraft:spruce_planks",
+    "I": "minecraft:spruce_trapdoor[facing=north,half=bottom,open=false,powered=false,waterlogged=false]",
+    "J": "minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]",
+    "K": "minecraft:spruce_trapdoor[facing=north,half=top,open=false,powered=false,waterlogged=false]",
+    "L": "minecraft:white_carpet"
+  },
+  "layers": [
+    [
+      "...J...",
+      ".#GHG#.",
+      ".....#.",
+      "..GAG..",
+      ".......",
+      "......."
+    ],
+    [
+      "..E....",
+      ".BGCGD.",
+      ".....I.",
+      "..G#G..",
+      ".......",
+      "......."
+    ],
+    [
+      ".......",
+      ".KGKGK.",
+      ".KKKKK.",
+      "..G.G..",
+      ".......",
+      "......."
+    ],
+    [
+      ".......",
+      ".FLFLF.",
+      ".FLFLF.",
+      ".HGHGH.",
+      ".HHHHH.",
+      "......."
+    ],
+    [
+      ".......",
+      ".......",
+      ".......",
+      ".FLFLF.",
+      ".FLFLF.",
+      "......."
+    ]
+  ]
+}

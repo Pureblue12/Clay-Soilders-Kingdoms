@@ -10,6 +10,7 @@ the hearth under a brick chimney, a table with stools, and a weapon shelf.
 """
 from make_batch1_structures import Structure
 from revise1.blockconn import connect, noise, put_id
+from batch2.commons import planter
 
 STAIR = dict(half='bottom', shape='straight', waterlogged='false')
 TOP = dict(half='top', shape='straight', waterlogged='false')
@@ -18,15 +19,19 @@ LANTERN = dict(hanging='false', waterlogged='false')
 HANGING = dict(hanging='true', waterlogged='false')
 OPEN = dict(half='bottom', open='true', powered='false', waterlogged='false')
 SHELF = dict(half='top', open='false', powered='false', waterlogged='false')
+SILL = SHELF                                              # a closed trapdoor in the top half: a window sill
+LEAVES = dict(persistent='true', distance='1', waterlogged='false')
 
 
 def barracks():
-    W, H, D = 9, 9, 14
+    W, H, D = 9, 9, 11
     s = Structure('barracks', (W, H, D), palette='oak_a2')
-    x0, x1, z0, z1 = 1, 7, 2, 12                         # walls
+    x0, x1, z0, z1 = 1, 7, 2, 9                          # walls: 7 x 8
     mid = 4
     posts_z = (z0, 5, 9, z1)
-    windows = [(x0, 2, 4), (x0, 2, 7), (x0, 2, 10), (x1, 2, 4), (x1, 2, 7), (x1, 2, 10), (2, 2, z0), (6, 2, z0)]
+    posts_x = (x0, 3, 5, x1)                              # gable walls: posts at the corners and beside the door
+    side_windows = [(x0, 2, 4), (x0, 2, 7), (x1, 2, 4), (x1, 2, 7)]
+    windows = side_windows + [(2, 2, z0), (6, 2, z0), (mid, 2, z1)]
     chim = (6, z1)                                        # chimney in the back wall, right
     s.at(1, 'shell')
     for x in range(x0, x1 + 1):                           # plinth and floor
@@ -35,12 +40,12 @@ def barracks():
                 put_id(s, x, 0, z, 'mossy_cobblestone' if noise(x, 0, z, 4) < 0.3 else 'cobblestone')
             else:
                 put_id(s, x, 0, z, 'spruce_planks')
-    for y in (1, 2, 3):                                   # walls
+    for y in (1, 2, 3):                                   # walls: a cobblestone course, plaster in a dark oak frame
         for x in range(x0, x1 + 1):
             for z in range(z0, z1 + 1):
                 if not (x in (x0, x1) or z in (z0, z1)):
                     continue
-                post = (x in (x0, x1) and z in posts_z) or (z in (z0, z1) and x in (x0, x1))
+                post = (x in (x0, x1) and z in posts_z) or (z in (z0, z1) and x in posts_x)
                 if post:
                     put_id(s, x, y, z, 'dark_oak_log', axis='y')
                 elif y == 1:
@@ -53,20 +58,28 @@ def barracks():
     for x in range(x0 + 1, x1):                           # beams over the gable walls
         for z in (z0, z1):
             put_id(s, x, 4, z, 'dark_oak_log', axis='x')
-    for z in range(z0 - 1, z1 + 2):                       # the roof: dark eaves, spruce slopes, a slab ridge
+    for z in range(z0 - 1, z1 + 2):                       # the roof: dark eaves, spruce slopes, a dark ridge with slabs
+        verge = z in (z0 - 1, z1 + 1)                     # the gable overhang rows are dark oak (barge boards)
+        slope = 'dark_oak_stairs' if verge else 'spruce_stairs'
         put_id(s, 0, 4, z, 'dark_oak_stairs', facing='east', **STAIR)
         put_id(s, W - 1, 4, z, 'dark_oak_stairs', facing='west', **STAIR)
         for i, y in ((1, 5), (2, 6), (3, 7)):
-            put_id(s, i, y, z, 'spruce_stairs', facing='east', **STAIR)
-            put_id(s, W - 1 - i, y, z, 'spruce_stairs', facing='west', **STAIR)
-        put_id(s, mid, 7, z, 'spruce_planks')
+            put_id(s, i, y, z, slope, facing='east', **STAIR)
+            put_id(s, W - 1 - i, y, z, slope, facing='west', **STAIR)
+        put_id(s, mid, 7, z, 'dark_oak_planks')
         put_id(s, mid, 8, z, 'spruce_slab', **SLAB)
-    for z in (z0, z1):                                    # gable ends, spruce planks
+    for z in (z0, z1):                                    # gable ends: half-timber, plaster in a dark oak frame
         for y, xs in ((5, range(2, 7)), (6, range(3, 6))):
             for x in xs:
-                put_id(s, x, y, z, 'spruce_planks')
-    for x, z in ((2, z0 - 1), (6, z0 - 1), (2, z1 + 1), (6, z1 + 1)):   # upside-down stairs under the gable overhang
-        put_id(s, x, 5, z, 'spruce_stairs', facing='east' if x < mid else 'west', **TOP)
+                if x == mid:
+                    put_id(s, x, y, z, 'dark_oak_log', axis='y')
+                else:
+                    put_id(s, x, y, z, 'white_terracotta')
+    for z in (z0 - 1, z1 + 1):                            # under the gable overhang: upside-down stairs, a ridge beam end
+        for i, y in ((1, 4), (2, 5), (3, 6)):
+            put_id(s, i, y, z, 'spruce_stairs', facing='west', **TOP)
+            put_id(s, W - 1 - i, y, z, 'spruce_stairs', facing='east', **TOP)
+        put_id(s, mid, 6, z, 'dark_oak_log', axis='z')
     cx, cz = chim                                         # brick chimney rising through the right slope
     for y in range(1, 8):
         if (cx, y, cz) in s.blocks:
@@ -82,59 +95,81 @@ def barracks():
     for x, y, z in windows:                               # glass panes joined to the wall they sit in
         side = x in (x0, x1)
         put_id(s, x, y, z, 'glass_pane', north=side, south=side, east=not side, west=not side, waterlogged='false')
-    for z in (4, 6, 8):                                   # six beds, heads to the long walls
+    for x, y, z in windows:                               # spruce shutters on every window
+        if x in (x0, x1):
+            out, f = (x - 1, 'west') if x == x0 else (x + 1, 'east')
+            for dz in (-1, 1):
+                put_id(s, out, y, z + dz, 'spruce_trapdoor', facing=f, **OPEN)
+            put_id(s, out, y - 1, z, 'spruce_trapdoor', facing=f, **SILL)          # and a sill under it
+        else:
+            out, f = (z - 1, 'north') if z == z0 else (z + 1, 'south')
+            for dx in (-1, 1):
+                put_id(s, x + dx, y, out, 'spruce_trapdoor', facing=f, **OPEN)
+    put_id(s, mid, 1, z1 + 1, 'spruce_trapdoor', facing='south', **SILL)       # sill under the back window
+    for z in (4, 6):                                      # four beds, heads to the long walls
         s.bed(3, 1, z, 'west'); s.bed(5, 1, z, 'east')
-    for z in (5, 7):                                      # footlockers between the beds
+    for z in (5,):                                        # footlockers between the beds
         put_id(s, 2, 1, z, 'chest', facing='east', type='single', waterlogged='false')
         put_id(s, 6, 1, z, 'chest', facing='west', type='single', waterlogged='false')
     put_id(s, 2, 1, 3, 'barrel', facing='up', open='false')               # arms store by the door
     put_id(s, 6, 1, 3, 'chest', facing='west', type='single', waterlogged='false')
     put_id(s, cx, 1, z1 - 1, 'furnace', facing='north', lit='false')       # hearth under the chimney
-    put_id(s, 3, 1, 10, 'oak_slab', **SLAB)                               # table and stools at the back
-    put_id(s, 2, 1, 10, 'spruce_stairs', facing='west', **STAIR)
-    put_id(s, 3, 1, 11, 'spruce_stairs', facing='south', **STAIR)
-    put_id(s, 2, 1, 11, 'barrel', facing='up', open='false')
-    for x, z, f in ((x0 + 1, 5, 'east'), (x1 - 1, 9, 'west'), (x0 + 1, 9, 'east'), (x1 - 1, 5, 'west')):
+    put_id(s, 3, 1, 7, 'oak_slab', **SLAB)                                # table and stools at the back
+    put_id(s, 2, 1, 7, 'spruce_stairs', facing='west', **STAIR)
+    put_id(s, 3, 1, 8, 'spruce_stairs', facing='south', **STAIR)
+    put_id(s, 2, 1, 8, 'barrel', facing='up', open='false')
+    put_id(s, 6, 1, 7, 'grindstone', face='floor', facing='north')        # the whetstone for blades
+    for x, z, f in ((x0 + 1, 5, 'east'), (x1 - 1, 5, 'west')):
         put_id(s, x, 3, z, 'wall_torch', facing=f)        # torches on the inside of the posts
-    for x in (3, 5):                                      # torches beside the door, outside
+    for x in (3, 5):                                      # torches beside the door, outside, on the door posts
         put_id(s, x, 3, z0 - 1, 'wall_torch', facing='north')
     # the training dummy at the door: a post with a hay body
     put_id(s, 7, 0, 0, 'oak_fence'); put_id(s, 7, 1, 0, 'hay_block', axis='y')
+    # green at the foot of the walls: leaf bushes and poppies
+    for x, z in ((0, 3), (0, 8), (8, 9), (2, 10)):
+        put_id(s, x, 0, z, 'oak_leaves', **LEAVES)
+    for x, z in ((0, 4), (0, 7), (8, 3), (1, 10), (7, 10)):
+        put_id(s, x, 0, z, 'poppy')
 
     s.at(2, 'flourish2')
     put_id(s, cx, 8, cz, 'campfire', facing='north', lit='true', signal_fire='false', waterlogged='false')  # smoke
-    for x in (2, 6):                                      # flower boxes under the front windows
-        put_id(s, x, 0, z0 - 1, 'coarse_dirt'); put_id(s, x, 1, z0 - 1, 'poppy' if x == 2 else 'cornflower')
+    # planters under the front windows: soil with a spruce trapdoor face, flowers in them
+    planter(s, [(2, 1), (3, 1)], y=0, skip={(mid, 1)})
+    planter(s, [(5, 1), (6, 1)], y=0, skip={(mid, 1), (7, 0)})
+    for x, f in ((2, 'poppy'), (3, 'cornflower'), (5, 'dandelion'), (6, 'poppy')):
+        put_id(s, x, 1, 1, f)
     for z in range(z0 + 1, z1 - 1):                       # red runner down the aisle
         put_id(s, mid, 1, z, 'red_carpet')
-    for z in (5, 9):                                      # lanterns on chains from the ridge
+    for z in (4, 7):                                      # lanterns on chains from the ridge
         put_id(s, mid, 6, z, 'chain', axis='y'); put_id(s, mid, 5, z, 'lantern', **HANGING)
-    for z in (10, 11):                                    # weapon shelf over the table
+    for z in (7, 8):                                      # weapon shelf over the table
         put_id(s, 2, 2, z, 'spruce_trapdoor', facing='east', **SHELF)
-    put_id(s, 3, 2, 10, 'candle', candles='2', lit='false', waterlogged='false')
+    put_id(s, 3, 2, 7, 'candle', candles='2', lit='false', waterlogged='false')
     put_id(s, 7, 2, 0, 'carved_pumpkin', facing='north')                   # the dummy's head and arms
     put_id(s, 6, 1, 0, 'oak_fence'); put_id(s, 8, 1, 0, 'oak_fence')
-    put_id(s, 2, 0, 0, 'oak_fence'); put_id(s, 2, 1, 0, 'lantern', **LANTERN)   # a lamp post at the path
+    put_id(s, 1, 0, 0, 'oak_fence'); put_id(s, 1, 1, 0, 'lantern', **LANTERN)   # a lamp post at the path
+    put_id(s, mid, 5, z0 - 1, 'lantern', **HANGING)       # a lantern under the ridge beam over the door
+    put_id(s, mid, 5, z1 + 1, 'lantern', **HANGING)       # and one over the back window
+    put_id(s, 2, 3, z0 - 1, 'oak_wall_sign', facing='north', waterlogged='false')   # the duty roster by the door
+    s.decorate(2, 3, z0 - 1, 'sign_text', text=['Duty roster', 'Watch: red#2', 'Drill at dawn'])
 
     s.at(3, 'flourish3')
-    for x, y, z in windows[:6]:                           # shutters on the side windows
-        out = x - 1 if x == x0 else x + 1
-        f = 'west' if x == x0 else 'east'
-        for dz in (-1, 1):
-            put_id(s, out, y, z + dz, 'spruce_trapdoor', facing=f, **OPEN)
-    for z in (6, 7, 8):                                   # log pile under the left eave
+    for z in (5, 6):                                      # log pile under the left eave, an axe block beside it
         put_id(s, 0, 0, z, 'spruce_log', axis='z')
-    put_id(s, 0, 1, 7, 'spruce_log', axis='z')
-    for z in (10, 11):                                    # barrels under the right eave
-        put_id(s, W - 1, 0, z, 'barrel', facing='up', open='false')
+    put_id(s, 0, 1, 5, 'spruce_log', axis='z')
+    put_id(s, W - 1, 0, 8, 'barrel', facing='up', open='false')            # a barrel under the right eave
+    put_id(s, W - 1, 1, 8, 'oak_pressure_plate', powered='false')          # its lid
     put_id(s, W - 1, 0, 2, 'hay_block', axis='y')
-    # a spear rack under the right eave: two posts and a rail of fences
-    for z in (5, 6, 7, 8):
+    for z in (4, 5, 6):                                   # a spear rack under the right eave
         put_id(s, W - 1, 0, z, 'spruce_fence')
-    for x, z in ((0, 3), (0, 11)):
-        put_id(s, x, 0, z, 'oak_leaves', persistent='true', distance='1', waterlogged='false')
-    put_id(s, 3, 0, 0, 'red_banner', rotation='0')                          # a flag on the path
-    s.decorate(3, 0, 0, 'banner_pattern', banner='red_banner', note='kingdom colours')
+    for z in (2, z1):                                     # ivy up the front and back corner posts
+        for y in (1, 2, 3):
+            if (0, y, z) not in s.blocks:
+                put_id(s, 0, y, z, 'vine', north='false', south='false', east='true', west='false', up='false')
+    for x, z in ((3, 10), (5, 10)):                       # flowers under the back shutters
+        put_id(s, x, 0, z, 'azure_bluet' if x == 3 else 'oxeye_daisy')
+    put_id(s, 0, 0, 1, 'red_banner', rotation='0')                          # a flag at the front corner
+    s.decorate(0, 0, 1, 'banner_pattern', banner='red_banner', note='kingdom colours')
     s.decorate(5, 0, 0, 'armor_stand', note='a sparring partner in leather armour beside the dummy')
     s.decorate(2, 2, z0 + 1, 'item_frame', item='minecraft:shield', facing='south', note='shield over the arms store')
     s.decorate(x1 - 1, 2, z1 - 2, 'item_frame', item='minecraft:iron_sword', facing='west', note='sword on the wall')

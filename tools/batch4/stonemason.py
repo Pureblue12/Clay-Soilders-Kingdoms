@@ -18,7 +18,8 @@ tool shelf, the shop sign, a block being dressed on the banker, lanterns on the 
 Level 3 (the statue in progress and life): a half-carved soldier statue on a plinth in the right yard with a scaffold
 beside it and chips round it, a banner, flower pots on the wall, moss on the rough stone, flowers and bushes."""
 from make_batch1_structures import Structure
-from batch3.ws_kit import P, A, STAIR, SLAB, SLAB_TOP, SHELF, HANG, STAND, LEAVES, connect, noise, gable_roof
+from batch3.ws_kit import (P, A, STAIR, TOP, SLAB, SLAB_TOP, SHELF, HANG, STAND, LEAVES, connect, noise, gable_roof,
+                           shutters)
 
 SCAFFOLD = dict(bottom='false', distance='0', waterlogged='false')
 
@@ -70,7 +71,11 @@ def stonemason():
     windows = [(x0, 2, 6), (x1, 2, 6), (mid, 2, z1)]
     for w in windows:
         s.remove(*w)
-    gable_roof(s, x0, x1, z0, z1, top, front=1, back=1, gable='spruce_planks', plates='spruce_log')
+    for z in (z0, z1):                              # half-timbered gables: a tie beam and a king post (dark oak)
+        for x in range(x0 + 1, x1):
+            P(s, x, top + 1, z, 'dark_oak_log', axis='x')
+        P(s, mid, top + 2, z, 'dark_oak_log', axis='y')
+    gable_roof(s, x0, x1, z0, z1, top, front=2, back=1, gable='spruce_planks', plates='spruce_log')
     # the yard wall: low cobblestone wall all round the yard, stone brick piers at the gate and the corners
     for x in range(0, W):
         if x not in gate:
@@ -109,6 +114,12 @@ def stonemason():
     P(s, 8, 2, 8, 'cobblestone_slab', **SLAB)
     # the banker: a block on a stump where the mason dresses stone in the open
     P(s, 8, 1, 5, 'stripped_spruce_log', axis='y')
+    # water and tool barrels by the right wall, a sledge with a block on it, a half-dressed block by the path
+    P(s, 9, 1, 5, 'barrel', facing='up', open='false'); P(s, 9, 1, 6, 'barrel', facing='west', open='false')
+    P(s, 5, 1, 2, 'spruce_slab', **SLAB); P(s, 5, 1, 3, 'spruce_slab', **SLAB)
+    P(s, 4, 1, 3, 'cobblestone_stairs', facing='west', **STAIR)
+    for x in (gate[0] - 1, gate[-1] + 1):                                      # lanterns on the gate piers
+        P(s, x, 3, 0, 'lantern', **STAND)
 
     s.at(2, 'flourish2')
     P(s, mid, 1, z1 - 1, 'stonecutter', facing='north')                        # the workstation
@@ -135,8 +146,12 @@ def stonemason():
     s.decorate(8, 2, 5, 'item', item='minecraft:stone_bricks', note='chips on the banker')
     P(s, x0, 2, z0 - 1, 'oak_wall_sign', facing='north', waterlogged='false')  # the shop sign on the left post
     s.decorate(x0, 2, z0 - 1, 'sign_text', lines=['', 'Stonemason', 'cut to order', ''])
-    for x in (gate[0] - 1, gate[-1] + 1):                                      # lanterns on the gate piers
-        P(s, x, 3, 0, 'lantern', **STAND)
+    # the long sides: shutters at the windows, stone corbels under the eaves at the posts
+    for x, side in ((x0, 'west'), (x1, 'east')):
+        shutters(s, x, 2, 6, side)
+        for z in (z0, z1):
+            P(s, x + (-1 if side == 'west' else 1), 3, z, 'stone_brick_stairs',
+              facing='east' if side == 'west' else 'west', **TOP)
     for x in (x0, x1):                                                         # lanterns under the front eave
         A(s, x, top, z0 - 1, 'lantern', **HANG)
 
@@ -154,12 +169,12 @@ def stonemason():
     s.decorate(sx, 2, sz, 'item', item='minecraft:iron_pickaxe', note='a chisel leaning on the statue')
     P(s, x1, 2, z0 - 1, 'gray_wall_banner', facing='north')
     s.decorate(x1, 2, z0 - 1, 'banner_pattern', banner='gray_wall_banner', note="a mason's square and chisel")
-    for x, z in ((0, 1), (W - 1, 3), (W - 1, 6)):
+    for x, z in ((0, 1), (W - 1, 3), (W - 1, 7), (9, 7)):
         P(s, x, 2, z, 'flower_pot')
         s.decorate(x, 2, z, 'potted_plant', plant='red_tulip')
     P(s, 1, 3, 1, 'moss_carpet'); P(s, 1, 2, 2, 'moss_carpet')
-    for x, z, b in ((0, z0, 'leaves'), (0, z0 + 2, 'poppy'), (0, z1 + 1, 'leaves'), (1, D - 1, 'cornflower'),
-                    (x1 + 1, D - 1, 'fern'), (6, 7, 'dandelion'), (8, 6, 'azure_bluet'), (9, 4, 'oxeye_daisy')):
+    for x, z, b in ((0, z0, 'leaves'), (0, z1 + 1, 'leaves'), (1, D - 1, 'cornflower'),
+                    (x1 + 1, D - 1, 'fern'), (6, 7, 'dandelion')):
         if b == 'leaves':
             A(s, x, 1, z, 'oak_leaves', **LEAVES)
         else:
@@ -169,8 +184,11 @@ def stonemason():
 
 
 STRUCTURES = [dict(path='stonemason', name='Stonemason', tier=4, zone='inner', role='workshop', group='stonemason',
-                   terrain='flexible', door='front', make=stonemason, ground_layer=0, changes='First version.',
-                   description='Over budget: 312 blocks vs 125 (first build 262 vs 90; the walled, paved yard is most of it). Flush piece (ground_layer 0: the mod does not support it yet). '
+                   terrain='flexible', door='front', make=stonemason, ground_layer=0, changes='Quality check round 1: half-timbered gables (dark oak tie beam and king post) and a 2-row front '
+                           'overhang over the bay; L1 yard filled (water and tool barrels, a sledge, a half-dressed block, lanterns '
+                           'on the gate piers from L1); L2 adds shutters and stone corbels on the long side walls; L3 '
+                           'flowers no longer stand on gravel (flower pots on the stacks and wall instead).',
+                   description='Over budget: 332 blocks vs 125 (first build 278 vs 90; the walled, paved yard is most of it). Flush piece (ground_layer 0: the mod does not support it yet). '
                                'Walled stone yard round an open stone brick shed under a spruce gable roof: grindstone, '
                                'cutting bench, rough and dressed stone, a banker; L2 adds the stonecutter and a stand '
                                'of half-cut blocks along the front wall; L3 a statue in progress with its scaffold, '
