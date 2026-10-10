@@ -21,7 +21,7 @@ Level 3 (the proud town): the clocks (decoration step), flower boxes on brackets
 and flower beds round the arcade, a lantern post, carpet runners in the chamber and the porch, vines.
 """
 from make_batch1_structures import Structure
-from batch3.ws_kit import P, A, STAIR, TOP, HANG, STAND, LEAVES, connect, gable_roof
+from batch3.ws_kit import P, A, STAIR, TOP, HANG, STAND, LEAVES, OPEN, SLAB_TOP, connect, gable_roof
 
 W, H, D = 13, 18, 18
 HX0, HX1, HZ0, HZ1 = 2, 10, 5, 16          # hall
@@ -36,6 +36,7 @@ PIERS = (5, 9, 13)
 BAYS = ((6, 7, 8), (10, 11, 12))             # arcade bays, 3 wide
 WIN_Z = (6, 8, 10, 12, 15)                 # upper windows on the long sides
 DORMER_Z = 11
+CHIMNEY_TOP = 15                           # the back chimney (through the gable overhang)
 CANDLES = dict(candles='3', lit='true', waterlogged='false')
 
 
@@ -61,6 +62,17 @@ def pyramid_ring(s, x0, x1, z0, z1, y, block='spruce_stairs'):
 def clock_faces():
     """(x, z, axis, outside x, outside z) of the three clock hubs (front and sides; the hall roof hides the back)."""
     return [(MID, TZ0, 'z', MID, TZ0 - 1), (TX0, TMZ, 'x', TX0 - 1, TMZ), (TX1, TMZ, 'x', TX1 + 1, TMZ)]
+
+
+def face_of(x, z):
+    """The clock face a tower-wall column belongs to (its hub), or None for a corner post."""
+    if x in (TX0, TX1) and z in (TZ0, TZ1):
+        return None
+    if z == TZ0:
+        return (MID, TZ0)
+    if x in (TX0, TX1):
+        return (x, TMZ)
+    return None
 
 
 def dormer(s, x, out):
@@ -92,7 +104,6 @@ def town_hall():
             P(s, x, 0, z, 'cobblestone' if edge else 'stone_bricks')
 
     # ---------------------------------------------------------------- tower
-    hubs = {(x, z) for x, z, *_ in clock_faces()}
     for y in range(1, CLOCK[1] + 1):
         for x in range(TX0, TX1 + 1):
             for z in range(TZ0, TZ1 + 1):
@@ -105,10 +116,10 @@ def town_hall():
                     P(s, x, y, z, 'dark_oak_log', axis='y')
                 elif y in CLOCK:
                     P(s, x, y, z, 'dark_oak_log', axis='x' if z in (TZ0, TZ1) else 'z')
-                elif (x, z) in hubs and y == 13:
-                    P(s, x, y, z, 'dark_oak_log', axis='z' if z in (TZ0, TZ1) else 'x')     # the hub
+                elif face_of(x, z) is not None and z != TZ1:
+                    P(s, x, y, z, 'white_wool')                    # the dial: bright white in the dark frame
                 else:
-                    P(s, x, y, z, 'white_terracotta')                                     # the face
+                    P(s, x, y, z, 'white_terracotta')                                     # the back (under the roof)
     for y in (1, 2, 3):                              # porch arches: front and back 3 high, sides 2 high
         s.remove(MID, y, TZ0); s.remove(MID, y, TZ1)
     for y in (1, 2):
@@ -120,8 +131,16 @@ def town_hall():
     for x, z in ((TX0, TMZ), (TX1, TMZ), (MID, TZ0)):                 # office windows
         s.remove(x, 7, z)
     s.remove(MID, FLOOR + 1, TZ1); s.remove(MID, FLOOR + 2, TZ1)      # doorway from the council chamber
+    # the stair from the office up to the clock chamber: along the east wall (rising north), then one step west
+    # through the office ceiling (y 9); solid underneath, open above every step
+    for x, y, z, f in ((TX1 - 1, 6, TZ1 - 1, 'north'), (TX1 - 1, 7, TMZ, 'north'), (TX1 - 1, 8, TZ0 + 1, 'north'),
+                       (MID, 9, TZ0 + 1, 'west')):
+        P(s, x, y, z, 'spruce_stairs', facing=f, **STAIR)
+        for yy in range(FLOOR + 1, y if y < 9 else FLOOR + 1):
+            P(s, x, yy, z, 'spruce_planks')
+    s.remove(TX1 - 1, 9, TMZ); s.remove(TX1 - 1, 9, TZ0 + 1)          # the stairwell through the office ceiling
     P(s, MID, 4, TZ0 - 1, 'stone_brick_stairs', facing='south', **TOP)   # a hood over the porch arch
-    P(s, MID, 0, TZ0 - 1, 'cobblestone_stairs', facing='south', **STAIR)
+    P(s, MID, 0, TZ0 - 1, 'stone_brick_stairs', facing='south', **STAIR)
     for x in (TX0, TX1):                             # buttresses at the tower's front corners
         P(s, x, 0, TZ0 - 1, 'cobblestone')
         for y in (1, 2, 3):
@@ -231,7 +250,9 @@ def town_hall():
     # the clerks' office in the tower: a desk, a chair and a chest
     P(s, MID - 1, FLOOR + 1, TZ0 + 1, 'crafting_table')
     P(s, MID - 1, FLOOR + 1, TZ0 + 2, 'oak_stairs', facing='south', **STAIR)
-    P(s, MID + 1, FLOOR + 1, TZ0 + 1, 'chest', facing='south', type='single', waterlogged='false')
+    P(s, MID - 1, FLOOR + 1, TZ1 - 1, 'chest', facing='east', type='single', waterlogged='false')
+    # the clock chamber (y 10): the clockwork (a grindstone)
+    P(s, MID - 1, 10, TZ1 - 1, 'grindstone', face='floor', facing='east')
     # the notice board on the front piers (its notices: decoration step)
     for x in (HX0, HX0 + 1, HX1 - 1, HX1):
         P(s, x, 2, HZ0 - 1, 'oak_wall_sign', facing='north', waterlogged='false')
@@ -241,6 +262,35 @@ def town_hall():
         P(s, x, 1, HZ0 + 1, 'spruce_stairs', facing='north', **STAIR)
     P(s, HX1 - 1, 1, HZ1 - 1, 'chest', facing='west', type='single', waterlogged='false')
     P(s, HX0 + 1, 1, HZ1 - 1, 'barrel', facing='up', open='false')
+    # outside: shutters beside the windows, slab sills under them
+    for x, side in ((HX0 - 1, 'west'), (HX1 + 1, 'east')):
+        for z in (5, 7, 9, 11, 13, 14, 16):                             # side windows (shared between neighbours)
+            P(s, x, wy, z, 'spruce_trapdoor', facing=side, **OPEN)
+    for x in (4, 8):                                                     # back: upper windows
+        P(s, x - 1, wy, HZ1 + 1, 'spruce_trapdoor', facing='south', **OPEN)
+        P(s, x + 1, wy, HZ1 + 1, 'spruce_trapdoor', facing='south', **OPEN)
+        P(s, x, wy - 1, HZ1 + 1, 'spruce_slab', **SLAB_TOP)
+        P(s, x, 1, HZ1 + 1, 'stone_brick_stairs', facing='north', **TOP)    # sill of the stair hall window
+    for x in (HX0 + 1, HX1 - 1):                                         # front windows of the hall
+        P(s, x, wy - 1, HZ0 - 1, 'spruce_slab', **SLAB_TOP)
+    P(s, MID, wy - 1, TZ0 - 1, 'spruce_slab', **SLAB_TOP)                 # the office windows in the tower
+    for x, side, f in ((TX0 - 1, 'west', -1), (TX1 + 1, 'east', 1)):
+        P(s, x, wy - 1, TMZ, 'spruce_slab', **SLAB_TOP)
+        P(s, x, wy, TMZ - 1, 'spruce_trapdoor', facing=side, **OPEN)
+        P(s, x, wy, TMZ + 1, 'spruce_trapdoor', facing=side, **OPEN)
+    # the back: buttresses at the corners and a brick chimney stack up the middle of the gable
+    for x in (HX0, HX1):
+        P(s, x, 0, HZ1 + 1, 'cobblestone')
+        for yy in (1, 2):
+            P(s, x, yy, HZ1 + 1, 'stone_bricks')
+        P(s, x, 3, HZ1 + 1, 'stone_brick_stairs', facing='north', **STAIR)
+    for x in (MID - 1, MID, MID + 1):
+        P(s, x, 0, HZ1 + 1, 'cobblestone')
+        P(s, x, 1, HZ1 + 1, 'stone_bricks')
+    P(s, MID - 1, 2, HZ1 + 1, 'stone_brick_stairs', facing='east', **STAIR)
+    P(s, MID + 1, 2, HZ1 + 1, 'stone_brick_stairs', facing='west', **STAIR)
+    for yy in range(2, CHIMNEY_TOP + 1):
+        P(s, MID, yy, HZ1 + 1, 'bricks')
     # torches
     P(s, MID, FLOOR + 3, HZ1 - 1, 'wall_torch', facing='north')
     P(s, HX0 + 1, FLOOR + 2, 11, 'wall_torch', facing='east')
@@ -250,9 +300,12 @@ def town_hall():
 
     # ---------------------------------------------------------------- level 2: the hall at work
     s.at(2, 'flourish2')
-    for x, z, axis, ox, oz in clock_faces():                              # hands on every clock hub
+    for x, z, axis, ox, oz in clock_faces():                              # black hands on every white dial
         f = {(0, -1): 'north', (0, 1): 'south', (-1, 0): 'west', (1, 0): 'east'}[(ox - x, oz - z)]
-        P(s, ox, 13, oz, 'dark_oak_button', face='wall', facing=f, powered='false')
+        rx, rz = {'north': (-1, 0), 'south': (1, 0), 'west': (0, 1), 'east': (0, -1)}[f]   # the viewer's right
+        P(s, ox, 13, oz, 'chain', axis='z' if z == TZ0 else 'x')         # the hub (a chain end-on: a dark dot)
+        P(s, ox, 14, oz, 'chain', axis='y')                               # minute hand at 12
+        P(s, ox + rx, 13, oz + rz, 'chain', axis='x' if rx else 'z')     # hour hand at 3 (a thin dark bar)
     for x in (HX0 + 1, HX1 - 1):                                          # records: bookshelves along the walls
         P(s, x, FLOOR + 2, 7, 'bookshelf'); P(s, x, FLOOR + 2, 13, 'bookshelf')
         P(s, x, FLOOR + 1, 14, 'bookshelf'); P(s, x, FLOOR + 2, 14, 'bookshelf')
@@ -265,29 +318,48 @@ def town_hall():
             P(s, MID, yy, z, 'chain', axis='y')
         P(s, MID, 10, z, 'lantern', **HANG)
     for z in (7, 10, 13):                                                 # lanterns under the floor, in the arcade
-        P(s, MID - 2, ARC, z, 'lantern', **HANG); P(s, MID + 2, ARC, z, 'lantern', **HANG)
+        P(s, MID, ARC, z, 'lantern', **HANG)
+    for x in (HX0 - 1, HX1 + 1):                                          # and under the brackets outside
+        for z in PIERS:
+            P(s, x, ARC - 1, z, 'lantern', **HANG)
     P(s, MID, ARC, TMZ, 'lantern', **HANG)                                # in the tower porch
     for x in (TX0 + 1, TX1 - 1):                                          # banners on the tower
         P(s, x, 8, TZ0 - 1, 'red_wall_banner', facing='north')
         s.decorate(x, 8, TZ0 - 1, 'banner_pattern', banner='red_wall_banner', note='the town arms')
-    # market stalls under the arcade: a counter and goods along the middle
-    for z in (8, 9):
-        P(s, MID - 2, 1, z, 'barrel', facing='up', open='false')
-        P(s, MID + 2, 1, z, 'hay_block' if z == 8 else 'barrel', **({'axis': 'y'} if z == 8 else {'facing': 'up', 'open': 'false'}))
-    for z in (11, 12):
-        P(s, MID - 2, 1, z, 'spruce_slab', type='top', waterlogged='false')     # a counter
-    P(s, MID + 2, 1, 11, 'chest', facing='west', type='single', waterlogged='false')
-    P(s, MID - 2, 2, 9, 'barrel', facing='up', open='false')
+    P(s, MID, 10, TZ1 - 1, 'bell', attachment='floor', facing='east', powered='false')   # the clock bell
+    # two market stalls in the middle bays, facing the aisle: a counter with goods, the seller behind it between two
+    # posts, a striped awning over both
+    for cx, sx, f, stripe, goods in ((MID - 2, MID - 3, 'west', 'red_wool',
+                                      (('hay_block', dict(axis='y')), ('pumpkin', {}), ('barrel', dict(facing='up', open='false')))),
+                                     (MID + 2, MID + 3, 'east', 'blue_wool',
+                                      (('red_wool', {}), ('lantern', STAND), ('white_wool', {})))):
+        for i, z in enumerate((10, 11, 12)):
+            P(s, cx, 1, z, 'spruce_stairs', facing=f, **TOP)               # the counter
+            P(s, cx, 2, z, goods[i][0], **goods[i][1])
+            for x in (sx, cx, 2 * cx - sx):                                # the awning, striped across
+                P(s, x, 3, z, stripe if z != 11 else 'white_wool')
+        for z in (10, 12):
+            for yy in (1, 2):
+                P(s, sx, yy, z, 'spruce_fence')
+    P(s, MID - 3, 1, 9, 'barrel', facing='up', open='false')              # stock behind the stalls
+    P(s, MID + 3, 1, 9, 'barrel', facing='up', open='false')
+    P(s, MID + 3, 2, 9, 'barrel', facing='up', open='false')
+    P(s, MID - 3, 1, 8, 'hay_block', axis='y')
 
     # ---------------------------------------------------------------- level 3: the proud town
     s.at(3, 'flourish3')
-    for x, z, axis, ox, oz in clock_faces():
-        s.decorate(ox, 13, oz, 'item_frame', item='minecraft:clock', note='the town clock, on the hub')
-    for x, side in ((HX0 - 1, 'west'), (HX1 + 1, 'east')):               # flower boxes under the upper windows
-        for i, z in enumerate(WIN_Z[:4]):
+    s.decorate(MID, FLOOR + 2, HZ1 - 1, 'item_frame', item='minecraft:clock',
+               note='the town clock, on the back wall of the chamber above the stairwell (facing north)')
+    for x, side in ((HX0 - 1, 'west'), (HX1 + 1, 'east')):               # a long flower box under the upper windows
+        out = -1 if side == 'west' else 1
+        for z in range(WIN_Z[0], WIN_Z[3] + 1):                           # soil on brackets, a trapdoor front
             P(s, x, FLOOR + 1, z, 'coarse_dirt')
+            P(s, x + out, FLOOR + 1, z, 'spruce_trapdoor', facing=side, **OPEN)
+        for i, z in enumerate(WIN_Z[:4]):
             P(s, x, FLOOR, z, 'dark_oak_stairs', facing='east' if side == 'west' else 'west', **TOP)
             P(s, x, FLOOR + 2, z, ('poppy', 'cornflower', 'oxeye_daisy', 'azure_bluet')[i])
+        P(s, x, FLOOR + 1, WIN_Z[0] - 1, 'spruce_trapdoor', facing='north', **OPEN)    # the box's end boards
+        P(s, x, FLOOR + 1, WIN_Z[3] + 1, 'spruce_trapdoor', facing='south', **OPEN)
     for z in range(7, 14):                                                # carpet runners in the chamber
         A(s, MID - 2, FLOOR + 1, z, 'red_carpet'); A(s, MID + 2, FLOOR + 1, z, 'red_carpet')
     for z in range(TZ0 + 1, HZ0 + 2):                                     # and through the porch
