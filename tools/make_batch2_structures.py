@@ -4,6 +4,10 @@
   python3 tools/make_batch2_structures.py --render [names]   # render every level to build/batch2/render/ (look at them)
   python3 tools/make_batch2_structures.py --studio [names]   # save every level into the Studio as a pending version
 
+  STRUCTURE_PKG=revise1 python3 tools/make_batch2_structures.py ...   # another package of modules (revisions of
+                                                                      # batch 1 from Carlton's notes: tools/revise1/)
+An entry may also carry changes='what changed and why' (the Studio's "Changes" line for a new version).
+
 Unlike batch 1, this never writes into the mod: a structure reaches the mod only after Carlton approves it in the
 Studio (the promote step). The building helpers, palettes and buildability rules are batch 1's
 (tools/make_batch1_structures.py); see its docstring for the conventions (x = width, z = 0 is the front, levels only
@@ -23,7 +27,8 @@ from make_batch1_structures import Structure, PALETTES, KNOWN_OK, BROKEN  # noqa
 
 REPO = os.path.dirname(HERE)
 STUDIO = os.path.join(REPO, 'studio')
-OUT = os.path.join(REPO, 'build', 'batch2')
+PKG = os.environ.get('STRUCTURE_PKG', 'batch2')
+OUT = os.path.join(REPO, 'build', PKG)
 
 # Look A, tier 2: batch 1's palette plus stone-hall and palisade roles. Every value here is KNOWN-OK (probe, D61).
 PALETTES['oak_a2'] = {
@@ -40,11 +45,11 @@ KEYS = '#ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@$%&*+=-~
 
 
 def discover():
-    """Every STRUCTURES entry of every module in tools/batch2/, in module order."""
-    import batch2
+    """Every STRUCTURES entry of every module in tools/<PKG>/, in module order."""
+    pkg = importlib.import_module(PKG)
     entries = []
-    for mod in sorted(m.name for m in pkgutil.iter_modules(batch2.__path__)):
-        entries += importlib.import_module(f'batch2.{mod}').STRUCTURES
+    for mod in sorted(m.name for m in pkgutil.iter_modules(pkg.__path__)):
+        entries += importlib.import_module(f'{PKG}.{mod}').STRUCTURES
     names = [e['path'] for e in entries]
     assert len(names) == len(set(names)), f'duplicate structure paths: {names}'
     return entries
@@ -91,7 +96,7 @@ def studio_file(entry, s, level):
         'format': 'csr-studio-structure/1', 'name': f"{entry['path']}_l{level}", 'version': 1, 'size': list(s.size),
         'meta': {'status': 'pending', 'notes': '', 'author': 'claude', 'created': datetime.now(timezone.utc).isoformat(),
                  'description': desc, 'changes': '', 'parent': None, 'reviewedAt': None,
-                 'tags': ['batch2', f"tier{entry['tier']}", entry['zone'], entry['role']]},
+                 'tags': [PKG, f"tier{entry['tier']}", entry['zone'], entry['role']]},
         'palette': palette, 'layers': layers,
     }
 
@@ -136,7 +141,7 @@ def main():
             elif mode == '--studio':
                 exists = os.path.isdir(os.path.join(STUDIO, 'structures', name))
                 r = studio('save' if exists else 'create', f, '--author', 'claude',
-                           *(['--changes', 'regenerated from tools/batch2'] if exists else []))
+                           *(['--changes', entry.get('changes', f'regenerated from tools/{PKG}')] if exists else []))
                 print('   ', (r.stdout or r.stderr).strip().splitlines()[-1])
     if mode == '--render':
         print(f'renders in {os.path.join(OUT, "render")}')
