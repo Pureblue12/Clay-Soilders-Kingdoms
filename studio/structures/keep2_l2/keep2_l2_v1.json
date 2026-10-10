@@ -4,14 +4,14 @@
   "version": 1,
   "size": [21,9,9],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "Idk what the hell is going on here delete these 3 keep2s the ont titles \"keep\" should be the only keep going foward",
     "author": "claude",
     "created": "2026-10-10T01:57:43.871Z",
     "description": "Keep (tier 2), level 2 of 3: L1 plus flourish 2. The tier-1 tower unchanged, plus a stone-and-timber hall with a throne, a table, a hearth and a storeroom with its own door. Not yet builder-tested: white_wall_banner. Decoration step adds: banner_pattern, sign_text.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T02:46:56.595Z",
     "tags": [
       "batch2",
       "tier2",

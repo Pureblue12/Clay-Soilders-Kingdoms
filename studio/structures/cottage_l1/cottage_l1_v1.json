@@ -5,11 +5,11 @@
   "size": [7,8,9],
   "meta": {
     "status": "rejected",
-    "notes": "logs are sideways not much in terms of detail",
+    "notes": "logs fixes still needs more detail also looks like its missing windows but could just be a bug fences also still seems bugged",
     "author": "generator",
     "created": "2026-10-10T01:37:40.041Z",
     "description": "Imported from cottage_l1.nbt",
-    "reviewedAt": "2026-10-10T02:19:02.577Z",
+    "reviewedAt": "2026-10-10T02:44:45.757Z",
     "parent": null
   },
   "palette": {

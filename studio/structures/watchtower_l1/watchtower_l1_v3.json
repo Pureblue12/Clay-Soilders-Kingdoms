@@ -1,0 +1,132 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "watchtower_l1",
+  "version": 3,
+  "size": [6,9,6],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude-qc",
+    "created": "2026-10-10T03:00:51.414Z",
+    "description": "Watchtower, level 1 of 3: shell and fittings (what soldiers build first). Log watchtower: spiral stair inside four posts up to a railed lookout (floor at y 4), hip roof; 4 x 4 core, not 3 x 3 (a walkable stair needs it).",
+    "changes": "Quality check round 3: dark oak eaves course under the spruce roof, side rails between the posts from level 1.",
+    "parent": 2,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:chain[axis=y]",
+    "B": "minecraft:cobblestone",
+    "C": "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=outer_left,waterlogged=false]",
+    "D": "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "E": "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=outer_left,waterlogged=false]",
+    "F": "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "G": "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=outer_left,waterlogged=false]",
+    "H": "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "I": "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=outer_left,waterlogged=false]",
+    "J": "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "K": "minecraft:hay_block[axis=y]",
+    "L": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "M": "minecraft:oak_fence[east=false,north=true,south=true,waterlogged=false,west=false]",
+    "N": "minecraft:oak_fence[east=true,north=false,south=false,waterlogged=false,west=true]",
+    "O": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "P": "minecraft:oak_log[axis=y]",
+    "Q": "minecraft:oak_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "R": "minecraft:oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "S": "minecraft:oak_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "T": "minecraft:spruce_planks",
+    "U": "minecraft:spruce_slab[type=top,waterlogged=false]",
+    "V": "minecraft:spruce_stairs[facing=east,half=bottom,shape=outer_left,waterlogged=false]",
+    "W": "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "X": "minecraft:spruce_stairs[facing=north,half=bottom,shape=outer_left,waterlogged=false]",
+    "Y": "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "Z": "minecraft:spruce_stairs[facing=south,half=bottom,shape=outer_left,waterlogged=false]",
+    "a": "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "b": "minecraft:spruce_stairs[facing=west,half=bottom,shape=outer_left,waterlogged=false]",
+    "c": "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "d": "minecraft:stripped_spruce_log[axis=z]",
+    "e": "minecraft:torch",
+    "f": "minecraft:wall_torch[facing=east]"
+  },
+  "layers": [
+    [
+      "......",
+      ".B..BK",
+      "..R..#",
+      "O.....",
+      ".B..B.",
+      "......"
+    ],
+    [
+      "......",
+      ".P..P.",
+      "...Q..",
+      "......",
+      ".Pf.P.",
+      "......"
+    ],
+    [
+      "......",
+      ".P..P.",
+      ".d..d.",
+      ".d.Rd.",
+      ".P..P.",
+      "......"
+    ],
+    [
+      "......",
+      ".P..P.",
+      "......",
+      "..S...",
+      ".P..P.",
+      "......"
+    ],
+    [
+      "......",
+      ".PTTP.",
+      ".TTTT.",
+      ".T..T.",
+      ".PTTP.",
+      "......"
+    ],
+    [
+      "......",
+      ".PNNP.",
+      ".M..M.",
+      ".M..M.",
+      ".PNNP.",
+      "......"
+    ],
+    [
+      "......",
+      ".P..P.",
+      ".eL...",
+      "......",
+      ".P..P.",
+      "......"
+    ],
+    [
+      "GHHHHI",
+      "DP..PJ",
+      "D.A..J",
+      "D....J",
+      "DP..PJ",
+      "CFFFFE"
+    ],
+    [
+      "......",
+      ".Zaab.",
+      ".WUUc.",
+      ".WUUc.",
+      ".VYYX.",
+      "......"
+    ]
+  ]
+}

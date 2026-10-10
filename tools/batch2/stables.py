@@ -7,9 +7,9 @@ SLAB = dict(waterlogged='false')
 def stables(width=9, depth=11, stable_depth=5):
     """Pens and stables: the pen (front) is a fence ring with an opening at the front centre (fence gates are BROKEN
     for passage). The stable (back) stands on log posts over cobblestone plinths, a plank back wall, log beams, and a
-    shallow spruce slab roof that overhangs by one; under the ridge a plank loft holds hay. Two stalls open onto
+    steep spruce stair gable roof (dark oak eaves) that overhangs by one; under the ridge a plank loft holds hay. Two stalls open onto
     the pen."""
-    s = Structure('stables', (width, 6, depth), palette='oak_a2')
+    s = Structure('stables', (width, 8, depth), palette='oak_a2')
     w, d = width - 1, depth - 1
     mid = width // 2
     z0, z1 = d - stable_depth, d - 1               # stable front and back post rows (5, 9)
@@ -31,12 +31,22 @@ def stables(width=9, depth=11, stable_depth=5):
     for x in (1, w - 1):
         for z in range(z0 + 1, z1):
             s.put(x, 3, z, 'frame', axis='z')
-    # roof: slabs rising half a block per row to the ridge, one row of overhang at the front, back and sides
-    for z in range(z0 - 1, z1 + 2):
-        k = (z1 - z0) // 2 + 1 - abs(z - zm)          # 0 at the eaves, highest at the ridge
-        y, half = 4 + k // 2, ('top' if k % 2 else 'bottom')
-        for x in range(0, width):
-            s.put(x, y, z, 'roof_slab', type=half, **SLAB)
+    # roof (quality check round 2): a steep stair gable, ridge along x, dark oak eaves, spruce slopes, dark ridge,
+    # one block of overhang all round; plank gable ends on the end posts leave the loft hay showing
+    for x in range(0, width):
+        for z in range(z0 - 1, z1 + 2):
+            k = (z1 - z0) // 2 + 1 - abs(z - zm)          # 0 at the eaves, highest at the ridge
+            if z == zm:
+                s.put(x, 4 + k, z, 'dark')
+            else:
+                s.put(x, 4 + k, z, 'dark_stairs' if k == 0 else 'roof_stairs', facing='south' if z < zm else 'north',
+                      half='bottom', shape='straight', waterlogged='false')
+    for x in (1, w - 1):
+        for y, zs in ((4, (z0, z1)), (5, range(zm - 1, zm + 2)), (6, (zm,))):
+            for z in zs:
+                s.put(x, y, z, 'wall')
+    for x in range(2, w - 1):                       # boards under the back eaves
+        s.put(x, 4, z1, 'plank2')
     # pen: fence ring from the front to the stable's front posts, opening at the front centre
     for x in range(0, width):
         if x != mid:
@@ -84,10 +94,16 @@ def stables(width=9, depth=11, stable_depth=5):
     for x in (0, w):                               # moss at the plinth ends
         s.put(x, 0, z1, 'moss_carpet')
     s.put(1, 0, 2, 'hay_block', axis='y')           # feed bale beside the trough
+    s.put(mid, 3, z0 - 1, 'lantern', hanging='true', waterlogged='false')   # lantern under the front eaves
+    for x in (0, w):                               # bushes against the stable sides
+        s.put(x, 0, zm, 'oak_leaves', persistent='true', distance='1', waterlogged='false')
+    for x in (2, 4, w - 2):                        # bushes and a flower along the back wall
+        s.put(x, 0, d, 'oak_leaves', persistent='true', distance='1', waterlogged='false')
+    s.put(w - 4, 0, d, 'poppy')
     return s
 
 
 STRUCTURES = [dict(path='stables', name='Pens and stables', tier=2, zone='outer', role='farm', group='stables',
                    terrain='flexible', door=None, make=stables,
                    description='Fenced pen (front opening, no gate) before an open-sided log stable with two stalls, a '
-                               'shallow spruce slab roof and a hay loft under the ridge; the stable wants level ground.')]
+                               'steep spruce gable roof and a hay loft under the ridge; the stable wants level ground.')]

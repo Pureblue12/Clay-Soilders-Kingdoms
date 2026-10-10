@@ -11,6 +11,9 @@ def carpenter(width=5, depth=5, wall_height=3):
     the signature, is UNKNOWN and comes at L2); log stack and sawhorse outside under the side eaves."""
     W, D = width + 2, depth + 1
     s = Structure('carpenter', (W, 1 + wall_height + 3, D), palette='oak_a2')
+    # Quality check round 2: style A colours instead of one oak brown everywhere. White plaster infill in a dark oak
+    # frame, a spruce roof with a dark ridge (all KNOWN-OK).
+    s.p = {**s.p, 'wall': 'white_terracotta', 'frame': 'dark_oak_log'}
     x0, x1, z0, z1 = 1, width, 1, depth            # walls
     mid = (x0 + x1) // 2
     top = wall_height                              # last wall layer (3)
@@ -39,19 +42,24 @@ def carpenter(width=5, depth=5, wall_height=3):
         for z in range(z0, z1 + 1):
             s.put(x, top + 1, z, 'frame', axis='z')
     for z in range(0, z1 + 1):                     # gable roof, ridge along the depth; overhang at the front (z 0)
-        s.put(x0 - 1, top + 1, z, 'oak_stairs', facing='east', **STAIR)
-        s.put(x1 + 1, top + 1, z, 'oak_stairs', facing='west', **STAIR)
-        s.put(x0, top + 2, z, 'oak_stairs', facing='east', **STAIR)
-        s.put(x1, top + 2, z, 'oak_stairs', facing='west', **STAIR)
-        s.put(x0 + 1, top + 3, z, 'oak_stairs', facing='east', **STAIR)
-        s.put(x1 - 1, top + 3, z, 'oak_stairs', facing='west', **STAIR)
-        s.put(mid, top + 3, z, 'wall')                              # ridge (a full block: no notch at the gable ends)
+        s.put(x0 - 1, top + 1, z, 'dark_stairs', facing='east', **STAIR)   # dark eaves row under the spruce roof
+        s.put(x1 + 1, top + 1, z, 'dark_stairs', facing='west', **STAIR)
+        s.put(x0, top + 2, z, 'roof_stairs', facing='east', **STAIR)
+        s.put(x1, top + 2, z, 'roof_stairs', facing='west', **STAIR)
+        s.put(x0 + 1, top + 3, z, 'roof_stairs', facing='east', **STAIR)
+        s.put(x1 - 1, top + 3, z, 'roof_stairs', facing='west', **STAIR)
+        s.put(mid, top + 3, z, 'dark')                              # ridge (a full block: no notch at the gable ends)
     for z in (z0, z1):                             # gable ends
         for x in range(x0 + 1, x1):
             s.put(x, top + 1, z, 'plank2'); s.put(x, top + 2, z, 'plank2')   # spruce, against the oak walls
     s.at(1, 'fittings')
-    for x, y, z in windows:
-        s.put(x, y, z, 'window')
+    for x, y, z in windows:                        # panes joined to the wall they sit in, so they don't show as posts
+        side = x in (x0, x1)
+        s.put(x, y, z, 'window', north=side, south=side, east=not side, west=not side, waterlogged='false')
+    s.put(mid, top + 2, 0, 'lantern', hanging='true', waterlogged='false')   # under the front overhang, over the bay
+    for x in (x0 - 1,):                                              # a bush and a poppy by the left wall
+        s.put(x, 0, z1, 'oak_leaves', persistent='true', distance='1', waterlogged='false')
+    s.put(0, 0, 0, 'poppy')
     s.put(x0 + 1, 1, z0 + 1, 'crafting_table')                 # the workstation, by the open bay
     s.put(x0 + 1, 1, z1 - 1, 'chest', facing='east', type='single', waterlogged='false')
     s.put(x1 - 1, 1, z1 - 1, 'barrel', facing='up', open='false')      # barrels of sticks
@@ -60,8 +68,7 @@ def carpenter(width=5, depth=5, wall_height=3):
     s.put(x1 - 1, 1, mid, 'chair', facing='east', **STAIR)
     for x in (x0 + 1, x1 - 1):                                       # torches inside the back wall
         s.put(x, 3, z1 - 1, 'wall_torch', facing='north')
-    s.at(2, 'flourish2')
-    s.put(x0 + 1, 1, mid, 'fletching_table')                         # the signature: a fletching table in the bay
+    # Quality check round 3: shutters, the log pile and the sawhorse from level 1, so it reads as a carpenter at once.
     for x, y, z in windows[:2]:                                      # shutters on the side windows
         out = x - 1 if x == x0 else x + 1
         f = 'west' if x == x0 else 'east'
@@ -75,6 +82,8 @@ def carpenter(width=5, depth=5, wall_height=3):
         s.put(W - 1, 0, z, 'post')
     for z in (z0 + 1, z0 + 2, z0 + 3):
         s.put(W - 1, 1, z, 'oak_slab', type='bottom', waterlogged='false')
+    s.at(2, 'flourish2')
+    s.put(x0 + 1, 1, mid, 'fletching_table')                         # the signature: a fletching table in the bay
     s.put(x1 + 1, 2, z0, 'oak_wall_sign', facing='east', waterlogged='false')   # shop sign on the front right post
     s.decorate(x1 + 1, 2, z0, 'sign_text', lines=['', 'Carpenter', '& Fletcher', ''])
     s.at(3, 'flourish3')
@@ -84,7 +93,6 @@ def carpenter(width=5, depth=5, wall_height=3):
     s.decorate(x1 - 1, 3, z1 - 1, 'item_frame', item='minecraft:bow', facing='north', note='bow on the back wall')
     s.put(x0 + 1, 2, z0 + 1, 'oak_pressure_plate', powered='false')   # a board on the workbench
     s.put(0, 2, z0 + 2, 'moss_carpet')                                # moss on the log stack
-    s.put(mid, top + 2, 0, 'lantern', hanging='true', waterlogged='false')   # under the front overhang
     s.put(W - 1, 0, z1, 'plank2'); s.put(W - 1, 1, z1, 'roof_slab', type='bottom', waterlogged='false')  # cut boards
     s.put(1, 0, 0, 'stripped', axis='y')                              # chopping block in front of the bay
     s.put(W - 1, 0, 0, 'barrel', facing='north', open='false')

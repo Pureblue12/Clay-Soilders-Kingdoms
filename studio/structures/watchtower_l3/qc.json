@@ -1,0 +1,170 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "watchtower_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T02:56:34.206Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 64,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: moss_carpet, white_wall_banner."
+          },
+          {
+            "level": "warn",
+            "check": "connections",
+            "message": "8 fence/pane/wall block(s) have no north/east/south/west set although a neighbour would connect, so they show as lone posts: (2, 5, 1), (3, 5, 1), (1, 5, 2) and 5 more."
+          }
+        ],
+        "stats": {
+          "blocks": 104,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5384615384615384,
+          "types": 13,
+          "dominant": {
+            "name": "oak_log",
+            "share": 0.3076923076923077
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 1,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {},
+        "summary": "The best of the three (banner, lanterns), with a nice roof, but the base is empty and the railing still shows as lone posts.",
+        "problems": [
+          "Give the platform a proper railing: the fences don't connect, so they show as lone posts",
+          "Mix the materials: a cobblestone footing under the four legs, stripped logs or a different wood for the platform floor, a darker roof edge",
+          "Add watchtower detail: a bell or a lantern on a chain under the roof, a banner, a ladder-like stair landing, a torch on each side",
+          "Add life at the base: a hay bale, barrels, a bush or flowers by the legs"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:00:50.726Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 2,
+      "score": 69,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: moss_carpet, white_wall_banner."
+          }
+        ],
+        "stats": {
+          "blocks": 109,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5596330275229358,
+          "types": 18,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.29357798165137616
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 1,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "The most finished one, with a lantern and moss; same one-colour roof as the others.",
+        "problems": [
+          "The roof is one spruce brown: give it a darker eaves course",
+          "The legs are bare poles below the platform: put the side rails between the posts in level 1 for depth"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:01:28.990Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 3,
+      "score": 75,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: moss_carpet, white_wall_banner."
+          }
+        ],
+        "stats": {
+          "blocks": 109,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5596330275229358,
+          "types": 19,
+          "dominant": {
+            "name": "oak_log",
+            "share": 0.25688073394495414
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "The fullest version: lantern, back rail and moss at the feet on top of level 2.",
+        "problems": [
+          "Still sparse for Carlton's taste: a bell or a horn stand on the platform and a flag on the roof cap would make it more of a lookout",
+          "Below the platform the legs are still mostly open: diagonal braces (upside-down stairs) between the posts would add depth"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

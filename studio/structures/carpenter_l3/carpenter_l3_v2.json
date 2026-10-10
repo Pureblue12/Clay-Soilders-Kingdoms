@@ -1,0 +1,117 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "carpenter_l3",
+  "version": 2,
+  "size": [7,7,6],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude-qc",
+    "created": "2026-10-10T02:57:59.938Z",
+    "description": "Carpenter or fletcher, level 3 of 3: L2 plus flourish 3. Timber workshop entered by an open front bay (crafting table, fletching table from L2), back door to the yard; log stack and sawhorse under the side eaves. Not yet builder-tested: fletching_table, moss_carpet. Decoration step adds: item_frame, sign_text.",
+    "changes": "Quality check round 2: style A colours instead of all oak (white terracotta infill in a dark oak frame, spruce roof with a dark oak ridge), window panes joined to the walls, a lantern over the open bay, a bush and a poppy by the walls (in level 1 already).",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "inner",
+      "workshop"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=north,open=false]",
+    "A": "minecraft:barrel[facing=up,open=false]",
+    "B": "minecraft:chain[axis=y]",
+    "C": "minecraft:chest[facing=east,type=single,waterlogged=false]",
+    "D": "minecraft:cobblestone",
+    "E": "minecraft:crafting_table",
+    "F": "minecraft:dark_oak_log[axis=x]",
+    "G": "minecraft:dark_oak_log[axis=y]",
+    "H": "minecraft:dark_oak_log[axis=z]",
+    "I": "minecraft:dark_oak_planks",
+    "J": "minecraft:fletching_table",
+    "K": "minecraft:glass_pane[east=false,north=true,south=true,waterlogged=false,west=false]",
+    "L": "minecraft:glass_pane[east=true,north=false,south=false,waterlogged=false,west=true]",
+    "M": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "N": "minecraft:moss_carpet",
+    "O": "minecraft:oak_door[facing=south,half=lower,hinge=left,open=false,powered=false]",
+    "P": "minecraft:oak_door[facing=south,half=upper,hinge=left,open=false,powered=false]",
+    "Q": "minecraft:oak_fence",
+    "R": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "S": "minecraft:oak_planks",
+    "T": "minecraft:oak_pressure_plate[powered=false]",
+    "U": "minecraft:oak_slab[type=bottom,waterlogged=false]",
+    "V": "minecraft:oak_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "W": "minecraft:oak_wall_sign[facing=east,waterlogged=false]",
+    "X": "minecraft:poppy",
+    "Y": "minecraft:spruce_planks",
+    "Z": "minecraft:spruce_slab[type=bottom,waterlogged=false]",
+    "a": "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "b": "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "c": "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]",
+    "d": "minecraft:spruce_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]",
+    "e": "minecraft:stripped_oak_log[axis=y]",
+    "f": "minecraft:wall_torch[facing=north]",
+    "g": "minecraft:white_terracotta"
+  },
+  "layers": [
+    [
+      "Xe....#",
+      ".DDDDD.",
+      "HDSSSDQ",
+      "HDSSSD.",
+      "HDSSSDQ",
+      "RDDDDDY"
+    ],
+    [
+      ".......",
+      ".G...G.",
+      "HgE.VgU",
+      "HgJ.VgU",
+      ".gC.AgU",
+      ".GgOgGZ"
+    ],
+    [
+      ".......",
+      ".G...GW",
+      "dgT..gc",
+      "NK...K.",
+      "dg..Agc",
+      ".GLPLG."
+    ],
+    [
+      ".......",
+      ".GFFFG.",
+      ".g...g.",
+      ".g.M.g.",
+      ".gf.fg.",
+      ".GgggG."
+    ],
+    [
+      "a.....b",
+      "aHYYYHb",
+      "aH...Hb",
+      "aH.B.Hb",
+      "aH...Hb",
+      "aHYYYHb"
+    ],
+    [
+      ".a.M.b.",
+      ".aYYYb.",
+      ".a...b.",
+      ".a...b.",
+      ".a...b.",
+      ".aYYYb."
+    ],
+    [
+      "..aIb..",
+      "..aIb..",
+      "..aIb..",
+      "..aIb..",
+      "..aIb..",
+      "..aIb.."
+    ]
+  ]
+}

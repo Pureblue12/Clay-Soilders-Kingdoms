@@ -1,0 +1,120 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "stables_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T03:10:40.412Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 47,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cauldron."
+          },
+          {
+            "level": "warn",
+            "check": "connections",
+            "message": "26 fence/pane/wall block(s) have no north/east/south/west set although a neighbour would connect, so they show as lone posts: (0, 0, 0), (1, 0, 0), (2, 0, 0) and 23 more."
+          }
+        ],
+        "stats": {
+          "blocks": 175,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.6857142857142857,
+          "types": 12,
+          "dominant": {
+            "name": "spruce_slab",
+            "share": 0.37142857142857144
+          },
+          "height": 6,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 0,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 0,
+          "materials": 1,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "artefacts": "fences unjoined: Carlton's note",
+          "roof": "half-slab steps, almost flat, one spruce colour"
+        },
+        "summary": "Pens and stables level 2: reads as a stable with a pen, but the fences are lone posts (your note) and the roof is a flat stack of spruce slabs.",
+        "problems": [
+          "Join every fence: Carlton's note on all three levels is \"Fences are broken\"; the pen ring, side rails and stall divider show as lone posts (26 blocks).",
+          "Replace the shallow one-colour slab roof with a steep stair gable (dark oak eaves, spruce slopes, dark ridge) with plank gable ends.",
+          "Make the levels differ visibly: give level 3 its own life (leaf bushes at the posts, a lantern on the gable, flower boxes on the back wall), without moving level 2 or 3 extras into level 1."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:12:26.396Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 75,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cauldron."
+          }
+        ],
+        "stats": {
+          "blocks": 192,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.578125,
+          "types": 15,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.1875
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "scale": 2,
+          "grandeur": 1,
+          "detail": 1,
+          "life": 1
+        },
+        "summary": "Pens and stables level 2: joined fences, steep gable roof, trough, cart and lanterns make it a working stable.",
+        "problems": [
+          "A leaf bush or flowers by the pen would add life.",
+          "Half-height side walls on the stable would add depth."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

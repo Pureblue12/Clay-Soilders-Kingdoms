@@ -10,7 +10,7 @@ import fs from 'node:fs';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { STATUSES, type Status } from '../format/structure.ts';
 import { assetFile, assetSource } from './assets.ts';
-import { commitFiles, commitLater, commitVersion, pull, type GitResult } from './gitsync.ts';
+import { branchWork, commitFiles, commitLater, commitVersion, pull, type GitResult } from './gitsync.ts';
 import { Store } from './store.ts';
 
 type Next = () => void;
@@ -30,6 +30,7 @@ async function readBody(req: IncomingMessage): Promise<Record<string, unknown>> 
 }
 
 export function createApi(store = new Store()) {
+  store.branchWork = branchWork;
   return async (req: IncomingMessage, res: ServerResponse, next: Next) => {
     const url = new URL(req.url ?? '/', 'http://localhost');
     const parts = url.pathname.split('/').filter(Boolean).map(decodeURIComponent);

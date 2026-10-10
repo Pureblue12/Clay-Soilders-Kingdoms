@@ -32,27 +32,34 @@ def watchtower(floor_y=4):
     holes = {(spiral[-1][0], spiral[-1][1]), (spiral[-2][0], spiral[-2][1])}   # headroom over the two top steps
     s.at(1, 'shell')
     for x, z in posts:
-        for y in range(0, 8):
+        s.put(x, 0, z, 'stone')                                    # cobblestone footings (quality check round 2)
+        for y in range(1, 8):
             s.put(x, y, z, 'frame', axis='y')
     for x in range(1, 5):                                          # platform (the tower top)
         for z in range(1, 5):
             if (x, z) not in posts and (x, z) not in holes:
                 s.put(x, floor_y, z, 'plank2')
-    hip_ring(s, 0, 0, 5, 5, 7, 'roof_stairs')                      # roof: eaves over the rail, then the cap
+    hip_ring(s, 0, 0, 5, 5, 7, 'dark_stairs')                      # roof: dark eaves over the rail, then the cap
     hip_ring(s, 1, 1, 4, 4, 8, 'roof_stairs')
     s.fill(2, 8, 2, 3, 8, 3, 'roof_slab', type='top', waterlogged='false')
     s.at(1, 'fittings')
     for y, (x, z, facing) in enumerate(spiral):
         s.put(x, y, z, 'oak_stairs', facing=facing, shape='straight', **STAIR)
-    for x in range(1, 5):                                          # fence rail round the platform
-        for z in range(1, 5):
-            if (x in (1, 4) or z in (1, 4)) and (x, z) not in posts:
-                s.put(x, floor_y + 1, z, 'post')
+    rail = {(x, z) for x in range(1, 5) for z in range(1, 5) if (x in (1, 4) or z in (1, 4)) and (x, z) not in posts}
+    for x, z in rail:                                              # fence rail round the platform, joined up
+        joins = lambda dx, dz: (x + dx, z + dz) in rail or (x + dx, z + dz) in posts
+        s.put(x, floor_y + 1, z, 'post', north=joins(0, -1), south=joins(0, 1), west=joins(-1, 0), east=joins(1, 0),
+              waterlogged='false')
     s.put(2, 1, 4, 'wall_torch', facing='east')                   # light in the stairwell, on the back left post
     s.put(1, floor_y + 2, 2, 'torch')                              # light on the platform, on the rail
-    s.at(2, 'flourish2')
-    for x, z in ((1, 2), (1, 3), (4, 2), (4, 3)):                  # rails between the posts on both sides
+    s.put(2, 7, 2, 'chain', axis='y')                              # lantern on a chain under the roof
+    s.put(2, 6, 2, 'lantern', hanging='true', waterlogged='false')
+    s.put(5, 0, 1, 'hay_block', axis='y')                          # supplies at the foot: hay, a barrel, a bush
+    s.put(5, 0, 2, 'barrel', facing='up', open='false')
+    s.put(0, 0, 3, 'oak_leaves', persistent='true', distance='1', waterlogged='false')
+    for x, z in ((1, 2), (1, 3), (4, 2), (4, 3)):                  # rails between the posts on both sides (round 3: L1)
         s.put(x, 2, z, 'stripped_spruce_log', axis='z')
+    s.at(2, 'flourish2')
     s.put(2, floor_y + 2, 1, 'campfire', facing='south', lit='false', signal_fire='false', waterlogged='false')  # brazier on the rail
     s.put(0, floor_y + 1, 2, 'white_wall_banner', facing='west')  # banner hung on the west rail
     s.decorate(0, floor_y + 1, 2, 'banner_pattern', banner='white_wall_banner', note='kingdom colours')

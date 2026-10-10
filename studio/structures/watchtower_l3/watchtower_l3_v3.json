@@ -1,0 +1,137 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "watchtower_l3",
+  "version": 3,
+  "size": [6,9,6],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude-qc",
+    "created": "2026-10-10T03:00:52.500Z",
+    "description": "Watchtower, level 3 of 3: L2 plus flourish 3. Log watchtower: spiral stair inside four posts up to a railed lookout (floor at y 4), hip roof; 4 x 4 core, not 3 x 3 (a walkable stair needs it). Not yet builder-tested: moss_carpet, white_wall_banner. Decoration step adds: banner_pattern.",
+    "changes": "Quality check round 3: dark oak eaves course under the spruce roof, side rails between the posts from level 1.",
+    "parent": 2,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:campfire[facing=south,lit=false,signal_fire=false,waterlogged=false]",
+    "B": "minecraft:chain[axis=y]",
+    "C": "minecraft:cobblestone",
+    "D": "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=outer_left,waterlogged=false]",
+    "E": "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "F": "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=outer_left,waterlogged=false]",
+    "G": "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "H": "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=outer_left,waterlogged=false]",
+    "I": "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "J": "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=outer_left,waterlogged=false]",
+    "K": "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "L": "minecraft:hay_block[axis=y]",
+    "M": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "N": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "O": "minecraft:moss_carpet",
+    "P": "minecraft:oak_fence[east=false,north=true,south=true,waterlogged=false,west=false]",
+    "Q": "minecraft:oak_fence[east=true,north=false,south=false,waterlogged=false,west=true]",
+    "R": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "S": "minecraft:oak_log[axis=y]",
+    "T": "minecraft:oak_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "U": "minecraft:oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "V": "minecraft:oak_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "W": "minecraft:spruce_planks",
+    "X": "minecraft:spruce_slab[type=top,waterlogged=false]",
+    "Y": "minecraft:spruce_stairs[facing=east,half=bottom,shape=outer_left,waterlogged=false]",
+    "Z": "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "a": "minecraft:spruce_stairs[facing=north,half=bottom,shape=outer_left,waterlogged=false]",
+    "b": "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "c": "minecraft:spruce_stairs[facing=south,half=bottom,shape=outer_left,waterlogged=false]",
+    "d": "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "e": "minecraft:spruce_stairs[facing=west,half=bottom,shape=outer_left,waterlogged=false]",
+    "f": "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "g": "minecraft:stripped_spruce_log[axis=x]",
+    "h": "minecraft:stripped_spruce_log[axis=z]",
+    "i": "minecraft:torch",
+    "j": "minecraft:wall_torch[facing=east]",
+    "k": "minecraft:white_wall_banner[facing=west]"
+  },
+  "layers": [
+    [
+      "......",
+      "OC..CL",
+      "..U..#",
+      "R.....",
+      "OC..CO",
+      "......"
+    ],
+    [
+      "......",
+      ".S..S.",
+      "...T..",
+      "......",
+      ".Sj.S.",
+      "......"
+    ],
+    [
+      "......",
+      ".S..S.",
+      ".h..h.",
+      ".h.Uh.",
+      ".SggS.",
+      "......"
+    ],
+    [
+      "......",
+      ".S..S.",
+      "......",
+      "..V...",
+      ".S..S.",
+      "......"
+    ],
+    [
+      "......",
+      ".SWWS.",
+      ".WWWW.",
+      ".W..W.",
+      ".SWWS.",
+      "......"
+    ],
+    [
+      "......",
+      ".SQQS.",
+      "kP..P.",
+      ".P..P.",
+      ".SQQS.",
+      "......"
+    ],
+    [
+      "......",
+      ".SA.S.",
+      ".iN...",
+      "......",
+      ".S.MS.",
+      "......"
+    ],
+    [
+      "HIIIIJ",
+      "ES..SK",
+      "E.B..K",
+      "E....K",
+      "ES..SK",
+      "DGGGGF"
+    ],
+    [
+      "......",
+      ".cdde.",
+      ".ZXXf.",
+      ".ZXXf.",
+      ".Ybba.",
+      "......"
+    ]
+  ]
+}

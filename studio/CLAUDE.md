@@ -38,7 +38,9 @@ The owner never types git commands for reviews (`src/server/gitsync.ts`):
 
 Each structure shows what happens next (`STAGES` in `src/format/structure.ts`, worked out in `Store.summary`):
 **Needs your review** (latest version pending), **Queued for revision** (latest rejected, nobody on it),
-**Revising** (latest rejected and `structures/<name>/work.json` says who is on it), **Approved**.
+**Revising** (latest rejected, and `structures/<name>/work.json` says who is on it, or a GitHub branch that isn't
+merged yet and had a commit in the last 24 h changes its files: `gitsync.branchWork`, scanned after each pull),
+**Approved**. So pushing a branch with the new version is enough for "Revising"; `work` shows it before that.
 - `npm run studio -- queue` lists the rejected structures with Carlton's notes: start every session with it (after a
   pull). `--all` also lists the ones waiting for his review.
 - Before revising one: `npm run studio -- work <name> --by <you> --note "plan"`. It writes `work.json`, commits and
@@ -132,3 +134,12 @@ One JSON file per version: `structures/<name>/<name>_v<N>.json`.
   sinks, which is the point (shows where grading is needed).
 - **Not built yet:** structure rotation in a `Placement` (needed for phase 3), the kingdom generator, a diff
   highlight in compare mode.
+
+## Quality check
+
+Every pending version is checked automatically before Carlton looks at it (automatic block checks plus a visual review
+against a rubric built from his notes): `qc/README.md`, `qc/RUBRIC.md`, CLI `npm run qc`. Run
+`npm run qc -- check draft.json` before saving a structure. **After pushing new versions, start the check at once**:
+`fire_trigger` on `trig_019cSHKLt96sxzKPmGP7Gz7T` with the text `check: <name> v<N>, ...` (details in `qc/README.md`). Reports live in `structures/<name>/qc.json` and
+`structures/qc-index.json`; the page shows them in its own small section (`src/ui/qc-panel.ts`). The reviewer never
+changes a status.

@@ -1,0 +1,105 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "carpenter_l1",
+  "version": 2,
+  "size": [7,7,6],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude-qc",
+    "created": "2026-10-10T02:57:57.856Z",
+    "description": "Carpenter or fletcher, level 1 of 3: shell and fittings (what soldiers build first). Timber workshop entered by an open front bay (crafting table, fletching table from L2), back door to the yard; log stack and sawhorse under the side eaves.",
+    "changes": "Quality check round 2: style A colours instead of all oak (white terracotta infill in a dark oak frame, spruce roof with a dark oak ridge), window panes joined to the walls, a lantern over the open bay, a bush and a poppy by the walls (in level 1 already).",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "inner",
+      "workshop"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:chest[facing=east,type=single,waterlogged=false]",
+    "B": "minecraft:cobblestone",
+    "C": "minecraft:crafting_table",
+    "D": "minecraft:dark_oak_log[axis=x]",
+    "E": "minecraft:dark_oak_log[axis=y]",
+    "F": "minecraft:dark_oak_log[axis=z]",
+    "G": "minecraft:dark_oak_planks",
+    "H": "minecraft:glass_pane[east=false,north=true,south=true,waterlogged=false,west=false]",
+    "I": "minecraft:glass_pane[east=true,north=false,south=false,waterlogged=false,west=true]",
+    "J": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "K": "minecraft:oak_door[facing=south,half=lower,hinge=left,open=false,powered=false]",
+    "L": "minecraft:oak_door[facing=south,half=upper,hinge=left,open=false,powered=false]",
+    "M": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "N": "minecraft:oak_planks",
+    "O": "minecraft:oak_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "P": "minecraft:poppy",
+    "Q": "minecraft:spruce_planks",
+    "R": "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "S": "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "T": "minecraft:wall_torch[facing=north]",
+    "U": "minecraft:white_terracotta"
+  },
+  "layers": [
+    [
+      "P......",
+      ".BBBBB.",
+      ".BNNNB.",
+      ".BNNNB.",
+      ".BNNNB.",
+      "MBBBBB."
+    ],
+    [
+      ".......",
+      ".E...E.",
+      ".UC.OU.",
+      ".U..OU.",
+      ".UA.#U.",
+      ".EUKUE."
+    ],
+    [
+      ".......",
+      ".E...E.",
+      ".U...U.",
+      ".H...H.",
+      ".U..#U.",
+      ".EILIE."
+    ],
+    [
+      ".......",
+      ".EDDDE.",
+      ".U...U.",
+      ".U...U.",
+      ".UT.TU.",
+      ".EUUUE."
+    ],
+    [
+      "R.....S",
+      "RFQQQFS",
+      "RF...FS",
+      "RF...FS",
+      "RF...FS",
+      "RFQQQFS"
+    ],
+    [
+      ".R.J.S.",
+      ".RQQQS.",
+      ".R...S.",
+      ".R...S.",
+      ".R...S.",
+      ".RQQQS."
+    ],
+    [
+      "..RGS..",
+      "..RGS..",
+      "..RGS..",
+      "..RGS..",
+      "..RGS..",
+      "..RGS.."
+    ]
+  ]
+}
