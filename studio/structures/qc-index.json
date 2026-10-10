@@ -20,6 +20,27 @@
     "round": 1,
     "checkedAt": "2026-10-10T04:51:00.339Z"
   },
+  "banner_pole_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 75,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:06:23.000Z"
+  },
+  "banner_pole_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:06:23.587Z"
+  },
+  "banner_pole_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:06:24.168Z"
+  },
   "barracks_l1": {
     "version": 1,
     "verdict": "revise",
@@ -313,6 +334,27 @@
     "score": 97,
     "round": 1,
     "checkedAt": "2026-10-10T04:34:55.889Z"
+  },
+  "lamp_post_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 75,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:06:21.462Z"
+  },
+  "lamp_post_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:06:21.976Z"
+  },
+  "lamp_post_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 94,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:06:22.474Z"
   },
   "lumber_camp_l1": {
     "version": 5,
