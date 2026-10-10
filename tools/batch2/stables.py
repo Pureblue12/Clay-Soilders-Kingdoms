@@ -140,15 +140,46 @@ def stables(width=9, depth=11, stable_depth=5):
         s.put(x, 0, d, 'oak_leaves', persistent='true', distance='1', waterlogged='false')
     s.put(w - 4, 0, d, 'poppy')
     s.decorate(mid + 2, 1, z1 - 1, 'armor_stand', note='horse armor on display', item='minecraft:leather_horse_armor')
+    return sink_stable_floor(s, range(1, w), range(z0, z1 + 1), z0 - 1)
+
+
+def sink_stable_floor(s, xs, zs, paddock_end):
+    """Carlton (v3 note): the stable's dirt floor should sit in the ground. The structure is saved with ground layer 0
+    (layer 0 replaces the top ground block), so the stable (its floor, plinths and everything on them) keeps its blocks
+    and its floor ends up level with the grass. Everything that stands on the grass outside the stable moves up one
+    layer: the whole paddock in front (z < paddock_end), and elsewhere each column's stack from the ground up.
+    Things hung on the stable (torches, lanterns, banners, hatches, the hoist) stay with it."""
+    def outside(x, z):
+        return x not in xs or z not in zs
+    moved = set()
+    for (x, y, z) in s.blocks:
+        if not outside(x, z):
+            continue
+        if z < paddock_end:
+            moved.add((x, y, z))
+        elif y == 0:
+            k = 0
+            while (x, k, z) in s.blocks:
+                moved.add((x, k, z)); k += 1
+    blocks, layers = {}, {}
+    for pos, b in s.blocks.items():
+        x, y, z = pos
+        new = (x, y + 1, z) if pos in moved else pos
+        assert new not in blocks, f'stables: {new} taken twice after sinking the floor'
+        blocks[new], layers[new] = b, s.layer_of[pos]
+    s.blocks, s.layer_of = blocks, layers
+    for decs in s.decorations.values():
+        for d in decs:
+            x, y, z = d['pos']
+            if (x, y, z) in moved:
+                d['pos'] = [x, y + 1, z]
     return s
 
 
 STRUCTURES = [dict(path='stables', name='Pens and stables', tier=2, zone='outer', role='farm', group='stables',
-                   terrain='flexible', door=None, make=stables,
-                   changes='Added a paddock gateway (log gateposts and lintel over an open gap soldiers can walk through, '
-                           'with two fence gates standing open from L2) and gave each level its own job: L1 stalls and a '
-                           'feed trough, L2 a hay loft with a hoist, a saddle rack and tack barrels and a water trough, '
-                           'L3 a farrier corner with an anvil, a weathervane, banners, lanterns and flower boxes.',
+                   terrain='flexible', door=None, make=stables, ground_layer=0,
+                   changes='The stable\'s dirt floor now sits in the ground, level with the grass (nothing else changed: '
+                           'the paddock and everything around it stand on the grass as before).',
                    description='Fenced paddock with a gateway (open gap; fence gates are decoration) before an open-sided '
                                'log stable with two stalls and a feed trough; L2 adds the hay loft, tack corner and water '
                                'trough, L3 a farrier corner, weathervane, banners and flower boxes. Wants level ground.')]
