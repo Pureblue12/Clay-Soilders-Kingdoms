@@ -126,6 +126,69 @@
           "iso"
         ]
       }
+    },
+    "5": {
+      "version": 5,
+      "checkedAt": "2026-10-10T04:34:55.889Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 97,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Drawn for the decoration step, not built: minecraft:water."
+          },
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: anvil, blast_furnace, dark_oak_fence, oxeye_daisy, smithing_table, dark_oak_slab, mossy_stone_bricks, cracked_stone_bricks, target, candle, red_wall_banner, gold_block, red_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "4570 blocks, over the landmark budget of 1800 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 4570,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.26411378555798687,
+          "types": 47,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.3474835886214442
+          },
+          "height": 20,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "summary": "A full castle that makes sense for soldiers: curtain wall with a real wall walk, hollow corner towers with stairs, a gatehouse with a guard chamber, kitchen and armory by the hall, storehouse, guardroom, well and forge by the gate, a flower garden and a training yard. Steep spire roofs, symmetric and coherent.",
+        "problems": [
+          "Reachability (flood fill from the ground outside, soldiers half a block tall, jump 1, drop 3, ladders climb): every floor, room, wall walk and tower top is reached; only the roof cones, the tie beams under the hall roof and the tops of log piles and the low forecourt wall are not, which is right",
+          "More life on the outside would help: a few vines or banners on the corner towers"
+        ],
+        "views": [
+          "sheet",
+          "iso"
+        ]
+      }
     }
   }
 }
