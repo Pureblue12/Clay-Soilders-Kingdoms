@@ -101,6 +101,18 @@ def commons(size=15):
     s.fill(c - 1, 1, c - 1, c + 1, 2, c + 1, 'stone_bricks')                     # and a 3 x 3 block
     for cells in planters:                                         # raised planters on the four diagonals
         planter(s, cells, skip=set(seats) | stall_posts)
+    for (x, z), back in seats.items():                             # the benches facing the statue
+        bench(s, [(x, z)], back)
+    # lantern posts in the planters' inner corners
+    for cells in planters:
+        x, z = min(cells, key=lambda p: d(*p))
+        put_id(s, x, 2, z, 'spruce_fence'); put_id(s, x, 3, z, 'spruce_fence'); put_id(s, x, 4, z, 'lantern', **LANTERN)
+    for cells in planters:                                         # poppies in each planter from the start
+        for x, z in cells[1:3]:
+            if (x, 2, z) not in s.blocks:
+                put_id(s, x, 2, z, 'poppy')
+    put_id(s, c, 2, c - 2, 'oak_wall_sign', facing='north', waterlogged='false')   # a plaque on the plinth (the statue follows at L2)
+    s.decorate(c, 2, c - 2, 'sign_text', lines=['', 'Our King', 'founder of', 'the realm'])
 
     s.at(2, 'flourish2')
     # the statue of the king (facing the front): a robe flaring at the hem, arms, shoulders, a chiselled head with a
@@ -123,14 +135,6 @@ def commons(size=15):
     for y in range(3, 8):
         put_id(s, c + 1, y, c - 1, 'spruce_fence')
     put_id(s, c + 1, 8, c - 1, 'red_banner', rotation='8')
-    put_id(s, c, 2, c - 2, 'oak_wall_sign', facing='north', waterlogged='false')   # a plaque on the plinth
-    s.decorate(c, 2, c - 2, 'sign_text', lines=['', 'Our King', 'founder of', 'the realm'])
-    for (x, z), back in seats.items():                             # the benches facing the statue
-        bench(s, [(x, z)], back)
-    # lantern posts in the planters' inner corners
-    for cells in planters:
-        x, z = min(cells, key=lambda p: d(*p))
-        put_id(s, x, 2, z, 'spruce_fence'); put_id(s, x, 3, z, 'spruce_fence'); put_id(s, x, 4, z, 'lantern', **LANTERN)
     # notice board at the front right, outside the circle, facing the road: posts, a plank board, a little gable roof
     for x in (e - 3, e - 1):
         put_id(s, x, 1, 1, 'spruce_fence')
@@ -176,9 +180,7 @@ def commons(size=15):
         for j, (x, z) in enumerate(cells):
             if (x, 2, z) not in s.blocks:
                 put_id(s, x, 2, z, FLOWERS[(i * 3 + j) % len(FLOWERS)])
-    # azalea bushes and flowers in the grass corners
-    for x, z in ((0, 0), (e, 0), (0, e)):
-        put_id(s, x, 1, z, 'flowering_azalea')
+    # flowers in the grass corners (no lone bushes)
     for x, z in ((1, 0), (0, 1), (e - 1, 0), (e, 1), (1, e), (0, e - 1), (2, 0), (0, 2)):
         if (x, 1, z) not in s.blocks:
             put_id(s, x, 1, z, FLOWERS[(x + 2 * z) % len(FLOWERS)])
@@ -190,9 +192,9 @@ def commons(size=15):
 
 STRUCTURES = [dict(path='commons', name='Commons (level 1)', tier=2, zone='inner', role='civic', group='commons',
                    terrain='flexible', door=None, make=commons, ground_layer=0,
-                   changes='Now a round plaza set level into the grass with a statue of the king on a stepped plinth '
-                           'as its centrepiece: ringed stone paving, gravel spokes, benches facing the statue, lantern '
-                           'planters, a notice board, banners and a market stall with a pitched roof.',
+                   changes='Level 1 is no longer bare: the benches facing the plinth, the lantern posts, poppies in '
+                           'the planters and the plaque come at level 1 now (the statue still arrives at level 2). '
+                           'The lone bushes on the lawn at level 3 are gone.',
                    description='A round paved plaza 13 across, level with the grass, at a road junction: a statue of the '
                                'king on a stepped plinth in the middle, ringed paving, gravel spokes, planters; later '
                                'levels add the statue, benches, lanterns, a notice board, banners and a market stall.')]
