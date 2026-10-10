@@ -1,355 +1,517 @@
-"""Keep (landmark), revised from Carlton's notes: he approved the Studio sample keep (studio/samples/keep.ts, 11 x 12 x
-11) and wants it "bigger and grander, split into levels"; the batch-1 keep_l1..l3 (rejected) are scrapped.
+"""Keep (landmark), v4: one symmetric plan that grows level by level, after Carlton's notes on v3 ("more differentiators
+between levels in function and decoration; expand, get bigger, a grand hall and a throne for the king"; then "the keep
+is all over the place": one clear plan, symmetric, on one grid, 2 to 3 materials).
 
-This keep keeps the sample's look (cobblestone apron, battered cobblestone plinth, stone brick walls, battlements on
-corbels, corner turrets, banners over the door) at 15 x 15 (17 x 17 with the apron) and 16 tall, with four corner
-towers, a gatehouse front and a great hall. Upper floors are reached by stairs, never ladders.
+Materials: stone bricks (walls), cobblestone (base, plinth, footings), dark oak (roofs, beams, door frames, furniture).
+Red banners and carpets are the accent.
 
-Coordinates: x across, z = 0 the front (north), y = 0 the floor layer resting on the ground.
-  body x 3..13, z 3..13 (walls y 1..10, roof deck y 10, battlements on corbels one block out)
-  towers 3 x 3 at the corners (x 1..3 / 13..15, z 1..3 / 13..15), walls y 1..12, a 5 x 5 top on corbels at y 13..14
-  gatehouse x 6..10, z 1..3: an arched passage (x 7..9) to the door at (8, 1, 3), a room over it, a roof at y 11
+Plan (x across, z = 0 the front, centre line x = 15; box 31 x 19 x 33):
+  L1  the keep (the approved sample keep, its 9 x 9 body scaled to 11 x 11): body x 10..20, z 9..19 on a cobblestone
+      apron, walls y 1..9, battlements on corbels, four corner turrets with pointed dark oak caps; a guard hall on the
+      ground floor, the king's chamber upstairs, stairs (no ladders) to the roof deck. Doors front and back.
+  L2  the royal court: a GREAT HALL wing on the centre line behind the keep (x 11..19, z 19..31, 9 x 13, dark oak roof,
+      tall windows, two fireplaces, long tables, the THRONE on a raised dais at the far end under banners), entered
+      through the keep; and a walled forecourt in front (wall x = 2 and 28, z = 2, closed at z = 9 against the keep)
+      with a gate on the centre line.
+  L3  the castle: the forecourt wall raised into a curtain with merlons and carried round the whole site (back to
+      z = 30), four corner towers with pointed dark oak roofs and flags, a gatehouse over the gate, a kitchen and a
+      barracks lean-to against the curtain, a well and a forge under matching roofs, walled gardens by the hall.
 """
 from make_batch1_structures import Structure
-from revise1.blockconn import connect, noise, put_id
+from revise1.blockconn import connect, noise
 
-W = 17                       # box: 17 x 16 x 17
-H = 16
-B0, B1 = 3, 13               # body
-MID = 8
-TOWERS = [(1, 1), (13, 1), (1, 13), (13, 13)]   # tower corner (low x, low z)
-GATE = (6, 10, 1, 3)         # gatehouse x0, x1, z0, z1
-HALL_TOP = 5                 # hall y 1..5
-UPPER = 6                    # upper floor (spruce) y 6, room y 7..9
-DECK = 10                    # roof deck y 10
-TOWER_TOP = 13               # tower floor and corbels y 13, parapet y 14, merlons y 15
+W, H, D = 31, 19, 33
+CX = 15                                  # centre line
+K0, K1 = 10, 20                          # keep body x (and K0..K1 is 11 wide)
+KZ0, KZ1 = 9, 19                         # keep body z
+UPPER, DECK = 5, 9                       # upper floor y 5, roof deck (and wall top) y 9
+HX0, HX1, HZ1 = 11, 19, 31               # great hall: walls x 11 / 19, z 19 (the keep's back wall) .. 31
+WALL_X0, WALL_X1, WALL_Z = 2, 28, 2      # forecourt / curtain lines
+COURT_Z1 = KZ0                           # forecourt closed along z = 9
+BACK_Z = 30                              # L3 curtain back line
+GATE = (14, 16)                          # gate opening x
 
 TOP = dict(half='top', shape='straight', waterlogged='false')
-BOTTOM = dict(half='bottom', shape='straight', waterlogged='false')
-OUT = {'north': (0, -1), 'south': (0, 1), 'west': (-1, 0), 'east': (1, 0)}
-FLIP = {'north': 'south', 'south': 'north', 'east': 'west', 'west': 'east'}
+BOT = dict(half='bottom', shape='straight', waterlogged='false')
+TOWARD = {'north': 'south', 'south': 'north', 'east': 'west', 'west': 'east'}
 
 
-def in_tower(x, z):
-    return any(tx <= x <= tx + 2 and tz <= z <= tz + 2 for tx, tz in TOWERS)
-
-
-def in_gate(x, z):
-    return GATE[0] <= x <= GATE[1] and GATE[2] <= z <= GATE[3]
-
-
-def in_body(x, z):
-    return B0 <= x <= B1 and B0 <= z <= B1
-
-
-def footprint(x, z):
-    return in_body(x, z) or in_tower(x, z) or in_gate(x, z)
-
-
-def passage(x, z):
-    return 7 <= x <= 9 and 1 <= z <= 2
-
-
-def plinth_mix(x, y, z):
+def base_mix(x, y, z):
     return 'mossy_cobblestone' if noise(x, y, z, 5) < 0.3 else 'cobblestone'
 
 
 def brick_mix(x, y, z):
-    """Level 2 and 3 masonry (battlement tops): stone bricks with mossy and cracked mixed in, about 1 in 4 (STYLE.md)."""
+    """Level 2 and 3 masonry: stone bricks with mossy and cracked mixed in (STYLE.md), a fixed pattern."""
     n = noise(x, y, z, 7)
-    return 'mossy_stone_bricks' if n < 0.13 else 'cracked_stone_bricks' if n < 0.26 else 'stone_bricks'
+    return 'mossy_stone_bricks' if n < 0.12 else 'cracked_stone_bricks' if n < 0.24 else 'stone_bricks'
 
 
-def overhang():
-    """The body's battlement line one block outside the walls, between the towers and the gatehouse: (x, z, facing of
-    the corbel, i.e. towards the wall)."""
-    line = []
-    for z in range(B0 + 1, B1):
-        line += [(B0 - 1, z, 'east'), (B1 + 1, z, 'west')]
-    for x in range(B0 + 1, B1):
-        line.append((x, B1 + 1, 'north'))
-        if x < GATE[0] or x > GATE[1]:
-            line.append((x, B0 - 1, 'south'))
-    return line
-
-
-def gate_overhang():
-    """The gatehouse battlement ring, one block out on the front and sides (x 5..11, z 0..3)."""
-    line = [(x, 0, 'south') for x in range(GATE[0] - 1, GATE[1] + 2)]
-    for z in range(1, GATE[3] + 1):
-        line += [(GATE[0] - 1, z, 'east'), (GATE[1] + 1, z, 'west')]
-    return line
-
-
-def tower_ring(tx, tz):
-    """The 5 x 5 ring round a tower's top (one block out on every side), with the corbel facing towards the tower."""
-    ring = []
-    for x in range(tx - 1, tx + 4):
-        for z in range(tz - 1, tz + 4):
-            if x in (tx - 1, tx + 3) or z in (tz - 1, tz + 3):
-                f = 'south' if z == tz - 1 else 'north' if z == tz + 3 else 'east' if x == tx - 1 else 'west'
-                ring.append((x, z, f))
-    return ring
-
-
-def tower_roof(s, tx, tz):
-    """A low dark oak pyramid roof inside a tower's parapet: a ring of dark oak stairs (rising to the middle, outer
-    corner pieces at the corners), a dark oak plank peak and a spruce fence finial. It closes the tower top."""
-    y = TOWER_TOP + 1
-    for x in range(tx, tx + 3):
-        for z in range(tz, tz + 3):
-            if (x, z) == (tx + 1, tz + 1):
-                s.put(x, y, z, 'dark_oak_planks')
+def stair_ring(s, cx, cz, y, k, block, add=False):
+    """A square ring of stairs of radius k round (cx, cz), rising to the middle (a pyramid course)."""
+    put = s.add if add else s.put
+    for x in range(cx - k, cx + k + 1):
+        for z in range(cz - k, cz + k + 1):
+            if max(abs(x - cx), abs(z - cz)) != k:
                 continue
-            f = 'south' if z == tz else 'north' if z == tz + 2 else 'east' if x == tx else 'west'
+            f = 'south' if z == cz - k else 'north' if z == cz + k else 'east' if x == cx - k else 'west'
             shape = 'straight'
-            if x != tx + 1 and z != tz + 1:                          # corners
-                west = x == tx
+            if abs(x - cx) == k and abs(z - cz) == k:
+                west = x < cx
                 shape = ('outer_left' if west else 'outer_right') if f == 'south' else ('outer_right' if west else 'outer_left')
-            s.put(x, y, z, 'dark_oak_stairs', facing=f, half='bottom', shape=shape, waterlogged='false')
-    s.put(tx + 1, y + 1, tz + 1, 'spruce_fence')
+            put(x, y, z, block, facing=f, half='bottom', shape=shape, waterlogged='false')
 
 
-def merlon(x, z):
-    return (x + z) % 2 == 0
+def spire(s, cx, cz, y, r, fence, add=False):
+    """A pointed dark oak roof: a flared eave course of radius r, then the radius-1 course twice (steep), a plank core
+    and a fence finial on top (a flag goes one above). Returns the finial's top y."""
+    put = s.add if add else s.put
+    courses = list(range(r, 1, -1)) + [1, 1]
+    for i, k in enumerate(courses):
+        stair_ring(s, cx, cz, y + i, k, 'dark_oak_stairs', add)
+        for x in range(cx - k + 1, cx + k):
+            for z in range(cz - k + 1, cz + k):
+                put(x, y + i, z, 'dark_oak_planks')
+    top = y + len(courses)
+    put(cx, top, cz, 'dark_oak_planks')
+    put(cx, top + 1, cz, fence)
+    return top + 1
+
+
+def corbel_ring(s, cx, cz, y, k, block='stone_brick_stairs', add=False):
+    """Upside-down stairs round (cx, cz) at radius k, each leaning towards the middle (corbels under an overhang)."""
+    put = s.add if add else s.put
+    for x in range(cx - k, cx + k + 1):
+        for z in range(cz - k, cz + k + 1):
+            if max(abs(x - cx), abs(z - cz)) != k:
+                continue
+            f = 'south' if z == cz - k else 'north' if z == cz + k else 'east' if x == cx - k else 'west'
+            put(x, y, z, block, facing=f, **TOP)
 
 
 def keep():
-    s = Structure('keep', (W, H, W))
+    s = Structure('keep', (W, H, D))
+    s.p = {}                                                         # exact block ids only (no palette roles)
     sb = 'stone_bricks'
 
-    # ------------------------------------------------------------ level 1: the shell (KNOWN-OK blocks only)
+    def in_body(x, z):
+        return K0 <= x <= K1 and KZ0 <= z <= KZ1
+
+    turrets = [(K0, KZ0), (K1, KZ0), (K0, KZ1), (K1, KZ1)]          # turret centres = the body corners
+
+    def in_turret(x, z):
+        return any(abs(x - tx) <= 1 and abs(z - tz) <= 1 for tx, tz in turrets)
+
+    # ================================================================ level 1: the keep (KNOWN-OK blocks only)
     s.at(1, 'shell')
-    for x in range(W):                                               # floor layer and apron
-        for z in range(W):
-            s.put(x, 0, z, sb if footprint(x, z) else plinth_mix(x, 0, z))
+    for x in range(K0 - 1, K1 + 2):                                  # apron and ground floor
+        for z in range(KZ0 - 1, KZ1 + 2):
+            s.put(x, 0, z, sb if in_body(x, z) and not (x in (K0, K1) or z in (KZ0, KZ1)) else base_mix(x, 0, z))
 
     def quoin(x, z):
-        """An outer corner of a tower or of the gatehouse front."""
-        for tx, tz in TOWERS:
-            if x in (tx, tx + 2) and z in (tz, tz + 2) and not in_body(x, z):
-                return True
-        return z == GATE[2] and x in (GATE[0], GATE[1])
+        return x in (K0, K1) and z in (KZ0, KZ1)
 
-    def wall(x, y, z):
-        if y == 1:
-            s.put(x, y, z, plinth_mix(x, y, z))
-        elif quoin(x, z) and y % 2 == 0:
-            s.put(x, y, z, 'cobblestone')                            # rough quoins on the corners, every other course
-        else:
-            s.put(x, y, z, sb)
-
-    for y in range(1, DECK + 1):                                     # body walls up to the deck
-        for x in range(B0, B1 + 1):
-            for z in range(B0, B1 + 1):
-                if x in (B0, B1) or z in (B0, B1):
-                    wall(x, y, z)
-    for tx, tz in TOWERS:                                            # towers: 3 x 3 rings, hollow
-        for y in range(1, TOWER_TOP):
-            for x in range(tx, tx + 3):
-                for z in range(tz, tz + 3):
-                    if (x, z) != (tx + 1, tz + 1):
-                        wall(x, y, z)
-    g0, g1, gz0, gz1 = GATE
-    for y in range(1, DECK + 1):                                     # gatehouse walls
-        for x in range(g0, g1 + 1):
-            for z in range(gz0, gz1 + 1):
-                if x in (g0, g1) or z == gz0:
-                    wall(x, y, z)
-    # arched passage through the gatehouse: 3 wide, 4 high in the middle, arch stairs at the top corners
-    for z in (1, 2):
-        for x in (7, 8, 9):
-            for y in range(1, 5):
-                s.remove(x, y, z)
-        s.put(7, 4, z, 'stone_brick_stairs', facing='west', **TOP)
-        s.put(9, 4, z, 'stone_brick_stairs', facing='east', **TOP)
-    for x in (7, 8, 9):
-        s.put(x, 5, 2, sb)                                           # passage ceiling
-        s.put(x, UPPER, 2, 'spruce_planks')                         # gatehouse room floor
-    s.remove(MID, 1, B0); s.remove(MID, 2, B0)
-    s.door(MID, 1, B0, 'north', block='spruce_door')
-    for y in (1, 2):                                                 # a dark oak door frame: posts and a lintel
-        for x in (MID - 1, MID + 1):
-            s.put(x, y, B0, 'dark_oak_log', axis='y')
-    for x in (MID - 1, MID, MID + 1):
-        s.put(x, 3, B0, 'dark_oak_log', axis='x')
-    s.remove(MID, UPPER + 1, B0); s.remove(MID, UPPER + 2, B0)      # king's room -> room over the gate
-    for x in range(g0, g1 + 1):                                      # gatehouse roof
-        for z in range(gz0, gz1 + 1):
-            s.put(x, DECK + 1, z, sb)
-
-    # floors: hall ceiling / upper floor (spruce) and roof deck, with the stair openings
-    for x in range(B0 + 1, B1):
-        for z in range(B0 + 1, B1):
+    for y in range(1, DECK + 1):                                     # walls
+        for x in range(K0, K1 + 1):
+            for z in range(KZ0, KZ1 + 1):
+                if x in (K0, K1) or z in (KZ0, KZ1):
+                    if y == 1:
+                        s.put(x, y, z, base_mix(x, y, z))
+                    elif quoin(x, z) and y % 2 == 0:
+                        s.put(x, y, z, 'cobblestone')
+                    else:
+                        s.put(x, y, z, sb)
+    for x in range(K0 + 1, K1):                                      # upper floor and roof deck
+        for z in range(KZ0 + 1, KZ1):
             s.put(x, UPPER, z, 'spruce_planks')
             s.put(x, DECK, z, sb)
-    # stairs hall -> upper floor along the right wall (x 12), rising to the front: y 1..6 at z 10..5
-    for i in range(6):
-        y, z = 1 + i, 10 - i
-        s.remove(B1 - 1, y, z)
-        s.put(B1 - 1, y, z, 'spruce_stairs', facing='north', **BOTTOM)
-    for z in range(6, 11):
-        s.remove(B1 - 1, UPPER, z)
-    # stairs upper floor -> roof deck along the left wall (x 4), rising to the back: y 7..10 at z 5..8
+    # stairs: ground -> upper along the west wall (x 11, rising to the front), upper -> deck along the east wall
     for i in range(4):
-        y, z = UPPER + 1 + i, 5 + i
-        s.remove(B0 + 1, y, z)
-        s.put(B0 + 1, y, z, 'stone_brick_stairs', facing='south', **BOTTOM)
-    for z in (6, 7):
-        s.remove(B0 + 1, DECK, z)
-    s.put(MID, DECK + 1, B0 + 1, 'stone_brick_stairs', facing='north', **BOTTOM)   # deck -> gatehouse roof
+        s.put(K0 + 1, 1 + i, 17 - i, 'spruce_stairs', facing='north', **BOT)
+    for z in range(14, 18):
+        s.remove(K0 + 1, UPPER, z)
+    for i in range(4):
+        y, z = UPPER + 1 + i, 11 + i
+        s.remove(K1 - 1, y, z)
+        s.put(K1 - 1, y, z, 'spruce_stairs', facing='south', **BOT)
+    for z in (11, 12, 13):
+        s.remove(K1 - 1, DECK, z)
 
-    # windows (glass panes; connect() joins them to the walls): hall 3 high, upper floor 2 high, tower slits
+    # doors front and back on the centre line, in dark oak frames
+    for z, f in ((KZ0, 'north'), (KZ1, 'south')):
+        s.remove(CX, 1, z); s.remove(CX, 2, z)
+        s.door(CX, 1, z, f, block='spruce_door')
+        for y in (1, 2):
+            for x in (CX - 1, CX + 1):
+                s.remove(x, y, z); s.put(x, y, z, 'dark_oak_log', axis='y')
+        for x in (CX - 1, CX, CX + 1):
+            s.remove(x, 3, z); s.put(x, 3, z, 'dark_oak_log', axis='x')
+
     def window(x, y, z):
         s.remove(x, y, z); s.put(x, y, z, 'glass_pane')
-    for z in (6, 10):
-        for y in (2, 3, 4):
-            window(B0, y, z); window(B1, y, z)
-    for x in (6, 10):
-        for y in (2, 3, 4):
-            window(x, y, B1)
-    for c in (5, 8, 11):
-        for y in (7, 8):
-            window(B0, y, c); window(B1, y, c); window(c, y, B1)
-    for y in (7, 8):
-        window(MID, y, 1)                                            # gatehouse front, over the arch
-    for tx, tz in TOWERS:
-        for y in (4, 9):
-            fx = tx if tx < MID else tx + 2                          # the tower's outer faces
-            fz = tz if tz < MID else tz + 2
-            window(fx, y, tz + 1); window(tx + 1, y, fz)
+    for c in (12, 18):                                               # ground floor: front and back
+        for y in (2, 3):
+            window(c, y, KZ0); window(c, y, KZ1)
+    for c in (12, 15, 18):                                           # ground floor sides, upper floor all round
+        for y in (2, 3):
+            window(K0, y, c); window(K1, y, c)
+        for y in (6, 7):
+            window(K0, y, c); window(K1, y, c); window(c, y, KZ0); window(c, y, KZ1)
 
-    # depth on the faces: a string course of upside-down stairs at the upper floor, corbels and battlements
-    for x, z, f in overhang():
+    # battlements on corbels one block out, with merlons; turrets on the corners
+    ring = []
+    for z in range(KZ0, KZ1 + 1):
+        ring += [(K0 - 1, z, 'east'), (K1 + 1, z, 'west')]
+    for x in range(K0, K1 + 1):
+        ring += [(x, KZ0 - 1, 'south'), (x, KZ1 + 1, 'north')]
+    for x, z, f in ring:
+        if in_turret(x, z):
+            continue
         s.put(x, DECK, z, 'stone_brick_stairs', facing=f, **TOP)
         s.put(x, DECK + 1, z, sb)
-    for x, z, f in gate_overhang():
-        s.put(x, DECK + 1, z, 'stone_brick_stairs', facing=f, **TOP)
-        s.put(x, DECK + 2, z, sb)
-    for tx, tz in TOWERS:
-        for x in range(tx, tx + 3):
-            for z in range(tz, tz + 3):
-                s.put(x, TOWER_TOP, z, sb)
-        for x, z, f in tower_ring(tx, tz):
-            s.put(x, TOWER_TOP, z, 'stone_brick_stairs', facing=f, **TOP)
-            s.put(x, TOWER_TOP + 1, z, sb)
-        tower_roof(s, tx, tz)
-    # battered plinth: cobblestone stairs leaning on every outside wall at y 1 (not in front of the arch)
-    for x in range(W):
-        for z in range(W):
-            if footprint(x, z) or (7 <= x <= 9 and z == 0):
+        if (x + z) % 2 == 0:
+            s.put(x, DECK + 2, z, sb)
+    for tx, tz in turrets:                                           # a turret on corbels over each corner
+        for x in range(tx - 1, tx + 2):
+            for z in range(tz - 1, tz + 2):
+                if not in_body(x, z):
+                    f = 'south' if z < tz else 'north' if z > tz else 'east' if x < tx else 'west'
+                    s.put(x, DECK, z, 'stone_brick_stairs', facing=f, **TOP)
+                for y in range(DECK + 1, DECK + 4):
+                    s.put(x, y, z, 'cobblestone' if (x != tx and z != tz and y % 2 == 0) else sb)
+        spire(s, tx, tz, DECK + 4, 2, 'spruce_fence')                # under a pointed dark oak cap
+    # battered plinth: cobblestone stairs leaning on the walls (not at the doors)
+    for x in range(K0 - 1, K1 + 2):
+        for z in range(KZ0 - 1, KZ1 + 2):
+            if in_body(x, z) or x == CX:
                 continue
-            for f, (dx, dz) in OUT.items():
-                if footprint(x + dx, z + dz) and not passage(x + dx, z + dz):
-                    s.put(x, 1, z, 'cobblestone_stairs', facing=f, **BOTTOM)
+            for f, (dx, dz) in {'north': (0, -1), 'south': (0, 1), 'west': (-1, 0), 'east': (1, 0)}.items():
+                if in_body(x + dx, z + dz):
+                    s.put(x, 1, z, 'cobblestone_stairs', facing=f, **BOT)
                     break
 
-    # ------------------------------------------------------------ level 1: fittings
+    # ---------------------------------------------------------------- level 1 fittings: guard hall, king's chamber
     s.at(1, 'fittings')
-    # great hall: a red runner from the door to the throne, a dais with the throne, two long tables with benches
-    for z in range(B0 + 1, 11):
-        s.put(MID, 1, z, 'red_carpet')
-    for x in range(6, 11):
-        s.put(x, 1, 12, 'spruce_planks')
-        s.put(x, 1, 11, 'spruce_stairs', facing='south', **BOTTOM)
-    s.put(MID, 2, 12, 'dark_oak_stairs', facing='south', **BOTTOM)  # the throne, back to the back wall
-    for tx in (6, 10):
-        for z in range(5, 10):
-            s.put(tx, 1, z, 'spruce_slab', type='top', waterlogged='false')       # table
-            s.put(tx - 1, 1, z, 'spruce_stairs', facing='west', **BOTTOM)          # benches, backs away
-            if tx + 1 < B1 - 1:
-                s.put(tx + 1, 1, z, 'spruce_stairs', facing='east', **BOTTOM)
-    s.put(B0 + 1, 1, 8, 'furnace', facing='east', lit='false')      # hearth on the left wall
-    for z in (4, 5):                                                 # stores by the door
-        s.put(B0 + 1, 1, z, 'barrel', facing='up', open='false')
-    s.put(B0 + 1, 2, 4, 'barrel', facing='up', open='false')
-    s.put(B1 - 1, 1, 4, 'chest', facing='west', type='single', waterlogged='false')
-    for x, z in ((6, 7), (10, 7), (MID, 10), (MID, 5)):             # hanging lanterns under the upper floor
-        s.put(x, HALL_TOP, z, 'lantern', hanging='true', waterlogged='false')
-    for x in (7, 9):                                                 # torches in the passage, by the door
-        s.put(x, 2, 2, 'wall_torch', facing='north')
-    # king's rooms upstairs
-    s.bed(10, UPPER + 1, 11, 'south')
-    s.put(11, UPPER + 1, 12, 'chest', facing='west', type='single', waterlogged='false')
-    for x in range(7, 10):
-        for z in range(7, 10):
+    for z in range(KZ0 + 1, KZ1):
+        s.put(CX, 1, z, 'red_carpet')
+    for tx in (13, 17):                                              # the garrison's mess tables
+        for z in range(12, 17):
+            s.put(tx, 1, z, 'spruce_slab', type='top', waterlogged='false')
+            s.put(tx - 1 if tx == 13 else tx + 1, 1, z, 'spruce_stairs', facing='west' if tx == 13 else 'east', **BOT)
+    s.put(K1 - 1, 1, 17, 'furnace', facing='west', lit='false')
+    s.put(K1 - 1, 1, 18, 'grindstone', face='floor', facing='west')
+    for z in (10, 11):
+        s.put(K0 + 1, 1, z, 'barrel', facing='up', open='false')
+        s.put(K1 - 1, 1, z, 'chest', facing='west', type='single', waterlogged='false')
+    s.put(K0 + 1, 2, 10, 'barrel', facing='up', open='false')
+    s.put(K0 + 1, 1, 18, 'crafting_table')
+    for x, z in ((13, 12), (17, 12), (13, 16), (17, 16)):
+        s.put(x, UPPER - 1, z, 'lantern', hanging='true', waterlogged='false')
+    s.put(13, UPPER + 1, 17, 'red_bed', facing='south', part='foot', occupied='false')   # the king's chamber
+    s.put(13, UPPER + 1, 18, 'red_bed', facing='south', part='head', occupied='false')
+    s.put(12, UPPER + 1, 18, 'chest', facing='east', type='single', waterlogged='false')
+    for x in range(14, 17):
+        for z in range(14, 17):
             s.put(x, UPPER + 1, z, 'red_carpet')
-    s.put(6, UPPER + 1, 11, 'spruce_slab', type='top', waterlogged='false')   # writing table and chair
-    s.put(6, UPPER + 1, 10, 'spruce_stairs', facing='north', **BOTTOM)
-    s.put(B1 - 2, UPPER + 1, 4, 'crafting_table')
-    for x, z in ((MID, 8), (6, 5), (10, 5)):
+    s.put(17, UPPER + 1, 18, 'spruce_slab', type='top', waterlogged='false')
+    s.put(17, UPPER + 1, 17, 'spruce_stairs', facing='north', **BOT)
+    s.put(12, UPPER + 1, 10, 'crafting_table')
+    for x, z in ((CX, 12), (CX, 16)):
         s.put(x, DECK - 1, z, 'lantern', hanging='true', waterlogged='false')
-    s.put(MID, UPPER + 1, 2, 'lantern', hanging='false', waterlogged='false')   # in the room over the gate
 
-    # ------------------------------------------------------------ level 2: grandeur
+    # ================================================================ level 2: the royal court
+    s.at(2, 'shell2')
+    # ---- great hall: walls x 11 / 19 from z 20 to 31, the keep's back wall is its front
+    def hall_wall(x, y, z):
+        if y == 1:
+            s.add(x, y, z, base_mix(x, y, z))
+        else:
+            s.add(x, y, z, brick_mix(x, y, z))
+    windows = (22, 23, 25, 26, 28, 29)
+    for z in range(KZ1 + 1, HZ1 + 1):
+        for x in (HX0, HX1):
+            s.add(x, 0, z, 'cobblestone')
+            for y in range(1, 7):
+                if z in windows and 2 <= y <= 5:
+                    s.put(x, y, z, 'glass_pane')
+                elif z == 24 and y == 1:
+                    s.put(x, y, z, 'campfire', facing='east' if x == HX0 else 'west', lit='true',
+                          signal_fire='false', waterlogged='false')       # the hearths
+                else:
+                    hall_wall(x, y, z)
+            s.put(x, 7, z, 'dark_oak_log', axis='z')                 # top plate
+    for x in range(HX0 + 1, HX1):
+        s.add(x, 0, HZ1, 'cobblestone')
+        for y in range(1, 7):
+            hall_wall(x, y, HZ1)
+        s.put(x, 7, HZ1, 'dark_oak_log', axis='x')
+        for y in (7, 8):
+            s.put(x, y, KZ1 + 1, sb)                                 # closes the gap under the keep's battlements
+    for x in range(HX0 + 1, HX1):                                    # floor
+        for z in range(KZ1 + 2, HZ1):
+            s.put(x, 0, z, 'dark_oak_planks')
+    # chimneys outside the hearths, buttresses between the bays
+    for x, f in ((HX0 - 1, 'east'), (HX1 + 1, 'west')):
+        for y in range(0, 10):
+            s.put(x, y, 24, 'cobblestone' if y < 2 else sb)
+        for z in (27, HZ1):
+            for y in range(0, 5):
+                s.put(x, y, z, base_mix(x, y, z) if y < 2 else sb)
+            s.put(x, 5, z, 'stone_brick_stairs', facing=f, **BOT)
+    for x in (13, 17):                                               # back buttresses
+        for y in range(0, 5):
+            s.put(x, y, HZ1 + 1, base_mix(x, y, HZ1 + 1) if y < 2 else sb)
+        s.put(x, 5, HZ1 + 1, 'stone_brick_stairs', facing='north', **BOT)
+    # roof: dark oak, 45 degrees, eaves on the top plates, one block overhang at the back
+    for z in range(KZ1 + 2, HZ1 + 2):
+        for i in range(5):
+            y = 7 + i
+            for x, f in ((HX0 - 1 + i, 'east'), (HX1 + 1 - i, 'west')):
+                if (x, y, z) not in s.blocks:
+                    s.put(x, y, z, 'dark_oak_stairs', facing=f, **BOT)
+        s.put(CX, 11, z, 'dark_oak_planks')
+        s.put(CX, 12, z, 'dark_oak_slab', type='bottom', waterlogged='false')
+    for y in range(8, 11):                                           # back gable
+        for x in range(HX0 + y - 7, HX1 - y + 8):
+            if (x, y, HZ1) not in s.blocks:
+                s.put(x, y, HZ1, brick_mix(x, y, HZ1))
+    for y in (8, 9):
+        s.remove(CX, y, HZ1); s.put(CX, y, HZ1, 'glass_pane')        # a tall window over the throne
+    for z in (24, 28):                                               # tie beams
+        for x in range(HX0 + 1, HX1):
+            s.put(x, 7, z, 'dark_oak_log', axis='x')
+
+    # ---- forecourt wall: footing y 0, cobble y 1, stone bricks y 2..3, posts to y 4 every fourth block
+    def wall_line():
+        cells = [(x, WALL_Z) for x in range(WALL_X0, WALL_X1 + 1) if not GATE[0] <= x <= GATE[1]]
+        for z in range(WALL_Z + 1, COURT_Z1 + 1):
+            cells += [(WALL_X0, z), (WALL_X1, z)]
+        for x in list(range(WALL_X0 + 1, K0)) + list(range(K1 + 1, WALL_X1)):
+            cells.append((x, COURT_Z1))
+        return cells
+    for x, z in wall_line():
+        s.add(x, 0, z, 'cobblestone')
+        s.add(x, 1, z, base_mix(x, 1, z))
+        for y in (2, 3):
+            s.add(x, y, z, brick_mix(x, y, z))
+        post = (x in (WALL_X0, WALL_X1) and (z - WALL_Z) % 4 == 3) or (z == WALL_Z and abs(x - CX) % 4 == 2) or \
+            (z == COURT_Z1 and x in (5, 25))
+        if post:
+            s.add(x, 4, z, sb)
+    for x in (GATE[0] - 1, GATE[1] + 1):                            # gate piers
+        s.add(x, 4, WALL_Z, sb)
+    for x in range(GATE[0], GATE[1] + 1):                           # path: gate to the keep door
+        for z in range(WALL_Z, KZ0 - 1):
+            s.put(x, 0, z, 'cobblestone_slab', type='bottom', waterlogged='false')
+
+    # ---- level 2 fittings: the throne room
     s.at(2, 'flourish2')
-    for x, z, f in overhang():                                       # merlons on every battlement
-        if merlon(x, z):
-            s.put(x, DECK + 2, z, brick_mix(x, DECK + 2, z))
-    for x, z, f in gate_overhang():
-        if merlon(x, z):
-            s.put(x, DECK + 3, z, brick_mix(x, DECK + 3, z))
-    for tx, tz in TOWERS:                                            # tower tops: merlons round the roofs
-        for x, z, f in tower_ring(tx, tz):
-            if merlon(x, z) or (x in (tx - 1, tx + 3) and z in (tz - 1, tz + 3)):
-                s.put(x, TOWER_TOP + 2, z, brick_mix(x, TOWER_TOP + 2, z))
-    for x in (7, 9):                                                 # two flags on the gatehouse roof
-        s.put(x, DECK + 2, 2, 'spruce_fence'); s.put(x, DECK + 3, 2, 'spruce_fence')
-        put_id(s, x, DECK + 4, 2, 'red_banner', rotation='8')
-    for x in (g0, g1):                                               # great banners on the gatehouse front
-        put_id(s, x, 8, 0, 'red_wall_banner', facing='north')
-    for x in (B0 + 1, B1 - 1):                                       # and on the front recesses
-        put_id(s, x, 4, B0 - 1, 'red_wall_banner', facing='north')
-    # sills under the upper windows, outside
-    for c in (5, 8, 11):
-        for x, z in ((B0 - 1, c), (B1 + 1, c), (c, B1 + 1)):
-            if (x, UPPER, z) not in s.blocks:
-                put_id(s, x, UPPER, z, 'stone_brick_slab', type='top', waterlogged='false')
-    # hall: banners behind the throne, lanterns on the dais
-    put_id(s, MID, 4, B1 - 1, 'red_wall_banner', facing='north')
-    for x in (6, 10):
-        s.put(x, 2, 12, 'lantern', hanging='false', waterlogged='false')
-    put_id(s, B0 + 1, 4, 8, 'red_wall_banner', facing='east')       # banner over the hearth
-    for x in (7, 8, 9):                                              # a hood moulding over the arch
-        s.put(x, 5, 0, 'stone_brick_stairs', facing='south', **TOP)
-    for x in (g0, g1):                                               # torches either side of the arch, outside
-        s.put(x, 3, 0, 'wall_torch', facing='north')
-    for y in range(DECK + 1, DECK + 4):                              # flagpole in the middle of the roof deck
-        s.put(MID, y, MID, 'spruce_fence')
-    put_id(s, MID, DECK + 4, MID, 'red_banner', rotation='8')
+    for z in range(KZ1 + 2, 28):                                     # red runner from the keep's back door
+        s.put(CX, 1, z, 'red_carpet')
+    for x in range(HX0 + 1, HX1):                                    # dais (z 29..30) with a step at z 28
+        for z in (29, 30):
+            s.put(x, 1, z, 'dark_oak_planks')
+        s.put(x, 1, 28, 'dark_oak_stairs', facing='south', **BOT)
+    for x in range(13, 18):
+        if x != CX:
+            s.put(x, 2, 29, 'red_carpet')
+    s.put(CX, 2, 29, 'dark_oak_stairs', facing='south', **BOT)        # the throne: seat, arms, high back, gold crest
+    s.put(CX - 1, 2, 29, 'dark_oak_stairs', facing='west', **TOP)
+    s.put(CX + 1, 2, 29, 'dark_oak_stairs', facing='east', **TOP)
+    for y in (2, 3):
+        s.put(CX, y, 30, 'dark_oak_planks')
+    s.put(CX, 4, 30, 'gold_block')
+    s.put(CX, 5, 30, 'red_wall_banner', facing='north')
+    for x in (13, 17):
+        s.put(x, 4, 30, 'red_wall_banner', facing='north')
+        s.put(x, 2, 30, 'lantern', hanging='false', waterlogged='false')
+    for tx, (b0, b1) in ((13, ('west', 'east')), (17, ('west', 'east'))):   # long tables with benches
+        for z in range(21, 27):
+            s.put(tx, 1, z, 'dark_oak_slab', type='top', waterlogged='false')
+            if z != 24:
+                s.put(tx - 1, 1, z, 'dark_oak_stairs', facing=b0, **BOT)
+                s.put(tx + 1, 1, z, 'dark_oak_stairs', facing=b1, **BOT)
+    for tx in (13, 17):
+        s.put(tx, 2, 22, 'candle', candles='3', lit='true', waterlogged='false')
+        s.put(tx, 2, 25, 'candle', candles='3', lit='true', waterlogged='false')
+    for z in (21, 27):                                               # banners between the windows
+        s.put(HX0 + 1, 4, z, 'red_wall_banner', facing='east')
+        s.put(HX1 - 1, 4, z, 'red_wall_banner', facing='west')
+    for z in (24, 28):                                               # lanterns on chains from the tie beams
+        for x in (13, 17):
+            s.put(x, 6, z, 'chain', axis='y', waterlogged='false')
+            s.put(x, 5, z, 'lantern', hanging='true', waterlogged='false')
+    # the keep dressed for the court: banners at the door, flags on the turrets
+    for x in (CX - 2, CX + 2):
+        s.put(x, 6, KZ0 - 1, 'red_wall_banner', facing='north')
+    for x in (CX - 1, CX + 1):
+        s.put(x, 2, KZ0 - 1, 'wall_torch', facing='north')
+    for tx, tz in turrets:
+        s.put(tx, DECK + 4 + 5, tz, 'red_banner', rotation='8')
+    for x in (12, 18):                                               # lantern posts in the forecourt
+        s.put(x, 1, 5, 'dark_oak_fence'); s.put(x, 2, 5, 'dark_oak_fence')
+        s.put(x, 3, 5, 'lantern', hanging='false', waterlogged='false')
 
-    # ------------------------------------------------------------ level 3: finishing touches
+    # ================================================================ level 3: the castle
+    s.at(3, 'shell3')
+    corners = [(WALL_X0, WALL_Z), (WALL_X1, WALL_Z), (WALL_X0, BACK_Z), (WALL_X1, BACK_Z)]
+
+    def in_tower(x, z):
+        return any(abs(x - cx) <= 1 and abs(z - cz) <= 1 for cx, cz in corners)
+
+    def gate_tower(x, z):
+        return 1 <= z <= 3 and (11 <= x <= 13 or 17 <= x <= 19)
+
+    curtain = wall_line()
+    for z in range(COURT_Z1 + 1, BACK_Z + 1):                        # carried back round the gardens to the hall
+        curtain += [(WALL_X0, z), (WALL_X1, z)]
+    for x in list(range(WALL_X0 + 1, HX0)) + list(range(HX1 + 1, WALL_X1)):
+        curtain.append((x, BACK_Z))
+    for x, z in curtain:
+        if in_tower(x, z) or gate_tower(x, z):
+            continue
+        inner = z == COURT_Z1 and x not in (WALL_X0, WALL_X1)       # the old forecourt wall stays low
+        s.add(x, 0, z, 'cobblestone')
+        s.add(x, 1, z, base_mix(x, 1, z))
+        for y in (2, 3):
+            s.add(x, y, z, brick_mix(x, y, z))
+        if inner:
+            if (x + z) % 2 == 0:
+                s.add(x, 4, z, brick_mix(x, 4, z))
+            continue
+        for y in (4, 5):
+            s.add(x, y, z, brick_mix(x, y, z))
+        if (x + z) % 2 == 0:
+            s.add(x, 6, z, brick_mix(x, 6, z))
+    for cx, cz in corners:                                           # corner towers
+        for x in range(cx - 1, cx + 2):
+            for z in range(cz - 1, cz + 2):
+                for y in range(0, 10):
+                    slit = y in (4, 7) and (x, z) in ((cx - 1 if cx < CX else cx + 1, cz), (cx, cz - 1 if cz < 10 else cz + 1))
+                    if slit:
+                        s.add(x, y, z, 'glass_pane')
+                    else:
+                        s.add(x, y, z, base_mix(x, y, z) if y < 2 else 'cobblestone' if (x != cx and z != cz and y % 2 == 0) else brick_mix(x, y, z))
+        corbel_ring(s, cx, cz, 9, 2, add=True)
+        spire(s, cx, cz, 10, 2, 'dark_oak_fence', add=True)
+        s.add(cx, 10 + 5, cz, 'red_banner', rotation='8')
+    # gatehouse: two towers flanking the gate joined over it into one block, a corbelled battlement on top
+    for x in range(11, 20):
+        for z in range(1, 4):
+            tower = x <= 13 or x >= 17
+            for y in range(0 if tower else 4, 9):
+                quoin = tower and x in (11, 13, 17, 19) and z in (1, 3) and y % 2 == 0
+                s.add(x, y, z, base_mix(x, y, z) if y < 2 else 'cobblestone' if quoin else brick_mix(x, y, z))
+    for z in (1, 2, 3):
+        s.put(GATE[0], 3, z, 'stone_brick_stairs', facing='west', **TOP)
+        s.put(GATE[1], 3, z, 'stone_brick_stairs', facing='east', **TOP)
+    for x in range(10, 21):                                          # corbels, parapet and merlons, one block out
+        for z in range(0, 5):
+            if x in (10, 20) or z in (0, 4):
+                f = 'south' if z == 0 else 'north' if z == 4 else 'east' if x == 10 else 'west'
+                s.add(x, 9, z, 'stone_brick_stairs', facing=f, **TOP)
+                s.add(x, 10, z, brick_mix(x, 10, z))
+                if (x + z) % 2 == 0:
+                    s.add(x, 11, z, brick_mix(x, 11, z))
+            else:
+                s.add(x, 9, z, 'stone_bricks')
+    for x in (12, 18):
+        s.put(x, 6, 0, 'red_wall_banner', facing='north')
+        for y in (10, 11, 12):
+            s.add(x, y, 2, 'dark_oak_fence')
+        s.add(x, 13, 2, 'red_banner', rotation='8')
+    s.put(CX, 6, 0, 'stone_brick_stairs', facing='south', **TOP)    # a hood over the arch
+    # lean-tos against the curtain: kitchen (west) and barracks (east), dark oak timber on a cobble footing
+    for side in (-1, 1):
+        wx = CX + side * (CX - WALL_X0)                              # the curtain line
+        x_in, x_front, x_eave = wx - side, wx - 3 * side, wx - 4 * side
+        for z in range(4, 8):
+            for x in (x_in, wx - 2 * side, x_front):
+                edge = x == x_front or z in (4, 7)
+                if not edge:
+                    continue
+                s.add(x, 0, z, 'cobblestone')
+                for y in (1, 2, 3):
+                    post = (x == x_front and z in (4, 7)) or (z in (4, 7) and x == x_in)
+                    s.add(x, y, z, 'dark_oak_log' if post else 'dark_oak_planks', **({'axis': 'y'} if post else {}))
+        for z in (4, 7):                                             # gable infill under the slope
+            s.add(x_in, 4, z, 'dark_oak_planks'); s.add(x_in, 5, z, 'dark_oak_planks')
+            s.add(wx - 2 * side, 4, z, 'dark_oak_planks')
+        f = 'west' if side < 0 else 'east'
+        for z in range(3, 9):
+            for x, y in ((x_eave, 3), (x_front, 4), (wx - 2 * side, 5), (x_in, 6)):
+                s.add(x, y, z, 'dark_oak_stairs', facing=f, **BOT)
+        for x in (x_in, wx - 2 * side):
+            s.add(x, 0, 5, 'dark_oak_planks'); s.add(x, 0, 6, 'dark_oak_planks')
+        s.remove(x_front, 1, 5); s.remove(x_front, 2, 5)
+        s.door(x_front, 1, 5, 'east' if side < 0 else 'west', block='spruce_door')
+        s.remove(x_front, 2, 6); s.put(x_front, 2, 6, 'glass_pane')
+    # well (west) and forge (east): matching posts under small pointed roofs
+    for cx, kind in ((9, 'well'), (21, 'forge')):
+        cz = 5
+        for x in range(cx - 1, cx + 2):
+            for z in range(cz - 1, cz + 2):
+                if (x, z) == (cx, cz):
+                    continue
+                s.add(x, 0, z, 'cobblestone')
+                if x != cx and z != cz:
+                    for y in (1, 2, 3):
+                        s.add(x, y, z, 'dark_oak_fence')
+                elif kind == 'well':
+                    s.add(x, 1, z, 'cobblestone_wall')
+        stair_ring(s, cx, cz, 4, 1, 'dark_oak_stairs', add=True)
+        s.add(cx, 4, cz, 'dark_oak_planks')
+        s.add(cx, 5, cz, 'dark_oak_slab', type='bottom', waterlogged='false')
+        if kind == 'well':
+            s.decorate(cx, 0, cz, 'water')
+            s.add(cx, 3, cz, 'chain', axis='y', waterlogged='false')
+        else:
+            s.add(cx, 0, cz, 'cobblestone')
+            s.add(cx, 1, cz, 'anvil', facing='east')
+            s.add(cx + 1, 1, cz, 'blast_furnace', facing='west', lit='false')
+            s.add(cx - 1, 1, cz, 'grindstone', face='floor', facing='west')
+    # walled gardens beside the great hall: flower beds round a bush, a gravel walk
     s.at(3, 'flourish3')
-    put_id(s, MID, 4, 1, 'iron_bars')                                # portcullis teeth in the arch
-    put_id(s, MID, 4, 2, 'iron_bars')
-    # timber hoardings: a dark oak pent roof over every battlement walk (body and gatehouse), sloping outwards
-    for x, z, f in overhang():                                       # posts in the crenels carry it
-        if (x, DECK + 2, z) not in s.blocks:
-            put_id(s, x, DECK + 2, z, 'dark_oak_fence')
-    for x, z, f in gate_overhang():
-        if (x, DECK + 3, z) not in s.blocks:
-            put_id(s, x, DECK + 3, z, 'dark_oak_fence')
-    for x, z, f in overhang():
-        if (x, DECK + 3, z) not in s.blocks:
-            put_id(s, x, DECK + 3, z, 'dark_oak_stairs', facing=f, half='bottom', shape='straight', waterlogged='false')
-    for x, z, f in gate_overhang():
-        put_id(s, x, DECK + 4, z, 'dark_oak_stairs', facing=f, half='bottom', shape='straight', waterlogged='false')
-    for x in (5, 11):                                                # hall: banners on the side tables' ends
-        put_id(s, B0 + 1 if x == 5 else B1 - 1, 4, 11, 'red_wall_banner', facing='east' if x == 5 else 'west')
-    for x in (6, 10):                                                # candles on the tables
-        s.put(x, 2, 7, 'candle', candles='3', lit='false', waterlogged='false')
-    for x, z in ((7, 10), (9, 10)):                                  # carpet by the bed and the desk upstairs
-        s.add(x, UPPER + 1, z, 'brown_carpet')
-    s.put(B1 - 1, UPPER + 1, 12, 'barrel', facing='up', open='false')
+    for side in (-1, 1):
+        for zc in (14, 21, 27):
+            xc = CX + side * 9
+            for x in range(xc - 2, xc + 3):
+                for z in range(zc - 1, zc + 2):
+                    s.add(x, 0, z, 'coarse_dirt')
+                    if (x, z) == (xc, zc):
+                        s.add(x, 1, z, 'oak_leaves', persistent='true', distance='1', waterlogged='false')
+                    elif (x + z) % 2 == 0:
+                        s.add(x, 1, z, ['poppy', 'cornflower', 'oxeye_daisy'][(zc // 7 + (x + z) // 2) % 3])
+        for z in range(KZ1 + 2, BACK_Z):                             # gravel walk along the hall
+            s.add(CX + side * 6, 0, z, 'gravel')
+    for x in (WALL_X0 + 4, WALL_X1 - 4, CX - 6, CX + 6):            # banners on the curtain front
+        s.add(x, 4, WALL_Z - 1, 'red_wall_banner', facing='north')
+    for x in (GATE[0] - 1, GATE[1] + 1):                            # torches either side of the gate, outside
+        s.add(x, 2, 0, 'wall_torch', facing='north')
+    for x in (CX - 4, CX + 4):                                       # more lanterns in the forecourt
+        s.add(x, 1, 7, 'dark_oak_fence'); s.add(x, 2, 7, 'lantern', hanging='false', waterlogged='false')
+    for side in (-1, 1):                                             # kitchen and barracks fittings
+        wx = CX + side * (CX - WALL_X0)
+        x_in = wx - side
+        if side < 0:
+            s.add(x_in, 1, 5, 'smoker', facing='east', lit='false'); s.add(x_in, 1, 6, 'barrel', facing='up', open='false')
+        else:
+            s.add(x_in, 1, 5, 'red_bed', facing='south', part='foot', occupied='false')
+            s.add(x_in, 1, 6, 'red_bed', facing='south', part='head', occupied='false')
     return connect(s)
 
 
 STRUCTURES = [dict(path='keep', name='Keep', tier=4, zone='keep', role='keep', group='keep', terrain='skirt',
-                   door='front', make=keep, max_height=H,
-                   description='A grand stone keep after the approved sample: 15 x 15 on a cobblestone apron, four '
-                               'corner towers with corbelled tops, a gatehouse with an arched passage, battlements on '
-                               'corbels, a great hall with a throne, tables and a hearth, stairs (no ladders) to the '
-                               "king's rooms and the roof deck. 16 tall: needs scaffold in game.",
-                   changes='Dark oak ties it to the kingdom look: a dark oak door frame (level 1) and low dark oak '
-                           'pyramid roofs that close the four tower tops (level 1, no more open boxes); level 3 now has '
-                           'its own feature, timber hoardings (dark oak posts and pent roofs) over every battlement.')]
+                   door='front', make=keep, max_height=20,
+                   description='A castle that grows round the approved sample keep, symmetric on one centre line. '
+                               'Level 1: the keep, 11 x 11 on a cobblestone apron, battlements on corbels, four '
+                               'corner turrets with pointed dark oak caps, a guard hall, the king\'s chamber and '
+                               'stairs (no ladders) to the roof. Level 2: the royal court, a 9 x 13 great hall behind '
+                               'the keep (dark oak roof, tall windows, two hearths, long tables, the throne on a dais '
+                               'under banners) and a walled forecourt with a gate. Level 3: the castle, a curtain '
+                               'wall round the whole site with four corner towers (pointed roofs, flags), a '
+                               'gatehouse, kitchen and barracks lean-tos, a well, a forge and walled gardens. '
+                               '19 tall: needs scaffold in game.',
+                   changes='Rebuilt as one symmetric plan that grows outward: level 1 is the sample keep with pointed '
+                           'turret caps (no flat lids), level 2 adds a great hall with the throne on a dais behind it '
+                           'and a walled forecourt, level 3 turns it into a castle with a curtain wall, four corner '
+                           'towers, a gatehouse, a kitchen, barracks, a well and gardens.')]

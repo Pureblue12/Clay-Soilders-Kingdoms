@@ -12,8 +12,8 @@ def fire_pit(size=9):
     """9 x 9 around a fire in the middle (x 4, z 4), open at the front (z 0).
     Level 1: an unlit campfire in a ring of stone (cobblestone slabs at the corners, cobblestone stairs front and back,
     cobblestone and mossy cobblestone at the sides) with a cooking spit (two spruce fence posts, a chain bar, a chain
-    hook), three spruce log benches, a spruce woodpile, a chopping stump, a barrel and a chest, stepping stones in from
-    the front, poppies and a lantern post.
+    hook), three spruce log benches, a spruce woodpile, a chopping stump, a barrel and a chest, a joined stepping-stone
+    path in from the front, poppies and leaf bushes round the edge and a lantern post.
     Level 2: a cauldron pot, a second lantern post, cushions on the benches, a potted flower, grass and ferns.
     Level 3: a firewood shelter over the woodpile (dark oak posts and slab roof) with a lantern hanging under it."""
     s = Structure('fire_pit', (size, 3, size))
@@ -47,10 +47,14 @@ def fire_pit(size=9):
     s.put(1, 1, 1, 'oak_pressure_plate')
     s.put(0, 0, c - 2, 'barrel', facing='up', open='false')         # supplies by the left bench
     s.put(0, 0, c - 1, 'chest', facing='east', type='single', waterlogged='false')
-    for z in (0, 2):                                                # stepping stones in from the front
-        s.put(c, 0, z, 'cobblestone_slab', type='bottom', waterlogged='false')
-    for x, z in ((2, 1), (size - 3, 0), (0, c + 2), (size - 1, c + 1)):
+    for z in range(0, c - 1):                                       # a joined stepping-stone path in from the
+        s.put(c, 0, z, 'cobblestone_slab', type='bottom', waterlogged='false')   # front to the ring's step
+    for x, z in ((c - 1, 0), (c + 1, 0)):                           # wider stones at the path's mouth
+        s.put(x, 0, z, 'cobblestone_slab', type='bottom', waterlogged='false')
+    for x, z in ((2, 1), (size - 3, 0), (0, c + 2), (size - 1, c + 1), (c + 2, 0)):
         s.put(x, 0, z, 'poppy')
+    for x, z in ((0, size - 2), (size - 1, c - 1), (3, size - 1)):  # low bushes round the edge
+        s.put(x, 0, z, 'oak_leaves', distance='1', persistent='true', waterlogged='false')
 
     s.at(2, 'flourish2')
     s.put(c + 2, 0, c - 2, 'cauldron')                              # the stew pot, front right of the ring
@@ -83,6 +87,5 @@ STRUCTURES = [dict(path='fire_pit', name='Fire pit', tier=1, zone='inner', role=
                                'log benches, a woodpile, a chopping stump, supplies, poppies and a lantern post; level 2 '
                                'a pot, a second lantern, cushions and plants; level 3 a dark oak firewood shelter with a '
                                'hanging lantern.',
-                   changes='Benches and woodpile in dark spruce instead of pale logs; level 1 now has the woodpile, a '
-                           'chopping stump, supplies and poppies round the fire; level 3 adds its own feature, a dark oak '
-                           'firewood shelter with a hanging lantern. The campfire stays unlit.')]
+                   changes='The lone stepping stones are now one joined stone path in from the front with a wider '
+                           'mouth, and leaf bushes and more poppies grow round the edge.')]

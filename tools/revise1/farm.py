@@ -346,28 +346,30 @@ def windmill(s, cx, front):
 
 # ---------------------------------------------------------------- field modules (one level each)
 
-def field(crop, prop, width=11, border='fence'):
+def field(crop, prop, width=11, border='fence', ox=0, height=None):
     """A raised field bed the farmer lays out next to the farmhouse: an oak log border, dirt in two blocks of 4 rows,
     an open trench down the middle (the decoration step fills it with water: every row is within 4 blocks of it),
     a fence (or a low hedge) on the border with an entrance at the front centre, reached by a step up from the plank
     boardwalk along the front; a composter on the boardwalk. Farmers till the dirt into farmland and the decoration
-    step sows the crop (builders can place neither). `width` leaves room on the right for the crop's own feature."""
+    step sows the crop (builders can place neither). `width` leaves room on the right for the crop's own feature;
+    `ox` moves the bed right, leaving a margin on the left for the edge details (a side path, flowers)."""
     W, D = width, 9
-    s = Connected('field_' + crop, (W, 5 if crop == 'wheat' else 3, D), palette='oak_a2')
-    w, d = 10, D - 1                              # the bed's right border column
-    t = 5                                         # trench column
+    H = height or (5 if crop == 'wheat' else 3)
+    s = Connected('field_' + crop, (W, H, D), palette='oak_a2')
+    w, d = 10 + ox, D - 1                         # the bed's right border column
+    t = 5 + ox                                    # trench column
     s.at(1, 'shell')
-    for x in range(0, w + 1):                     # boardwalk path along the front, a step up at the entrance
+    for x in range(ox, w + 1):                    # boardwalk path along the front, a step up at the entrance
         if x == t:
             s.put(x, 0, 0, 'spruce_stairs', facing='south', **STAIR)
         else:
             s.put(x, 0, 0, 'spruce_slab', **SLAB)
-    for x in range(0, w + 1):                     # log border (axis along the edge)
+    for x in range(ox, w + 1):                    # log border (axis along the edge)
         s.put(x, 0, 1, 'frame', axis='x'); s.put(x, 0, d, 'frame', axis='x')
     for z in range(2, d):
-        s.put(0, 0, z, 'frame', axis='z'); s.put(w, 0, z, 'frame', axis='z')
+        s.put(ox, 0, z, 'frame', axis='z'); s.put(w, 0, z, 'frame', axis='z')
     s.put(t, 0, 1, 'base'); s.put(t, 0, d, 'base')  # stone ends hold the trench water
-    for x in range(1, w):
+    for x in range(ox + 1, w):
         for z in range(2, d):
             if x == t:
                 s.decorate(x, 0, z, 'water', note='irrigation trench (raised bed: water sits on the ground below)')
@@ -375,24 +377,35 @@ def field(crop, prop, width=11, border='fence'):
                 s.put(x, 0, z, 'dirt')
                 s.decorate(x, 0, z, 'farmland', note='tilled by the farmer (D55)')
                 s.decorate(x, 1, z, 'crop', block=f'minecraft:{crop}[age=7]')
-    edge = [(x, z) for x in range(0, w + 1) for z in (1, d) if not (z == 1 and x == t)] + \
-           [(x, z) for z in range(2, d) for x in (0, w)]
+    edge = [(x, z) for x in range(ox, w + 1) for z in (1, d) if not (z == 1 and x == t)] + \
+           [(x, z) for z in range(2, d) for x in (ox, w)]
     for x, z in edge:
         if border == 'hedge':
             s.put(x, 1, z, 'oak_leaves', **LEAVES)
         else:
             s.put(x, 1, z, 'fence')
     s.at(1, 'fittings')
-    for x in (0, w):
+    for x in (ox, w):
         s.put(x, 2, 1, 'lantern', **LANTERN)
-    s.put(0, 0, 0, 'composter')
+    s.put(ox, 0, 0, 'composter')
     prop(s, w, d, t)
     return s
 
 
+def _edges(s, w, d):
+    """The simple surroundings of a widened field: a plank path down the left side joining the front boardwalk, a few
+    poppies and a leaf bush along it, and a lantern post at the back corner."""
+    s.put(0, 0, 0, 'spruce_slab', **SLAB)
+    for z in range(1, d + 1):
+        s.put(0, 0, z, 'spruce_slab', **SLAB) if z % 3 != 2 else s.put(0, 0, z, 'poppy')
+    s.put(0, 0, d, 'fence'); s.put(0, 1, d, 'fence'); s.put(0, 2, d, 'lantern', **LANTERN)
+
+
 def _wheat(s, w, d, t):
-    """Scarecrow in the left bed (fence post, hay body and head, fence arms, carpet hat); hay bales by the path."""
-    x, z = 2, 5
+    """Scarecrow in the left bed (fence post, hay body and head, fence arms, carpet hat); hay bales by the path. On the
+    right edge a tool rack (spruce posts, a slab shelf, a hoe and a scythe hung on it by the decoration step) and
+    poppies; a side path, flowers and a lantern post on the left (_edges)."""
+    x, z = 2 + (w - 10), 5
     s.remove(x, 0, z)
     s.decorations[1] = [e for e in s.decorations[1] if e['pos'][:1] + e['pos'][2:] != [x, z]]
     s.put(x, 0, z, 'coarse_dirt')
@@ -400,6 +413,20 @@ def _wheat(s, w, d, t):
     s.put(x - 1, 2, z, 'spruce_fence'); s.put(x + 1, 2, z, 'spruce_fence')
     s.put(x, 4, z, 'brown_carpet')                                       # hat
     s.put(w, 0, 0, 'hay_block', axis='y'); s.put(w - 1, 0, 0, 'hay_block', axis='x'); s.put(w, 1, 0, 'hay_block', axis='x')
+    if w > 10:                                                           # the widened field: its edges
+        _edges(s, w, d)
+        r = w + 1                                                        # right edge column
+        s.put(r, 0, 0, 'spruce_slab', **SLAB)
+        for zz in (3, 5):                                                # tool rack
+            s.put(r, 0, zz, 'spruce_fence'); s.put(r, 1, zz, 'spruce_fence')
+        for zz in (3, 4, 5):
+            s.put(r, 2, zz, 'spruce_slab', **SLAB)
+        s.put(r, 0, 4, 'barrel', facing='up', open='false')
+        s.decorate(r, 1, 4, 'item_frame', item='minecraft:iron_hoe', facing='east', note='hoe on the tool rack')
+        s.decorate(r, 1, 3, 'item_frame', item='minecraft:wooden_hoe', facing='east', note='second hoe on the rack')
+        for zz in (1, 7):
+            s.put(r, 0, zz, 'poppy')
+        s.put(r, 0, 8, 'oak_leaves', **LEAVES)
 
 
 def _carrots(s, w, d, t):
@@ -418,28 +445,48 @@ def _carrots(s, w, d, t):
 
 
 def _potatoes(s, w, d, t):
-    """A root cellar beside the bed: a turf mound on a cobblestone pad, the cellar hatch (a trapdoor lying flat)
-    between two cobblestone wall posts, one with a lantern; a sack pile and a chest by the path."""
-    xa, xb = w + 1, w + 3
-    for x in range(xa, xb + 1):
-        for z in range(2, 7):
-            s.put(x, 0, z, 'base')
-        for z in (4, 5, 6):
-            s.put(x, 1, z, 'dirt')
-    for z in (5, 6):
-        s.put(xa + 1, 2, z, 'dirt')
-    s.put(xa, 2, 5, 'oak_leaves', **LEAVES); s.put(xb, 2, 6, 'oak_leaves', **LEAVES)   # bushes on the mound
-    s.put(xa + 1, 1, 3, 'spruce_trapdoor', facing='south', half='bottom', open='false', powered='false',
-          waterlogged='false')                                             # the hatch
-    s.put(xa, 1, 3, 'stone_wall'); s.put(xb, 1, 3, 'stone_wall')
-    s.put(xa, 2, 3, 'lantern', **LANTERN)
-    s.put(xa + 1, 1, 2, 'stone_stairs', facing='south', **STAIR)         # step down to the hatch
+    """A potato store beside the bed: a little spruce lean-to (tall fence posts on the field side, short ones on the
+    outside, a slab roof stepping down, a plank back wall) over a pile of potato sacks (barrels with brown carpet
+    tops), a chest, a hanging lantern and a sign; the boardwalk runs on in front of it. A side path, flowers and a
+    lantern post on the left (_edges)."""
+    xa, xb, za, zb = w + 1, w + 4, 2, 6
+    _edges(s, w, d)
+    for x in range(xa, xb + 1):                                          # the boardwalk runs on in front
+        s.put(x, 0, 0, 'spruce_slab', **SLAB)
+    for z in (za, zb):
+        for y in (0, 1, 2):
+            s.put(xa, y, z, 'spruce_fence')                              # tall posts, field side
+        for y in (0, 1):
+            s.put(xb, y, z, 'spruce_fence')                              # short posts, outside
+    for z in range(za, zb + 2):                                          # slab roof stepping down to the outside
+        for x in range(xa, xb + 1):
+            if x < xa + 2:
+                s.put(x, 3, z, 'spruce_slab', **SLAB)
+            else:
+                s.put(x, 2, z, 'spruce_slab', **TOP_SLAB)
+    for x in range(xa + 1, xb):                                          # plank back wall
+        for y in (0, 1):
+            s.put(x, y, zb, 'shed_wall')
+    s.put(xa + 1, 2, zb, 'shed_wall')
+    for x in (xa + 1, xa + 2):                                           # the sack pile, at the open front
+        for z in (za, za + 1):
+            s.put(x, 0, z, 'barrel', facing='north' if z == za else 'up', open='false')
+            if (x, z) != (xa + 1, za + 1):
+                s.put(x, 1, z, 'brown_carpet')
+    s.put(xa + 1, 1, za + 1, 'barrel', facing='up', open='false'); s.put(xa + 1, 2, za + 1, 'brown_carpet')
+    s.put(xa + 1, 0, 5, 'chest', facing='north', type='single', waterlogged='false')
+    s.put(xa + 2, 0, 5, 'barrel', facing='up', open='false')
+    s.put(xa + 1, 2, 4, 'lantern', **HANG)
+    s.put(xb - 1, 0, za - 1, 'oak_wall_sign', facing='north', waterlogged='false')   # on the front sack barrel
+    s.decorate(xb - 1, 0, za - 1, 'sign_text', lines=['', 'Potatoes', '', ''])
     s.put(w, 0, 0, 'barrel', facing='up', open='false'); s.put(w, 1, 0, 'brown_carpet')
     s.put(w - 1, 0, 0, 'chest', facing='north', type='single', waterlogged='false')
+    for z in (7, 8):
+        s.put(xb, 0, z, 'poppy' if z == 7 else 'oak_leaves', **({} if z == 7 else LEAVES))
 
 
 def field_wheat():
-    return field('wheat', _wheat)
+    return field('wheat', _wheat, width=13, ox=1)
 
 
 def field_carrots():
@@ -447,7 +494,7 @@ def field_carrots():
 
 
 def field_potatoes():
-    return field('potatoes', _potatoes, width=14)
+    return field('potatoes', _potatoes, width=16, ox=1, height=4)
 
 
 _FIELD_DESC = ('A raised field bed, one level: dirt in two blocks of 4 rows each side of an open trench, oak log '
@@ -471,9 +518,10 @@ STRUCTURES = [
                  'with lattice sails (fence frame and wool panels) and beehives, so each level adds something visible.'),
     dict(path='farm_field_wheat', name='Farm field: wheat', tier=1, zone='outer', role='farm', group='farm_field',
          terrain='flexible', door=None, make=field_wheat,
-         description=_FIELD_DESC.format(crop='wheat') + ' A scarecrow stands in the left bed; hay by the path.',
-         changes='A step up from the boardwalk at the entrance, so soldiers can walk into the field; the scarecrow '
-                 'and hay mark it as the wheat field.'),
+         description=_FIELD_DESC.format(crop='wheat') + ' A scarecrow stands in the left bed; hay by the path; a side '
+                     'path, poppies, a tool rack and a lantern post round the edges.',
+         changes='Two blocks wider with simple edges: a plank path down the left side, a tool rack and a lantern post, '
+                 'poppies and a leaf bush.'),
     dict(path='farm_field_carrots', name='Farm field: carrots', tier=1, zone='outer', role='farm', group='farm_field',
          terrain='flexible', door=None, make=field_carrots,
          description=_FIELD_DESC.format(crop='carrots').replace('fence', 'low leaf hedge') +
@@ -482,8 +530,10 @@ STRUCTURES = [
                  'step up at the entrance so soldiers can walk in.'),
     dict(path='farm_field_potatoes', name='Farm field: potatoes', tier=1, zone='outer', role='farm',
          group='farm_field', terrain='flexible', door=None, make=field_potatoes,
-         description=_FIELD_DESC.format(crop='potatoes') + ' A root cellar beside the bed: a turf mound with a '
-                     'cellar hatch between stone posts and a lantern; a sack pile and a chest by the path.',
-         changes='Its own look now: a root cellar (turf mound, cellar hatch, stone posts, lantern) beside the bed, '
-                 'plus a step up at the entrance so soldiers can walk in.'),
+         description=_FIELD_DESC.format(crop='potatoes') + ' A potato store beside the bed: a little spruce '
+                     'lean-to over a pile of sacks (barrels with brown carpet), a chest, a lantern and a sign; a side '
+                     'path, poppies and a lantern post round the edges.',
+         changes='The cobblestone and dirt root cellar is replaced by a little lean-to over a pile of potato sacks '
+                 '(barrels with brown carpet) with a sign, and the field is two wider with a side path, poppies and a '
+                 'lantern.'),
 ]
