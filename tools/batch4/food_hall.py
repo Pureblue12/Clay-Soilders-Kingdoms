@@ -153,7 +153,7 @@ def food_hall(width=7, depth=11):
         P(s, x1 + 1, 3, z, 'spruce_stairs', facing='west', **STAIR)
         P(s, x1 + 2, 2, z, 'spruce_stairs', facing='west', **STAIR)
     for z in (kdoor - 1, kdoor + 2):                                     # its posts
-        P(s, x1 + 2, 0, z, 'spruce_fence'); P(s, x1 + 2, 1, z, 'spruce_fence')
+        P(s, x1 + 2, 0, z, 'spruce_log', axis='y'); P(s, x1 + 2, 1, z, 'spruce_log', axis='y')
     P(s, x1 + 1, 0, kdoor - 1, 'crafting_table')                        # prep table
     P(s, x1 + 1, 0, kdoor + 1, 'smoker', facing='east', lit='true')     # the second smoker
     P(s, x1 + 2, 0, kdoor, 'barrel', facing='up', open='false')         # supplies
