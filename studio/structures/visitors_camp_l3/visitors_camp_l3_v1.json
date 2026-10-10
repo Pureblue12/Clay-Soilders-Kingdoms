@@ -1,0 +1,83 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "visitors_camp_l3",
+  "version": 1,
+  "size": [9,4,9],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "generator",
+    "created": "2026-10-10T01:37:40.084Z",
+    "description": "Imported from visitors_camp_l3.nbt",
+    "reviewedAt": null,
+    "parent": null
+  },
+  "palette": {
+    "#": "minecraft:blue_wool",
+    ".": "minecraft:air",
+    "=": "minecraft:oak_fence",
+    "+": "minecraft:oak_log",
+    "-": "minecraft:coarse_dirt",
+    "*": "minecraft:white_banner[rotation=0]",
+    "@": "minecraft:stripped_oak_log[axis=x]",
+    "%": "minecraft:chest[facing=west,type=single,waterlogged=false]",
+    "&": "minecraft:red_carpet",
+    "$": "minecraft:cobblestone_slab[type=bottom,waterlogged=false]",
+    "!": "minecraft:hay_block[axis=y]",
+    "?": "minecraft:campfire[facing=north,lit=false,signal_fire=false,waterlogged=false]",
+    "~": "minecraft:cyan_wool",
+    "^": "minecraft:torch",
+    ":": "minecraft:oak_wall_sign[facing=south,waterlogged=false]",
+    ";": "minecraft:lantern[hanging=false,waterlogged=false]",
+    ",": "minecraft:dandelion",
+    "<": "minecraft:oak_wall_sign[facing=west,waterlogged=false]",
+    ">": "minecraft:oak_trapdoor[facing=west,half=top,open=false,powered=false,waterlogged=false]",
+    "/": "minecraft:poppy"
+  },
+  "layers": [
+    [
+      "#.=+-*=..",
+      "#.#@-@.%=",
+      "#&#.-...=",
+      "#.#$-$-..",
+      "==!$?$--=",
+      "~.~$$$#.#",
+      "~&~...#&#",
+      "~&~=@=#&#",
+      "~.~...#.#"
+    ],
+    [
+      ".#^+..^..",
+      ".#.:....;",
+      ".#......=",
+      ".#....,<>",
+      "......//=",
+      ".~.....#.",
+      ".~.....#.",
+      ".~.;.;.#.",
+      ".~.....#."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "........."
+    ]
+  ]
+}

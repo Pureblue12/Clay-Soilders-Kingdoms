@@ -1,0 +1,24 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "bench_l1",
+  "version": 1,
+  "size": [4,1,1],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "generator",
+    "created": "2026-10-10T01:37:40.035Z",
+    "description": "Imported from bench_l1.nbt",
+    "reviewedAt": null,
+    "parent": null
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]"
+  },
+  "layers": [
+    [
+      ".##."
+    ]
+  ]
+}

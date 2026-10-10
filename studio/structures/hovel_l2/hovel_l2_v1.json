@@ -1,0 +1,52 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "hovel_l2",
+  "version": 1,
+  "size": [5,3,5],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "generator",
+    "created": "2026-10-10T01:37:40.064Z",
+    "description": "Imported from hovel_l2.nbt",
+    "reviewedAt": null,
+    "parent": null
+  },
+  "palette": {
+    "#": "minecraft:oak_fence",
+    ".": "minecraft:air",
+    "=": "minecraft:campfire[facing=north,lit=false,signal_fire=false,waterlogged=false]",
+    "+": "minecraft:oak_log",
+    "-": "minecraft:chest[facing=north,type=single,waterlogged=false]",
+    "*": "minecraft:stripped_oak_log[axis=z]",
+    "@": "minecraft:oak_planks",
+    "%": "minecraft:red_bed[facing=south,occupied=false,part=foot]",
+    "&": "minecraft:red_bed[facing=south,occupied=false,part=head]",
+    "$": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "!": "minecraft:wall_torch[facing=east]",
+    "?": "minecraft:oak_slab[type=bottom,waterlogged=false]"
+  },
+  "layers": [
+    [
+      "#.=..",
+      ".+-+.",
+      "*@%@.",
+      "*@&@.",
+      ".+@+."
+    ],
+    [
+      "$....",
+      ".+.+.",
+      ".!...",
+      ".....",
+      ".@@@."
+    ],
+    [
+      ".....",
+      ".???.",
+      ".???.",
+      ".???.",
+      ".???."
+    ]
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "farm_l3",
+  "version": 1,
+  "size": [7,7,9],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "generator",
+    "created": "2026-10-10T01:37:40.057Z",
+    "description": "Imported from farm_l3.nbt",
+    "reviewedAt": null,
+    "parent": null
+  },
+  "palette": {
+    "#": "minecraft:oak_fence",
+    ".": "minecraft:air",
+    "=": "minecraft:coarse_dirt",
+    "+": "minecraft:hay_block[axis=y]",
+    "-": "minecraft:chest[facing=north,type=single,waterlogged=false]",
+    "*": "minecraft:composter[level=0]",
+    "@": "minecraft:oak_planks",
+    "%": "minecraft:spruce_log[axis=y]",
+    "&": "minecraft:torch",
+    "$": "minecraft:poppy",
+    "!": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "?": "minecraft:carved_pumpkin[facing=north]",
+    "~": "minecraft:cyan_wool",
+    "^": "minecraft:spruce_slab[type=bottom,waterlogged=false]",
+    ":": "minecraft:white_wool",
+    ";": "minecraft:oak_log[axis=z]",
+    ",": "minecraft:oak_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "<": "minecraft:oak_slab[type=bottom,waterlogged=false]"
+  },
+  "layers": [
+    [
+      "###.###",
+      "#==.=+#",
+      "#.....#",
+      "#.....#",
+      "##....#",
+      "#.....#",
+      "#...-*#",
+      "#+@@%%#",
+      "#######"
+    ],
+    [
+      "&.....&",
+      ".$$.$..",
+      ".......",
+      ".......",
+      "!+....!",
+      ".......",
+      ".......",
+      ".+@@%%.",
+      "&.....&"
+    ],
+    [
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".?.....",
+      ".......",
+      "..~.^^.",
+      "..@@^^.",
+      "......."
+    ],
+    [
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".~:....",
+      "..@@...",
+      "......."
+    ],
+    [
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      "~:;:~..",
+      "..@@...",
+      "......."
+    ],
+    [
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      "..:~...",
+      "..,,...",
+      "......."
+    ],
+    [
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      "..~....",
+      "..<<...",
+      "......."
+    ]
+  ]
+}

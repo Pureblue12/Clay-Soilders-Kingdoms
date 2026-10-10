@@ -1,0 +1,27 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "signpost_l1",
+  "version": 1,
+  "size": [3,2,1],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "generator",
+    "created": "2026-10-10T01:37:40.079Z",
+    "description": "Imported from signpost_l1.nbt",
+    "reviewedAt": null,
+    "parent": null
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:oak_log[axis=y]"
+  },
+  "layers": [
+    [
+      ".#."
+    ],
+    [
+      ".#."
+    ]
+  ]
+}
