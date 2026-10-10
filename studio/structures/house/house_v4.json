@@ -4,7 +4,7 @@
   "version": 4,
   "size": [9,9,11],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T03:25:04.574Z",
@@ -14,7 +14,7 @@
       "housing"
     ],
     "changes": "Quality-check fixes on v3: the roof is now two-tone (dark oak eave rows and gable edges, spruce between) with upside-down dark oak stair trim under the gable overhangs, so the overhang reads; the lone fence of the table inside is gone (the table is now a barrel with a board on it). All v3 decorations are kept.",
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T03:40:38.314Z",
     "parent": 3
   },
   "palette": {
