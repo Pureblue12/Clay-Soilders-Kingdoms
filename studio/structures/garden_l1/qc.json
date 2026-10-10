@@ -51,6 +51,68 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T04:05:55.476Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "flat-wall",
+            "message": "The back is flat: 100 % of it at one depth and 100 % one block. Add posts, sills, a beam, flower boxes."
+          },
+          {
+            "level": "warn",
+            "check": "flat-wall",
+            "message": "The left is flat: 100 % of it at one depth and 100 % one block. Add posts, sills, a beam, flower boxes."
+          },
+          {
+            "level": "warn",
+            "check": "flat-wall",
+            "message": "The right is flat: 100 % of it at one depth and 100 % one block. Add posts, sills, a beam, flower boxes."
+          }
+        ],
+        "stats": {
+          "blocks": 188,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.34574468085106386,
+          "types": 6,
+          "dominant": {
+            "name": "coarse_dirt",
+            "share": 0.3882978723404255
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Much bigger (15 x 15) and set level into the lawn as Carlton asked: a hedge ring, gravel and stone paths in a round walk to a sundial, and soil beds. At this first level the beds are still only red poppies.",
+        "problems": [
+          "Put two or three flower kinds in the L1 beds already (the dozen kinds can stay for L2 and L3)",
+          "Layer 0 is now level with the grass (meta.groundLayer 0): in game the builders never dig or replace ground, so the mod side still has to support setting paths and beds into the lawn before this can be built as drawn"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

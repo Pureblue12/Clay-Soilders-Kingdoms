@@ -226,6 +226,62 @@
           "sheet"
         ]
       }
+    },
+    "5": {
+      "version": 5,
+      "checkedAt": "2026-10-10T04:06:38.128Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 97,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: flowering_azalea_leaves, cauldron, moss_carpet, lever, dark_oak_slab."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 77,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5194805194805194,
+          "types": 16,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.2597402597402597
+          },
+          "height": 6,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Level 3 dresses it with moss on the rim, flowering azalea, a cauldron water tub, flower pots and a lantern on each side. A charming village well.",
+        "problems": [
+          "Flower pots look empty in the viewer: their plants come from the decoration step (known)"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

@@ -54,6 +54,56 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T04:06:19.970Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 2,
+      "score": 39,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 210,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.18571428571428572,
+          "types": 7,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.4523809523809524
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 0,
+          "artefacts": 1,
+          "purpose": 1,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 0
+        },
+        "notes": {
+          "artefacts": "four bare dirt cubes as planters and an empty stepped plinth: it looks unfinished"
+        },
+        "summary": "Level 1 is now a small round stone plaza with an empty stepped plinth and four bare dirt planters. Smaller and barer than the last version, while Carlton asked for slightly bigger and more detail on all three levels.",
+        "problems": [
+          "Carlton's note: slightly bigger and more detail on all 3. L1 is now the smallest and barest it has been: keep the 13 x 13 size or larger and give L1 at least benches facing the plinth, lantern posts and plants in the planters",
+          "The planters are bare dirt cubes: plant them (flowers, a small bush) or use coarse dirt with grass; if the plants come from the decoration step, say so in the description",
+          "The plinth is empty at L1: put a simple centrepiece on it (a lantern post, a well or a flagpole) so the square has a focus before the statue arrives in L2"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

@@ -58,6 +58,65 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T04:06:21.018Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 94,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: grass_block, flowering_azalea, dandelion, cornflower, allium, azure_bluet, oxeye_daisy, pumpkin, red_banner, white_banner, polished_andesite, red_wool, white_wool, stone_brick_wall, chiseled_stone_bricks, light_weighted_pressure_plate."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "386 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 386,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.44041450777202074,
+          "types": 34,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.24611398963730569
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {
+          "artefacts": "single bushes and flower clumps dotted on the open lawn around the plaza read as stray blocks"
+        },
+        "summary": "Level 3 adds a second stall, more banners, flowers in the planters and greenery round the edge. Busy and festive, clearly the finished square.",
+        "problems": [
+          "The lone bushes and flower clumps on the lawn outside the paving look stray: line them up along the plaza edge or drop them"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

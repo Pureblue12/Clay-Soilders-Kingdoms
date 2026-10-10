@@ -1,0 +1,61 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "flower_bed_l1",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T04:07:53.929Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 50,
+      "auto": {
+        "issues": [
+          {
+            "level": "fail",
+            "check": "too-small",
+            "message": "Only 6 blocks: too bare for a prop (at least 10). Carlton wants more detail, not less."
+          }
+        ],
+        "stats": {
+          "blocks": 6,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.5,
+          "types": 2,
+          "dominant": {
+            "name": "coarse_dirt",
+            "share": 0.5
+          },
+          "height": 2,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 0,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 0,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 0
+        },
+        "notes": {
+          "roof": "no roof, not needed"
+        },
+        "summary": "A 3-block dirt bed with three red poppies, now standing on the grass. Very small and plain (automatic check: 6 blocks).",
+        "problems": [
+          "Frame the bed with spruce trapdoors or log edging so it reads as a planter, not a dirt lump",
+          "Mix two or three flower kinds"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

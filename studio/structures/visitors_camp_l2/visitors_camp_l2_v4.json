@@ -4,14 +4,14 @@
   "version": 4,
   "size": [21,5,14],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:03:29.835Z",
     "description": "Visitors' camp, level 2 of 3: L1 plus flourish 2. A traveller's camp (21 x 14) grouped round an unlit fire in a stone ring on a trodden earth patch with log seats: two clean green A-frame tents (ridge pole, corner poles, trim along the bottom edge, bedrolls inside) face the fire from either side; a canopy bed, a woodpile and the supplies along the back; a cart, a camp table and a hitching rail along the front. Level 2 a covered wagon, a cooking spit and pot, pennants, rugs and lanterns; level 3 a red and white market awning over the supplies, a welcome sign, cushions and flowers. Not yet builder-tested: cauldron, red_banner, white_wool.",
     "changes": "Six blocks wider and grouped round the fire: two clean A-frame tents (one canvas colour, trim only on the bottom edge, ridge and corner poles) face it from either side, the stall and woodpile along the back, more detail (trodden earth patch, table, trough, rugs, kindling).",
     "parent": 3,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T04:06:47.280Z",
     "tags": [
       "revise1",
       "tier1",

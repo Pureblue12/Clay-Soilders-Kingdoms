@@ -58,6 +58,63 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T04:05:56.714Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 94,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: grass_block, dandelion, azalea, oxeye_daisy, azure_bluet, flowering_azalea, lilac, cornflower, peony, rose_bush, orange_tulip, pink_tulip, allium, red_tulip, pink_petals, lily_of_the_valley, white_tulip, birch_log, cherry_log, flowering_azalea_leaves, stone_brick_wall, bee_nest, vine, azalea_leaves, daylight_detector, birch_leaves, cherry_leaves."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "402 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 402,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5945273631840796,
+          "types": 37,
+          "dominant": {
+            "name": "coarse_dirt",
+            "share": 0.18159203980099503
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "summary": "Level 3 packs the borders with tall flowers (lilacs, rose bushes, peonies) and dresses the sundial, so the garden is in full bloom. Richest level, though the change from L2 is mostly more flowers.",
+        "problems": [
+          "To set L3 further apart from L2 (Carlton's note on other structures): a bee nest in the cherry, a small pond or a bird bath on one side",
+          "Layer 0 is now level with the grass (meta.groundLayer 0): in game the builders never dig or replace ground, so the mod side still has to support setting paths and beds into the lawn before this can be built as drawn"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }
