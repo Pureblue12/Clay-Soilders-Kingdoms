@@ -4,14 +4,14 @@
   "version": 1,
   "size": [9,9,9],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T08:50:28.386Z",
     "description": "Statue, level 2 of 3: L1 plus flourish 2. Over budget: 182 blocks vs 42 (a paved round 9 across round the 3 x 3 plinth). Flush plaza piece (ground_layer 0: the paving replaces the grass, level with the lawn; the mod's builders can't do that yet). The founding king as a clay soldier in stone, sword raised and shield on his arm, on a stepped plinth with a plaque, in a paved round 9 across. L2 lantern posts, flowering bushes and flowers; L3 a gold-look crown, a red cloak, candles at his feet and banners. Not yet builder-tested: allium, cornflower, dandelion, flowering_azalea_leaves, grass_block, oxeye_daisy, stone_brick_wall. Decoration step adds: sign_text.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T08:58:14.248Z",
     "tags": [
       "batch5",
       "tier6",
