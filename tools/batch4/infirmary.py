@@ -181,7 +181,7 @@ STRUCTURES = [dict(path='infirmary', name='Infirmary', tier=4, zone='inner', rol
                    terrain='ground_level', door='front', make=infirmary, changes='The red cross now reads as one: red wool on a white wool field in the front gable overhang '
                            '(QC: the brick cross looked like chimney masonry); L1 gets a bench and a planter by the '
                            'front, L2 sills under the side and back windows, L3 lanterns on the herb-bed end posts.',
-                   description='Over budget: 448 blocks vs 285 (first build 379 vs 235). White plaster ward in a dark oak frame under a spruce gable roof, a red wool cross on white in the front gable: six '
+                   description='Over budget: 463 blocks vs 285 (first build 389 vs 235). White plaster ward in a dark oak frame under a spruce gable roof, a red wool cross on white in the front gable: six '
                                'beds (three on each side, heads to the wall, a window over each), bedside tables, a '
                                'hearth, herb barrels and shelves, a lean-to herb store; L2 adds the brewing stand and '
                                'cauldron, candles, lanterns, flower boxes, a door canopy and the banner; L3 a herb '

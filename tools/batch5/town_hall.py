@@ -5,7 +5,7 @@ sits on one stone base course (layer 0).
 Layout (13 wide x 18 deep x 18 tall, front z = 0):
 - Clock tower x 4..8, z 1..5 (5 x 5), stone bricks: an open vaulted porch at the bottom (arches to the front, both
   sides and into the arcade), the clerks' office above it (reached from the council chamber), a timber clock stage at
-  y 11..15 with a clock face on all four sides (white plaster round a dark hub in a dark oak frame; the hands are
+  y 11..15 with a clock face on three sides (white plaster round a dark hub in a dark oak frame; the hands are
   item frames with clocks, the decoration step), and a spruce pyramid roof with one block of eaves, to 17 (18 tall:
   needs scaffolding).
 - Hall x 2..10, z 5..16 (9 x 12): the ground floor is an open market arcade, 4 high (stone brick piers every 3 blocks,
@@ -57,9 +57,8 @@ def pyramid_ring(s, x0, x1, z0, z1, y, block='spruce_stairs'):
 
 
 def clock_faces():
-    """(x, z, axis, outside x, outside z) of the four clock hubs."""
-    return [(MID, TZ0, 'z', MID, TZ0 - 1), (MID, TZ1, 'z', MID, TZ1 + 1),
-            (TX0, TMZ, 'x', TX0 - 1, TMZ), (TX1, TMZ, 'x', TX1 + 1, TMZ)]
+    """(x, z, axis, outside x, outside z) of the three clock hubs (front and sides; the hall roof hides the back)."""
+    return [(MID, TZ0, 'z', MID, TZ0 - 1), (TX0, TMZ, 'x', TX0 - 1, TMZ), (TX1, TMZ, 'x', TX1 + 1, TMZ)]
 
 
 def town_hall():
