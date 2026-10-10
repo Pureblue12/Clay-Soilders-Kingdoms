@@ -4,14 +4,14 @@
   "version": 2,
   "size": [5,7,3],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "Delete this",
     "author": "claude-qc",
     "created": "2026-10-10T03:48:58.260Z",
     "description": "Palisade gate, level 2 of 3: L1 plus flourish 2. Two log towers and a 3 wide, 3 high opening (no fence gate); the walk crosses over it. Not yet builder-tested: white_banner. Decoration step adds: banner_pattern.",
     "changes": "Quality check round 2: cobblestone footing under the stakes (mossy every third), walk posts every other block braced to the stakes, fence points and the gate's beam railing joined the way the game joins them; level 2 adds stores under the walk (barrel, hay) and level 3 hanging lanterns and a second barrel; the corner gets a flag",
     "parent": 1,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T04:28:15.068Z",
     "tags": [
       "batch2",
       "tier2",
