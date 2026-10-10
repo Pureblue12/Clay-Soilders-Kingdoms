@@ -74,6 +74,79 @@
           "front"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T09:09:59.690Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 80,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Drawn for the decoration step, not built: minecraft:water."
+          },
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: white_wool, red_wool."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "1447 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "13 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          }
+        ],
+        "stats": {
+          "blocks": 1447,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3075328265376641,
+          "types": 29,
+          "dominant": {
+            "name": "spruce_planks",
+            "share": 0.1824464409122322
+          },
+          "height": 13,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "roof": "Front gable now a real 9-wide plaster face with a window and dark oak hips/verges; but the rest is still one even spruce ring round the courtyard with a plain hipped back (top view reads as a uniform square donut).",
+          "purpose": "Red wool cross on white wool over the door reads clearly from the front on every level (last round's main problem fixed).",
+          "detail": "Shutters, planters, bushes and taller windows fixed last round's bare front; back still plain."
+        },
+        "summary": "Cloister hospital shell: stone brick ground storey, white plaster in dark oak frame above, red-wool cross over the door, front gable, chimney, two-tall shuttered windows and poppy planters with trapdoor fronts.",
+        "problems": [
+          "Roof: the back and side slopes are one plain even spruce ring; break it with a small dormer or a back gable (e.g. over the back wall centre x7..9, z18) so it is not a uniform square donut from above and behind.",
+          "Back wall bottom storey is a wide blank stone brick stretch between the windows (x5..11, y1..3, z18): add a window, back door or buttress/log pile.",
+          "Reach: about 345 of ~650 standing places reached; unreached are roof slopes, eaves, ridge, attic beam tops (white_terracotta x5/x11 y8) and furniture/chimney ledges: fine (both floors and the courtyard are reached)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

@@ -77,6 +77,85 @@
           "front"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T09:10:00.383Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 90,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Drawn for the decoration step, not built: minecraft:water, minecraft:lily_pad."
+          },
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cornflower, allium, cauldron, fern, sweet_berry_bush, oxeye_daisy, clay, brewing_stand, candle, white_wool, red_wool, red_wall_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "1599 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "13 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 1599,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3539712320200125,
+          "types": 43,
+          "dominant": {
+            "name": "spruce_planks",
+            "share": 0.16948092557848654
+          },
+          "height": 13,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "roof": "Front gable now a real 9-wide plaster face with a window and dark oak hips/verges; but the rest is still one even spruce ring round the courtyard with a plain hipped back (top view reads as a uniform square donut).",
+          "purpose": "Red wool cross on white wool over the door reads clearly from the front on every level (last round's main problem fixed).",
+          "levels": "Visible new feature from the front: covered porch."
+        },
+        "summary": "Adds a covered entrance porch with hanging lanterns and benches under the cross, red banners, more planters, and inside brewing stands, cauldrons, candles, carpets and courtyard herbs; the porch is a clear new feature from the front.",
+        "problems": [
+          "Roof: same plain even spruce ring on back and sides as L1 (see L1).",
+          "Back wall bottom storey still blank at x5..11, y1..3, z18.",
+          "Roof overhang warning is a false alarm: the porch confuses the check; the renders show eaves all round.",
+          "Reach: about 345 of ~650 standing places reached; unreached are roof slopes, eaves, ridge, attic beam tops (white_terracotta x5/x11 y8) and furniture/chimney ledges: fine (both floors and the courtyard are reached)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }
