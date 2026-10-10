@@ -4,14 +4,14 @@
   "version": 3,
   "size": [21,9,12],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "scale is off needs to be slightly smaller to remeber these are small guys detail is good but needs more to deffreintiate between them all",
     "author": "claude",
     "created": "2026-10-10T03:30:31.893Z",
     "description": "Lumber camp (sawmill), level 3 of 3: L2 plus flourish 3. A miniature sawmill: a long open mill hall (dark oak frame on cobblestone feet, spruce roof with dark oak eaves and trim) with the saw bench in the middle, a sash-saw frame whose chain blade cuts the log on the carriage line; the grindstone (workstation) beside it. Log yard with piles and a pulley at the right end, plank yard at the left. L2 adds a waterwheel behind the hall driving the saw, a stonecutter, sawhorse, cart, lanterns, sign; L3 a drying rack, more logs, saplings, moss. Not yet builder-tested: moss_carpet, oak_sapling, stonecutter. Decoration step adds: item_frame, sign_text, water.",
     "changes": "Rebuilt as a long open mill hall with the saw bench as the centrepiece (a sash-saw frame over the log line), a log yard on one end and plank stacks on the other, a two-tone roof with overhang and trim on a dark frame and cobblestone feet; each level adds something visible (L2 waterwheel, second saw, cart; L3 drying rack, saplings, more logs).",
     "parent": 2,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T03:38:18.238Z",
     "tags": [
       "revise1",
       "tier1",
