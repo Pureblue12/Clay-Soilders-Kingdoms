@@ -117,6 +117,68 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T05:23:35.048Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 88,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: pumpkin, melon, dandelion, red_wall_banner, red_wool, white_wool."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "85 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 85,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.6352941176470588,
+          "types": 22,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.17647058823529413
+          },
+          "height": 5,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 1
+        },
+        "notes": {
+          "detail": "Rich in props, but L3 is mostly more props (stool, back barrel, composter, flowers, leaves bush, banner); the lamp post with its sign at x0 z0 is the only thing near a new feature. Under Carlton's rule detail is at most 1 here.",
+          "materials": "Oak stairs stool (x4 z0) and oak leaves among the spruce are minor; fine.",
+          "artefacts": "Lantern on the fence post (x0 y2 z0) stands, hanging lanterns have wool above, banner hangs on the log at x4 z1; nothing floats.",
+          "levels": "Tells apart from L2 by the lamp post and the greenery, but no clear new job or structure part."
+        },
+        "summary": "Level 3 adds a lamp post with a hanging sign, a red banner, a stool for customers, a back barrel, a scraps bin (composter) and bushes and flowers around the stall. It looks finished and lived-in, but the additions are props more than a new feature.",
+        "problems": [
+          "L3 adds mostly props over L2: give it one clearly visible new part, e.g. a small side table or crate rack with goods on the open side (x6, z1-z3) or a short fence/rail making a customer area in front, so L3 has a feature of its own (detail capped at 1 until then)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

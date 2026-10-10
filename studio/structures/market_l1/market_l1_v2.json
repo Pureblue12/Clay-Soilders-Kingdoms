@@ -4,14 +4,14 @@
   "version": 2,
   "size": [15,8,15],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T05:19:58.990Z",
     "description": "Market square, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 702 blocks vs 221 (15 x 15 instead of 11 x 11, so four full stalls fit). Flush piece (ground_layer 0: the paving replaces the grass; the mod's builders can't do that yet). A paved square (stone brick border, cobblestone, gravel aisles in from all four sides) with four market stalls (the market stall design, red-white and brown-white awnings) round a stepped stone market cross with flush flower beds; benches face the cross. L2: the cross head with lanterns, stalls open for trade, a weighing scale (lectern), a strongbox, banner poles, striped canopies over the benches. L3: a covered market cross with a pyramid roof, more flowers, banners on the stall backs, stall stools and banners, goods stacked at the sides. Decoration step adds: potted_plant, sign_text.",
     "changes": "Carlton: L2 and L3 now differ clearly. L2 adds two covered sitting areas (striped red and white / yellow and white wool canopies on spruce posts over the benches and the west and east entrances, with hanging lanterns) instead of the small lantern posts; L3 turns the market cross into a covered cross (stone posts and a pyramid spruce roof). Also: the stall copies follow the market stall's quality-check round 2 (a flower pot and grain on the front barrels at level 1, produce at the front edge). The flower beds round the cross are now flush with the paving (coarse dirt in the ground layer, poppies from level 1, a second flower at level 3) instead of raised dirt with trapdoor borders. The stall's shop sign is no longer copied without its post (it floated).",
     "parent": 1,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:24:14.494Z",
     "tags": [
       "batch4",
       "tier4",

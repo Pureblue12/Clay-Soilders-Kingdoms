@@ -118,6 +118,62 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T05:23:32.829Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 3,
+      "score": 90,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "62 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 62,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.6290322580645161,
+          "types": 10,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.22580645161290322
+          },
+          "height": 5,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Fine for the shell level: barrels, chest, hay on the counter, trade sign and the new flower pot (tulip comes from the decoration step); still on the plain side, as an L1 should be.",
+          "roof": "Earlier asks are done: the front awning is now one thin layer (top-half trapdoors with red/white carpet, y2-3, z1-2) and the back canopy is carpet on one plank layer instead of wool on planks, so it reads lighter. Stepped two-height canopy with a front overhang.",
+          "materials": "Red/white stripes (the colour fix from v2) on spruce logs and planks; the oak wall sign is the only odd wood, too small to matter.",
+          "life": "Only the flower pot; fine for L1, L2 and L3 add the rest.",
+          "levels": "L1 bare stall, L2 adds the striped valance, lanterns and produce, L3 the lamp post, banner and greenery: tell apart at a glance."
+        },
+        "summary": "Level 1 is the stall shell: spruce posts, plank counter with a hay bale and trade sign at the front edge, a flower pot on the front-left barrel, a chest and barrel at the back under a thin two-step striped awning. The round 2 asks (goods at the counter edge, a flower pot) are done.",
+        "problems": [],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

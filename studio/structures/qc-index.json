@@ -504,25 +504,25 @@
     "checkedAt": "2026-10-10T05:22:53.150Z"
   },
   "market_stall_l1": {
-    "version": 2,
-    "verdict": "revise",
-    "score": 67,
-    "round": 2,
-    "checkedAt": "2026-10-10T05:02:43.223Z"
+    "version": 3,
+    "verdict": "pass",
+    "score": 90,
+    "round": 3,
+    "checkedAt": "2026-10-10T05:23:32.829Z"
   },
   "market_stall_l2": {
-    "version": 2,
+    "version": 3,
     "verdict": "pass",
-    "score": 83,
-    "round": 2,
-    "checkedAt": "2026-10-10T05:02:43.888Z"
+    "score": 100,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:23:33.825Z"
   },
   "market_stall_l3": {
-    "version": 2,
+    "version": 3,
     "verdict": "pass",
-    "score": 92,
-    "round": 2,
-    "checkedAt": "2026-10-10T05:02:44.517Z"
+    "score": 88,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:23:35.048Z"
   },
   "mine_l1": {
     "version": 1,
