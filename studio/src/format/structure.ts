@@ -44,6 +44,8 @@ export interface StructureMeta {
   /** Blocks drawn only for the viewer that the mod adds in its decoration step, not the builders (water, lily pads):
    * [x, y, z, kind]. A promote step leaves them out of the NBT; the quality check doesn't count them as built. */
   decorationBlocks?: [number, number, number, string][];
+  /** The layer level with the top block of the ground; -1 (default) means layer 0 stands on the ground. */
+  groundLayer?: number;
 }
 
 export interface StructureFile {

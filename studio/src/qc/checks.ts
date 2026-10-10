@@ -55,6 +55,13 @@ export function isDetailBlock(name: string): boolean {
 
 const CONNECTS = (n: string) => n.endsWith('_fence') || n.endsWith('_pane') || n === 'glass_pane' || n === 'iron_bars' || n.endsWith('_wall');
 
+const SOIL = new Set(['grass_block', 'dirt', 'coarse_dirt', 'podzol', 'rooted_dirt', 'mycelium', 'moss_block', 'mud', 'muddy_mangrove_roots', 'farmland']);
+const FLOWERS = ['dandelion', 'poppy', 'blue_orchid', 'allium', 'azure_bluet', 'oxeye_daisy', 'cornflower', 'lily_of_the_valley',
+  'torchflower', 'wither_rose', 'rose_bush', 'lilac', 'peony', 'sunflower', 'short_grass', 'tall_grass', 'fern', 'large_fern',
+  'sweet_berry_bush', 'pink_petals', 'bush', 'firefly_bush', 'wildflowers', 'leaf_litter'];
+/** Plants that need dirt or grass under them (not flower pots, not crops on farmland only, not cave plants). */
+const isPlant = (n: string) => FLOWERS.includes(n) || n.endsWith('_tulip') || (n.endsWith('_sapling') && n !== 'mangrove_propagule');
+
 export function categoryOf(s: StructureFile): Category {
   const tags = s.meta.tags ?? [];
   const n = s.name;
@@ -185,6 +192,21 @@ export function autoCheck(s: StructureFile, extraDecorations: [number, number, n
       }
   if (halfDoors.length) add('fail', 'two-part', `Door with a missing half at ${list(halfDoors)}.`);
   if (halfBeds.length) add('fail', 'two-part', `Bed with a missing half at ${list(halfBeds)}.`);
+
+  // ---- plants need soil under them (a flower on a slab or planks can't be placed in game); the bottom layer stands on the ground
+  const unrooted: [number, number, number][] = [];
+  for (let y = 1; y < g.sy; y++)
+    for (let z = 0; z < g.sz; z++)
+      for (let x = 0; x < g.sx; x++) {
+        const b = g.at(x, y, z);
+        if (!b || !isPlant(shortName(b.name)) || deco.has(`${x},${y},${z}`)) continue;
+        const below = g.at(x, y - 1, z);
+        const bn = below ? shortName(below.name) : '';
+        if (SOIL.has(bn) || (below && below.name === b.name)) continue; // upper half of a tall plant
+        if (!below && y === (s.meta.groundLayer ?? -1) + 1) continue; // on the grass, next to a layer that is flush with it
+        unrooted.push([x, y, z]);
+      }
+  if (unrooted.length) add('fail', 'plant-soil', `Plant with no dirt or grass under it (can't be placed in game; use a flower pot, or dirt under it) at ${list(unrooted)}.`);
 
   // ---- fences, panes and walls without their connections look like lone posts in the Studio (Carlton's farm note)
   const lone: [number, number, number][] = [];
