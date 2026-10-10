@@ -70,10 +70,9 @@ def armory():
     for x in (X0, X1):
         for z, f in ((Z0 - 1, 'south'), (Z1 + 1, 'north')):
             P(s, x, 0, z, 'cobblestone')
-            P(s, x, 1, z, 'stone_bricks')
-            P(s, x, 2, z, 'stone_brick_stairs', facing=f, **STAIR)
-    P(s, X0 - 1, 0, 6, 'cobblestone'); P(s, X0 - 1, 1, 6, 'stone_bricks')
-    P(s, X0 - 1, 2, 6, 'stone_brick_stairs', facing='east', **STAIR)
+            P(s, x, 1, z, 'stone_brick_stairs', facing=f, **STAIR)
+    P(s, X0 - 1, 0, 6, 'cobblestone')
+    P(s, X0 - 1, 1, 6, 'stone_brick_stairs', facing='east', **STAIR)
     P(s, MID, 0, Z0 - 1, 'cobblestone_stairs', facing='south', **STAIR)   # the step at the door
 
     # ------------------------------------------------------------------ L1 fittings
