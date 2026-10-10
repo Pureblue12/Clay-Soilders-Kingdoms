@@ -4,14 +4,14 @@
   "version": 1,
   "size": [9,9,11],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:41:09.896Z",
     "description": "Smithy, level 3 of 3: L2 plus flourish 3. Over budget: 296 blocks vs 165. Stone forge with an open front bay and a brick chimney breast on its right side (furnace forge under a brick hood); L2 makes it a working smithy (anvil, smithing table, blast furnace, quench tub, smoke, sign, lanterns), L3 adds the ore lean-to, weapon rack and yard life. Not yet builder-tested: anvil, black_carpet, blast_furnace, cauldron, coal_block, cornflower, dandelion, fern, iron_bars, raw_iron_block, red_wall_banner, smithing_table. Decoration step adds: armor_stand, banner_pattern, item, item_frame, sign_text, water_cauldron.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:12:38.603Z",
     "tags": [
       "batch3",
       "tier3",

@@ -4,14 +4,14 @@
   "version": 1,
   "size": [5,13,6],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:42:41.836Z",
     "description": "Wall tower, level 1 of 3: shell and fittings (what soldiers build first). Needs scaffolding: 13 tall (level 3 cone roof; levels 1 and 2 are 9 tall). Over budget: 205 blocks vs 160. Square stone tower the wall walk runs through (stand at 5); a door on the town side and a stone stair up to the walk room and the archer platform on the roof.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:14:40.427Z",
     "tags": [
       "batch3",
       "tier3",
