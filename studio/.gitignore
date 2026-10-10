@@ -1,0 +1,8 @@
+node_modules/
+dist/
+# Your own Minecraft assets (client jar or extracted assets). Never commit them.
+minecraft/*
+!minecraft/README.md
+# Cache of assets extracted from the jar, and headless renders.
+.cache/
+renders/
