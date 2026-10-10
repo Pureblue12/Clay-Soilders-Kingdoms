@@ -4,14 +4,14 @@
   "version": 4,
   "size": [6,9,6],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T03:42:50.317Z",
     "description": "Watchtower, level 2 of 3: L1 plus flourish 2. Log watchtower: spiral stair inside four posts up to a railed lookout (floor at y 4), hip roof; L2 walls the base with arrow slits, awning and bell; L3 adds a pointed cap with a flag. 4 x 4 core, not 3 x 3 (a walkable stair needs it). Not yet builder-tested: bell, red_wall_banner, white_wall_banner. Decoration step adds: banner_pattern.",
     "changes": "More detail on L2 and L3: L2 boards the base into a guardhouse with arrow slits and shutters, an awning with an alarm bell over the door, banners, a brazier and supply crates; L3 adds a pointed roof cap with a flag, corner lanterns, ivy, shields by the door and a weapon rack (the roof sits one lower so the cap fits in 9).",
     "parent": 3,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T03:55:58.246Z",
     "tags": [
       "batch2",
       "tier2",
