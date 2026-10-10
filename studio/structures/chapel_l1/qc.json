@@ -71,6 +71,73 @@
           "iso_back"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T05:25:24.264Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 88,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "371 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "13 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 371,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3935309973045822,
+          "types": 18,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.3557951482479784
+          },
+          "height": 13,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Shell is well articulated (buttresses, plinth, door hood, lancets, gable shutters, pews and altar inside) but the outside has no lights or plants; fine for a first build, L2 adds them.",
+          "life": "No plants or lanterns at L1 by design.",
+          "roof": "Automatic 'no overhang' warning is a false alarm on the long sides (dark oak eaves stick out past the walls); the front gable is the bell-cote wall on purpose.",
+          "levels": "Base level; L2 and L3 build on it."
+        },
+        "summary": "L1 is the bare stone chapel: buttressed nave on a cobblestone plinth, spruce roof, bell cote without its bell, door hood, shuttered gable windows, pews and altar.",
+        "problems": [
+          "Reachability: interior floor and pews are reached; unreached places are only roof slopes, eaves, buttress caps, the door-hood top and the bell cote top. Fine."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

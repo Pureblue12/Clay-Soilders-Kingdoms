@@ -62,6 +62,66 @@
           "iso_back"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T05:26:46.258Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 98,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "418 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 418,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.41866028708133973,
+          "types": 22,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.22009569377990432
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "roof": "Chimney (x7 z13) now goes up to y8, level with the ridge slab and half a block above it: v1 fix done. 1-block overhang all round.",
+          "life": "A few bushes and flowers; the planters and terrace come in L3, which is right for the first build.",
+          "levels": "Base level: long hall with table, hearth, smoker corner and kegs."
+        },
+        "summary": "L1 is the working food hall shell: long timber hall with a long table under the dormer, brick hearth and chimney, a smoker kitchen corner and a keg bar. The only change from v1 is the chimney now rising to the ridge.",
+        "problems": [
+          "Reach: 162 of 269 standing places reached; the unreached ones are main roof slopes, the ridge, and the two chimney-side brick tops at y4 z13; the whole floor, kitchen are reached: fine."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "iso_back",
+          "right",
+          "floor_top"
+        ]
+      }
     }
   }
 }

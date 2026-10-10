@@ -60,6 +60,66 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T05:27:24.799Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 95,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: brick_stairs, red_tulip."
+          }
+        ],
+        "stats": {
+          "blocks": 303,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.42244224422442245,
+          "types": 30,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.1782178217821782
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "artefacts": "Lanterns still in front of the ground-floor windows; an empty flower pot in the bedroom.",
+          "levels": "Adds shutters on every ground-floor window, planters by the door, hanging lanterns and a log-pile lean-to with barrel on the east side: clearly different from L1."
+        },
+        "summary": "Adds shutters, planters with flowers by the door, hanging lanterns under the jetty and a log pile with a barrel on the east side, so the house looks lived in.",
+        "problems": [
+          "The hanging lanterns at (3,3,2) and (5,3,2) still hang right in front of the tops of the ground-floor windows at (3,2,3) and (5,2,3) (front view: they overlap the glass). Not fixed from v1, only shifted one row with the box; move them over the door (4,3,2) or onto the corner brackets (2,3,2)/(6,3,2) sides.",
+          "Empty flower pot on the bedroom floor at (5,5,3): put a plant in it (potted fern/flower) or drop it.",
+          "Reachability: 102 of 140 standing places reached; unreached are roof slopes, the chimney top and a barrel top. Both floors and the staircase are reached: fine."
+        ],
+        "views": [
+          "sheet",
+          "front",
+          "iso_back",
+          "right"
+        ]
+      }
     }
   }
 }

@@ -75,6 +75,81 @@
           "front"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T05:25:24.843Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 88,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: lily_of_the_valley, lectern, cornflower, oxeye_daisy, dandelion, candle, bell."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "416 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "13 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 416,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.44471153846153844,
+          "types": 30,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.3173076923076923
+          },
+          "height": 13,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 1
+        },
+        "notes": {
+          "levels": "Over L1, L2 adds the bell, flower beds along the plinth and at the door, two door lanterns, a bench, a red runner, lectern, candles and hung lanterns inside. The bell gives the cote its job, but from outside the step is still mostly props: L1 and L2 only tell apart up close. L3 is now clearly different (churchyard and lych gate), which answers Carlton's L2-vs-L3 note.",
+          "detail": "Capped at 1 under Carlton's rule: no clearly visible new feature from a distance at L2.",
+          "artefacts": "v1 problem fixed: door-hood lanterns at (4,4,4)/(6,4,4) now stand on top-half stone brick stairs (full top face). Gable shutters are open trapdoors on the outside wall beside the opening, not covering it.",
+          "roof": "Automatic overhang warning is a false alarm on the long sides (eaves overhang); the front gable is the bell-cote wall on purpose."
+        },
+        "summary": "L2 furnishes the chapel: the bell in the cote, flower beds along the plinth and by the door, door lanterns, a bench, and inside a red runner, lectern, candles and hanging lanterns.",
+        "problems": [
+          "Levels: L2 still differs from L1 mostly by small props (bell, flower beds, two lanterns). Add one feature that shows from a distance on top of L1, e.g. a small sacristy lean-to on one side wall, a covered side porch, or a lit notice board/bench with a roofed frame by the door (keep the churchyard in L3).",
+          "Reachability: interior floor, runner and pews are reached; unreached places are roofs, buttress caps, the outside flower boxes, the bell top and the gable slots. Fine."
+        ],
+        "views": [
+          "sheet",
+          "front",
+          "iso"
+        ]
+      }
     }
   }
 }

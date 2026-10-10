@@ -57,6 +57,59 @@
           "front"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T05:27:24.280Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 88,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 267,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3707865168539326,
+          "types": 20,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.20224719101123595
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Shell with brackets, jetty, chimney and a furnished interior, but the outside has no shutters, lanterns or boxes yet (those come in L2); fine for a first build but plain.",
+          "life": "No plants or lanterns outside at L1 (by design, L2/L3 add them).",
+          "roof": "Steep spruce roof with a dark oak ridge, eaves trim and overhang all round."
+        },
+        "summary": "The base town house: stone ground floor with hearth, table and stores, a jettied plaster-and-dark-oak upper storey with 3 beds, a brick chimney. v2 adds small windows in both upper long sides, which fixes the blank side walls.",
+        "problems": [
+          "Reachability: 102 of 140 standing places reached; unreached are roof slopes, the chimney top and a barrel top. Both floors and the staircase are reached: fine."
+        ],
+        "views": [
+          "sheet",
+          "front",
+          "iso_back",
+          "right"
+        ]
+      }
     }
   }
 }

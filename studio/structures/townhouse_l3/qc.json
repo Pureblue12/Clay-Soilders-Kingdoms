@@ -64,6 +64,76 @@
           "front"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T05:27:25.307Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 95,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "buildability",
+            "message": "Soldiers can't open: spruce_fence_gate (decoration only)."
+          },
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: brick_stairs, fern, allium, cornflower, oxeye_daisy, azure_bluet, red_tulip, vine, red_wall_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "355 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 355,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.49014084507042255,
+          "types": 42,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.15211267605633802
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "artefacts": "v1 fixes are in: flower boxes are now coarse dirt in trapdoor boxes at (3..5,4,1) and (3..5,4,9) (no flowers on slabs); the garden fence is closed on the east side (gate (7,0,9), fences (7,0,10),(7,0,11)); the garden pot is now a fern at (3,0,9); upper side windows at (2,5,4),(6,5,4),(6,5,6). Remaining: lanterns in front of the windows and an empty pot indoors.",
+          "levels": "Back garden with fence, composter and flowers, jetty flower boxes on both gables, vines, a banner, chimney smoke and a lantern post: clearly a step up from L2."
+        },
+        "summary": "The finished town house: a fenced back garden with composter and flowers, soil flower boxes on both jetties, vines, a red banner, a smoking chimney and a lantern post by the street.",
+        "problems": [
+          "The hanging lanterns at (3,3,2) and (5,3,2) still hang right in front of the tops of the ground-floor windows at (3,2,3) and (5,2,3) (front view: they overlap the glass). Not fixed from v1, only shifted one row with the box; move them over the door (4,3,2) or onto the corner brackets (2,3,2)/(6,3,2) sides.",
+          "Empty flower pot on the bedroom floor at (5,5,3): put a plant in it (potted fern/flower) or drop it.",
+          "Reachability: 85 of 138 reached. Unreached: roof slopes, chimney top, flower-box tops, a barrel top, and the whole back garden (x2..6, y0, z9..10), because the fence is now closed and the gate (7,0,9) can't be opened by soldiers. It is decoration, and builders can place its blocks from the house (within 2) or from outside the fence, so it's acceptable; but if the fence goes up before the composter (2,0,9), fern (3,0,9) and stair seat (4,0,9), those may be hard to place: consider leaving the gate open or a 1-block gap."
+        ],
+        "views": [
+          "sheet",
+          "front",
+          "iso_back",
+          "right"
+        ]
+      }
     }
   }
 }

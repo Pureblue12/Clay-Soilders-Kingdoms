@@ -208,6 +208,16 @@ export function autoCheck(s: StructureFile, extraDecorations: [number, number, n
       }
   if (unrooted.length) add('fail', 'plant-soil', `Plant with no dirt or grass under it (can't be placed in game; use a flower pot, or dirt under it) at ${list(unrooted)}.`);
 
+  // ---- a hanging lantern needs a block above it to hang from, or it drops in game
+  const loose: [number, number, number][] = [];
+  for (let y = 0; y < g.sy; y++)
+    for (let z = 0; z < g.sz; z++)
+      for (let x = 0; x < g.sx; x++) {
+        const b = g.at(x, y, z);
+        if (b && /lantern$/.test(shortName(b.name)) && b.properties.hanging === 'true' && !g.at(x, y + 1, z)) loose.push([x, y, z]);
+      }
+  if (loose.length) add('fail', 'hanging', `Hanging lantern with nothing above it (it drops in game) at ${list(loose)}.`);
+
   // ---- fences, panes and walls without their connections look like lone posts in the Studio (Carlton's farm note)
   const lone: [number, number, number][] = [];
   for (let y = 0; y < g.sy; y++)

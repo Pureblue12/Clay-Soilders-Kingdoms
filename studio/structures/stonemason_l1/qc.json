@@ -66,6 +66,69 @@
           "front"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T05:26:22.889Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 80,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 277,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.36462093862815886,
+          "types": 22,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.18772563176895307
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Yard is better than v1 (barrel cluster at x=8..9 z=5..6, sledge and half-dressed block at x=1..2 z=2..3, lanterns on the gate piers), but the right half of the yard (x=7..9, z=0..4) is still plain gravel with two coarse dirt patches.",
+          "depth": "Long side walls (x=1 and x=5) now have a centre glass pane between corner posts over a cobble plinth; still mostly flat at L1 (shutters and corbels only come at L2).",
+          "roof": "Fixed: roof now overhangs both gables (2 rows at the front z=2..3, 1 at the back z=9) and both eaves (dark oak stairs at x=0 and x=6), with upside-down stair verge trim and a dark oak tie beam and king post on each gable. The automatic 'no overhang' warning is a false alarm.",
+          "life": "Lanterns and coarse dirt only; no plants at L1."
+        },
+        "summary": "L1 is the walled stone yard with an open stone brick shed under a spruce gable roof: grindstone, banker, chest, barrels, stone stacks. v2 fixes the gable overhang and trim and partly fills the yard.",
+        "problems": [
+          "Right part of the yard (x=7..9, z=0..4) is still bare gravel: one more small prop there (a slab pile or a barrel) would finish it.",
+          "Long side walls at L1 are still flat apart from the centre pane; a sill (stone brick slab/stair under the pane at y=1, z=6) would help.",
+          "Reachability fine: only roof slopes, the ridge and three single wall/pier tops are unreached; shed floor and yard all reached."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "iso_back",
+          "front",
+          "back"
+        ]
+      }
     }
   }
 }

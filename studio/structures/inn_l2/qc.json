@@ -67,6 +67,70 @@
           "iso"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T05:27:00.322Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 93,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cauldron, oak_hanging_sign."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "488 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 488,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4426229508196721,
+          "types": 33,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.1987704918032787
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 1,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "artefacts": "Fixed: the hitching rail now runs (11,0,4)-(11,0,7) and turns west through (10,0,7) to the stable's corner post at (10,1-2,7), so it reads as one fence joined to the stable instead of a loose piece.",
+          "purpose": "Projecting hanging sign, stable lean-to with hay and a cauldron trough, hitching rail: reads as an inn.",
+          "materials": "Same busy mix as L1; nothing new clashes.",
+          "life": "Lanterns, hay and fencing; planters still empty, no plants yet."
+        },
+        "summary": "L2 adds a stable lean-to on the east side (hay, cauldron trough, hitching rail now joined to its post), a projecting hanging sign, shutters, front-gable lanterns and red carpets inside.",
+        "problems": [
+          "Reachability: common room, upper floor and stable floor are reached (176 of 252); unreached are roof slopes, the stable roof (x10 y4 z7-11), the hay top and chimney, which is fine."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "front"
+        ]
+      }
     }
   }
 }
