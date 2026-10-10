@@ -1,0 +1,78 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "well_l1",
+  "version": 4,
+  "size": [5,6,5],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T03:42:51.281Z",
+    "description": "Well, level 1 of 3: shell and fittings (what soldiers build first). Round stone well: octagon cobblestone basin with stair-rounded corners, dark oak posts and windlass with a chain; L2 adds the spruce gable roof and crank, L3 flowers, a water tub, moss and lanterns. 5 x 5 x 6, water by the decoration step. Decoration step adds: water.",
+    "changes": "Smaller and round: a 5 x 5 octagon basin with cut, stair-rounded corners and a round pool (was a 5 x 5 square basin under a 7 x 7 roof), keeping the windlass and a 5-wide gable roof facing the front; L1 is the working well, L2 adds the roof and windlass crank, L3 flowers, a water tub, moss and lanterns.",
+    "parent": 3,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier1",
+      "core",
+      "water"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:chain[axis=y]",
+    "A": "minecraft:cobblestone",
+    "B": "minecraft:cobblestone_stairs[facing=east,half=bottom,shape=outer_left,waterlogged=false]",
+    "C": "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=outer_left,waterlogged=false]",
+    "D": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=outer_left,waterlogged=false]",
+    "E": "minecraft:cobblestone_stairs[facing=west,half=bottom,shape=outer_left,waterlogged=false]",
+    "F": "minecraft:dark_oak_log[axis=y]",
+    "G": "minecraft:dark_oak_log[axis=z]",
+    "H": "minecraft:mossy_cobblestone"
+  },
+  "layers": [
+    [
+      "DAAHE",
+      "AA.AA",
+      "A...H",
+      "HA.AA",
+      "BHAAC"
+    ],
+    [
+      ".AFA.",
+      "H...A",
+      "A.#.A",
+      "A...H",
+      ".AFA."
+    ],
+    [
+      "..F..",
+      ".....",
+      "..#..",
+      ".....",
+      "..F.."
+    ],
+    [
+      "..F..",
+      "..G..",
+      "..G..",
+      "..G..",
+      "..F.."
+    ],
+    [
+      ".....",
+      ".....",
+      ".....",
+      ".....",
+      "....."
+    ],
+    [
+      ".....",
+      ".....",
+      ".....",
+      ".....",
+      "....."
+    ]
+  ]
+}
