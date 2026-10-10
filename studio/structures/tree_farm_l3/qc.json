@@ -1,0 +1,71 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "tree_farm_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:28:47.252Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: azure_bluet, dandelion, cornflower, oxeye_daisy, cauldron, oak_hanging_sign, oak_sapling, birch_sapling, spruce_sapling, bee_nest, moss_carpet, green_wall_banner."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 284,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4894366197183099,
+          "types": 37,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.13380281690140844
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 1,
+          "levels": 1
+        },
+        "notes": {
+          "detail": "Capped at 1: L3 adds only props (flowers along the path, two bee nests, two banners, two potted saplings on a shelf, moss, a hanging sign the viewer does not draw), no clearly visible new feature or job.",
+          "levels": "L2 and L3 are hard to tell apart in the sheet; the bee nests are hidden under the canopies and the shelf is inside the shed.",
+          "roof": "Automatic overhang warning is a false alarm."
+        },
+        "summary": "L2 plus flowers along the path, bee nests on the oaks, green banners and a small shelf of potted saplings in the shed, moss on the log pile and a hanging sign at the gate.",
+        "problems": [
+          "L3 adds no clearly visible new feature or job over L2: add one that reads at a glance, e.g. a proper sapling nursery bench/cold frame beside the shed, a log-drying rack or a timber cart, or a second growth stage (a row of half-grown trees) in the plantation.",
+          "Leaves of the two young oaks run into the shed eave: leaf at (8,5,6) sits on the roof stair and leaves at (2,3,6)/(8,3,6) press against the shed posts, so from the front the canopies swallow the shed; trim them back so the eave at z=6 is clear.",
+          "Shed interior is a 3 x 1 alcove (x4..6, z8) holding chest, grindstone and barrel in a row: reads as a stall more than a woodcutter's shed; give it a real working depth (2 deep) or turn it into an open-fronted lean-to with a bench.",
+          "Reach: the shed floor, workstation (chest, grindstone, barrel), yard and every planting row are reached; the unreached places are roof slopes, leaf tops, pier tops and the gateway roof, which is fine."
+        ],
+        "views": [
+          "sheet",
+          "iso"
+        ]
+      }
+    }
+  }
+}

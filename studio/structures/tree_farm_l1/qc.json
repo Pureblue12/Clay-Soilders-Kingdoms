@@ -1,0 +1,68 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "tree_farm_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:28:45.581Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 65,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 226,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4469026548672566,
+          "types": 20,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.168141592920354
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 1,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 1,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Chest, grindstone, barrel, log pile, chopping block and composter, but the plot is six bare raised dirt strips and the gate and piers carry nothing.",
+          "purpose": "Without saplings (decoration step only) the plot reads as empty garden beds; two small oaks are the only sign of a tree plantation.",
+          "roof": "Automatic 'no overhang' warning is a false alarm: the shed roof has one block of overhang all round (stairs at z=6 and z=10, gable ends at x=2 and x=8), 45 degrees, slab ridge, two-tone.",
+          "scale": "Young oaks are 3-high trunks with a 3x3 blob: ok as young trees, but the shed is a 3 x 1 alcove."
+        },
+        "summary": "An 11 x 11 fenced plot with a coarse dirt path, six raised dirt planting strips, two young oaks, a gateway beam and a small open dark-oak shed with log pile and woodpile at the back.",
+        "problems": [
+          "Planting strips (z=1,3,5) render as bare dirt in L1: put at least a few saplings or seedlings (or a row marker/fence edging) in L1 itself so the plot reads as a tree nursery, not empty garden beds.",
+          "Leaves of the two young oaks run into the shed eave: leaf at (8,5,6) sits on the roof stair and leaves at (2,3,6)/(8,3,6) press against the shed posts, so from the front the canopies swallow the shed; trim them back so the eave at z=6 is clear.",
+          "Shed interior is a 3 x 1 alcove (x4..6, z8) holding chest, grindstone and barrel in a row: reads as a stall more than a woodcutter's shed; give it a real working depth (2 deep) or turn it into an open-fronted lean-to with a bench.",
+          "Corner piers (0,0..1,0), (10,0..1,0), (0,0..1,10), (10,0..1,10) are bare 2-high cobblestone stubs: cap them (slab or wall) so they read as finished posts.",
+          "Reach: the shed floor, workstation (chest, grindstone, barrel), yard and every planting row are reached; the unreached places are roof slopes, leaf tops, pier tops and the gateway roof, which is fine."
+        ],
+        "views": [
+          "sheet",
+          "iso"
+        ]
+      }
+    }
+  }
+}
