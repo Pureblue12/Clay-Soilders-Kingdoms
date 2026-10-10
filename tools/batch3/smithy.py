@@ -13,7 +13,7 @@ def smithy(width=5, depth=7, wall_height=3):
     against the right wall and rises past the eaves; inside it the forge (furnace) under a brick hood. Chest and
     barrels of ore at the back, a workbench, torches, shutters on the open windows, a firewood pile under the left
     eave, a step up into the bay. Spruce roof with dark oak eaves and ridge, corbels under the gable overhangs.
-    L2 (a working smithy): anvil before the forge, smithing table (the workstation), blast furnace and quench
+    L2 (a working smithy): anvil by the bay, smithing table (the workstation), blast furnace and quench
     cauldron beside the furnace under the hood, iron bars in the windows, smoke from the chimney (campfire on top),
     shop sign, a lantern on a chain over the anvil and one under the front gable, tool shelves, a grindstone outside.
     L3 (the yard): an ore and coal lean-to on the left (fence posts, stair roof, coal and raw iron, an open barrel of
@@ -78,7 +78,7 @@ def smithy(width=5, depth=7, wall_height=3):
             P(s, x0 - 1, 1, z, 'spruce_log', axis='z')
 
     s.at(2, 'flourish2')
-    P(s, mid, 1, z0 + 2, 'anvil', facing='west')                         # anvil before the forge
+    P(s, x0 + 1, 1, z0 + 1, 'anvil', facing='north')                     # anvil by the bay; the middle aisle stays free
     P(s, x0 + 1, 1, z0 + 2, 'smithing_table')                            # the workstation
     P(s, x1 - 1, 1, cz - 1, 'blast_furnace', facing='west', lit='false')
     P(s, x1 - 1, 1, cz + 1, 'cauldron')                                  # quench tub
@@ -134,7 +134,7 @@ def smithy(width=5, depth=7, wall_height=3):
 
 STRUCTURES = [dict(path='smithy', name='Smithy', tier=3, zone='inner', role='workshop', group='smithy',
                    terrain='ground_level', door='front', make=smithy, changes='First version.',
-                   description='Stone forge with an open front bay and a brick chimney breast on its right side '
+                   description='Over budget: 296 blocks vs 165. Stone forge with an open front bay and a brick chimney breast on its right side '
                                '(furnace forge under a brick hood); L2 makes it a working smithy (anvil, smithing '
                                'table, blast furnace, quench tub, smoke, sign, lanterns), L3 adds the ore lean-to, '
                                'weapon rack and yard life.')]

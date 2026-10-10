@@ -127,7 +127,7 @@ def bakery(width=5, depth=6, wall_height=3):
 
 STRUCTURES = [dict(path='bakery', name='Bakery', tier=3, zone='inner', role='food', group='bakery',
                    terrain='ground_level', door='front', make=bakery, changes='First version.',
-                   description='Plaster and timber cottage bakery with a brick oven built onto the back gable (furnace mouth, '
+                   description='Over budget: 269 blocks vs 170. Plaster and timber cottage bakery with a brick oven built onto the back gable (furnace mouth, '
                                'chimney past the ridge) and the smoker as workstation; L2 domes the oven, adds smoke, '
                                'flour sacks, shutters, flower boxes, sign and bench; L3 a bread stall, wheat bales, '
                                'banner, lanterns and flowers.')]

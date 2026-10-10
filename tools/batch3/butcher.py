@@ -48,7 +48,8 @@ def butcher(width=5, depth=6, wall_height=3):
             P(s, mid, y, z, 'spruce_log', axis='y')
     gable_roof(s, x0, x1, z0, z1, top, plates='stripped_spruce_log', gable='white_terracotta')
     s.at(1, 'fittings')
-    for x, y, z in serve:                                  # counters inside the serving windows
+    for x, y, z in serve:                                  # serving hatches: a board in the window, a counter inside
+        P(s, x, y, z, 'spruce_slab', **SLAB)
         P(s, x, 1, z0 + 1, 'spruce_slab', **SLAB_TOP)
     P(s, x0 + 1, 1, z1 - 1, 'smoker', facing='east', lit='false')      # the workstation
     P(s, mid, 1, z1 - 1, 'chest', facing='north', type='single', waterlogged='false')
@@ -82,7 +83,7 @@ def butcher(width=5, depth=6, wall_height=3):
     P(s, x1 - 1, 1, z0 + 2, 'cauldron')                                 # stone sink by the window
     s.decorate(x1 - 1, 1, z0 + 2, 'water_cauldron', note='wash water')
     for x, y, z in serve:
-        s.decorate(x, 2, z0 + 1, 'item', item='minecraft:cooked_beef', note='meat on the counter')
+        s.decorate(x, 2, z0, 'item', item='minecraft:cooked_beef', note='meat on the serving hatch')
     shutters(s, *side_win[0], 'east')
     shutters(s, *side_win[1], 'west')
     shutters(s, *side_win[2], 'south')
@@ -121,7 +122,7 @@ def butcher(width=5, depth=6, wall_height=3):
 
 STRUCTURES = [dict(path='butcher', name='Butcher / meat hall', tier=3, zone='inner', role='food', group='butcher',
                    terrain='ground_level', door='front', make=butcher, changes='First version.',
-                   description='Stone butcher shop with a plaster gable: door between two serving windows, smoker '
+                   description='Over budget: 245 blocks vs 165. Stone butcher shop with a plaster gable: door between two serving windows, smoker '
                                '(workstation), chopping table and meat hooks on a tie beam; L2 a striped awning, '
                                'lanterns, salt barrel and sink; L3 a fenced holding pen with hay and trough, sign, '
                                'banner and flowers.')]
