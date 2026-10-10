@@ -1,0 +1,71 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "statue_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T08:56:50.777Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 90,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: grass_block, allium, cornflower, stone_brick_wall, flowering_azalea_leaves, oxeye_daisy, dandelion, red_wall_banner, white_wall_banner, candle, red_wool, light_weighted_pressure_plate."
+          },
+          {
+            "level": "warn",
+            "check": "connections",
+            "message": "1 fence/pane/wall block(s) have no north/east/south/west set although a neighbour would connect, so they show as lone posts: (4, 6, 4)."
+          }
+        ],
+        "stats": {
+          "blocks": 182,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.46153846153846156,
+          "types": 24,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.2032967032967033
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 1,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "artefacts": "Banners clip into the flowers below them; neck wall flagged as a lone post.",
+          "materials": "Peach white_terracotta head and torso clash with the grey stone; red cloak and gold crown are good accents.",
+          "levels": "Clearly new: gold crown, red wool cloak down his back, candles at his feet, banners on the posts."
+        },
+        "summary": "Level 3: L2 plus a gold-look crown, a red cloak, candles at the king's feet and red/white banners on the lantern posts.",
+        "problems": [
+          "The wall banners at (1,2,0), (7,2,0), (1,2,8), (7,2,8) hang down into the block below, right over the flowers at (1,1,0), (7,1,0), (1,1,8), (7,1,8): take those flowers out (or move the banners) so they don't clip.",
+          "The neck cobblestone_wall at (4,6,4) has no connections set although the red_wool cloak at (4,6,5) is next to it (automatic check); in game it will grow an arm to the cloak. Set south=low, or keep the thin neck by using a block that doesn't connect (e.g. a chain or end_rod).",
+          "Head (4,7,4) and torso (4,5,4) are white_terracotta, which renders peach and reads as bare skin on an otherwise stone statue ('the king in stone'): use a stone-like block (calcite, smooth_stone, polished_diorite) unless the clay look is wanted, and then say so in the description.",
+          "The raised sword (cobblestone_wall (5,7,4) + chain (5,8,4)) reads more like an antenna than a blade from the front; a lighter, sword-like top would help (e.g. iron_bars or an end_rod as the blade).",
+          "Reachability: open plaza piece, all paving and plinth steps are reached; only spots on the figure itself (shoulders, head) are not, which is fine."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

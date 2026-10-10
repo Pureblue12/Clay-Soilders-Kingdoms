@@ -1,0 +1,59 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "statue_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T08:56:49.465Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 85,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 110,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3181818181818182,
+          "types": 9,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.33636363636363636
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 1,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Plinth, plaque and figure only; bare paving round it (fine for a shell).",
+          "materials": "Peach white_terracotta head and torso clash with the grey stone.",
+          "scale": "Right size: 5x5 stepped plinth, figure about 5 tall, round 9-wide paving with cut corners.",
+          "roof": "No roof (statue); the top is the head and raised sword."
+        },
+        "summary": "Level 1: the founding king as a blocky figure with shield and raised sword on a stepped stone plinth with a plaque, in round cobble paving.",
+        "problems": [
+          "Head (4,7,4) and torso (4,5,4) are white_terracotta, which renders peach and reads as bare skin on an otherwise stone statue ('the king in stone'): use a stone-like block (calcite, smooth_stone, polished_diorite) unless the clay look is wanted, and then say so in the description.",
+          "The raised sword (cobblestone_wall (5,7,4) + chain (5,8,4)) reads more like an antenna than a blade from the front; a lighter, sword-like top would help (e.g. iron_bars or an end_rod as the blade).",
+          "Reachability: open plaza piece, all paving and plinth steps are reached; only spots on the figure itself (shoulders, head) are not, which is fine."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}
