@@ -171,6 +171,75 @@
           "sheet"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T05:31:02.747Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 90,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: short_grass, cauldron, dandelion, fern, dark_oak_fence, dark_oak_slab."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "135 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 135,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.7925925925925926,
+          "types": 25,
+          "dominant": {
+            "name": "oak_leaves",
+            "share": 0.362962962962963
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "purpose": "Carlton's note is met: a hand-built oak (oak_log axis=y trunk, oak_wood joints, an oak_log axis=z branch) with a ragged three-clump crown overhangs and shades the left bench and the back bench, with the fire ring left open to the sky",
+          "artefacts": "Leaves are all persistent=true and log axes make sense, but a few tree blocks join only at corners (see problems)",
+          "roof": "Fire pit itself has no roof (right); the new dark oak firewood shelter has a flat slab roof, a lean-to slope would read better",
+          "levels": "Clearly different from L2: the young oak has grown into a big shade tree with lanterns hanging from its branches, and a dark oak firewood shelter is new"
+        },
+        "summary": "Level 3 grows the young oak into a big custom shade tree whose branches reach over the left and back benches, with a lantern hanging from each branch, and adds a dark oak firewood shelter. It answers Carlton's shade-tree note.",
+        "problems": [
+          "Three oak leaves touch the rest only at a corner and float: (x2,y4,z2), (x5,y4,z6), (x6,y4,z6); attach each to a leaf or log on a face, or remove them",
+          "The trunk bend joins only through leaves: the trunk top at (x1,y3,z7) and the bent trunk at (x2,y4,z6) meet diagonally; put oak_wood at (x1,y4,z7) or (x2,y4,z7) so the wood is continuous",
+          "The back branch (x3..4,y5,z7) meets the trunk (x2,y5,z6) only at a corner; add oak_wood/oak_log at (x2,y5,z7) or (x3,y5,z6)",
+          "Firewood shelter roof (dark oak slabs, x6..8, y2, z7..8) is flat: one row of stairs would make it a lean-to (small)",
+          "Lanterns are fine: the two hanging ones sit under oak_wood (x1,y5,z4) and (x4,y5,z7), the shelter one under a slab; standing ones are on fence posts. Flowers and grass are on the ground layer",
+          "Reachability: all ground places reached; the only unreached places are on top of leaves, which is fine"
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "top"
+        ]
+      }
     }
   }
 }

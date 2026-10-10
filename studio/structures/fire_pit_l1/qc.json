@@ -153,6 +153,64 @@
           "sheet"
         ]
       }
+    },
+    "5": {
+      "version": 5,
+      "checkedAt": "2026-10-10T05:31:01.659Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 80,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "47 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 47,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.6595744680851063,
+          "types": 15,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.2765957446808511
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Same as v4 (only padded to 8 layers tall): ring, spit, benches, woodpile, stump, crates, poppies, lantern post; fine for a first level but a little sparse",
+          "roof": "Open fire pit, no roof wanted (the fire stays open to the sky); not marked down further",
+          "levels": "L1 is the base; L2 and L3 each add a visible new feature (young oak, then the grown shade tree and the firewood shelter)",
+          "artefacts": "Nothing floating; lantern stands on a spruce fence post; flowers stand on the grass"
+        },
+        "summary": "Level 1 of the fire pit: a stone-ringed unlit campfire with a cooking spit, three spruce log benches, a woodpile, a chopping stump, supplies and a lantern post. Unchanged from v4 apart from the empty layers added to match the other levels.",
+        "problems": [
+          "The benches could still use a little variety (one stump seat or a crate) so the sides don't look alike (small, not blocking)",
+          "Reachability: 78 of 78 standing places reached"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }
