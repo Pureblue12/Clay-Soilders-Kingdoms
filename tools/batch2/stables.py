@@ -107,6 +107,10 @@ def stables(width=9, depth=11, stable_depth=5):
         s.put(w - 1, 0, z, 'cauldron')
         s.decorate(w - 1, 0, z, 'water_cauldron', note='fill the water trough')
     s.put(w - 1, 0, 4, 'hay_block', axis='y'); s.put(w - 2, 2, z1 - 1, 'hay_block', axis='z')   # more hay
+    # flowers round the stable (Carlton, v4: "add some flowers around it to l2 and l3")
+    for (x, z), flower in (((0, z0 + 1), 'poppy'), ((0, z1 - 1), 'dandelion'), ((1, d), 'oxeye_daisy'),
+                           ((w - 1, d), 'azure_bluet')):
+        s.put(x, 0, z, flower)
     for x in (3, w - 3):                           # hatches on the back wall (open trapdoors against the planks)
         s.put(x, 2, d, 'trapdoor', facing='south', **OPEN)
     s.at(3, 'flourish3')
@@ -139,6 +143,9 @@ def stables(width=9, depth=11, stable_depth=5):
     for x in (2, 4, w - 2):                        # bushes and a flower along the back wall
         s.put(x, 0, d, 'oak_leaves', persistent='true', distance='1', waterlogged='false')
     s.put(w - 4, 0, d, 'poppy')
+    for x in (0, w):                               # rose bushes at the stable's back corners
+        s.put(x, 0, d, 'rose_bush', half='lower')
+        s.put(x, 1, d, 'rose_bush', half='upper')
     s.decorate(mid + 2, 1, z1 - 1, 'armor_stand', note='horse armor on display', item='minecraft:leather_horse_armor')
     return sink_stable_floor(s, range(1, w), range(z0, z1 + 1), z0 - 1)
 
@@ -178,8 +185,8 @@ def sink_stable_floor(s, xs, zs, paddock_end):
 
 STRUCTURES = [dict(path='stables', name='Pens and stables', tier=2, zone='outer', role='farm', group='stables',
                    terrain='flexible', door=None, make=stables, ground_layer=0,
-                   changes='The stable\'s dirt floor now sits in the ground, level with the grass (nothing else changed: '
-                           'the paddock and everything around it stand on the grass as before).',
+                   changes='Flowers round the stable: poppies, dandelions, daisies and bluets along its sides and back at '
+                           'level 2, rose bushes at its back corners at level 3.',
                    description='Fenced paddock with a gateway (open gap; fence gates are decoration) before an open-sided '
                                'log stable with two stalls and a feed trough; L2 adds the hay loft, tack corner and water '
                                'trough, L3 a farrier corner, weathervane, banners and flower boxes. Wants level ground.')]
