@@ -136,6 +136,8 @@ def tree_farm():
         P(s, x, 3, 4, 'spruce_stairs', facing='south', **STAIR)
         P(s, x, 4, 5, 'spruce_slab', **SLAB)
         P(s, x, 4, 6, 'spruce_slab', **SLAB)
+    for x, y in ((16, 2), (16, 3), (17, 3), (18, 2), (18, 3)):         # back posts under the high edge, on the logs
+        P(s, x, y, 6, 'spruce_fence')
     P(s, 17, 2, 3, 'oak_slab', type='top', waterlogged='false')         # boards drying on the rail
     P(s, 17, 1, 3, 'oak_slab', **SLAB)
     P(s, GATE, 1, FZ0, 'oak_hanging_sign', rotation='0', attached='false', waterlogged='false')
@@ -150,7 +152,7 @@ def tree_farm():
                          (1, 0, 'poppy'), (2, 0, 'azure_bluet'), (12, 1, 'dandelion'), (13, 2, 'cornflower'),
                          (12, 11, 'oxeye_daisy'), (12, 12, 'poppy')):   # flowers along the outside of the fence
         P(s, x, 0, z, flower)
-    for x, z in ((16, 5), (18, 6)):                                      # moss on the logs
+    for x, z in ((16, 5), (18, 5)):                                      # moss on the logs
         P(s, x, 2, z, 'moss_carpet')
     s.decorate(13, 1, 7, 'item_frame', item='minecraft:iron_axe', facing='up', note='axe in the chopping block')
     connect(s)
@@ -159,14 +161,8 @@ def tree_farm():
 
 STRUCTURES = [dict(path='tree_farm', name='Tree farm', tier=6, zone='outer', role='resource', group='lumber_camp',
                    terrain='flexible', door='front', make=tree_farm,
-                   changes='Carlton\'s note: "Take decoration from the inside and put them outside make sure the place '
-                           'where the sapling sit are clear cause other sapling will sit there and grow". The fenced '
-                           'plot now holds only three raised dirt rows and the walking lanes between them: the young '
-                           'trees, bushes and every prop are gone from it. Saplings (oak, birch, spruce) come at L2, '
-                           'each 3 blocks from the next, with nothing above them (no leaves, roofs or lanterns over '
-                           'the rows); at L1 the rows are empty dirt. Shed, log pile, chopping block, composter, '
-                           'sawhorse, drying lean-to, cauldron, barrels, banners and flowers moved outside the fence: '
-                           'into a woodcutter\'s yard on the right, by the gate and along the fence.',
+                   changes='Quality-check fix: the L3 drying lean-to\'s high back edge floated (posts only at the front); spruce fence '
+                           'posts now stand on the log pile under it. Nothing else changed from v3.',
                    description='Over budget: 344 blocks vs 102 (the lumber camp brief; the tree farm has no budget of '
                                'its own), first build 268 vs 200; 19 x 14 instead of 11 x 11 because the yard moved '
                                'outside the plot. The lumber camp\'s tier-6 upgrade: a fenced planting plot (11 x 13, '
