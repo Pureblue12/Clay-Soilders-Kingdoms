@@ -139,6 +139,27 @@
     "round": 1,
     "checkedAt": "2026-10-10T03:41:21.304Z"
   },
+  "chapel_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 86,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:10:09.878Z"
+  },
+  "chapel_l2": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 86,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:10:10.398Z"
+  },
+  "chapel_l3": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 89,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:10:10.938Z"
+  },
   "commons_l1": {
     "version": 4,
     "verdict": "pass",
@@ -292,6 +313,27 @@
     "score": 89,
     "round": 1,
     "checkedAt": "2026-10-10T04:22:15.668Z"
+  },
+  "graveyard_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 75,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:10:17.605Z"
+  },
+  "graveyard_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:10:18.185Z"
+  },
+  "graveyard_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 94,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:10:18.744Z"
   },
   "hitching_post_l1": {
     "version": 3,

@@ -1,0 +1,82 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "chapel_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:10:10.938Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 89,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: azure_bluet, fern, lily_of_the_valley, candle, lectern, cornflower, oxeye_daisy, dandelion, red_wall_banner, white_wall_banner, red_stained_glass_pane, yellow_stained_glass_pane, blue_stained_glass_pane, bell."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "440 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "13 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 440,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4772727272727273,
+          "types": 39,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.3
+          },
+          "height": 13,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 0,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {
+          "artefacts": "the standing lanterns at (4,4,0) and (6,4,0) sit on bottom-half stone brick stairs (facing west/east); a stair's top only covers half the block, so it can't hold a lantern and it drops in game. Put a full block, a top slab or a top-half stair under them, or hang them",
+          "roof": "Roof warning is a false alarm: 1-block overhang at both eaves and the back gable.",
+          "life": "Leaf bushes at the corners, flowers and a fern behind, a fence-post lantern by the front corner.",
+          "grandeur": "Banners and the tricolour stained glass in both gables make it read as the village's church."
+        },
+        "summary": "Level 3 adds red banners by the door and white banners inside, stained glass in the front and back gable slots, floor candles by the door, buttress flower pots, corner bushes, flowers and a fence-post lantern.",
+        "problems": [
+          "Carlton's earlier note still applies: L3 differs from L2 only in small touches (banners, three glass panes, a few bushes). Add something visible from a distance on top of L2, e.g. a short stone or gravel path with a lych gate/fence to the door, a small churchyard with a few markers, or a side porch.",
+          "Lanterns at (4,4,0) and (6,4,0) stand on bottom stone_brick_stairs and would pop off in game (same fix as L2).",
+          "The open shutter trapdoors at (5,4,2),(5,5,2),(5,6,2) and (5,4,8),(5,5,8),(5,6,8) hide the new stained glass from inside; remove them in L3 where the glass goes in.",
+          "Reachability: interior floor is reached; unreached places are roofs, buttress caps, window boxes, the bell top and the gable slots. Fine."
+        ],
+        "views": [
+          "sheet",
+          "front"
+        ]
+      }
+    }
+  }
+}
