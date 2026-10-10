@@ -335,26 +335,47 @@
     "round": 2,
     "checkedAt": "2026-10-10T04:19:54.127Z"
   },
-  "market_stall_l1": {
+  "market_l1": {
     "version": 1,
-    "verdict": "revise",
-    "score": 33,
+    "verdict": "pass",
+    "score": 72,
     "round": 1,
-    "checkedAt": "2026-10-10T04:51:08.200Z"
+    "checkedAt": "2026-10-10T05:03:47.649Z"
+  },
+  "market_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:03:48.206Z"
+  },
+  "market_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 94,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:03:48.829Z"
+  },
+  "market_stall_l1": {
+    "version": 2,
+    "verdict": "revise",
+    "score": 67,
+    "round": 2,
+    "checkedAt": "2026-10-10T05:02:43.223Z"
   },
   "market_stall_l2": {
-    "version": 1,
-    "verdict": "revise",
-    "score": 50,
-    "round": 1,
-    "checkedAt": "2026-10-10T04:51:08.888Z"
+    "version": 2,
+    "verdict": "pass",
+    "score": 83,
+    "round": 2,
+    "checkedAt": "2026-10-10T05:02:43.888Z"
   },
   "market_stall_l3": {
-    "version": 1,
-    "verdict": "revise",
-    "score": 58,
-    "round": 1,
-    "checkedAt": "2026-10-10T04:51:09.495Z"
+    "version": 2,
+    "verdict": "pass",
+    "score": 92,
+    "round": 2,
+    "checkedAt": "2026-10-10T05:02:44.517Z"
   },
   "mine_l1": {
     "version": 1,

@@ -64,6 +64,60 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T05:02:43.223Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 2,
+      "score": 67,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "60 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 60,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.6166666666666667,
+          "types": 9,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.23333333333333334
+          },
+          "height": 5,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "Still a little heavy: the back canopy is wool on a full plank layer (two blocks thick); a single layer would look lighter. Not blocking."
+        },
+        "summary": "Spruce stall with a counter, barrels, crates and hay under a two-tier red and white awning. Now it looks like a market stall.",
+        "problems": [
+          "Round 1 fixes are in: red and white stripes instead of neon blue, and the front awning is one layer stepping down from the back. Still a little heavy: the back canopy is wool on a full plank layer (two blocks thick); a single layer would look lighter. Not blocking."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }
