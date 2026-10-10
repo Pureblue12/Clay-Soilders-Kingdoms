@@ -4,14 +4,14 @@
   "version": 3,
   "size": [6,9,6],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "Needs more detail in the l2 and l3",
     "author": "claude-qc",
     "created": "2026-10-10T03:00:51.414Z",
     "description": "Watchtower, level 1 of 3: shell and fittings (what soldiers build first). Log watchtower: spiral stair inside four posts up to a railed lookout (floor at y 4), hip roof; 4 x 4 core, not 3 x 3 (a walkable stair needs it).",
     "changes": "Quality check round 3: dark oak eaves course under the spruce roof, side rails between the posts from level 1.",
     "parent": 2,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T03:15:38.025Z",
     "tags": [
       "batch2",
       "tier2",

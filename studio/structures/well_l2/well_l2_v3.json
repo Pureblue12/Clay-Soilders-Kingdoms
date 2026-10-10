@@ -1,0 +1,114 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "well_l2",
+  "version": 3,
+  "size": [7,8,7],
+  "meta": {
+    "status": "rejected",
+    "notes": "well is now too big and the base is square id like it to be circular please find a middle ground",
+    "author": "claude-qc",
+    "created": "2026-10-10T03:15:33.119Z",
+    "description": "Well, level 2 of 3: L1 plus flourish 2. Stone well: two-course cobblestone basin, dark oak posts and windlass beam with a chain, steep spruce gable roof; 5 x 5 basin under a 7 x 7 roof, water by the decoration step. Not yet builder-tested: cauldron. Decoration step adds: potted_plant, water, water_cauldron.",
+    "changes": "Quality check round 3: basin widened to 5 x 5 round a 3 x 3 pool under a 7 x 7 roof (the small basin looked top-heavy); posts, windlass and extras moved to match",
+    "parent": 2,
+    "reviewedAt": "2026-10-10T03:19:16.183Z",
+    "tags": [
+      "batch2",
+      "tier1",
+      "core",
+      "water"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:cauldron",
+    "B": "minecraft:chain[axis=y]",
+    "C": "minecraft:cobblestone",
+    "D": "minecraft:dark_oak_log[axis=x]",
+    "E": "minecraft:dark_oak_log[axis=y]",
+    "F": "minecraft:dark_oak_planks",
+    "G": "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "H": "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "I": "minecraft:flower_pot",
+    "J": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "K": "minecraft:mossy_cobblestone",
+    "L": "minecraft:oak_fence[east=false,north=false,south=false,waterlogged=false,west=true]",
+    "M": "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "N": "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]"
+  },
+  "layers": [
+    [
+      ".......",
+      ".CKCCC.",
+      ".C...C#",
+      ".C...C.",
+      ".C...C.",
+      "ACCCCC.",
+      "......."
+    ],
+    [
+      ".......",
+      ".CCCCC.",
+      ".C...K.",
+      ".C...C.",
+      ".K...C.",
+      ".CCCKC.",
+      "......."
+    ],
+    [
+      ".......",
+      ".I.....",
+      ".......",
+      ".E...E.",
+      ".......",
+      ".....I.",
+      "......."
+    ],
+    [
+      ".......",
+      ".......",
+      ".......",
+      ".E.B.E.",
+      ".......",
+      ".......",
+      "......."
+    ],
+    [
+      "HHHHHHH",
+      ".......",
+      ".......",
+      ".E.B.E.",
+      ".......",
+      ".......",
+      "GGGGGGG"
+    ],
+    [
+      ".......",
+      "NNNNNNN",
+      ".......",
+      ".E.B.EL",
+      ".......",
+      "MMMMMMM",
+      "......."
+    ],
+    [
+      ".......",
+      ".......",
+      "NNNNNNN",
+      "JDDDDD.",
+      "MMMMMMM",
+      ".......",
+      "......."
+    ],
+    [
+      ".......",
+      ".......",
+      ".......",
+      "FFFFFFF",
+      ".......",
+      ".......",
+      "......."
+    ]
+  ]
+}

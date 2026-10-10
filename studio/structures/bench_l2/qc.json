@@ -1,0 +1,63 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "bench_l2",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:18:45.702Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 86,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: flowering_azalea_leaves."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "65 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 65,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.8615384615384616,
+          "types": 13,
+          "dominant": {
+            "name": "oak_leaves",
+            "share": 0.26153846153846155
+          },
+          "height": 4,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Bench level 2: adds a roofed pergola with a hanging lantern and flowering azalea; clearly richer than level 1.",
+        "problems": [
+          "The pergola roof is a flat plank slab in one colour; a dark oak trim or stair edge would finish it.",
+          "65 blocks, twice the prop budget; Carlton decides."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

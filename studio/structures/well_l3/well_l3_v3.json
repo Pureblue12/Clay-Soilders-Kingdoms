@@ -1,0 +1,119 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "well_l3",
+  "version": 3,
+  "size": [7,8,7],
+  "meta": {
+    "status": "rejected",
+    "notes": "well is now too big and the base is square id like it to be circular please find a middle ground",
+    "author": "claude-qc",
+    "created": "2026-10-10T03:15:33.660Z",
+    "description": "Well, level 3 of 3: L2 plus flourish 3. Stone well: two-course cobblestone basin, dark oak posts and windlass beam with a chain, steep spruce gable roof; 5 x 5 basin under a 7 x 7 roof, water by the decoration step. Not yet builder-tested: cauldron, dandelion, moss_carpet. Decoration step adds: potted_plant, water, water_cauldron.",
+    "changes": "Quality check round 3: basin widened to 5 x 5 round a 3 x 3 pool under a 7 x 7 roof (the small basin looked top-heavy); posts, windlass and extras moved to match",
+    "parent": 2,
+    "reviewedAt": "2026-10-10T03:19:16.184Z",
+    "tags": [
+      "batch2",
+      "tier1",
+      "core",
+      "water"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:cauldron",
+    "B": "minecraft:chain[axis=y]",
+    "C": "minecraft:cobblestone",
+    "D": "minecraft:cobblestone_slab[type=bottom,waterlogged=false]",
+    "E": "minecraft:dandelion",
+    "F": "minecraft:dark_oak_log[axis=x]",
+    "G": "minecraft:dark_oak_log[axis=y]",
+    "H": "minecraft:dark_oak_planks",
+    "I": "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "J": "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "K": "minecraft:flower_pot",
+    "L": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "M": "minecraft:moss_carpet",
+    "N": "minecraft:mossy_cobblestone",
+    "O": "minecraft:oak_fence[east=false,north=false,south=false,waterlogged=false,west=true]",
+    "P": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "Q": "minecraft:poppy",
+    "R": "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "S": "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]"
+  },
+  "layers": [
+    [
+      "P.ED...",
+      ".CNCCC.",
+      ".C...C#",
+      ".C...C.",
+      ".C...CQ",
+      "ACCCCC.",
+      "P.....P"
+    ],
+    [
+      ".......",
+      ".CCCCC.",
+      ".C...N.",
+      ".C...C.",
+      ".N...C.",
+      ".CCCNC.",
+      "......."
+    ],
+    [
+      ".......",
+      ".K.M...",
+      ".....M.",
+      ".G...G.",
+      ".M.....",
+      "..M..K.",
+      "......."
+    ],
+    [
+      ".......",
+      ".......",
+      ".......",
+      ".G.B.G.",
+      ".......",
+      ".......",
+      "......."
+    ],
+    [
+      "JJJJJJJ",
+      ".......",
+      ".......",
+      ".G.B.G.",
+      ".......",
+      ".......",
+      "IIIIIII"
+    ],
+    [
+      ".......",
+      "SSSSSSS",
+      ".......",
+      ".G.B.GO",
+      ".......",
+      "RRRRRRR",
+      "......."
+    ],
+    [
+      ".......",
+      ".......",
+      "SSSSSSS",
+      "LFFFFF.",
+      "RRRRRRR",
+      ".......",
+      "......."
+    ],
+    [
+      ".......",
+      ".......",
+      ".......",
+      "HHHHHHH",
+      ".......",
+      ".......",
+      "......."
+    ]
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "cottage_l1",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:18:43.484Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 61,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "connections",
+            "message": "1 fence/pane/wall block(s) have no north/east/south/west set although a neighbour would connect, so they show as lone posts: (5, 1, 4)."
+          }
+        ],
+        "stats": {
+          "blocks": 219,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4063926940639269,
+          "types": 22,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.2420091324200913
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Cottage level 1: a neat timber cottage with a chimney, but the roof is one colour, the front is bare and nothing grows around it.",
+        "problems": [
+          "No life at all at level 1: flower boxes under the front windows would fix it without taking level 2's extras.",
+          "Levels 2 and 3 look almost the same (level 3 only adds a wood pile at the back): give level 3 its own visible feature, such as a jettied upper gable, a lean-to woodshed or a garden fence with a gate (Carlton's carpenter and watchtower notes).",
+          "The roof is one oak colour and flush at the gable ends: dark oak eaves, a slab ridge and one block of overhang at the front and back.",
+          "One fence inside at (5, 1, 4) still shows as a lone post (Carlton: \"fences also still seems bugged\"); and on level 3 the fences at (1, 0, 0) and (7, 0, 0).",
+          "The pale squares in the gables read as blank patches, not windows; use glass panes with trapdoor shutters."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

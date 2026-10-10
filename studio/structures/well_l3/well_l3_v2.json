@@ -1,0 +1,98 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "well_l3",
+  "version": 2,
+  "size": [5,7,5],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude-qc",
+    "created": "2026-10-10T03:14:01.690Z",
+    "description": "Well, level 3 of 3: L2 plus flourish 3. Stone well: two-course cobblestone basin, dark oak posts and windlass beam with a chain, steep spruce gable roof; 5 x 5, water by the decoration step. Not yet builder-tested: cauldron, dandelion, moss_carpet. Decoration step adds: potted_plant, water, water_cauldron.",
+    "changes": "Quality check round 2: rebuilt as a 5 x 5 well (generator tools/batch2/well.py): two-course mossy cobblestone basin, dark oak posts and windlass beam with a chain and crank, steep spruce gable roof with dark oak eaves and ridge; level 2 adds a trough, bucket barrel, pots and a lantern; level 3 bushes, flowers, a step and moss",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier1",
+      "core",
+      "water"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:cauldron",
+    "B": "minecraft:chain[axis=y]",
+    "C": "minecraft:cobblestone",
+    "D": "minecraft:cobblestone_slab[type=bottom,waterlogged=false]",
+    "E": "minecraft:dandelion",
+    "F": "minecraft:dark_oak_log[axis=x]",
+    "G": "minecraft:dark_oak_log[axis=y]",
+    "H": "minecraft:dark_oak_planks",
+    "I": "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "J": "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "K": "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "L": "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "M": "minecraft:flower_pot",
+    "N": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "O": "minecraft:moss_carpet",
+    "P": "minecraft:mossy_cobblestone",
+    "Q": "minecraft:oak_fence[east=false,north=false,south=false,waterlogged=false,west=true]",
+    "R": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "S": "minecraft:poppy",
+    "T": "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "U": "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]"
+  },
+  "layers": [
+    [
+      "RED..",
+      ".CCC#",
+      ".C.C.",
+      "ACCCS",
+      "R...R"
+    ],
+    [
+      ".....",
+      ".CCP.",
+      ".C.C.",
+      ".PCC.",
+      "....."
+    ],
+    [
+      ".....",
+      ".MO..",
+      ".G.G.",
+      ".OOM.",
+      "....."
+    ],
+    [
+      ".....",
+      ".....",
+      ".GBG.",
+      ".....",
+      "....."
+    ],
+    [
+      "KKKKK",
+      ".....",
+      ".GBGQ",
+      ".....",
+      "JJJJJ"
+    ],
+    [
+      ".....",
+      "UUUUU",
+      "NFFF.",
+      "TTTTT",
+      "....."
+    ],
+    [
+      ".....",
+      ".....",
+      "IHHHL",
+      ".....",
+      "....."
+    ]
+  ]
+}

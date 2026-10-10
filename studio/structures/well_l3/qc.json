@@ -1,0 +1,174 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "well_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T03:14:01.143Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 25,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: moss_carpet."
+          },
+          {
+            "level": "warn",
+            "check": "too-small",
+            "message": "Only 28 blocks: too bare for a common (at least 50). Carlton wants more detail, not less."
+          }
+        ],
+        "stats": {
+          "blocks": 28,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.7142857142857143,
+          "types": 8,
+          "dominant": {
+            "name": "oak_slab",
+            "share": 0.32142857142857145
+          },
+          "height": 4,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 0,
+          "purpose": 1,
+          "depth": 0,
+          "roof": 0,
+          "materials": 1,
+          "shape": 0,
+          "life": 1,
+          "scale": 1,
+          "grandeur": 0
+        },
+        "notes": {
+          "artefacts": "cobblestone_wall posts without properties render as '?'"
+        },
+        "summary": "Well level 3: a 3 x 3 cobblestone ring with a slab lid; too small and plain, and the wall posts show as placeholder blocks.",
+        "problems": [
+          "Far too small and bare for the kingdom's water source (23 to 28 blocks): build a 5 x 5 well with a raised two-course stone basin, posts, a windlass beam with a rope or chain and a proper roof.",
+          "The cobblestone wall posts have no connection properties and show as \"?\" placeholder blocks; use log posts instead.",
+          "The flat oak slab lid reads as a box: give it a steep gable roof with dark eaves and ridge.",
+          "Give each level its own extras (a trough and a bucket barrel at level 2, bushes, flowers and moss at level 3)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:15:25.723Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: dandelion, cauldron, moss_carpet."
+          }
+        ],
+        "stats": {
+          "blocks": 67,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.582089552238806,
+          "types": 17,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.208955223880597
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 2,
+          "scale": 1,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "steep and well trimmed, but far too big for the small basin"
+        },
+        "summary": "Well level 3: now a real well with posts, windlass and a steep roof, but the roof dwarfs the small 3 x 3 basin.",
+        "problems": [
+          "The roof is two blocks wider than the 3 x 3 basin on every side, so the well looks top-heavy (a mushroom): widen the basin to 5 x 5 under the same kind of roof.",
+          "Level 1 has no life at all; fine for a first level, but the levels above should keep adding plants and props."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:16:10.489Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 86,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: dandelion, cauldron, moss_carpet."
+          }
+        ],
+        "stats": {
+          "blocks": 113,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5398230088495575,
+          "types": 17,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.24778761061946902
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "scale": 2,
+          "grandeur": 1,
+          "detail": 2,
+          "life": 2
+        },
+        "summary": "Well level 3: a finished village well with trough, barrel, pots, bushes, flowers, moss on the rim and a front step.",
+        "problems": [
+          "The full dark plank ridge reads a little heavy; a slab ridge would be lighter."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}
