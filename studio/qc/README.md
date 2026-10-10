@@ -3,7 +3,7 @@
 Every new structure version is checked by a reviewer before Carlton looks at it. Carlton asked for it to be fully
 automatic and to judge by his taste. It never approves or rejects anything: only Carlton does that, in the Studio.
 
-- **Automatic checks** (`src/qc/checks.ts`, no AI): floating blocks, doors and beds missing a half, flowers with no dirt or grass under them, fences that won't
+- **Automatic checks** (`src/qc/checks.ts`, no AI): floating blocks, doors and beds missing a half, flowers with no dirt or grass under them, hanging lanterns with nothing above, fences that won't
   connect, too few blocks, too few detail blocks, one block everywhere, flat walls, a roof without overhang, a door on
   the back, block budget, height over builder reach, the buildability validator.
 - Blocks listed in `meta.decorationBlocks` (`[x, y, z, kind]`: water, lily pads the mod adds in its decoration step,

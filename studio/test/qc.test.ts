@@ -105,3 +105,10 @@ test('with groundLayer 0, a flower one layer up over an empty cell stands on the
   assert.ok(checks(s).includes('fail:plant-soil'));
   assert.ok(!checks({ ...s, meta: { ...s.meta, groundLayer: 0 } }).includes('fail:plant-soil'));
 });
+
+test('a hanging lantern needs a block above it', () => {
+  const hung = make('porch', { '#': 'oak_planks', l: 'lantern[hanging=true]' }, [['#.'], ['#l'], ['##']]);
+  assert.ok(!checks(hung).includes('fail:hanging'));
+  const loose = make('porch2', { '#': 'oak_planks', l: 'lantern[hanging=true]' }, [['#.'], ['#l'], ['#.']]);
+  assert.ok(checks(loose).includes('fail:hanging'));
+});
