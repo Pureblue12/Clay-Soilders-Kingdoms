@@ -58,6 +58,57 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T04:05:56.077Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 94,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: grass_block, azalea, flowering_azalea, cornflower, orange_tulip, pink_tulip, dandelion, azure_bluet, allium, red_tulip, oxeye_daisy, lily_of_the_valley, white_tulip, birch_log, cherry_log, flowering_azalea_leaves, azalea_leaves, birch_leaves, cherry_leaves."
+          }
+        ],
+        "stats": {
+          "blocks": 329,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.547112462006079,
+          "types": 28,
+          "dominant": {
+            "name": "coarse_dirt",
+            "share": 0.22188449848024316
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "summary": "A proper cottage garden: a cherry and a birch in the corners, azalea bushes, a flowering arbor at the entrance, benches on three sides and many kinds of flowers in curved borders.",
+        "problems": [
+          "Layer 0 is now level with the grass (meta.groundLayer 0): in game the builders never dig or replace ground, so the mod side still has to support setting paths and beds into the lawn before this can be built as drawn"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }
