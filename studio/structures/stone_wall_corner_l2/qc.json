@@ -63,6 +63,61 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:43:53.055Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 98,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: iron_bars, red_banner."
+          }
+        ],
+        "stats": {
+          "blocks": 44,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.29545454545454547,
+          "types": 8,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.4772727272727273
+          },
+          "height": 8,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "artefacts": "Fixed: the wall torch is now at (2,6,1) against merlon (2,6,0); the lamp post is gone, so the 2x2 corner walk is clear. Banner (1,6,0) stands on the parapet in the crenel.",
+          "levels": "Barred slits, a standing red banner over the corner and a torch: clearly different from L1."
+        },
+        "summary": "Level 2 adds barred slits on both faces, a standing red banner over the corner and a torch on the front merlon.",
+        "problems": [
+          "Minor (carried over): the single south-facing stair at (0,7,0) on the corner pier still reads like a stray step from the east/west views; a proper cap (e.g. a slab, or a stone_brick_wall finial) would finish the pier."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

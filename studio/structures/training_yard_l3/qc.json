@@ -65,6 +65,71 @@
           "iso_back"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:43:51.763Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 95,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: dandelion, cornflower, lectern, target, carved_pumpkin, red_banner."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 227,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4185022026431718,
+          "types": 24,
+          "dominant": {
+            "name": "oak_fence",
+            "share": 0.14977973568281938
+          },
+          "height": 5,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "roof": "The drill master's shelter has a flat one-colour spruce slab canopy (x=1..3, y=3, z=7..9) on four spruce fence posts; acceptable for an open pavilion, and the automatic overhang warning is about this canopy, not a real fault. A stair edge or a second colour would lift it.",
+          "levels": "The shelter with lectern, seat and hanging lantern is a clearly visible new feature; lane lantern posts and flowers along the curb add to it.",
+          "shape": "The shelter gives the yard a second height and asymmetry."
+        },
+        "summary": "L2 plus the drill master's shelter in the back-left corner (four corner posts, slab canopy, lectern, seat, hanging lantern), lantern posts along the archery lane and flowers along the front curb.",
+        "problems": [
+          "Last round's note is still open: the hay block at (x=0, y=0, z=0) and the barrel at (x=10, y=0, z=0) sit on the grass at the outer front corners and look stuck on; tie them in (e.g. a trapdoor edge) or move them inside the yard.",
+          "Optional: the shelter canopy (spruce slabs, y=3, z=7..9) is flat and one colour; a dark oak or stair edge along its front would finish it.",
+          "Reach: the yard floor is reached, including the shelter (the round-1 enclosed tile is gone); only the canopy top, post tops and dummy heads are unreached (fine)."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "iso_back"
+        ]
+      }
     }
   }
 }
