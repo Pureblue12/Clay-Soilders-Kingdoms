@@ -54,7 +54,7 @@ def noble_house():
     Hm = roof_heights()
     posts = {(X0, Z0), (X1, Z0), (X0, Z1), (X1, Z1), (MID - 1, Z0), (MID + 1, Z0), (X0, 6), (X1, 6), (MID, Z1)}
     side_door = (X0, 5)
-    windows = [(7, 2, Z0), (8, 2, Z0), (12, 2, Z0), (13, 2, Z0), (X0, 2, 8), (X1, 2, 4), (X1, 2, 8), (8, 2, Z1),
+    windows = [(7, 2, Z0), (8, 2, Z0), (12, 2, Z0), (13, 2, Z0), (X0, 2, 8), (X1, 2, 4), (8, 2, Z1),
                (12, 2, Z1)]
     gable_windows = [(X0, 6, 5), (X1, 6, 5)]
     chimney_x, chimney_z = X1 + 1, 7
@@ -91,9 +91,12 @@ def noble_house():
     for x in (X0, X1):                                              # half-timbered gables: king post, plaster
         for z in range(Z0 + 1, Z1):
             for y in range(5, Hm[(x, z)]):
-                if (x, y, z) not in gable_windows:
-                    P(s, x, y, z, 'dark_oak_log' if z == 6 else 'white_terracotta', axis='y') if z == 6 else \
-                        P(s, x, y, z, 'white_terracotta')
+                if (x, y, z) in gable_windows:
+                    continue
+                if z == 6:
+                    P(s, x, y, z, 'dark_oak_log', axis='y')
+                else:
+                    P(s, x, y, z, 'white_terracotta')
     # the cross gable's face over the door: posts by the bedroom window, plaster under the ridge
     P(s, MID - 1, 5, Z0, 'dark_oak_log', axis='y'); P(s, MID + 1, 5, Z0, 'dark_oak_log', axis='y')
     P(s, MID, 6, Z0, 'white_terracotta')
@@ -227,8 +230,6 @@ def noble_house():
         P(s, x, 2, 0, 'white_wall_banner', facing='north')
         s.decorate(x, 2, 0, 'banner_pattern', banner='white_wall_banner', note='the family arms')
     P(s, 7, 2, 6, 'candle', candles='2', lit='true', waterlogged='false')
-    for x in (10, 11):
-        P(s, x, 2, 6, 'candle', candles='3', lit='true', waterlogged='false') if False else None
     for x, z in ((10, 7), (11, 7), (9, 7)):
         A(s, x, 1, z, 'brown_carpet')
     # vines on the left wall's plaster

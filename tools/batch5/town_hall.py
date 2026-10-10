@@ -17,8 +17,8 @@ Layout (13 wide x 18 deep x 18 tall, front z = 0):
 Level 1: shell and fittings (arcade, chamber, table and chairs, records chests, stair, notice board, torches).
 Level 2 (the hall at work): the clock hubs get hands (buttons), bookshelves of records and a lectern, market stalls
 under the arcade (barrels, hay, a counter), lanterns under the floor and in the chamber, red banners on the tower.
-Level 3 (the proud town): the clocks (decoration step), flower boxes on brackets under the upper windows, a
-weathervane, benches and flower beds round the arcade, a lantern post, carpets in the chamber, vines.
+Level 3 (the proud town): the clocks (decoration step), flower boxes on brackets under the upper windows, benches
+and flower beds round the arcade, a lantern post, carpet runners in the chamber and the porch, vines.
 """
 from make_batch1_structures import Structure
 from batch3.ws_kit import P, A, STAIR, TOP, HANG, STAND, LEAVES, connect, gable_roof
@@ -112,10 +112,8 @@ def town_hall():
         for y in (1, 2, 3):
             P(s, x, y, TZ0 - 1, 'stone_bricks')
         P(s, x, 4, TZ0 - 1, 'stone_brick_stairs', facing='south', **STAIR)
-    for z in (TZ0, TZ1):                             # a string course where the stone meets the clock stage
-        for x in range(TX0 - 1, TX1 + 2):
-            if z == TZ0:
-                P(s, x, STONE_TOP, z - 1, 'stone_brick_stairs', facing='south', **TOP)
+    for x in range(TX0 - 1, TX1 + 2):                # a string course where the stone meets the clock stage
+        P(s, x, STONE_TOP, TZ0 - 1, 'stone_brick_stairs', facing='south', **TOP)
     for z in range(TZ0, TZ1 + 1):
         for x, f in ((TX0 - 1, 'east'), (TX1 + 1, 'west')):
             A(s, x, STONE_TOP, z, 'stone_brick_stairs', facing=f, **TOP)
