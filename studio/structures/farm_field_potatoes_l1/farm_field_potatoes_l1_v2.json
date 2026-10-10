@@ -4,14 +4,14 @@
   "version": 2,
   "size": [14,3,9],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "ever so slightly wider with more detail surrounding it please keep it simple nothing crazy also the coblestone and the dirt I dont know what thats supposed to be",
     "author": "claude",
     "created": "2026-10-10T03:27:22.400Z",
     "description": "Farm field: potatoes, level 1 of 1: shell and fittings (what soldiers build first). A raised field bed, one level: dirt in two blocks of 4 rows each side of an open trench, oak log border and fence with an entrance at the front centre, plank boardwalk and composter in front. Builders place the dirt; farmers till it into farmland and the decoration step adds the trench water and the potatoes (builders can place neither water, farmland nor crops). Modules tile side by side and around the farmhouse. A root cellar beside the bed: a turf mound with a cellar hatch between stone posts and a lantern; a sack pile and a chest by the path. Decoration step adds: crop, farmland, water.",
     "changes": "Its own look now: a root cellar (turf mound, cellar hatch, stone posts, lantern) beside the bed, plus a step up at the entrance so soldiers can walk in.",
     "parent": 1,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T03:44:38.520Z",
     "tags": [
       "revise1",
       "tier1",
