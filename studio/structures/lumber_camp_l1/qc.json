@@ -164,6 +164,58 @@
           "sheet"
         ]
       }
+    },
+    "5": {
+      "version": 5,
+      "checkedAt": "2026-10-10T04:17:26.485Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 219,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4520547945205479,
+          "types": 16,
+          "dominant": {
+            "name": "spruce_planks",
+            "share": 0.1735159817351598
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Smaller now (16 x 11), as Carlton asked: an open saw shed with a steep roof, the saw bench, logs on trestles and plank stacks. Reads as a saw mill.",
+        "problems": [
+          "No plants or lights at L1: a lantern on a post and a bush at a corner",
+          "The roof's open ends are bare: a gable board or bargeboard trim at each end"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

@@ -185,6 +185,68 @@
           "sheet"
         ]
       }
+    },
+    "5": {
+      "version": 5,
+      "checkedAt": "2026-10-10T04:17:26.993Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 2,
+      "score": 94,
+      "auto": {
+        "issues": [
+          {
+            "level": "fail",
+            "check": "buildability",
+            "message": "Builders can't place: water."
+          },
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: stonecutter."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 299,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3712374581939799,
+          "types": 24,
+          "dominant": {
+            "name": "spruce_planks",
+            "share": 0.12709030100334448
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "summary": "Level 2 adds a waterwheel in a stone race on the left and a log yard of stacked crates and logs on the right. Clearly a working mill and clearly more than L1. The shed lanterns now hang from the tie beams.",
+        "problems": [
+          "Water blocks were added in the wheel race at x=14, y=0, z=2..6 (not in the change notes): builders can't place water (automatic check fails). Record the water as a decoration step (s.decorate(..., 'water')) like the well, and leave the race empty in the blocks",
+          "The waterwheel reads as a dark block from most angles: open spokes (fences or trapdoors) between the paddles would make it read as a wheel"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }
