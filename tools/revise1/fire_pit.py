@@ -2,10 +2,60 @@
 soldiers can burn themselves"; l2 "see l1". Decision (already made): the fire is an UNLIT campfire (lit=false), so
 nothing burns; the light comes from a lantern."""
 from make_batch1_structures import Structure
-from revise1.blockconn import connect, put_id
+import math
+
+from revise1.blockconn import connect, noise, put_id
 
 STAIR = dict(half='bottom', shape='straight', waterlogged='false')
 LANTERN = dict(hanging='false', waterlogged='false')
+LEAVES = dict(distance='1', persistent='true', waterlogged='false')
+TRUNK = (1, 7)                                                     # the shade tree's foot, back left, between benches
+
+
+def clear_of_fire(x, z, c):
+    """No leaf or branch over the fire ring (the 3 x 3 round the campfire) or the spit: the fire stays open to the sky."""
+    return max(abs(x - c), abs(z - c)) >= 2
+
+
+def young_tree(s):
+    """Level 2: a young oak at the back left: a trunk 4 high with a tuft of leaves at its top."""
+    tx, tz = TRUNK
+    for y in range(0, 4):
+        put_id(s, tx, y, tz, 'oak_log', axis='y')
+    for x, y, z in ((tx, 4, tz), (tx - 1, 4, tz), (tx, 4, tz + 1), (tx - 1, 3, tz), (tx, 3, tz + 1),
+                    (tx + 1, 4, tz + 1), (tx - 1, 4, tz + 1)):
+        put_id(s, x, y, z, 'oak_leaves', **LEAVES)
+
+
+def shade_tree(s, c):
+    """Level 3: the oak has grown: the trunk bends forward out of the young tree's tuft, splits into a branch over the
+    left bench and one over the back bench, and carries a broad, ragged crown (y 5 to 7) that shades both benches but
+    leaves the fire ring open. A few leaves hang under the crown's edge; a lantern hangs from each branch."""
+    tx, tz = TRUNK
+    put_id(s, tx + 1, 4, tz - 1, 'oak_wood', axis='y')            # the bend: bark all round, no sawn ends
+    put_id(s, tx + 1, 5, tz - 1, 'oak_log', axis='y')
+    put_id(s, tx + 1, 6, tz - 1, 'oak_log', axis='y')
+    for x, z, axis in ((tx, tz - 2, 'z'), (tx, tz - 3, 'z')):     # branch forward over the left bench
+        put_id(s, x, 5, z, 'oak_log', axis=axis)
+    for x, z in ((tx + 2, tz), (tx + 3, tz)):                      # branch right over the back bench
+        put_id(s, x, 5, z, 'oak_log', axis='x')
+    put_id(s, tx, 5, tz - 1, 'oak_wood', axis='y')                # joints where the branches leave the trunk
+    put_id(s, tx + 2, 5, tz - 1, 'oak_wood', axis='y')
+    cx, cz = tx + 1.2, tz - 1.4                                    # the crown's middle, over the gap between benches
+    for y, r in ((4, 3.4), (5, 3.3), (6, 3.0), (7, 1.9)):
+        for x in range(s.size[0]):
+            for z in range(s.size[2]):
+                if (x, y, z) in s.blocks or not clear_of_fire(x, z, c):
+                    continue
+                dist = math.hypot(x - cx, (z - cz) * 0.9)
+                if y == 4:                                         # leaves hanging under the edge, not on the seats
+                    if not (2.2 < dist <= r and noise(x, y, z, 11) < 0.35):
+                        continue
+                elif dist > r or (dist > r - 1.2 and noise(x, y, z, 12) < 0.4):
+                    continue
+                put_id(s, x, y, z, 'oak_leaves', **LEAVES)
+    s.put(tx, 4, tz - 3, 'lantern', hanging='true', waterlogged='false')       # lanterns hanging from the branches
+    s.put(tx + 3, 4, tz, 'lantern', hanging='true', waterlogged='false')
 
 
 def fire_pit(size=9):
@@ -16,7 +66,7 @@ def fire_pit(size=9):
     path in from the front, poppies and leaf bushes round the edge and a lantern post.
     Level 2: a cauldron pot, a second lantern post, cushions on the benches, a potted flower, grass and ferns.
     Level 3: a firewood shelter over the woodpile (dark oak posts and slab roof) with a lantern hanging under it."""
-    s = Structure('fire_pit', (size, 3, size))
+    s = Structure('fire_pit', (size, 8, size))
     c = size // 2                                                   # 4
     s.at(1, 'shell')
     for x in (c - 1, c + 1):                                        # ring corners: low slabs, so the fire shows
@@ -69,8 +119,10 @@ def fire_pit(size=9):
     for x, z, plant in ((0, 1, 'short_grass'), (size - 1, c, 'fern'), (2, size - 1, 'short_grass'),
                         (size - 1, 2, 'dandelion'), (0, c + 1, 'short_grass')):
         s.put(x, 0, z, plant)
+    young_tree(s)
 
     s.at(3, 'flourish3')
+    shade_tree(s, c)
     # a firewood shelter over the woodpile: dark oak posts and a dark oak slab roof, a lantern hanging under it
     for z in (size - 2, size - 1):
         put_id(s, size - 3, 0, z, 'dark_oak_fence'); put_id(s, size - 3, 1, z, 'dark_oak_fence')

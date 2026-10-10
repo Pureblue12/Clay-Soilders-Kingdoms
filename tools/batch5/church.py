@@ -216,8 +216,6 @@ def church():
         A(s, x, 4, pz0, 'spruce_stairs', facing='south', **STAIR)
         A(s, x, 4, pz1, 'spruce_stairs', facing='north', **STAIR)
         A(s, x, 5, SIDE_DOOR_Z, 'dark_oak_planks')
-        if x > px0:
-            A(s, x, 6, SIDE_DOOR_Z, 'spruce_slab', **SLAB)
     P(s, px1 + 1, 2, pz0, 'spruce_stairs', facing='east', **TOP)    # corbels under the gable overhang
     P(s, px1 + 1, 2, pz1, 'spruce_stairs', facing='east', **TOP)
     P(s, px1 + 1, 0, SIDE_DOOR_Z, 'cobblestone_stairs', facing='west', **STAIR)

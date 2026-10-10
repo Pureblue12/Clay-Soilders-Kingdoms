@@ -205,8 +205,8 @@ def inn(width=7, depth=9):
 
 
 STRUCTURES = [dict(path='inn', name='Inn (inn stage of the visitors\' camp)', tier=4, zone='inner', role='house',
-                   group='visitors_camp', terrain='skirt', door='front', make=inn, changes='First version.',
-                   description='Over budget: 509 blocks vs 315 (first build 419 vs 255). Two-storey inn: stone common room (hearth, two tables, a bar of kegs), six beds in the '
+                   group='visitors_camp', terrain='skirt', door='front', make=inn, changes='Quality check round 1: level 1 outside is no longer bare: planter boxes under the front windows, sills under the side and back windows, a stepping-stone path to the road, kegs and a bench by the door. The hitching rail now joins the stable post. Level 3 fills the planter boxes with flowers and adds flowers along the path and a barrel of apples. The box is two rows deeper at the front for the path and porch.',
+                   description='Over budget: 521 blocks vs 315 (first build 433 vs 255). Two-storey inn: stone common room (hearth, two tables, a bar of kegs), six beds in the '
                                'timber upper storey up a staircase; L2 the stable lean-to, a projecting sign, '
                                'lanterns and shutters; L3 a porch over the door, a Welcome signpost, flower boxes, '
                                'banner and chimney smoke.')]

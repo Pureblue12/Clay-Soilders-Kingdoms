@@ -143,13 +143,11 @@ def tree_farm():
             P(s, x, 2, z, 'lantern', **STAND)
     for x in (4, 6):                                               # lanterns under the gateway lintel
         P(s, x, 1, 0, 'lantern', **HANG)
-    # a little gabled roof on the gateway (a lychgate): dark oak eaves, oak slopes, a spruce gable and ridge cap
-    for x, y, f, b in ((2, 2, 'east', 'dark_oak_stairs'), (3, 3, 'east', 'oak_stairs'), (4, 4, 'east', 'oak_stairs'),
-                       (6, 4, 'west', 'oak_stairs'), (7, 3, 'west', 'oak_stairs'), (8, 2, 'west', 'dark_oak_stairs')):
+    # a low gabled roof on the gateway (a lychgate): dark oak eaves, oak slopes, a dark oak ridge with a spruce cap
+    for x, y, f, b in ((2, 2, 'east', 'dark_oak_stairs'), (3, 3, 'east', 'oak_stairs'), (4, 3, 'east', 'oak_stairs'),
+                       (6, 3, 'west', 'oak_stairs'), (7, 3, 'west', 'oak_stairs'), (8, 2, 'west', 'dark_oak_stairs')):
         P(s, x, y, 0, b, facing=f, **STAIR)
-    P(s, 5, 4, 0, 'dark_oak_planks'); P(s, 5, 5, 0, 'spruce_slab', **SLAB)
-    for x in (4, 5, 6):
-        P(s, x, 3, 0, 'spruce_planks')
+    P(s, 5, 3, 0, 'dark_oak_planks'); P(s, 5, 4, 0, 'spruce_slab', **SLAB)
     for x in (PATH - 1, PATH + 1):                                 # shutters beside the back window
         P(s, x, 2, SZ1 + 1, 'spruce_trapdoor', facing='south', **OPEN)
     for x in (7, 9):                                               # a sawhorse with a cut log, by the log yard
