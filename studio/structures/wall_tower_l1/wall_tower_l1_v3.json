@@ -4,14 +4,14 @@
   "version": 3,
   "size": [7,13,7],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T09:01:31.383Z",
     "description": "Wall tower, level 1 of 3: shell and fittings (what soldiers build first). Needs scaffolding: 13 tall (level 3 cone roof; levels 1 and 2 are 9 tall). Over budget: 294 blocks vs 160. Box 7 x 7: the tower stands at x 1..5, z 1..5, the end columns x 0 and 6 are stone wall (wall line z 1..3: place the box 1 block forward of the wall line); z 0 holds the hoarding and roof overhang. Square stone tower the wall walk runs through (stand at 5); a door on the town side and a stone stair up to the walk room and the archer platform on the roof.",
     "changes": "Quality check round 2: the end columns (x 0 and 6) are now the stone wall itself (stone_wall_straight profile: parapet at z 1, body and walk at z 2..3, half merlon at x 0, merlon at x 6), so the walk and parapet join the wall block for block (the wall line is box z 1..3). The walk-room torch moved off the arrow slit onto the solid back wall at (4, 6, 4). L2: a timber hoarding on the front (gallery on dark oak brackets, fence railing), two red banners under it and a lantern hanging over the slit; the platform lantern moved off the hatch to the front corner. L3: the cone roof is seated on a dark oak wall plate on the merlons, each spruce course rests on a solid course below, with a dark oak eave course 1 block out all round.",
     "parent": 2,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T09:13:30.085Z",
     "tags": [
       "batch3",
       "tier3",
