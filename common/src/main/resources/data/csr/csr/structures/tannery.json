@@ -1,0 +1,30 @@
+{
+  "id": "csr:tannery",
+  "name": "Tannery",
+  "design": "ready",
+  "tier": 3,
+  "zone": "outer",
+  "role": "workshop",
+  "footprint": [
+    12,
+    8,
+    10
+  ],
+  "cost": "auto",
+  "variant_group": "tannery",
+  "structure": "csr:kingdom/studio/tannery_l1",
+  "levels": [
+    "csr:kingdom/studio/tannery_l1",
+    "csr:kingdom/studio/tannery_l2",
+    "csr:kingdom/studio/tannery_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "ground_level",
+  "batch": 3,
+  "door_side": "front",
+  "studio": {
+    "tannery_l1": 1,
+    "tannery_l2": 1,
+    "tannery_l3": 1
+  }
+}

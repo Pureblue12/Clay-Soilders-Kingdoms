@@ -6,21 +6,25 @@
   "zone": "inner",
   "role": "house",
   "footprint": [
-    7,
-    8,
-    9
+    9,
+    9,
+    11
   ],
   "cost": "auto",
   "variant_group": "cottage",
-  "palette": "oak_a",
-  "structure": "csr:kingdom/batch1/cottage_l1",
+  "structure": "csr:kingdom/studio/cottage_l1",
   "levels": [
-    "csr:kingdom/batch1/cottage_l1",
-    "csr:kingdom/batch1/cottage_l2",
-    "csr:kingdom/batch1/cottage_l3"
+    "csr:kingdom/studio/cottage_l1",
+    "csr:kingdom/studio/cottage_l2",
+    "csr:kingdom/studio/cottage_l3"
   ],
   "ground_level": 0,
   "terrain": "ground_level",
   "batch": 1,
-  "door_side": "front"
+  "door_side": "front",
+  "studio": {
+    "cottage_l1": 3,
+    "cottage_l2": 3,
+    "cottage_l3": 3
+  }
 }

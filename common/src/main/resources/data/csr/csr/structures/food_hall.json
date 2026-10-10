@@ -1,8 +1,30 @@
 {
   "id": "csr:food_hall",
   "name": "Food hall",
-  "design": "TBD",
+  "design": "ready",
   "tier": 4,
   "zone": "inner",
-  "role": "food"
+  "role": "food",
+  "footprint": [
+    13,
+    9,
+    15
+  ],
+  "cost": "auto",
+  "variant_group": "food_hall",
+  "structure": "csr:kingdom/studio/food_hall_l1",
+  "levels": [
+    "csr:kingdom/studio/food_hall_l1",
+    "csr:kingdom/studio/food_hall_l2",
+    "csr:kingdom/studio/food_hall_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "ground_level",
+  "batch": 4,
+  "door_side": "front",
+  "studio": {
+    "food_hall_l1": 2,
+    "food_hall_l2": 2,
+    "food_hall_l3": 3
+  }
 }

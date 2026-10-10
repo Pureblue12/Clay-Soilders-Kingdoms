@@ -6,21 +6,24 @@
   "zone": "outer",
   "role": "resource",
   "footprint": [
-    7,
-    4,
-    7
+    16,
+    8,
+    11
   ],
   "cost": "auto",
   "variant_group": "lumber_camp",
-  "palette": "oak_a",
-  "structure": "csr:kingdom/batch1/lumber_camp_l1",
+  "structure": "csr:kingdom/studio/lumber_camp_l1",
   "levels": [
-    "csr:kingdom/batch1/lumber_camp_l1",
-    "csr:kingdom/batch1/lumber_camp_l2",
-    "csr:kingdom/batch1/lumber_camp_l3"
+    "csr:kingdom/studio/lumber_camp_l1",
+    "csr:kingdom/studio/lumber_camp_l2",
+    "csr:kingdom/studio/lumber_camp_l3"
   ],
   "ground_level": 0,
   "terrain": "flexible",
   "batch": 1,
-  "door_side": "front"
+  "studio": {
+    "lumber_camp_l1": 5,
+    "lumber_camp_l2": 5,
+    "lumber_camp_l3": 5
+  }
 }

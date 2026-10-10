@@ -1,0 +1,21 @@
+{
+  "id": "csr:farm_field_wheat",
+  "name": "Wheat field",
+  "design": "ready",
+  "tier": 1,
+  "zone": "outer",
+  "role": "farm",
+  "footprint": [
+    13,
+    5,
+    9
+  ],
+  "cost": "auto",
+  "variant_group": "farm",
+  "structure": "csr:kingdom/studio/farm_field_wheat_l1",
+  "ground_level": 0,
+  "terrain": "flexible",
+  "studio": {
+    "farm_field_wheat_l1": 3
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "id": "csr:notice_board",
+  "name": "Notice board",
+  "design": "ready",
+  "tier": 2,
+  "zone": "inner",
+  "role": "decoration",
+  "footprint": [
+    4,
+    4,
+    2
+  ],
+  "cost": "auto",
+  "variant_group": "notice_board",
+  "structure": "csr:kingdom/studio/notice_board_l1",
+  "levels": [
+    "csr:kingdom/studio/notice_board_l1",
+    "csr:kingdom/studio/notice_board_l2"
+  ],
+  "ground_level": 0,
+  "terrain": "flexible",
+  "batch": 2,
+  "studio": {
+    "notice_board_l1": 3,
+    "notice_board_l2": 3
+  }
+}

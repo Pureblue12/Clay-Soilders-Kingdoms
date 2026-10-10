@@ -183,10 +183,10 @@ public class StructurePasteGameTests {
      */
     @GameTest(template = PLATFORM, batch = "structure_paste_tbd")
     public static void placeholderCannotBePasted(GameTestHelper helper) {
-        // The market is still a placeholder (the keep got its structure files in batch 1).
-        StructureMeta market = meta(helper, ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, "market"));
+        // The storehouse is still a placeholder (its Studio versions aren't approved yet).
+        StructureMeta storehouse = meta(helper, ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, "storehouse"));
         try {
-            StructurePaster.paste(helper.getLevel(), market, helper.absolutePos(AT), Direction.SOUTH);
+            StructurePaster.paste(helper.getLevel(), storehouse, helper.absolutePos(AT), Direction.SOUTH);
             helper.fail("Pasting a placeholder should be refused");
         } catch (IllegalArgumentException e) {
             helper.assertTrue(e.getMessage().contains("TBD"), "The reason should say the design is TBD: " + e.getMessage());

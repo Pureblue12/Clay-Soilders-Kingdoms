@@ -1,0 +1,30 @@
+{
+  "id": "csr:inn",
+  "name": "Inn",
+  "design": "ready",
+  "tier": 4,
+  "zone": "inner",
+  "role": "house",
+  "footprint": [
+    12,
+    9,
+    15
+  ],
+  "cost": "auto",
+  "variant_group": "inn",
+  "structure": "csr:kingdom/studio/inn_l1",
+  "levels": [
+    "csr:kingdom/studio/inn_l1",
+    "csr:kingdom/studio/inn_l2",
+    "csr:kingdom/studio/inn_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "ground_level",
+  "batch": 4,
+  "door_side": "front",
+  "studio": {
+    "inn_l1": 2,
+    "inn_l2": 2,
+    "inn_l3": 2
+  }
+}

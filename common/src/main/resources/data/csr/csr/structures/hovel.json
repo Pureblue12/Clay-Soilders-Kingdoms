@@ -12,15 +12,18 @@
   ],
   "cost": "auto",
   "variant_group": "hovel",
-  "palette": "oak_a",
-  "structure": "csr:kingdom/batch1/hovel_l1",
+  "structure": "csr:kingdom/studio/hovel_l1",
   "levels": [
-    "csr:kingdom/batch1/hovel_l1",
-    "csr:kingdom/batch1/hovel_l2",
-    "csr:kingdom/batch1/hovel_l3"
+    "csr:kingdom/studio/hovel_l1",
+    "csr:kingdom/studio/hovel_l2",
+    "csr:kingdom/studio/hovel_l3"
   ],
   "ground_level": 0,
   "terrain": "flexible",
   "batch": 1,
-  "door_side": "front"
+  "studio": {
+    "hovel_l1": 2,
+    "hovel_l2": 2,
+    "hovel_l3": 2
+  }
 }

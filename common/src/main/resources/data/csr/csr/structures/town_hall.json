@@ -1,0 +1,29 @@
+{
+  "id": "csr:town_hall",
+  "name": "Town hall",
+  "design": "ready",
+  "tier": 6,
+  "zone": "inner",
+  "role": "civic",
+  "footprint": [
+    13,
+    18,
+    18
+  ],
+  "cost": "auto",
+  "variant_group": "town_hall",
+  "structure": "csr:kingdom/studio/town_hall_l1",
+  "levels": [
+    "csr:kingdom/studio/town_hall_l1",
+    "csr:kingdom/studio/town_hall_l2",
+    "csr:kingdom/studio/town_hall_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "ground_level",
+  "batch": 5,
+  "studio": {
+    "town_hall_l1": 2,
+    "town_hall_l2": 2,
+    "town_hall_l3": 2
+  }
+}

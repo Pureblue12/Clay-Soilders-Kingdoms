@@ -1,0 +1,29 @@
+{
+  "id": "csr:stone_wall_gate",
+  "name": "Stone wall, gate",
+  "design": "ready",
+  "tier": 3,
+  "zone": "wall",
+  "role": "gate",
+  "footprint": [
+    7,
+    9,
+    5
+  ],
+  "cost": "auto",
+  "variant_group": "stone_wall",
+  "structure": "csr:kingdom/studio/stone_wall_gate_l1",
+  "levels": [
+    "csr:kingdom/studio/stone_wall_gate_l1",
+    "csr:kingdom/studio/stone_wall_gate_l2",
+    "csr:kingdom/studio/stone_wall_gate_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "ground_level",
+  "batch": 3,
+  "studio": {
+    "stone_wall_gate_l1": 1,
+    "stone_wall_gate_l2": 1,
+    "stone_wall_gate_l3": 1
+  }
+}

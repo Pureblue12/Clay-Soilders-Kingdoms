@@ -1,0 +1,29 @@
+{
+  "id": "csr:mine",
+  "name": "Mine",
+  "design": "ready",
+  "tier": 3,
+  "zone": "outer",
+  "role": "resource",
+  "footprint": [
+    11,
+    7,
+    11
+  ],
+  "cost": "auto",
+  "variant_group": "mine",
+  "structure": "csr:kingdom/studio/mine_l1",
+  "levels": [
+    "csr:kingdom/studio/mine_l1",
+    "csr:kingdom/studio/mine_l2",
+    "csr:kingdom/studio/mine_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "flexible",
+  "batch": 3,
+  "studio": {
+    "mine_l1": 1,
+    "mine_l2": 1,
+    "mine_l3": 1
+  }
+}

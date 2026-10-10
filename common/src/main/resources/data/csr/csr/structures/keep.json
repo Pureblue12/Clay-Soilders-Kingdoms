@@ -1,26 +1,30 @@
 {
   "id": "csr:keep",
-  "name": "Keep (tier 1)",
+  "name": "Keep",
   "design": "ready",
   "tier": 1,
   "zone": "keep",
   "role": "keep",
   "footprint": [
-    9,
-    9,
-    9
+    31,
+    20,
+    33
   ],
   "cost": "auto",
   "variant_group": "keep",
-  "palette": "oak_a",
-  "structure": "csr:kingdom/batch1/keep_l1",
+  "structure": "csr:kingdom/studio/keep_l1",
   "levels": [
-    "csr:kingdom/batch1/keep_l1",
-    "csr:kingdom/batch1/keep_l2",
-    "csr:kingdom/batch1/keep_l3"
+    "csr:kingdom/studio/keep_l1",
+    "csr:kingdom/studio/keep_l2",
+    "csr:kingdom/studio/keep_l3"
   ],
   "ground_level": 0,
   "terrain": "ground_level",
   "batch": 1,
-  "door_side": "front"
+  "door_side": "front",
+  "studio": {
+    "keep_l1": 6,
+    "keep_l2": 6,
+    "keep_l3": 6
+  }
 }

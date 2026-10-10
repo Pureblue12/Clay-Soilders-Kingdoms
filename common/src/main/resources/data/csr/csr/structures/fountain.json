@@ -1,0 +1,29 @@
+{
+  "id": "csr:fountain",
+  "name": "Fountain",
+  "design": "ready",
+  "tier": 5,
+  "zone": "inner",
+  "role": "decoration",
+  "footprint": [
+    9,
+    8,
+    9
+  ],
+  "cost": "auto",
+  "variant_group": "fountain",
+  "structure": "csr:kingdom/studio/fountain_l1",
+  "levels": [
+    "csr:kingdom/studio/fountain_l1",
+    "csr:kingdom/studio/fountain_l2",
+    "csr:kingdom/studio/fountain_l3"
+  ],
+  "ground_level": 1,
+  "terrain": "flexible",
+  "batch": 5,
+  "studio": {
+    "fountain_l1": 1,
+    "fountain_l2": 1,
+    "fountain_l3": 1
+  }
+}

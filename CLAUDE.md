@@ -317,6 +317,8 @@ whenever you change a datagen provider or add items/blocks/recipes.
 A separate Node tool (not part of the Gradle build) to view structures with real Minecraft textures, review them
 (approve / reject, versions, compare) and render screenshots. Run with `cd studio && npm install && npm run dev`.
 Its own guide is `studio/CLAUDE.md`; building rules `studio/STYLE.md`. Only Carlton approves structures there.
+Approved structures reach the mod only through `npm run studio -- promote` (table `studio/promote.json`; rules in
+`docs/STRUCTURES.md`, "Promote step"). The batch-1 files stay as test copies `csr:batch1_<name>`.
 
 ## Code structure
 

@@ -1,9 +1,0 @@
-{
-  "structure": "csr:fire_pit",
-  "note": "What the decoration step (roadmap 5a) must add after builders finish each level; nothing here is placed by builders.",
-  "unknown_blocks_in_flourish": [],
-  "levels": {
-    "1": [],
-    "2": []
-  }
-}

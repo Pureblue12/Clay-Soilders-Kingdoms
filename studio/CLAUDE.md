@@ -82,6 +82,9 @@ One JSON file per version: `structures/<name>/<name>_v<N>.json`.
 - `meta.notes` are Carlton's review notes; `meta.changes` is the author's summary of the version.
 - Versions are never overwritten (`Store.saveNewVersion` writes with the `wx` flag). The only edit to an existing
   version is its review metadata, from the UI. Rollback = a new version copying an old one.
+- **Promote (into the mod):** `npm run studio -- promote [ids...] [--dry-run]` exports the latest APPROVED version of
+  every structure listed in `promote.json` into the mod (NBT, metadata JSON, decoration sidecar) and prints a report.
+  Rules: `../docs/STRUCTURES.md`, "Promote step". Code changes still go through a PR.
 - Converters: `export-nbt` writes a vanilla structure `.nbt` (DataVersion 3955, 1.21.1) the mod can load from
   `data/csr/structure/`; `import-nbt` reads one (block-entity data and entities are dropped).
 

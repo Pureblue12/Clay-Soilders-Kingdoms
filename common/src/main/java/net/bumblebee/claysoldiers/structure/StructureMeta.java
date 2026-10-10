@@ -52,7 +52,7 @@ public record StructureMeta(ResourceLocation id, String name, String design, int
     public static final List<String> ZONES = List.of("keep", "inner", "wall", "outer");
     /** What a structure is for. Add a role here and in docs/STRUCTURES.md when a new kind of building needs one. */
     public static final List<String> ROLES = List.of("keep", "house", "farm", "resource", "storage", "defense", "gate",
-            "military", "workshop", "market", "religious", "health", "food", "utility", "decoration");
+            "military", "workshop", "market", "religious", "health", "food", "utility", "decoration", "civic");
 
     /** How a structure sits on uneven ground (docs/STRUCTURES.md, "Terrain behavior"). */
     public static final List<String> TERRAIN_BEHAVIORS = List.of("ground_level", "skirt", "stepped", "flexible");

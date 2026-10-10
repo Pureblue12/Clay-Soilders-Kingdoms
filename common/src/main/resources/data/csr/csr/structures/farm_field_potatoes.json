@@ -1,0 +1,21 @@
+{
+  "id": "csr:farm_field_potatoes",
+  "name": "Potato field",
+  "design": "ready",
+  "tier": 1,
+  "zone": "outer",
+  "role": "farm",
+  "footprint": [
+    16,
+    4,
+    9
+  ],
+  "cost": "auto",
+  "variant_group": "farm",
+  "structure": "csr:kingdom/studio/farm_field_potatoes_l1",
+  "ground_level": 0,
+  "terrain": "flexible",
+  "studio": {
+    "farm_field_potatoes_l1": 3
+  }
+}

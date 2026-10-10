@@ -1,0 +1,29 @@
+{
+  "id": "csr:lamp_post",
+  "name": "Lamp post",
+  "design": "ready",
+  "tier": 4,
+  "zone": "inner",
+  "role": "decoration",
+  "footprint": [
+    3,
+    6,
+    3
+  ],
+  "cost": "auto",
+  "variant_group": "lamp_post",
+  "structure": "csr:kingdom/studio/lamp_post_l1",
+  "levels": [
+    "csr:kingdom/studio/lamp_post_l1",
+    "csr:kingdom/studio/lamp_post_l2",
+    "csr:kingdom/studio/lamp_post_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "flexible",
+  "batch": 4,
+  "studio": {
+    "lamp_post_l1": 1,
+    "lamp_post_l2": 1,
+    "lamp_post_l3": 1
+  }
+}

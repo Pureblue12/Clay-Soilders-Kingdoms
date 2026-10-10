@@ -1,0 +1,30 @@
+{
+  "id": "csr:townhouse",
+  "name": "Townhouse",
+  "design": "ready",
+  "tier": 4,
+  "zone": "inner",
+  "role": "house",
+  "footprint": [
+    9,
+    9,
+    12
+  ],
+  "cost": "auto",
+  "variant_group": "townhouse",
+  "structure": "csr:kingdom/studio/townhouse_l1",
+  "levels": [
+    "csr:kingdom/studio/townhouse_l1",
+    "csr:kingdom/studio/townhouse_l2",
+    "csr:kingdom/studio/townhouse_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "ground_level",
+  "batch": 4,
+  "door_side": "front",
+  "studio": {
+    "townhouse_l1": 2,
+    "townhouse_l2": 3,
+    "townhouse_l3": 3
+  }
+}

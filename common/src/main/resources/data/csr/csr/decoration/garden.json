@@ -1,0 +1,84 @@
+{
+  "structure": "csr:garden",
+  "note": "What the decoration step (roadmap 5a) must add after builders finish each level; nothing here is placed by builders. Written by the Studio promote step.",
+  "levels": {
+    "1": [
+      {
+        "pos": [
+          2,
+          0,
+          2
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          3,
+          0,
+          2
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          4,
+          0,
+          2
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          2,
+          0,
+          3
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          3,
+          0,
+          3
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          4,
+          0,
+          3
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      }
+    ],
+    "2": [
+      {
+        "pos": [
+          3,
+          1,
+          3
+        ],
+        "kind": "lily_pad",
+        "block": "minecraft:lily_pad"
+      }
+    ],
+    "3": [
+      {
+        "pos": [
+          2,
+          1,
+          2
+        ],
+        "kind": "lily_pad",
+        "block": "minecraft:lily_pad"
+      }
+    ]
+  }
+}

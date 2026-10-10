@@ -1,0 +1,41 @@
+{
+  "structure": "csr:batch1_well",
+  "note": "What the decoration step (roadmap 5a) must add after builders finish each level; nothing here is placed by builders.",
+  "unknown_blocks_in_flourish": [
+    "moss_carpet"
+  ],
+  "levels": {
+    "1": [
+      {
+        "pos": [
+          1,
+          0,
+          1
+        ],
+        "kind": "water",
+        "note": "well water"
+      }
+    ],
+    "2": [
+      {
+        "pos": [
+          2,
+          1,
+          0
+        ],
+        "kind": "potted_plant",
+        "plant": "poppy"
+      },
+      {
+        "pos": [
+          0,
+          1,
+          2
+        ],
+        "kind": "potted_plant",
+        "plant": "dandelion"
+      }
+    ],
+    "3": []
+  }
+}

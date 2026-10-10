@@ -1,8 +1,29 @@
 {
   "id": "csr:smithy",
   "name": "Smithy",
-  "design": "TBD",
+  "design": "ready",
   "tier": 3,
   "zone": "inner",
-  "role": "workshop"
+  "role": "workshop",
+  "footprint": [
+    9,
+    9,
+    11
+  ],
+  "cost": "auto",
+  "variant_group": "smithy",
+  "structure": "csr:kingdom/studio/smithy_l1",
+  "levels": [
+    "csr:kingdom/studio/smithy_l1",
+    "csr:kingdom/studio/smithy_l2",
+    "csr:kingdom/studio/smithy_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "ground_level",
+  "batch": 3,
+  "studio": {
+    "smithy_l1": 1,
+    "smithy_l2": 1,
+    "smithy_l3": 1
+  }
 }

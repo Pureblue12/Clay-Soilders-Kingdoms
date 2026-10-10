@@ -17,6 +17,7 @@ import { buildability } from '../src/format/modrules.ts';
 import { assetFile, assetSource } from '../src/server/assets.ts';
 import { STAGE_LABELS, STUDIO_ROOT, Store } from '../src/server/store.ts';
 import { commitFile } from '../src/server/gitsync.ts';
+import { promote } from './promote.ts';
 
 const HELP = `Minecraft Structure Studio CLI
 
@@ -55,6 +56,10 @@ Minecraft structure files
                                         new structure, or the next version if <name> exists
   import-nbt <folder> [--prefix mod_]   every .nbt in a folder, named after the files
   assets                                where the Minecraft textures come from
+
+Into the mod
+  promote [ids...] [--dry-run]          export the latest APPROVED version of every structure listed in promote.json
+                                        into the mod (NBT, metadata JSON, decoration sidecar) and print a report
 
 Reviews (approve / reject) are made only in the studio UI (npm run dev).
 `;
@@ -369,6 +374,19 @@ async function main() {
       const out = str(args, 'out') ?? `${s.name}_v${s.version}.nbt`;
       fs.writeFileSync(out, structureToNbt(s));
       console.log(`wrote ${out}`);
+      return;
+    }
+
+    case 'promote': {
+      const { rows, skipped, noScaffoldHeight } = promote(store, { dryRun: args['dry-run'] === true, only: rest });
+      console.log('| id | tier | size | height | Studio versions | ground | decoration | fixes |');
+      console.log('|---|---|---|---|---|---|---|---|');
+      for (const r of rows)
+        console.log(`| ${r.id} | ${r.tier} | ${r.size.join('x')} | ${r.height}${r.height > noScaffoldHeight ? ' (scaffold)' : ''} | ${r.versions.join(', ')} | ${r.groundLayer === 0 ? 'sunk 1' : 'on top'} | ${r.decoration} | ${r.fixes} |`);
+      for (const s of skipped) console.log(`skipped ${s}`);
+      const unknown = [...new Set(rows.flatMap((r) => r.unknown))].sort();
+      console.log(`${rows.length} promoted${args['dry-run'] ? ' (dry run, nothing written)' : ''}, ${skipped.length} skipped`);
+      if (unknown.length) console.log(`not yet tested by a builder GameTest (${unknown.length}): ${unknown.join(', ')}`);
       return;
     }
 

@@ -1,8 +1,29 @@
 {
   "id": "csr:market",
-  "name": "Market",
-  "design": "TBD",
+  "name": "Market square",
+  "design": "ready",
   "tier": 4,
   "zone": "inner",
-  "role": "market"
+  "role": "market",
+  "footprint": [
+    15,
+    8,
+    15
+  ],
+  "cost": "auto",
+  "variant_group": "market",
+  "structure": "csr:kingdom/studio/market_l1",
+  "levels": [
+    "csr:kingdom/studio/market_l1",
+    "csr:kingdom/studio/market_l2",
+    "csr:kingdom/studio/market_l3"
+  ],
+  "ground_level": 1,
+  "terrain": "flexible",
+  "batch": 4,
+  "studio": {
+    "market_l1": 2,
+    "market_l2": 2,
+    "market_l3": 2
+  }
 }
