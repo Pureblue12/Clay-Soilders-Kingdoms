@@ -1,86 +1,135 @@
 {
-  "carpenter_l1": {
-    "version": 3,
-    "verdict": "pass",
-    "score": 75,
-    "round": 3,
-    "checkedAt": "2026-10-10T02:59:36.691Z"
-  },
-  "carpenter_l2": {
-    "version": 3,
-    "verdict": "pass",
-    "score": 75,
-    "round": 3,
-    "checkedAt": "2026-10-10T02:59:37.189Z"
-  },
-  "carpenter_l3": {
-    "version": 3,
-    "verdict": "pass",
-    "score": 75,
-    "round": 1,
-    "checkedAt": "2026-10-10T02:59:37.669Z"
-  },
-  "stables_l1": {
-    "version": 2,
-    "verdict": "pass",
-    "score": 72,
-    "round": 2,
-    "checkedAt": "2026-10-10T03:12:25.898Z"
-  },
-  "stables_l2": {
-    "version": 2,
-    "verdict": "pass",
-    "score": 75,
-    "round": 2,
-    "checkedAt": "2026-10-10T03:12:26.396Z"
-  },
-  "stables_l3": {
-    "version": 2,
-    "verdict": "pass",
-    "score": 86,
-    "round": 2,
-    "checkedAt": "2026-10-10T03:12:26.889Z"
-  },
-  "watchtower_l1": {
-    "version": 3,
-    "verdict": "pass",
-    "score": 75,
-    "round": 3,
-    "checkedAt": "2026-10-10T03:01:27.891Z"
-  },
-  "watchtower_l2": {
-    "version": 3,
-    "verdict": "pass",
-    "score": 75,
-    "round": 3,
-    "checkedAt": "2026-10-10T03:01:28.482Z"
-  },
-  "watchtower_l3": {
-    "version": 3,
-    "verdict": "pass",
-    "score": 75,
-    "round": 3,
-    "checkedAt": "2026-10-10T03:01:28.990Z"
-  },
-  "well_l1": {
-    "version": 3,
-    "verdict": "pass",
-    "score": 72,
-    "round": 3,
-    "checkedAt": "2026-10-10T03:16:09.355Z"
-  },
-  "well_l2": {
-    "version": 3,
-    "verdict": "pass",
-    "score": 75,
-    "round": 3,
-    "checkedAt": "2026-10-10T03:16:09.879Z"
-  },
-  "well_l3": {
-    "version": 3,
-    "verdict": "pass",
-    "score": 86,
-    "round": 1,
-    "checkedAt": "2026-10-10T03:16:10.489Z"
-  }
+ "carpenter_l1": {
+  "version": 3,
+  "verdict": "pass",
+  "score": 75,
+  "round": 3,
+  "checkedAt": "2026-10-10T02:59:36.691Z"
+ },
+ "carpenter_l2": {
+  "version": 3,
+  "verdict": "pass",
+  "score": 75,
+  "round": 3,
+  "checkedAt": "2026-10-10T02:59:37.189Z"
+ },
+ "carpenter_l3": {
+  "version": 3,
+  "verdict": "pass",
+  "score": 75,
+  "round": 1,
+  "checkedAt": "2026-10-10T02:59:37.669Z"
+ },
+ "stables_l1": {
+  "version": 2,
+  "verdict": "pass",
+  "score": 72,
+  "round": 2,
+  "checkedAt": "2026-10-10T03:12:25.898Z"
+ },
+ "stables_l2": {
+  "version": 2,
+  "verdict": "pass",
+  "score": 75,
+  "round": 2,
+  "checkedAt": "2026-10-10T03:12:26.396Z"
+ },
+ "stables_l3": {
+  "version": 2,
+  "verdict": "pass",
+  "score": 86,
+  "round": 2,
+  "checkedAt": "2026-10-10T03:12:26.889Z"
+ },
+ "watchtower_l1": {
+  "version": 3,
+  "verdict": "pass",
+  "score": 75,
+  "round": 3,
+  "checkedAt": "2026-10-10T03:01:27.891Z"
+ },
+ "watchtower_l2": {
+  "version": 3,
+  "verdict": "pass",
+  "score": 75,
+  "round": 3,
+  "checkedAt": "2026-10-10T03:01:28.482Z"
+ },
+ "watchtower_l3": {
+  "version": 3,
+  "verdict": "pass",
+  "score": 75,
+  "round": 3,
+  "checkedAt": "2026-10-10T03:01:28.990Z"
+ },
+ "well_l1": {
+  "version": 3,
+  "verdict": "pass",
+  "score": 72,
+  "round": 3,
+  "checkedAt": "2026-10-10T03:16:09.355Z"
+ },
+ "well_l2": {
+  "version": 3,
+  "verdict": "pass",
+  "score": 75,
+  "round": 3,
+  "checkedAt": "2026-10-10T03:16:09.879Z"
+ },
+ "well_l3": {
+  "version": 3,
+  "verdict": "pass",
+  "score": 86,
+  "round": 1,
+  "checkedAt": "2026-10-10T03:16:10.489Z"
+ },
+ "cottage_l1": {
+  "version": 2,
+  "verdict": "revise",
+  "score": 61,
+  "round": 1,
+  "checkedAt": "2026-10-10T03:18:43.484Z"
+ },
+ "cottage_l2": {
+  "version": 2,
+  "verdict": "pass",
+  "score": 81,
+  "round": 1,
+  "checkedAt": "2026-10-10T03:18:44.029Z"
+ },
+ "cottage_l3": {
+  "version": 2,
+  "verdict": "pass",
+  "score": 72,
+  "round": 1,
+  "checkedAt": "2026-10-10T03:18:44.560Z"
+ },
+ "bench_l1": {
+  "version": 2,
+  "verdict": "pass",
+  "score": 75,
+  "round": 1,
+  "checkedAt": "2026-10-10T03:18:45.118Z"
+ },
+ "bench_l2": {
+  "version": 2,
+  "verdict": "pass",
+  "score": 86,
+  "round": 1,
+  "checkedAt": "2026-10-10T03:18:45.702Z"
+ },
+ "signpost_l1": {
+  "version": 2,
+  "verdict": "pass",
+  "score": 78,
+  "round": 1,
+  "checkedAt": "2026-10-10T03:18:46.237Z"
+ },
+ "signpost_l2": {
+  "version": 2,
+  "verdict": "pass",
+  "score": 86,
+  "round": 1,
+  "checkedAt": "2026-10-10T03:18:46.768Z"
+ }
 }

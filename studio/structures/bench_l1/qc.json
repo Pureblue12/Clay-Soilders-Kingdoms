@@ -1,0 +1,58 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "bench_l1",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:18:45.118Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 75,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "36 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 36,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.9444444444444444,
+          "types": 10,
+          "dominant": {
+            "name": "oak_leaves",
+            "share": 0.25
+          },
+          "height": 4,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Bench level 1: a bench between hedges, flower planters and a lamp post; a pleasant little rest spot.",
+        "problems": [
+          "Over the prop budget (36 of 30); fine by me, Carlton decides.",
+          "The cobblestone kerb in front of the seat looks like a step soldiers would trip on; a gravel or path strip would read better."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}
