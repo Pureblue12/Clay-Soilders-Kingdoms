@@ -1,0 +1,119 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "carpenter_l3",
+  "version": 3,
+  "size": [7,7,6],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude-qc",
+    "created": "2026-10-10T02:58:58.108Z",
+    "description": "Carpenter or fletcher, level 3 of 3: L2 plus flourish 3. Timber workshop entered by an open front bay (crafting table, fletching table from L2), back door to the yard; log stack and sawhorse under the side eaves. Not yet builder-tested: fletching_table, moss_carpet. Decoration step adds: item_frame, sign_text.",
+    "changes": "Quality check round 3: shutters on the side windows, the log pile and the sawhorse from level 1 (it reads as a carpenter at once), a dark oak eaves row under the spruce roof.",
+    "parent": 2,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "inner",
+      "workshop"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=north,open=false]",
+    "A": "minecraft:barrel[facing=up,open=false]",
+    "B": "minecraft:chain[axis=y]",
+    "C": "minecraft:chest[facing=east,type=single,waterlogged=false]",
+    "D": "minecraft:cobblestone",
+    "E": "minecraft:crafting_table",
+    "F": "minecraft:dark_oak_log[axis=x]",
+    "G": "minecraft:dark_oak_log[axis=y]",
+    "H": "minecraft:dark_oak_log[axis=z]",
+    "I": "minecraft:dark_oak_planks",
+    "J": "minecraft:dark_oak_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "K": "minecraft:dark_oak_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "L": "minecraft:fletching_table",
+    "M": "minecraft:glass_pane[east=false,north=true,south=true,waterlogged=false,west=false]",
+    "N": "minecraft:glass_pane[east=true,north=false,south=false,waterlogged=false,west=true]",
+    "O": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "P": "minecraft:moss_carpet",
+    "Q": "minecraft:oak_door[facing=south,half=lower,hinge=left,open=false,powered=false]",
+    "R": "minecraft:oak_door[facing=south,half=upper,hinge=left,open=false,powered=false]",
+    "S": "minecraft:oak_fence",
+    "T": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "U": "minecraft:oak_planks",
+    "V": "minecraft:oak_pressure_plate[powered=false]",
+    "W": "minecraft:oak_slab[type=bottom,waterlogged=false]",
+    "X": "minecraft:oak_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "Y": "minecraft:oak_wall_sign[facing=east,waterlogged=false]",
+    "Z": "minecraft:poppy",
+    "a": "minecraft:spruce_planks",
+    "b": "minecraft:spruce_slab[type=bottom,waterlogged=false]",
+    "c": "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "d": "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "e": "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]",
+    "f": "minecraft:spruce_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]",
+    "g": "minecraft:stripped_oak_log[axis=y]",
+    "h": "minecraft:wall_torch[facing=north]",
+    "i": "minecraft:white_terracotta"
+  },
+  "layers": [
+    [
+      "Zg....#",
+      ".DDDDD.",
+      "HDUUUDS",
+      "HDUUUD.",
+      "HDUUUDS",
+      "TDDDDDa"
+    ],
+    [
+      ".......",
+      ".G...G.",
+      "HiE.XiW",
+      "HiL.XiW",
+      ".iC.AiW",
+      ".GiQiGb"
+    ],
+    [
+      ".......",
+      ".G...GY",
+      "fiV..ie",
+      "PM...M.",
+      "fi..Aie",
+      ".GNRNG."
+    ],
+    [
+      ".......",
+      ".GFFFG.",
+      ".i...i.",
+      ".i.O.i.",
+      ".ih.hi.",
+      ".GiiiG."
+    ],
+    [
+      "J.....K",
+      "JHaaaHK",
+      "JH...HK",
+      "JH.B.HK",
+      "JH...HK",
+      "JHaaaHK"
+    ],
+    [
+      ".c.O.d.",
+      ".caaad.",
+      ".c...d.",
+      ".c...d.",
+      ".c...d.",
+      ".caaad."
+    ],
+    [
+      "..cId..",
+      "..cId..",
+      "..cId..",
+      "..cId..",
+      "..cId..",
+      "..cId.."
+    ]
+  ]
+}

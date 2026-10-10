@@ -74,6 +74,141 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T02:58:39.809Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 2,
+      "score": 69,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: fletching_table."
+          },
+          {
+            "level": "warn",
+            "check": "connections",
+            "message": "2 fence/pane/wall block(s) have no north/east/south/west set although a neighbour would connect, so they show as lone posts: (6, 0, 2), (6, 0, 4)."
+          },
+          {
+            "level": "warn",
+            "check": "door",
+            "message": "No door on the front half (z = 0 is the front, toward the easel)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 158,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3924050632911392,
+          "types": 22,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.22784810126582278
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 1,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Good timber-frame colours and the sawhorse and log pile show up; walls still flat, roof one colour.",
+        "problems": [
+          "Make it read as a carpenter from level 1: the log pile and the sawhorse should be there from the start, not only at level 2",
+          "Give the side windows trapdoor shutters and a slab sill at level 1, so the plaster walls aren't flat panels",
+          "The roof is one spruce brown: mix in a row of dark oak stairs at the eaves or along the gable edge"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T02:59:37.189Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 3,
+      "score": 75,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: fletching_table."
+          },
+          {
+            "level": "warn",
+            "check": "connections",
+            "message": "2 fence/pane/wall block(s) have no north/east/south/west set although a neighbour would connect, so they show as lone posts: (6, 0, 2), (6, 0, 4)."
+          },
+          {
+            "level": "warn",
+            "check": "door",
+            "message": "No door on the front half (z = 0 is the front, toward the easel)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 158,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3924050632911392,
+          "types": 23,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.189873417721519
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Same workshop with the fletching table and a shop sign added.",
+        "problems": [
+          "Still could use more small detail for Carlton's taste: a flower box under the back windows, a second lantern by the door, tools hanging on the front posts",
+          "The side walls are flat plaster panels between the posts: a mid-post or a sill row would add depth"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

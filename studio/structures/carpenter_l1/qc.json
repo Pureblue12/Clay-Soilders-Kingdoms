@@ -65,6 +65,121 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T02:58:39.313Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 2,
+      "score": 67,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "door",
+            "message": "No door on the front half (z = 0 is the front, toward the easel)."
+          }
+        ],
+        "stats": {
+          "blocks": 142,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3591549295774648,
+          "types": 17,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.2535211267605634
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 1,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 0
+        },
+        "summary": "Much better colours now (white plaster in a dark frame, spruce roof), but level 1 still doesn't say carpenter from outside.",
+        "problems": [
+          "Make it read as a carpenter from level 1: the log pile and the sawhorse should be there from the start, not only at level 2",
+          "Give the side windows trapdoor shutters and a slab sill at level 1, so the plaster walls aren't flat panels",
+          "The roof is one spruce brown: mix in a row of dark oak stairs at the eaves or along the gable edge"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T02:59:36.691Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 3,
+      "score": 75,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "connections",
+            "message": "2 fence/pane/wall block(s) have no north/east/south/west set although a neighbour would connect, so they show as lone posts: (6, 0, 2), (6, 0, 4)."
+          },
+          {
+            "level": "warn",
+            "check": "door",
+            "message": "No door on the front half (z = 0 is the front, toward the easel)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 156,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.38461538461538464,
+          "types": 21,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.19230769230769232
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "A tidy timber-frame workshop: white plaster in a dark oak frame, a spruce roof with dark eaves, a log pile and a sawhorse outside. Reads as a carpenter now.",
+        "problems": [
+          "Still could use more small detail for Carlton's taste: a flower box under the back windows, a second lantern by the door, tools hanging on the front posts",
+          "The side walls are flat plaster panels between the posts: a mid-post or a sill row would add depth"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

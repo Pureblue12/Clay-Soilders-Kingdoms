@@ -1,24 +1,24 @@
 {
   "carpenter_l1": {
-    "version": 1,
-    "verdict": "revise",
-    "score": 33,
-    "round": 1,
-    "checkedAt": "2026-10-10T02:56:31.568Z"
+    "version": 3,
+    "verdict": "pass",
+    "score": 75,
+    "round": 3,
+    "checkedAt": "2026-10-10T02:59:36.691Z"
   },
   "carpenter_l2": {
-    "version": 1,
-    "verdict": "revise",
-    "score": 42,
-    "round": 1,
-    "checkedAt": "2026-10-10T02:56:32.085Z"
+    "version": 3,
+    "verdict": "pass",
+    "score": 75,
+    "round": 3,
+    "checkedAt": "2026-10-10T02:59:37.189Z"
   },
   "carpenter_l3": {
-    "version": 1,
-    "verdict": "revise",
-    "score": 44,
+    "version": 3,
+    "verdict": "pass",
+    "score": 75,
     "round": 1,
-    "checkedAt": "2026-10-10T02:56:32.645Z"
+    "checkedAt": "2026-10-10T02:59:37.669Z"
   },
   "watchtower_l1": {
     "version": 1,
