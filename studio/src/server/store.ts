@@ -92,6 +92,9 @@ export class Store {
     return JSON.parse(fs.readFileSync(this.file(name, v), 'utf8')) as StructureFile;
   }
 
+  /** Branch activity (gitsync.branchWork) for structures nobody marked with work.json: rejected -> "Revising". */
+  branchWork: () => Map<string, { branch: string; since: string }> = () => new Map();
+
   summary(name: string): StructureSummary {
     const versions = this.versions(name).map((v) => {
       const s = this.load(name, v);
@@ -114,7 +117,12 @@ export class Store {
     });
     const latest = versions[versions.length - 1];
     const approved = [...versions].reverse().find((v) => v.status === 'approved');
-    const work = latest.status === 'rejected' ? this.work(name) : null;
+    let work = latest.status === 'rejected' ? this.work(name) : null;
+    const onBranch = latest.status === 'rejected' && !work ? this.branchWork().get(name) : undefined;
+    if (onBranch) {
+      work = { state: 'revising', by: `Claude (branch ${onBranch.branch})`, since: onBranch.since,
+        note: 'changes on a GitHub branch that is not merged yet' };
+    }
     const stage: Stage =
       latest.status === 'approved' ? 'approved' : latest.status === 'pending' ? 'review' : work ? 'revising' : 'queued';
     return {
