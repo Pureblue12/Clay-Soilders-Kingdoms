@@ -1,0 +1,97 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "signpost_l2",
+  "version": 3,
+  "size": [5,7,5],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T03:24:24.438Z",
+    "description": "Signpost, level 2 of 2: L1 plus flourish 2. Village signpost: spruce post on a stepped cobblestone base with poppies, two direction arrows (short arms carrying boards of oak wall signs) at different heights, a lantern on top. Not yet builder-tested: moss_carpet. Decoration step adds: note, sign_text.",
+    "changes": "The direction signs are now real arrows: short fence arms out of the post carrying boards of oak wall signs, pointing east and west at different heights; level 2 clearly adds more: a lantern arm with a lantern on a chain, a back arm with a hanging board, the village name and a notice sign on the post, and moss round the base.",
+    "parent": 2,
+    "reviewedAt": null,
+    "tags": [
+      "revise1",
+      "tier1",
+      "inner",
+      "decoration"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:chain[axis=y]",
+    "A": "minecraft:coarse_dirt",
+    "B": "minecraft:cobblestone",
+    "C": "minecraft:cobblestone_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "D": "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "E": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "F": "minecraft:cobblestone_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "G": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "H": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "I": "minecraft:moss_carpet",
+    "J": "minecraft:oak_wall_sign[facing=north,waterlogged=false]",
+    "K": "minecraft:oak_wall_sign[facing=south,waterlogged=false]",
+    "L": "minecraft:poppy",
+    "M": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=true]",
+    "N": "minecraft:spruce_fence[east=false,north=false,south=true,waterlogged=false,west=false]",
+    "O": "minecraft:spruce_fence[east=false,north=true,south=false,waterlogged=false,west=false]",
+    "P": "minecraft:spruce_fence[east=false,north=true,south=true,waterlogged=false,west=false]",
+    "Q": "minecraft:spruce_fence[east=true,north=false,south=false,waterlogged=false,west=false]",
+    "R": "minecraft:spruce_fence[east=true,north=false,south=false,waterlogged=false,west=true]",
+    "S": "minecraft:spruce_log[axis=y]",
+    "T": "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]"
+  },
+  "layers": [
+    [
+      "..I..",
+      ".AEA.",
+      "ICBFI",
+      ".ADA.",
+      "..I.."
+    ],
+    [
+      ".....",
+      ".LJL.",
+      "..S..",
+      ".L.L.",
+      "....."
+    ],
+    [
+      ".....",
+      ".....",
+      "..S..",
+      "..K..",
+      "....."
+    ],
+    [
+      "..H..",
+      "JJ...",
+      "QRS..",
+      "KK...",
+      "..T.."
+    ],
+    [
+      "..#..",
+      "...JJ",
+      "..SRM",
+      "...KK",
+      "..#.."
+    ],
+    [
+      "..N..",
+      "..P..",
+      "..S..",
+      "..P..",
+      "..O.."
+    ],
+    [
+      ".....",
+      ".....",
+      "..G..",
+      ".....",
+      "....."
+    ]
+  ]
+}
