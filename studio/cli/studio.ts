@@ -15,7 +15,8 @@ import {
 import { nbtToStructure, structureToNbt } from '../src/format/nbt.ts';
 import { buildability } from '../src/format/modrules.ts';
 import { assetFile, assetSource } from '../src/server/assets.ts';
-import { STUDIO_ROOT, Store } from '../src/server/store.ts';
+import { STAGE_LABELS, STUDIO_ROOT, Store } from '../src/server/store.ts';
+import { commitFile } from '../src/server/gitsync.ts';
 
 const HELP = `Minecraft Structure Studio CLI
 
@@ -29,6 +30,13 @@ Library
 Checking
   validate <name|file.json> [-v N]      format errors, unknown blocks/properties (with assets), mod buildability
   diff <name> <a> <b>                   what changed between two versions, layer by layer
+
+Revision queue (Carlton's rejections; his reviews reach GitHub the moment he clicks)
+  queue [--all]                         rejected structures with Carlton's notes: queued first, then revising
+                                        (--all: also the ones waiting for his review)
+  work <name> [--by A] [--note "plan"]  say you are revising it: the page shows "Revising" (writes work.json,
+                                        commits and pushes it unless --no-push). Saving the next version ends it.
+  work <name> --stop                    put it back in the queue
 
 Saving (versions are never overwritten; every save is "pending" until Carlton reviews it)
   create <file.json> [--author A]       first version of a new structure
@@ -206,6 +214,35 @@ async function main() {
       const head = ['name', 'latest', 'status', 'approved', 'size', 'blocks'];
       const w = head.map((h, i) => Math.max(h.length, ...rows.map((r) => r[i].length)));
       for (const r of [head, ...rows]) console.log(r.map((c, i) => c.padEnd(w[i])).join('  '));
+      return;
+    }
+
+    case 'queue': {
+      const order = { queued: 0, revising: 1, review: 2, approved: 3 };
+      const all = store.list()
+        .filter((s) => s.stage === 'queued' || s.stage === 'revising' || (args.all && s.stage === 'review'))
+        .sort((a, b) => order[a.stage] - order[b.stage] || a.name.localeCompare(b.name));
+      if (!all.length) return console.log('the queue is empty: nothing rejected is waiting for a revision');
+      for (const s of all) {
+        const l = s.versions[s.versions.length - 1];
+        console.log(`${s.name} v${s.latest}  [${STAGE_LABELS[s.stage]}${s.work ? ` by ${s.work.by} since ${s.work.since}` : ''}]`);
+        if (l.status === 'rejected') console.log(`  Carlton: ${l.notes || '(rejected without a note)'}`);
+        if (s.work?.note) console.log(`  plan: ${s.work.note}`);
+      }
+      const n = (st: string) => all.filter((s) => s.stage === st).length;
+      console.log(`\n${n('queued')} queued, ${n('revising')} revising${args.all ? `, ${n('review')} waiting for review` : ''}`);
+      return;
+    }
+
+    case 'work': {
+      const name = rest[0] ?? fail('work <name> [--by A] [--note "plan"] | --stop');
+      const w = args.stop ? store.setWork(name, null) : store.setWork(name, str(args, 'by') ?? 'claude', str(args, 'note') ?? '');
+      console.log(w ? `${name}: revising (by ${w.by})` : `${name}: back in the queue`);
+      if (!args['no-push']) {
+        const r = await commitFile(path.join(store.dir, name, 'work.json'), `Studio: ${name} ${w ? `revising (${w.by})` : 'back in the queue'}`);
+        console.log(r.message || 'git sync is off');
+        if (!r.ok) process.exitCode = 1;
+      }
       return;
     }
 

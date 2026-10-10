@@ -51,6 +51,16 @@ select, input[type=search], textarea {
 .pill.pending { color: var(--pending); }
 .pill.approved { color: var(--approved); }
 .pill.rejected { color: var(--rejected); }
+/* stages: what happens next (store.ts STAGES) */
+.pill.stage { text-transform: none; letter-spacing: 0; }
+.pill.review, .stage-text.review { color: var(--pending); }
+.pill.queued, .stage-text.queued { color: var(--rejected); }
+.pill.revising, .stage-text.revising { color: var(--accent); }
+.stage-text.approved { color: var(--approved); }
+#counts { font-size: 12px; }
+.spin { display: inline-block; width: 8px; height: 8px; margin-right: 5px; border-radius: 50%;
+  border: 2px solid currentColor; border-right-color: transparent; animation: spin 1s linear infinite; vertical-align: -1px; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* stage */
 #stage { position: relative; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
@@ -87,6 +97,11 @@ select, input[type=search], textarea {
 .decide .reject:hover { background: #55262a; }
 .decide button.current { box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25) inset; }
 .notes-label { display: block; margin: 14px 0 6px; color: var(--muted); font-size: 13px; }
+.notes-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.small { font-size: 12px; }
+#levels-hint { margin-top: 4px; }
+#notes-state.error { color: var(--rejected); }
+#all-levels { width: 100%; }
 textarea { width: 100%; resize: vertical; }
 .row { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
 .compare-row select { flex: 1; }

@@ -28,6 +28,23 @@ The owner never types git commands for reviews (`src/server/gitsync.ts`):
   to the branch the owner has checked out show up on refresh.
 - Approve, reject, notes and rollback commit only that one version file (`Studio review: <name> vN <status>`) and push.
 - The toast says what happened; failures (offline, conflict) stay local and show in red. `STUDIO_GIT=off` turns it off.
+- The open page also pulls and redraws the list every 30 s, so new versions and stage changes show up without a reload.
+- Notes save as Carlton types (0.8 s after he stops, and when he leaves the box); typed notes are committed together
+  20 s after the last change (`commitLater`), approve / reject at once.
+- "Apply to all levels" (toggle in the review panel, remembered in the browser): approve, reject and notes go to the
+  latest version of every level of the family (`bench_l1`, `bench_l2`, ...; `Store.levels`) in one commit.
+
+## Revision queue (stages)
+
+Each structure shows what happens next (`STAGES` in `src/format/structure.ts`, worked out in `Store.summary`):
+**Needs your review** (latest version pending), **Queued for revision** (latest rejected, nobody on it),
+**Revising** (latest rejected and `structures/<name>/work.json` says who is on it), **Approved**.
+- `npm run studio -- queue` lists the rejected structures with Carlton's notes: start every session with it (after a
+  pull). `--all` also lists the ones waiting for his review.
+- Before revising one: `npm run studio -- work <name> --by <you> --note "plan"`. It writes `work.json`, commits and
+  pushes it, so the page shows "Revising" (from a branch, it shows once the branch is merged). `--stop` puts it back.
+- Saving the next version (`save`) deletes `work.json`: the structure goes back to "Needs your review". Commit the
+  deletion with the new version.
 
 ## Minecraft assets
 
@@ -57,7 +74,8 @@ One JSON file per version: `structures/<name>/<name>_v<N>.json`.
 - Palette keys are single characters. `minecraft:air` clears, `minecraft:structure_void` leaves the ground as it is
   (it is not written to NBT). Air does not dig into the test terrain in the viewer (the mod's builders never clear
   terrain either).
-- `meta.groundLayer` (optional, default 0): the layer that is level with the top block of the ground.
+- `meta.groundLayer` (optional, default -1): the layer that is level with the top block of the ground. -1 means layer 0
+  stands on the ground, the way the mod builds it (`BuildSitePlanner`: ground y = easel y - 1).
 - `meta.notes` are Carlton's review notes; `meta.changes` is the author's summary of the version.
 - Versions are never overwritten (`Store.saveNewVersion` writes with the `wx` flag). The only edit to an existing
   version is its review metadata, from the UI. Rollback = a new version copying an old one.
@@ -66,6 +84,7 @@ One JSON file per version: `structures/<name>/<name>_v<N>.json`.
 
 ## Agent workflow (the loop)
 
+0. `npm run studio -- queue`; pick one, `work <name> --by <you> --note "plan"`.
 1. Read `STYLE.md` (and the brief in `../docs/STRUCTURES.md` if there is one).
 2. Write the structure: in code with `samples/builder.ts` (see `samples/house.ts`), or start from
    `npm run studio -- template <name> x y z -o draft.json`.

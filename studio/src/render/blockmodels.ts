@@ -100,6 +100,12 @@ function matchWhen(when: Record<string, unknown> | undefined, props: Record<stri
   });
 }
 
+/** Vanilla default values of common properties, used when a state leaves them out (as the game does). */
+const STATE_DEFAULTS: Record<string, string> = {
+  axis: 'y', half: 'bottom', type: 'bottom', shape: 'straight', facing: 'north', waterlogged: 'false', open: 'false',
+  powered: 'false', lit: 'false', hinge: 'left', part: 'foot', occupied: 'false', attached: 'false', hanging: 'false',
+};
+
 const pick = (v: VariantJson | VariantJson[]): VariantJson => (Array.isArray(v) ? v[0] : v);
 const toPart = (v: VariantJson): ModelPart => ({ model: ns(v.model), x: v.x ?? 0, y: v.y ?? 0, uvlock: !!v.uvlock });
 
@@ -110,7 +116,11 @@ export function resolveParts(bs: BlockstateJson, state: BlockState): ModelPart[]
     const keys = Object.keys(bs.variants);
     let key = keys.find((k) => matchVariantKey(k, props));
     if (key === undefined) {
-      // Missing properties: fill them from the first variant, keeping the ones given.
+      // Missing properties: the game's default state first (a bare "oak_log" stands upright), then the first variant.
+      const withDefaults = { ...STATE_DEFAULTS, ...props };
+      key = keys.find((k) => matchVariantKey(k, withDefaults));
+    }
+    if (key === undefined) {
       key = keys.find((k) =>
         k.split(',').every((kv) => {
           const [p, v] = kv.split('=');

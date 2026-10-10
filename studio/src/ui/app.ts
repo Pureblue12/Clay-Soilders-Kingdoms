@@ -1,6 +1,6 @@
 // The studio app: library with thumbnails, 3D view, review panel (approve / reject / notes), versions with
 // compare and rollback, layer view and test terrain.
-import { blockCounts, type Status, type StructureFile } from '../format/structure.ts';
+import { blockCounts, STAGE_LABELS, type Stage, type Status, type StructureFile } from '../format/structure.ts';
 import { buildability } from '../format/modrules.ts';
 import { BlockLibrary, HttpAssets } from '../render/blocks.ts';
 import { DEFAULT_SCENE, showStructure, type SceneOptions } from '../render/scene.ts';
@@ -15,7 +15,7 @@ const PRESET_LABELS: Record<CameraPreset, string> = {
 
 const state = {
   list: [] as StructureSummary[],
-  filter: 'all' as 'all' | Status,
+  filter: 'all' as 'all' | Stage,
   search: '',
   name: null as string | null,
   version: 0,
@@ -24,6 +24,7 @@ const state = {
   scene: { ...DEFAULT_SCENE, layer: { ...DEFAULT_SCENE.layer } } as SceneOptions,
   worldA: null as World | null,
   worldB: null as World | null,
+  allLevels: (() => { try { return !!localStorage.getItem('studio.allLevels'); } catch { return false; } })(),
 };
 
 const files = new Map<string, StructureFile>();
@@ -59,7 +60,37 @@ async function getFile(name: string, version: number): Promise<StructureFile> {
 async function refreshList() {
   state.list = await api<StructureSummary[]>('/api/structures');
   renderList();
+  renderCounts();
   void makeThumbnails();
+}
+
+/** "3 need review · 5 queued · 1 revising · 2 approved" under the title. */
+function renderCounts() {
+  const n = (st: Stage) => state.list.filter((s) => s.stage === st).length;
+  const parts: string[] = [];
+  if (n('review')) parts.push(`<b class="stage-text review">${n('review')}</b> need your review`);
+  if (n('queued')) parts.push(`<b class="stage-text queued">${n('queued')}</b> queued`);
+  if (n('revising')) parts.push(`<b class="stage-text revising">${n('revising')}</b> revising`);
+  if (n('approved')) parts.push(`<b class="stage-text approved">${n('approved')}</b> approved`);
+  $('#counts').innerHTML = parts.join(' · ') || 'No structures yet';
+}
+
+function stagePill(s: StructureSummary) {
+  const who = s.work ? ` title="${escapeHtml(`${s.work.by} since ${new Date(s.work.since).toLocaleString()}${s.work.note ? `: ${s.work.note}` : ''}`)}"` : '';
+  return `<span class="pill stage ${s.stage}"${who}>${s.stage === 'revising' ? '<i class="spin"></i>' : ''}${STAGE_LABELS[s.stage]}</span>`;
+}
+
+/** Every 30 s: pull from GitHub and redraw the list, so new versions and "Revising" show up without a reload. */
+function startAutoRefresh() {
+  window.setInterval(async () => {
+    if (document.hidden) return;
+    const sync = await api<{ ok: boolean; message: string }>('/api/sync', { method: 'POST' }).catch(
+      () => ({ ok: true, message: '' }));
+    const before = JSON.stringify(state.list);
+    await refreshList().catch(() => undefined);
+    if (sync.message) toast(sync.message, !sync.ok);
+    if (JSON.stringify(state.list) !== before && summary()) renderReview();
+  }, 30_000);
 }
 
 function summary(): StructureSummary | undefined {
@@ -82,7 +113,7 @@ function renderList() {
   ul.innerHTML = '';
   const q = state.search.toLowerCase();
   for (const s of state.list) {
-    if (state.filter !== 'all' && s.status !== state.filter) continue;
+    if (state.filter !== 'all' && s.stage !== state.filter) continue;
     if (q && !s.name.includes(q)) continue;
     const li = document.createElement('li');
     li.dataset.name = s.name;
@@ -94,7 +125,7 @@ function renderList() {
       <div>
         <div class="name">${s.name}</div>
         <div class="sub">v${s.latest} · ${latest.size.join('×')} · ${latest.blocks} blocks</div>
-        <div class="sub"><span class="pill ${s.status}">${s.status}</span>${s.approvedVersion && s.approvedVersion !== s.latest ? ` <span class="muted">v${s.approvedVersion} approved</span>` : ''}</div>
+        <div class="sub">${stagePill(s)}${s.approvedVersion && s.approvedVersion !== s.latest ? ` <span class="muted">v${s.approvedVersion} approved</span>` : ''}</div>
       </div>`;
     li.onclick = () => select(s.name, s.latest);
     ul.appendChild(li);
@@ -236,10 +267,17 @@ function renderReview() {
   $('#r-meta').textContent = `${v.size.join(' × ')} (x × y × z) · ${v.blocks} blocks · by ${v.author} · ${new Date(v.created).toLocaleString()}${v.parent ? ` · from v${v.parent}` : ''}`;
   $('#r-desc').textContent = v.description;
   $('#r-status').innerHTML = `Status: <span class="pill ${v.status}">${v.status}</span>${v.reviewedAt ? ` <span class="muted">reviewed ${new Date(v.reviewedAt).toLocaleString()}</span>` : ''}`;
+  const w = s.work;
+  $('#r-stage').innerHTML = `Next: ${stagePill(s)}${
+    w ? ` <span class="muted">${escapeHtml(w.by)} since ${new Date(w.since).toLocaleString()}</span>${w.note ? `<div class="vnotes"><b>Plan:</b> ${escapeHtml(w.note)}</div>` : ''}`
+      : s.stage === 'queued' ? ' <span class="muted">waiting for Claude to pick it up</span>' : ''}`;
   $('#approve').classList.toggle('current', v.status === 'approved');
   $('#reject').classList.toggle('current', v.status === 'rejected');
   const notes = $<HTMLTextAreaElement>('#notes');
   if (document.activeElement !== notes) notes.value = v.notes;
+  if (notes.dataset.for !== `${s.name}@${v.version}`) notesState(''); // another structure: "Saved ✓" was for the last one
+  notes.dataset.for = `${s.name}@${v.version}`;
+  renderLevelsToggle(s);
 
   const ul = $('#versions');
   ul.innerHTML = '';
@@ -310,21 +348,84 @@ function escapeHtml(s: string) {
   return s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
 }
 
-async function review(status: Status | null) {
+/** "Apply to all levels": reviews and notes go to the latest version of every level (bench_l1, bench_l2, ...). */
+function allLevelsOn(s: StructureSummary) {
+  return state.allLevels && s.levels.length > 1;
+}
+
+function renderLevelsToggle(s: StructureSummary) {
+  const b = $<HTMLButtonElement>('#all-levels');
+  b.hidden = s.levels.length < 2;
+  b.classList.toggle('on', state.allLevels);
+  b.textContent = state.allLevels ? 'Apply to all levels: ON' : 'Apply to all levels: off';
+  b.title = `Approve, reject and notes also go to the latest version of ${s.levels.join(', ')}`;
+  const hint = $('#levels-hint');
+  hint.hidden = !allLevelsOn(s);
+  hint.textContent = `Goes to ${s.levels.join(', ')} (latest versions)`;
+}
+
+/** Approve / reject / pending. Sends the notes in the box too. */
+async function review(status: Status) {
   const s = summary();
   if (!s) return;
-  const v = s.versions.find((x) => x.version === state.version)!;
+  cancelAutosave();
   const notes = $<HTMLTextAreaElement>('#notes').value;
-  const r = await api<{ git: { ok: boolean; message: string } }>(`/api/structures/${s.name}/${state.version}/review`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-Studio-UI': 'review' },
-    body: JSON.stringify({ status: status ?? v.status, notes }),
-  });
+  const r = await sendReview(s, state.version, status, notes, false);
   files.delete(`${s.name}@${state.version}`);
   await refreshList();
   renderReview();
-  const what = status ? `${s.name} v${state.version}: ${status}` : 'Notes saved';
-  toast(r.git.message ? `${what}. ${r.git.message}` : what, !r.git.ok);
+  const names = r.saved.length > 1 ? `${r.saved.length} levels (${r.saved.map((x) => x.name).join(', ')})` : `${s.name} v${state.version}`;
+  toast(r.git.message ? `${names}: ${status}. ${r.git.message}` : `${names}: ${status}`, !r.git.ok);
+}
+
+function sendReview(s: StructureSummary, version: number, status: Status | null, notes: string, autosave: boolean) {
+  return api<{ saved: { name: string; version: number }[]; git: { ok: boolean; message: string } }>(
+    `/api/structures/${s.name}/${version}/review`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Studio-UI': 'review' },
+      body: JSON.stringify({ status, notes, allLevels: allLevelsOn(s), autosave }),
+    });
+}
+
+// ---------------------------------------------------------------- notes autosave (while typing, and on leaving the box)
+
+let autosaveTimer = 0;
+let pendingNotes: { s: StructureSummary; version: number; notes: string } | null = null;
+
+function notesState(text: string, error = false) {
+  const el = $('#notes-state');
+  el.textContent = text;
+  el.classList.toggle('error', error);
+}
+
+function cancelAutosave() {
+  clearTimeout(autosaveTimer);
+  pendingNotes = null;
+}
+
+function onNotesInput() {
+  const s = summary();
+  if (!s) return;
+  // remember WHICH structure the text belongs to: clicking another one blurs the box before it changes
+  pendingNotes = { s, version: state.version, notes: $<HTMLTextAreaElement>('#notes').value };
+  notesState('Typing…');
+  clearTimeout(autosaveTimer);
+  autosaveTimer = window.setTimeout(() => void saveNotesNow(), 800);
+}
+
+async function saveNotesNow() {
+  clearTimeout(autosaveTimer);
+  const p = pendingNotes;
+  if (!p) return;
+  pendingNotes = null;
+  try {
+    const r = await sendReview(p.s, p.version, null, p.notes, true);
+    notesState(r.saved.length > 1 ? `Saved to ${r.saved.length} levels ✓` : 'Saved ✓');
+    await refreshList();
+    renderReview(); // the notes box itself is left alone while it has focus
+  } catch (e) {
+    notesState(`Not saved: ${(e as Error).message}`, true);
+  }
 }
 
 // ---------------------------------------------------------------- wiring
@@ -399,10 +500,19 @@ function setupControls() {
     state.scene.layer.y = Number((e.target as HTMLInputElement).value);
     applyLayer();
   };
+  const notes = $<HTMLTextAreaElement>('#notes');
+  notes.addEventListener('input', onNotesInput);
+  notes.addEventListener('blur', () => void saveNotesNow());
+  window.addEventListener('beforeunload', () => void saveNotesNow());
+  $('#all-levels').onclick = () => {
+    state.allLevels = !state.allLevels;
+    try { localStorage.setItem('studio.allLevels', state.allLevels ? '1' : ''); } catch { /* private window */ }
+    const s = summary();
+    if (s) renderLevelsToggle(s);
+  };
   $('#approve').onclick = () => review('approved');
   $('#reject').onclick = () => review('rejected');
   $('#set-pending').onclick = () => review('pending');
-  $('#save-notes').onclick = () => review(null);
   $('#compare').onclick = () => {
     const s = summary();
     if (!s) return;
@@ -449,6 +559,7 @@ async function main() {
     (e: Error) => ({ ok: false, message: e.message }));
   if (sync.message) toast(sync.message, !sync.ok);
   await refreshList();
+  startAutoRefresh();
   const hash = new URLSearchParams(location.hash.slice(1));
   const first = hash.get('s') ?? state.list[0]?.name;
   const s = state.list.find((x) => x.name === first);

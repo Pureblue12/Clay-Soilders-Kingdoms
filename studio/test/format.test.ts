@@ -78,3 +78,36 @@ test('the shipped samples are valid', () => {
     for (const v of store.versions(name))
       assert.deepEqual(validateStructure(store.load(name, v)).filter((i) => i.level === 'error'), [], `${name} v${v}`);
 });
+
+test('stages: review, queued after a reject, revising while an agent works, review again after the next save', () => {
+  const store = new Store(fs.mkdtempSync(path.join(os.tmpdir(), 'studio-')));
+  store.saveNewVersion(sample());
+  assert.equal(store.summary('tiny').stage, 'review');
+  assert.throws(() => store.setWork('tiny', 'claude'), /not rejected/);
+  store.setReview('tiny', 1, 'rejected', 'sunk into the ground');
+  assert.equal(store.summary('tiny').stage, 'queued');
+  store.setWork('tiny', 'claude', 'raise it one block');
+  assert.equal(store.summary('tiny').stage, 'revising');
+  assert.equal(store.summary('tiny').work?.note, 'raise it one block');
+  assert.deepEqual(store.versions('tiny'), [1]); // work.json is not a version
+  store.setWork('tiny', null);
+  assert.equal(store.summary('tiny').stage, 'queued');
+  store.setWork('tiny', 'claude');
+  store.saveNewVersion(sample());
+  assert.equal(store.summary('tiny').stage, 'review');
+  assert.equal(store.work('tiny'), null);
+  store.setReview('tiny', 2, 'approved', '');
+  assert.equal(store.summary('tiny').stage, 'approved');
+});
+
+test('levels: a family is every name_lN, sorted by level; notes-only reviews keep the status', () => {
+  const store = new Store(fs.mkdtempSync(path.join(os.tmpdir(), 'studio-')));
+  for (const n of ['bench_l2', 'bench_l10', 'bench_l1', 'benches_l1', 'house']) store.saveNewVersion({ ...sample(), name: n });
+  assert.deepEqual(store.levels('bench_l2'), ['bench_l1', 'bench_l2', 'bench_l10']);
+  assert.deepEqual(store.levels('house'), ['house']);
+  assert.deepEqual(store.summary('benches_l1').levels, ['benches_l1']);
+  store.setReview('house', 1, 'rejected', 'too plain');
+  store.setReview('house', 1, null, 'too plain, add flowers');
+  assert.equal(store.load('house', 1).meta.status, 'rejected');
+  assert.equal(store.load('house', 1).meta.notes, 'too plain, add flowers');
+});
