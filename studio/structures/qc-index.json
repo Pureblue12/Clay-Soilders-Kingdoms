@@ -420,25 +420,25 @@
     "checkedAt": "2026-10-10T05:27:00.851Z"
   },
   "keep_l1": {
-    "version": 5,
+    "version": 6,
     "verdict": "pass",
-    "score": 83,
+    "score": 98,
     "round": 1,
-    "checkedAt": "2026-10-10T04:34:54.786Z"
+    "checkedAt": "2026-10-10T08:48:34.301Z"
   },
   "keep_l2": {
-    "version": 5,
+    "version": 6,
     "verdict": "pass",
-    "score": 97,
+    "score": 100,
     "round": 1,
-    "checkedAt": "2026-10-10T04:34:55.350Z"
+    "checkedAt": "2026-10-10T08:48:36.232Z"
   },
   "keep_l3": {
-    "version": 5,
+    "version": 6,
     "verdict": "pass",
-    "score": 97,
+    "score": 100,
     "round": 1,
-    "checkedAt": "2026-10-10T04:34:55.889Z"
+    "checkedAt": "2026-10-10T08:48:37.887Z"
   },
   "lamp_post_l1": {
     "version": 1,
