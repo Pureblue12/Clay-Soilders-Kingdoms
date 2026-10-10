@@ -5,11 +5,11 @@
   "size": [7,8,9],
   "meta": {
     "status": "rejected",
-    "notes": "logs fixes still needs more detail also looks like its missing windows but could just be a bug",
+    "notes": "logs fixes still needs more detail also looks like its missing windows but could just be a bug fences also still seems bugged",
     "author": "generator",
     "created": "2026-10-10T01:37:40.051Z",
     "description": "Imported from cottage_l3.nbt",
-    "reviewedAt": "2026-10-10T02:18:52.710Z",
+    "reviewedAt": "2026-10-10T02:44:45.756Z",
     "parent": null
   },
   "palette": {
