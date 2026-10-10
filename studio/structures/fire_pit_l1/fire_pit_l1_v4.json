@@ -1,0 +1,78 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "fire_pit_l1",
+  "version": 4,
+  "size": [9,3,9],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T04:03:26.105Z",
+    "description": "Fire pit, level 1 of 3: shell and fittings (what soldiers build first). An unlit campfire (it never burns) in a stone ring with a cooking spit, three spruce log benches, a woodpile, a chopping stump, supplies, poppies and a lantern post; level 2 a pot, a second lantern, cushions and plants; level 3 a dark oak firewood shelter with a hanging lantern.",
+    "changes": "The lone stepping stones are now one joined stone path in from the front with a wider mouth, and leaf bushes and more poppies grow round the edge.",
+    "parent": 3,
+    "reviewedAt": null,
+    "tags": [
+      "revise1",
+      "tier1",
+      "inner",
+      "decoration"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:campfire[facing=north,lit=false,signal_fire=false,waterlogged=false]",
+    "B": "minecraft:chain[axis=x,waterlogged=false]",
+    "C": "minecraft:chain[axis=y,waterlogged=false]",
+    "D": "minecraft:chest[facing=east,type=single,waterlogged=false]",
+    "E": "minecraft:cobblestone",
+    "F": "minecraft:cobblestone_slab[type=bottom,waterlogged=false]",
+    "G": "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "H": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "I": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "J": "minecraft:mossy_cobblestone",
+    "K": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "L": "minecraft:oak_log[axis=y]",
+    "M": "minecraft:oak_pressure_plate",
+    "N": "minecraft:poppy",
+    "O": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "P": "minecraft:spruce_log[axis=x]",
+    "Q": "minecraft:spruce_log[axis=z]"
+  },
+  "layers": [
+    [
+      "...FFFN..",
+      ".LN.F....",
+      "#...F....",
+      "DQ.FGF.QK",
+      ".Q.JAE.Q.",
+      ".Q.FHF.QN",
+      "N........",
+      "K..PPP..Q",
+      "O..K...QQ"
+    ],
+    [
+      ".........",
+      ".M.......",
+      ".........",
+      ".........",
+      "...OCO...",
+      ".........",
+      ".........",
+      ".........",
+      "O.......Q"
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "...OBO...",
+      ".........",
+      ".........",
+      ".........",
+      "I........"
+    ]
+  ]
+}

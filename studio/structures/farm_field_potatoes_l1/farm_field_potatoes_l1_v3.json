@@ -1,0 +1,102 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "farm_field_potatoes_l1",
+  "version": 3,
+  "size": [16,4,9],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T04:03:25.203Z",
+    "description": "Farm field: potatoes, level 1 of 1: shell and fittings (what soldiers build first). A raised field bed, one level: dirt in two blocks of 4 rows each side of an open trench, oak log border and fence with an entrance at the front centre, plank boardwalk and composter in front. Builders place the dirt; farmers till it into farmland and the decoration step adds the trench water and the potatoes (builders can place neither water, farmland nor crops). Modules tile side by side and around the farmhouse. A potato store beside the bed: a little spruce lean-to over a pile of sacks (barrels with brown carpet), a chest, a lantern and a sign; a side path, poppies and a lantern post round the edges. Decoration step adds: crop, farmland, sign_text, water.",
+    "changes": "The cobblestone and dirt root cellar is replaced by a little lean-to over a pile of potato sacks (barrels with brown carpet) with a sign, and the field is two wider with a side path, poppies and a lantern.",
+    "parent": 2,
+    "reviewedAt": null,
+    "tags": [
+      "revise1",
+      "tier1",
+      "outer",
+      "farm"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=north,open=false]",
+    "A": "minecraft:barrel[facing=up,open=false]",
+    "B": "minecraft:brown_carpet",
+    "C": "minecraft:chest[facing=north,type=single,waterlogged=false]",
+    "D": "minecraft:cobblestone",
+    "E": "minecraft:composter",
+    "F": "minecraft:dirt",
+    "G": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "H": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "I": "minecraft:oak_fence[east=false,north=false,south=false,waterlogged=false,west=true]",
+    "J": "minecraft:oak_fence[east=false,north=false,south=true,waterlogged=false,west=true]",
+    "K": "minecraft:oak_fence[east=false,north=true,south=false,waterlogged=false,west=true]",
+    "L": "minecraft:oak_fence[east=false,north=true,south=true,waterlogged=false,west=false]",
+    "M": "minecraft:oak_fence[east=true,north=false,south=false,waterlogged=false,west=false]",
+    "N": "minecraft:oak_fence[east=true,north=false,south=false,waterlogged=false,west=true]",
+    "O": "minecraft:oak_fence[east=true,north=false,south=true,waterlogged=false,west=false]",
+    "P": "minecraft:oak_fence[east=true,north=true,south=false,waterlogged=false,west=true]",
+    "Q": "minecraft:oak_fence[east=true,north=true,south=true,waterlogged=false,west=false]",
+    "R": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "S": "minecraft:oak_log[axis=x]",
+    "T": "minecraft:oak_log[axis=z]",
+    "U": "minecraft:oak_wall_sign[facing=north,waterlogged=false]",
+    "V": "minecraft:poppy",
+    "W": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "X": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=true]",
+    "Y": "minecraft:spruce_fence[east=true,north=false,south=false,waterlogged=false,west=false]",
+    "Z": "minecraft:spruce_fence[east=true,north=false,south=false,waterlogged=false,west=true]",
+    "a": "minecraft:spruce_planks",
+    "b": "minecraft:spruce_slab[type=bottom,waterlogged=false]",
+    "c": "minecraft:spruce_slab[type=top,waterlogged=false]",
+    "d": "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]"
+  },
+  "layers": [
+    [
+      "bEbbbbdbbbCAbbbb",
+      "bSSSSSDSSSSS..U.",
+      "VTFFFF.FFFFTZ##X",
+      "bTFFFF.FFFFT.AA.",
+      "bTFFFF.FFFFT....",
+      "VTFFFF.FFFFT.CA.",
+      "bTFFFF.FFFFTZaaX",
+      "bTFFFF.FFFFT...V",
+      "MSSSSSDSSSSS...R"
+    ],
+    [
+      "...........B....",
+      ".ONNNI.MNNNJ....",
+      ".L.........QXBBW",
+      ".L.........L.AB.",
+      ".L.........L....",
+      ".L.........L....",
+      ".L.........QZaaX",
+      ".L.........L....",
+      "MPNNNNNNNNNK...."
+    ],
+    [
+      "................",
+      ".G.........G....",
+      "............W.cc",
+      ".............Bcc",
+      ".............Hcc",
+      "..............cc",
+      "............Yacc",
+      "..............cc",
+      "G..............."
+    ],
+    [
+      "................",
+      "................",
+      "............bb..",
+      "............bb..",
+      "............bb..",
+      "............bb..",
+      "............bb..",
+      "............bb..",
+      "................"
+    ]
+  ]
+}
