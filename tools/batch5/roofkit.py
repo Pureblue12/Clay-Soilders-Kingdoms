@@ -39,32 +39,56 @@ def levels(cells):
     return lv
 
 
-def hip_roof(s, cells, y0, slope='spruce_stairs', eave='dark_oak_stairs', ridge='spruce_slab', skip=()):
-    lv = levels(cells)
+def stair_for(H, x, z):
+    """(facing, shape) of the roof stair at (x, z) of height map H, or None for a ridge cell (nothing higher round it)."""
+    h = H[(x, z)]
+    up = [d for d, (dx, dz) in DIRS.items() if H.get((x + dx, z + dz), -1) > h]
+    diag = [(dx, dz) for dx in (-1, 1) for dz in (-1, 1) if H.get((x + dx, z + dz), -1) > h]
+    if not up and not diag:
+        return None
+    if len(up) >= 2 and not ({'north', 'south'} <= set(up) or {'east', 'west'} <= set(up)):
+        f, other = up[0], up[1]
+        return f, ('inner_right' if RIGHT[f] == other else 'inner_left')
+    if up:
+        return up[0], 'straight'
+    dx, dz = diag[0]
+    f = NAME[(dx, 0)]
+    return f, ('outer_right' if RIGHT[f] == NAME[(0, dz)] else 'outer_left')
+
+
+def height_roof(s, H, eave_y, slope='spruce_stairs', eave='dark_oak_stairs', ridge='spruce_slab', skip=()):
+    """A roof over the height map H ((x, z) -> y of the roof block there): stairs facing uphill (corner shapes at hips
+    and valleys), a bottom slab where nothing round is higher (the ridge). Cells at eave_y use `eave`."""
     skip = set(skip)
-    for (x, z), L in sorted(lv.items()):
-        y = y0 + L
+    for (x, z), y in sorted(H.items()):
         if (x, y, z) in skip:
             continue
-        up = [d for d, (dx, dz) in DIRS.items() if lv.get((x + dx, z + dz), -1) > L]
-        diag = [(dx, dz) for dx in (-1, 1) for dz in (-1, 1) if lv.get((x + dx, z + dz), -1) > L]
-        block = eave if L == 0 else slope
-        if not up and not diag:
+        st = stair_for(H, x, z)
+        if st is None:
             A(s, x, y, z, ridge, **SLAB)
-            continue
-        if len(up) >= 2 and not ({'north', 'south'} <= set(up) or {'east', 'west'} <= set(up)):
-            f = up[0]
-            other = up[1]
-            shape = 'inner_right' if RIGHT[f] == other else 'inner_left'
-        elif up:
-            f, shape = up[0], 'straight'
-            if len(up) >= 2:      # uphill on two opposite sides (a narrow trough): a plain stair
-                shape = 'straight'
         else:
-            dx, dz = diag[0]
-            f = NAME[(dx, 0)]
-            shape = 'outer_right' if RIGHT[f] == NAME[(0, dz)] else 'outer_left'
-        A(s, x, y, z, block, facing=f, half='bottom', shape=shape, waterlogged='false')
+            A(s, x, y, z, eave if y == eave_y else slope, facing=st[0], half='bottom', shape=st[1], waterlogged='false')
+
+
+def corbels(s, H, cells, block='spruce_stairs', peak='dark_oak_planks'):
+    """Upside-down stairs under the roof stairs of an overhang row (cells), facing the other way; a plank under a
+    ridge slab. Leaves the lowest row (the eave) alone."""
+    low = min(H[c] for c in cells)
+    for x, z in cells:
+        y = H[(x, z)]
+        if y == low:
+            continue
+        st = stair_for(H, x, z)
+        if st is None:
+            A(s, x, y - 1, z, peak)
+        elif st[1] == 'straight':
+            back = {'north': 'south', 'south': 'north', 'east': 'west', 'west': 'east'}[st[0]]
+            A(s, x, y - 1, z, block, facing=back, **TOP)
+
+
+def hip_roof(s, cells, y0, slope='spruce_stairs', eave='dark_oak_stairs', ridge='spruce_slab', skip=()):
+    lv = levels(cells)
+    height_roof(s, {c: y0 + L for c, L in lv.items()}, y0, slope, eave, ridge, skip)
     return lv
 
 

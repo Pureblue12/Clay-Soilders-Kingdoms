@@ -35,6 +35,8 @@ KNOWN_OK = {
     'white_terracotta', 'dark_oak_planks', 'dark_oak_log', 'dark_oak_stairs', 'spruce_planks', 'spruce_stairs',
     'spruce_slab', 'stripped_spruce_log', 'coarse_dirt', 'dirt', 'gravel', 'flower_pot', 'campfire', 'lantern',
     'oak_leaves', 'chain', 'stone_brick_stairs', 'oak_button', 'poppy',
+    # not placed by a GameTest themselves, but the same plain full block as the tested wools above
+    'red_wool', 'white_wool',
 }
 # Never placed by builders (no item, block data, or entities): the decoration step adds these (D54, D56).
 BROKEN = {'water', 'lava', 'fire', 'farmland', 'dirt_path', 'water_cauldron'}

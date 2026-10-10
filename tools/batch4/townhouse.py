@@ -18,7 +18,7 @@ def townhouse(width=5, depth=6):
     chair, barrels and a chest under the staircase, a 4-step spruce staircase up the right wall; upstairs 3 beds and
     a chest, windows in both gables, torches, a step at the door.
     L2 (lived in): shutters and flower boxes on the ground windows, two lanterns under the jetty, a bench by the door,
-    rugs, shelves and a pot upstairs, brick shoulders on the chimney, a log pile and barrels on the right side.
+    rugs, shelves and candles upstairs, brick shoulders on the chimney, a log pile and barrels on the right side.
     L3 (the town look): flower boxes (soil in trapdoor boxes) under the front and back gable windows, smoke from the chimney, a fenced back garden (composter, flowers, a bench, a bush), a lantern post and banner at the front,
     vines on the stone walls."""
     W, D, H = width + 4, depth + 6, 9
@@ -129,8 +129,8 @@ def townhouse(width=5, depth=6):
         P(s, x, 0, jz, 'coarse_dirt')
         P(s, x, 0, jz - 1, 'spruce_trapdoor', facing='north', **OPEN)
         P(s, x, 1, jz, f)
-    for x in (mid - 1, mid + 1):                                    # lanterns under the jetty
-        P(s, x, 3, jz, 'lantern', **HANG)
+    for x in (x0, x1):                                              # lanterns under the corner brackets, beside the windows
+        P(s, x, 2, jz, 'lantern', **HANG)
     P(s, x1 + 1, 0, z0, 'spruce_stairs', facing='east', **STAIR)       # bench by the right corner
     P(s, x1 + 1, 0, z0 + 1, 'spruce_stairs', facing='east', **STAIR)
     P(s, chim_x - 1, 3, cz, 'brick_stairs', facing='east', **STAIR)      # chimney shoulder
@@ -145,8 +145,7 @@ def townhouse(width=5, depth=6):
     P(s, x0 + 1, 3, z0 + 1, 'spruce_trapdoor', facing='east', **SHELF)   # shelves over the table
     P(s, x0 + 1, 3, z0 + 2, 'spruce_trapdoor', facing='east', **SHELF)
     P(s, mid, knee, z0 + 1, 'brown_carpet'); P(s, mid, knee, z0 + 2, 'brown_carpet')
-    P(s, x1 - 1, knee, z0, 'flower_pot')                            # pot on the floor by the front window
-    s.decorate(x1 - 1, knee, z0, 'potted_plant', plant='azure_bluet')
+    P(s, x1 - 1, knee, z0, 'candle', candles='2', lit='false', waterlogged='false')   # candles by the front window
     P(s, mid, 7, z0 + 3, 'lantern', **HANG)                          # under the ridge (ridge at y 8)
 
     # ------------------------------------------------------------------ L3: the town look
@@ -162,15 +161,14 @@ def townhouse(width=5, depth=6):
         for x in (mid - 1, mid, mid + 1):
             P(s, x, 4, out, 'spruce_trapdoor', facing='north' if bz < z0 else 'south', **OPEN)
     P(s, chim_x, 8, cz, 'campfire', facing='north', lit='true', signal_fire='false', waterlogged='false')
-    # back garden behind the house: a fenced plot of two rows (a gate on the right, decoration only: the garden
-    # needs no visits)
+    # back garden behind the house: a fenced plot of two rows, entered by an open gate on the right
     gz0, gz1 = z1 + 1, D - 1                                       # 8 (under the back eave) .. 10 (fence)
     for x in range(x0 - 1, x1 + 2):
         P(s, x, 0, gz1, 'spruce_fence')
     for z in (gz0, gz0 + 1):
         P(s, x0 - 1, 0, z, 'spruce_fence')
     P(s, x1 + 1, 0, gz0 + 1, 'spruce_fence')
-    P(s, x1 + 1, 0, gz0, 'spruce_fence_gate', facing='east', open='false', powered='false', in_wall='false')
+    P(s, x1 + 1, 0, gz0, 'spruce_fence_gate', facing='east', open='true', powered='false', in_wall='false')
     P(s, x0, 0, gz0, 'composter', level='3')
     P(s, mid, 0, gz0, 'spruce_stairs', facing='north', **STAIR)     # a bench against the back wall
     P(s, x1, 0, gz0, 'oak_leaves', **LEAVES)
@@ -191,7 +189,7 @@ def townhouse(width=5, depth=6):
 
 
 STRUCTURES = [dict(path='townhouse', name='Townhouse', tier=4, zone='inner', role='house', group='townhouse',
-                   terrain='ground_level', door='front', make=townhouse, changes='Quality check round 1: the gable flower boxes are now soil in trapdoor boxes (no flowers on slabs); the back garden fence is closed on the east side (a fence and a gate, decoration only); the empty flower pot in the garden is a fern; little windows in the upper knee walls (L1). The box is one row deeper at the front for the flower boxes.',
+                   terrain='ground_level', door='front', make=townhouse, changes='Quality check round 2: the two lanterns under the jetty moved beside the ground-floor windows (they now hang under the corner brackets); candles instead of the empty flower pot upstairs; the back garden gate stands open so soldiers can walk in.',
                    description='Over budget: 355 blocks vs 265 (first build 267 vs 205). Narrow two-storey town house: stone ground floor (kitchen-living room with hearth, '
                                'table, stores under the stairs), plaster and dark oak upper storey jettied over the '
                                'street on brackets, 3 beds upstairs by a staircase; L2 shutters, planters, lanterns '

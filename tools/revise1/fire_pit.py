@@ -34,7 +34,10 @@ def shade_tree(s, c):
     tip and over the trunk), not one ball, with leaves hanging under their edges; the fire ring stays open to the sky.
     A lantern hangs from each branch, over the benches."""
     tx, tz = TRUNK
-    put_id(s, tx + 1, 4, tz - 1, 'oak_wood', axis='y')            # the bend: bark all round, no sawn ends
+    put_id(s, tx + 1, 3, tz, 'oak_wood', axis='y')                # the bend: bark all round, no sawn ends; every
+    put_id(s, tx + 1, 4, tz, 'oak_wood', axis='y')                # trunk and branch block joins the next by a face
+    put_id(s, tx + 1, 4, tz - 1, 'oak_wood', axis='y')
+    put_id(s, tx + 1, 5, tz, 'oak_wood', axis='y')                # the back branch's joint
     for y in (5, 6):
         put_id(s, tx + 1, y, tz - 1, 'oak_log', axis='y')
     put_id(s, tx, 5, tz - 1, 'oak_wood', axis='y')                # branch forward over the left bench

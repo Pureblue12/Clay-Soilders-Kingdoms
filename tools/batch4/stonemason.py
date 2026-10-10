@@ -152,8 +152,8 @@ def stonemason():
         for z in (z0, z1):
             P(s, x + (-1 if side == 'west' else 1), 3, z, 'stone_brick_stairs',
               facing='east' if side == 'west' else 'west', **TOP)
-    for x in (x0, x1):                                                         # lanterns under the front eave
-        A(s, x, top, z0 - 1, 'lantern', **HANG)
+    for x in (x0, x1):                                                         # lanterns under the front gable corbels
+        A(s, x, top, z0 - 2, 'lantern', **HANG)
 
     s.at(3, 'flourish3')
     # the statue in progress: a soldier on a chiseled plinth, the head still rough, a scaffold beside it
@@ -169,9 +169,9 @@ def stonemason():
     s.decorate(sx, 2, sz, 'item', item='minecraft:iron_pickaxe', note='a chisel leaning on the statue')
     P(s, x1, 2, z0 - 1, 'gray_wall_banner', facing='north')
     s.decorate(x1, 2, z0 - 1, 'banner_pattern', banner='gray_wall_banner', note="a mason's square and chisel")
-    for x, z in ((0, 1), (W - 1, 3), (W - 1, 7), (9, 7)):
-        P(s, x, 2, z, 'flower_pot')
-        s.decorate(x, 2, z, 'potted_plant', plant='red_tulip')
+    for x, z, plant in ((0, 1, 'red_tulip'), (W - 1, 3, 'cornflower'), (W - 1, 7, 'oxeye_daisy'), (9, 7, 'fern')):
+        P(s, x, 2, z, 'flower_pot')                                            # plants by the decoration step
+        s.decorate(x, 2, z, 'potted_plant', plant=plant)
     P(s, 1, 3, 1, 'moss_carpet'); P(s, 1, 2, 2, 'moss_carpet')
     for x, z, b in ((0, z0, 'leaves'), (0, z1 + 1, 'leaves'), (1, D - 1, 'cornflower'),
                     (x1 + 1, D - 1, 'fern'), (6, 7, 'dandelion')):
@@ -184,7 +184,9 @@ def stonemason():
 
 
 STRUCTURES = [dict(path='stonemason', name='Stonemason', tier=4, zone='inner', role='workshop', group='stonemason',
-                   terrain='flexible', door='front', make=stonemason, ground_layer=0, changes='Quality check round 1: half-timbered gables (dark oak tie beam and king post) and a 2-row front '
+                   terrain='flexible', door='front', make=stonemason, ground_layer=0, changes='Quality check round 2: the lanterns under the front gable hang from the corbels (z 2) again; every '
+                           'L3 flower pot gets its own plant from the decoration step (tulip, cornflower, daisy, fern). '
+                           'Round 1: half-timbered gables (dark oak tie beam and king post) and a 2-row front '
                            'overhang over the bay; L1 yard filled (water and tool barrels, a sledge, a half-dressed block, lanterns '
                            'on the gate piers from L1); L2 adds shutters and stone corbels on the long side walls; L3 '
                            'flowers no longer stand on gravel (flower pots on the stacks and wall instead).',
