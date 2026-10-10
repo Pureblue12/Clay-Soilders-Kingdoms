@@ -1,0 +1,73 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "library_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T08:51:57.647Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 93,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: lectern, bookshelf, cornflower, candle, red_wall_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "443 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 443,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4672686230248307,
+          "types": 32,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.17607223476297967
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "levels": "Clear new job: the stacks fill with bookshelves and a lectern, plus shutters, flower boxes, red banners and lanterns on the front.",
+          "roof": "Steep 45-degree roof with one block of overhang on all four sides (eaves at x1/x9, z0/z10), dark oak eaves and ridge stripe: the automatic overhang warning is a false alarm.",
+          "shape": "Still one rectangle under one roof; the chimney and the corner buttresses are the only breaks.",
+          "materials": "Stone brick, cobble base, spruce and dark oak; the white terracotta in the back gable reads slightly pinkish but does not clash."
+        },
+        "summary": "Adds the bookshelves in the stacks, a lectern, candles, hanging lanterns, shutters, flower boxes and red banners: now clearly a library.",
+        "problems": [
+          "Reach: the whole hall floor is reached; only roof slopes, bookshelf tops and stair tops are unreached - fine."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

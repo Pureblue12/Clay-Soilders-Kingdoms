@@ -1,0 +1,70 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "library_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T08:51:57.012Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "394 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 394,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.41116751269035534,
+          "types": 22,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.19796954314720813
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 1,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "purpose": "Without bookshelves (they come in L2) the hall reads as a plain house with a table, chairs and barrels; only the big glass front gable hints at a library.",
+          "detail": "Buttresses, timber posts and the front glass are good, but the stacks are empty and there are no props outside.",
+          "roof": "Steep 45-degree roof with one block of overhang on all four sides (eaves at x1/x9, z0/z10), dark oak eaves and ridge stripe: the automatic overhang warning is a false alarm.",
+          "shape": "A plain rectangle under one gable roof; the brick chimney is the only break. The great window reads as a stepped grid of panes rather than round.",
+          "life": "No plants or lanterns yet."
+        },
+        "summary": "Stone reading hall shell with a glazed front gable, buttressed walls, a reading table, hearth, archive barrels and a scribe desk at the back.",
+        "problems": [
+          "L1 does not read as a library: put at least a couple of bookshelves (or a lectern) in L1 so the job shows from the first build; L2 can still fill the rest of the stacks.",
+          "Reach: the whole hall floor is reached; only roof slopes, bookshelf tops and stair tops are unreached - fine."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

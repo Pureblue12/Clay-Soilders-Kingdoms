@@ -1,0 +1,74 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "library_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T08:51:58.222Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 83,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: oxeye_daisy, azure_bluet, cornflower, green_carpet, cartography_table, lectern, bookshelf, light_blue_stained_glass, candle, red_wall_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "469 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 469,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4946695095948827,
+          "types": 40,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.16631130063965885
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 2,
+          "scale": 2,
+          "levels": 1
+        },
+        "notes": {
+          "levels": "L3 adds mostly props: carpets, a map table, a bench at the back, a lantern post, bushes and flowers. Nice, but no clearly visible new feature or job; from outside it is hard to tell from L2.",
+          "detail": "Capped at 1 because L3 adds no clearly visible new feature over L2 (Carlton rule).",
+          "roof": "Steep 45-degree roof with one block of overhang on all four sides (eaves at x1/x9, z0/z10), dark oak eaves and ridge stripe: the automatic overhang warning is a false alarm.",
+          "life": "Bushes, flowers, lantern post and vines round the base."
+        },
+        "summary": "Adds carpets, a globe and map table, a back bench, flowers, bushes, vines and a lantern post; the building itself is the same as L2.",
+        "problems": [
+          "L3 looks almost the same as L2 from outside: add one clearly visible new feature, e.g. a small reading porch or lean-to, a dormer/oriel window on a side, or a fenced reading garden with benches.",
+          "Reach: the whole hall floor is reached; only roof slopes, bookshelf tops and stair tops are unreached - fine."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}
