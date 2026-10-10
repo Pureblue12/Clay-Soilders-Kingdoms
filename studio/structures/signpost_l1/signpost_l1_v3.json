@@ -4,14 +4,14 @@
   "version": 3,
   "size": [5,7,5],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T03:24:23.961Z",
     "description": "Signpost, level 1 of 2: shell and fittings (what soldiers build first). Village signpost: spruce post on a stepped cobblestone base with poppies, two direction arrows (short arms carrying boards of oak wall signs) at different heights, a lantern on top. Decoration step adds: sign_text.",
     "changes": "The direction signs are now real arrows: short fence arms out of the post carrying boards of oak wall signs, pointing east and west at different heights; level 2 clearly adds more: a lantern arm with a lantern on a chain, a back arm with a hanging board, the village name and a notice sign on the post, and moss round the base.",
     "parent": 2,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T03:38:41.434Z",
     "tags": [
       "revise1",
       "tier1",
