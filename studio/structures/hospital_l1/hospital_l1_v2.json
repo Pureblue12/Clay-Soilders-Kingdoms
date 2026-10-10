@@ -4,14 +4,14 @@
   "version": 2,
   "size": [17,13,19],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T09:06:33.676Z",
     "description": "Hospital, level 1 of 3: shell and fittings (what soldiers build first). Needs scaffolding: 13 tall. Over budget: 1,654 blocks (L1 1,447) vs the infirmary's 285 (no hospital budget in the brief; under the landmark 1,800). The infirmary's tier-6 big brother, a two-storey cloister hospital round a 5 x 5 herb courtyard: stone brick ground storey, white plaster in a dark oak frame above with the red wool cross over the door, one spruce roof round the ring (dark oak hips and eaves) with a front gable and a kiln chimney. 14 beds, dispensary, healers' room, herb store, clay room (rebuilding fallen soldiers), a staircase; courtyard pool by the decoration step. L2 a covered entrance porch, red banners, brewing stands, cauldrons, candles, lanterns, carpets, courtyard herbs, planters, shutters, clay; L3 a front herb garden with lantern posts, corner banners, a herb strip on the left, a log pile, barrels. Decoration step adds: water.",
     "changes": "QC v1: the red cross now reads on every level (red wool on a white wool field on the upper storey over the door, as the infirmary v4); the plain white banners are gone (red banners from L2). L1: two-tall outer windows with front shutters, poppy planters with trapdoor fronts and corner bushes, a proper 9-wide front gable with a plaster face and window, dark oak hips, valleys and verges on the spruce roof, a front yard with a path (the building moved back 2 rows). L2: a covered entrance porch with hanging lanterns and benches, two more planters with trapdoor fronts. L3: a front herb garden either side of the porch with lantern posts.",
     "parent": 1,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T09:16:21.511Z",
     "tags": [
       "batch5",
       "tier6",
