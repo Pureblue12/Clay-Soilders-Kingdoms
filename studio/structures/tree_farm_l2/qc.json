@@ -205,6 +205,74 @@
           "front"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T09:01:27.902Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 100,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cauldron, oak_sapling, birch_sapling, spruce_sapling."
+          },
+          {
+            "level": "warn",
+            "check": "door",
+            "message": "No door on the front half (z = 0 is the front, toward the easel)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 305,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.45901639344262296,
+          "types": 27,
+          "dominant": {
+            "name": "spruce_planks",
+            "share": 0.1737704918032787
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "artefacts": "Carlton's note is met: oak, birch and spruce saplings on the dirt rows at (3|6|9, 1, 3|6|9|12), 3 blocks apart in both directions, with open sky above each (nothing at y2+ over the plot). Barrel (3,0,0) and cauldron (4,0,0) now stand outside the fence by the gate, the sawhorse (12..14,0..1,4) in the yard. Hanging lanterns (5,1,1), (7,1,1) hang from the gateway slabs.",
+          "levels": "Clearly new over L1: the rows are planted, the gateway gets a lychgate roof with hanging lanterns, lanterns on the corner piers, shutters on the shed, a sawhorse.",
+          "roof": "Automatic overhang warning is a false alarm (shed roof overhangs one block all round). The lychgate roof steps down to eave stairs at (3,2,1)/(9,2,1) fixed to the posts."
+        },
+        "summary": "L2 plants the rows with oak, birch and spruce saplings 3 apart and turns the gateway into a roofed lychgate with lanterns; shutters, pier lanterns, a sawhorse, barrel and cauldron are added outside the plot. (v4 is the same build as v3.)",
+        "problems": [
+          "Reachability: fine. Same as L1; only roof slopes, the lychgate roof top and pier tops are unreached."
+        ],
+        "views": [
+          "sheet",
+          "iso_back",
+          "front"
+        ]
+      }
     }
   }
 }
