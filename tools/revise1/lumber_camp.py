@@ -124,7 +124,7 @@ def sawmill():
                 s.add(x, 1, z, 'frame', **LOG_Z)
         s.add(1, 2, 1 if z0 == 0 else 7, 'frame', **LOG_Z)
     s.put(saw + 2, 1, line + 1, 'stonecutter', facing='east')       # the second saw, trimming the beams
-    for x in (5, 9):                                                 # lanterns under the tie beams
+    for x in (xa, xb):                                               # lanterns hung from the end tie beams
         s.put(x, 3, line, 'lantern', **HANG)
     for x, z in ((8, 3), (6, 5), (9, 3), (6, 3)):                    # sawdust round the saws
         s.add(x, 1, z, 'brown_carpet')
@@ -174,6 +174,5 @@ STRUCTURES = [dict(path='lumber_camp', name='Lumber camp (sawmill)', tier=1, zon
                                'sash-saw frame whose belt drives the blade on the carriage line; the grindstone '
                                '(workstation). L1 the shed, the saw and plank stacks; L2 a waterwheel on the end and '
                                'the log yard; L3 a crane over the logs, a drying rack, a sign and saplings.',
-                   changes='About a third smaller (16 x 11, a shorter and lower hall) and each level now adds its own '
-                           'big piece: L1 the shed and saw, L2 the waterwheel and log yard, L3 the crane, drying rack '
-                           'and sign.')]
+                   changes='Fix: the two lanterns in the shed hung from thin air (they would drop in game); they now hang '
+                           'from the end tie beams. Nothing else changed.')]
