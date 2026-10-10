@@ -1,0 +1,154 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "well_l3",
+  "version": 6,
+  "size": [5,7,5],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T05:27:01.973Z",
+    "description": "Well, level 3 of 3: L2 plus flourish 3. Round stone well sunk into the ground: a one-course round cobblestone rim round a pool, dark oak posts and windlass with a chain; L2 adds the spruce gable roof, crank, pulley and a lantern, L3 a water tub, a flower pot, moss and lanterns. 5 x 5 x 7 (one layer in the ground), water by the decoration step. Not yet builder-tested: cauldron, dark_oak_slab, lever, moss_carpet. Decoration step adds: item, potted_plant, water, water_cauldron.",
+    "changes": "For your note: the rim is now ONE block tall. The well is sunk into the ground (the water is level with the grass, inside a stone lining) and only one course of stone stands above it. Rounder: the corner stairs are gone (grass there now), the rim is a thin round ring and the pool inside is bigger. Posts, roof, windlass and the per-level extras stay; poppies by the rim on level 1, a flower pot on the barrel on level 3.",
+    "parent": 5,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier1",
+      "core",
+      "water"
+    ],
+    "groundLayer": 0,
+    "decorationBlocks": [
+      [
+        2,
+        0,
+        1,
+        "water"
+      ],
+      [
+        1,
+        0,
+        2,
+        "water"
+      ],
+      [
+        2,
+        0,
+        2,
+        "water"
+      ],
+      [
+        3,
+        0,
+        2,
+        "water"
+      ],
+      [
+        2,
+        0,
+        3,
+        "water"
+      ],
+      [
+        1,
+        0,
+        1,
+        "water"
+      ],
+      [
+        3,
+        0,
+        1,
+        "water"
+      ],
+      [
+        3,
+        0,
+        3,
+        "water"
+      ],
+      [
+        1,
+        0,
+        3,
+        "water"
+      ]
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:cauldron",
+    "B": "minecraft:chain[axis=y]",
+    "C": "minecraft:cobblestone",
+    "D": "minecraft:dark_oak_log[axis=x]",
+    "E": "minecraft:dark_oak_log[axis=y]",
+    "F": "minecraft:dark_oak_slab[type=bottom,waterlogged=false]",
+    "G": "minecraft:dark_oak_stairs[facing=east,half=top,shape=straight,waterlogged=false]",
+    "H": "minecraft:dark_oak_stairs[facing=north,half=top,shape=straight,waterlogged=false]",
+    "I": "minecraft:dark_oak_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "J": "minecraft:dark_oak_stairs[facing=west,half=top,shape=straight,waterlogged=false]",
+    "K": "minecraft:flower_pot",
+    "L": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "M": "minecraft:lever[face=wall,facing=north,powered=false]",
+    "N": "minecraft:moss_carpet",
+    "O": "minecraft:mossy_cobblestone",
+    "P": "minecraft:poppy",
+    "Q": "minecraft:spruce_slab[type=top,waterlogged=false]",
+    "R": "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "S": "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "T": "minecraft:water[level=0]"
+  },
+  "layers": [
+    [
+      ".CCO.",
+      "CTTTO",
+      "CTTTC",
+      "OTTTC",
+      ".OCC."
+    ],
+    [
+      "PCCC#",
+      "O...C",
+      "E.B.E",
+      "C...O",
+      "ACCCP"
+    ],
+    [
+      ".N.NK",
+      "M...L",
+      "EJBGE",
+      "L...L",
+      ".N.N."
+    ],
+    [
+      ".....",
+      "H...H",
+      "EDDDE",
+      "I...I",
+      "....."
+    ],
+    [
+      ".....",
+      "SSSSS",
+      "E.Q.E",
+      "RRRRR",
+      "....."
+    ],
+    [
+      ".....",
+      ".....",
+      "FFFFF",
+      ".....",
+      "....."
+    ],
+    [
+      ".....",
+      ".....",
+      ".....",
+      ".....",
+      "....."
+    ]
+  ]
+}

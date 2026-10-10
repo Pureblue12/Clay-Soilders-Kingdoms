@@ -186,9 +186,9 @@ def stone_wall_gate(width=7):
                 body(s, x, z, WALK - 1)                              # solid up to the walk
             for z in (0, 3):                                         # front and back walls beside the walk
                 for y in (WALK, WALK + 1):
-                    put_id(s, x, y, z, 'stone_bricks')
+                    put_id(s, x, y, z, masonry(x, y, z, seed=5))
             for z in range(4):
-                put_id(s, x, WALK + 2, z, 'stone_bricks')            # the roof over the walk
+                put_id(s, x, WALK + 2, z, masonry(x, WALK + 2, z, seed=5))   # the roof over the walk
         for x, z in ((outer, 0), (inner, 1), (outer, 2), (inner, 3)):   # merlons on the tower top, chequered
             put_id(s, x, WALK + 3, z, 'stone_bricks')
     for x in range(gx0, gx1 + 1):
@@ -199,11 +199,20 @@ def stone_wall_gate(width=7):
     for z in (1, 2):                                                 # the arch: upside-down stairs in the top corners
         put_id(s, gx0, 2, z, 'stone_brick_stairs', facing='west', **TOP)
         put_id(s, gx1, 2, z, 'stone_brick_stairs', facing='east', **TOP)
+    put_id(s, gx0, 3, 0, 'stone_brick_stairs', facing='west', **TOP)   # the arch's front ring under the corbels
+    put_id(s, gx1, 3, 0, 'stone_brick_stairs', facing='east', **TOP)
+    for tx in towers:                                                # the towers: a battered foot and a corbel course
+        for x in tx:                                                 # at the walk floor, front and town side, in line
+            for z, f in ((0, 'south'), (3, 'north')):                # with the parapet corbels over the arch
+                s.remove(x, 0, z); put_id(s, x, 0, z, 'cobblestone_stairs', facing=f, **STAIR)
+                s.remove(x, WALK - 1, z); put_id(s, x, WALK - 1, z, 'stone_brick_stairs', facing=f, **TOP)
     s.at(1, 'fittings')
     put_id(s, gx0, 1, 0, 'wall_torch', facing='east')                # torches in the gateway on the tower sides
     put_id(s, gx1, 1, 0, 'wall_torch', facing='west')
     for x in (1, width - 2):                                         # torches in the walk passages
         put_id(s, x, WALK + 1, 2, 'wall_torch', facing='north')
+    put_id(s, mid, 2, 1, 'lantern', **HANGING)                       # lanterns hanging in the arch
+    put_id(s, mid, 2, 2, 'lantern', **HANGING)
     s.at(2, 'flourish2')
     put_id(s, mid, 3, 0, 'red_wall_banner', facing='north')          # banner over the arch (pattern: decoration step)
     s.decorate(mid, 3, 0, 'banner_pattern', banner='red_wall_banner', note='kingdom colours')
@@ -212,8 +221,6 @@ def stone_wall_gate(width=7):
         put_id(s, inner, WALK + 3, 2, 'lantern', **LANTERN)          # a watch light on each tower top
         put_id(s, inner, 3, 4, 'red_wall_banner', facing='south')    # banners on the town side
         s.decorate(inner, 3, 4, 'banner_pattern', banner='red_wall_banner', note='kingdom colours')
-    put_id(s, mid, 2, 1, 'lantern', **HANGING)                       # lanterns hanging in the arch
-    put_id(s, mid, 2, 2, 'lantern', **HANGING)
     for x in (gx0 - 1, gx1 + 1):                                     # lamp posts on the town side of the gate
         put_id(s, x + (-1 if x < mid else 1), 0, 4, 'stone_brick_wall')
         put_id(s, x + (-1 if x < mid else 1), 1, 4, 'lantern', **LANTERN)

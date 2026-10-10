@@ -5,14 +5,15 @@ Ground rule: a flush plaza piece (ground_layer=0, like tools/batch4/market.py). 
 block: the paving is level with the lawn; cells outside the round stay grass. Everything that stands is at y >= 1.
 
 Plan (9 x 9, centre (4, 4), the figure faces the front, z = 0): a paved round 9 across with a cobble path in from each
-side; a plinth: a step of stairs all round (5 x 5), a 3 x 3 body with a plaque on the front, a corbelled cornice; the
-figure on top: a tabard flaring at the hem, arms, shoulders, a head; the left arm carries a shield, the right one
-raises a sword.
+side; a plinth: a step of stairs all round (5 x 5) with the plaque on its front, a 3 x 3 body and a corbelled cornice;
+the figure on top (6 tall with the crown): legs astride, a mail skirt flaring at the hips, a chest of fired clay
+(white terracotta: he is a clay soldier), pauldrons, a neck and a clay head; the left arm carries a shield, the right
+one raises a sword.
 Level 1 (KNOWN-OK only): paving, plinth, plaque (its text by the decoration step), the figure, its shield and sword.
-Level 2 (honoured): four lantern posts round the plinth, flowers in the grass corners and on the step, a blade that
-shines (a lightning rod), the shield's coat of arms (a banner), moss on the step.
-Level 3 (the king): a gold-look crown, a red cloak over the shoulders and down his back, candles on the cornice,
-red and white banners on the lantern posts, wreaths of flowers in pots at the plinth's corners."""
+Level 2 (honoured): four lantern posts round the plinth, flowering azalea bushes round their feet, flowers in the grass
+corners.
+Level 3 (the king): a gold-look crown, a red cloak over the shoulders and down his back, candles at his feet, red and
+white banners on the lantern posts."""
 import math
 
 from make_batch1_structures import Structure
@@ -72,7 +73,8 @@ def statue():
     s.decorate(C, 1, C - 3, 'sign_text', lines=['', 'Our Founder', 'the First King', ''])
 
     s.at(1, 'fittings')                                                 # the figure (faces the front)
-    P(s, C, 3, C, 'cobblestone_wall')                                   # legs
+    P(s, C - 1, 3, C, 'cobblestone_wall')                               # legs, astride
+    P(s, C + 1, 3, C, 'cobblestone_wall')
     P(s, C, 4, C, 'stone_bricks')                                       # the mail skirt
     P(s, C - 1, 4, C, 'stone_brick_stairs', facing='east', **STAIR)     # flaring out
     P(s, C + 1, 4, C, 'stone_brick_stairs', facing='west', **STAIR)
@@ -103,7 +105,7 @@ def statue():
         P(s, C, y, C + 1, 'red_wool')
     P(s, C, 3, C + 1, 'red_carpet')
     P(s, C - 1, 7, C, 'red_carpet')                                     # over the shoulders
-    for x, z in ((C - 1, C - 1), (C + 1, C - 1)):                       # candles on the cornice's front corners
+    for x, z in ((C - 1, C - 1), (C + 1, C - 1)):                       # candles at his feet
         A(s, x, 3, z, 'candle', candles='3', lit='true', waterlogged='false')
     for i, (x, z) in enumerate(posts):                                  # banners on the lantern posts
         side = 'north' if z < C else 'south'
@@ -118,5 +120,5 @@ STRUCTURES = [dict(path='statue', name='Statue', tier=6, zone='inner', role='dec
                    description='Flush plaza piece (ground_layer 0: the paving replaces the grass, level with the lawn; '
                                'the mod\'s builders can\'t do that yet). The founding king as a clay soldier in stone, '
                                'sword raised and shield on his arm, on a stepped plinth with a plaque, in a paved round '
-                               '9 across. L2 lantern posts, bushes and flowers, a shining blade, the arms on his shield, '
-                               'moss; L3 a gold-look crown, a red cloak, candles, banners and flower wreaths.')]
+                               '9 across. L2 lantern posts, flowering bushes and flowers; L3 a gold-look crown, a red '
+                               'cloak, candles at his feet and banners.')]

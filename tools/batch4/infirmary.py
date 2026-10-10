@@ -4,7 +4,8 @@
 Layout (11 wide x 13 deep, front z = 0): walls x 2..8, z 2..10 (7 x 9). Cobblestone base course, white terracotta
 (plaster) walls in a dark oak frame (corner posts and posts in the long walls), a spruce stair gable roof with dark
 oak eaves, spruce top plates and a slab ridge, one block of overhang all round, spruce plank gables.
-- Front: the door in the middle (spruce) with a step, a window on each side.
+- Front: the door in the middle (spruce) with a step, a window on each side, and the red cross (bricks on white
+  plaster) in the gable overhang above the door, from level 1.
 - Sides: three windows each, one over every bed head; on the right, an open lean-to herb store under its own roof.
 - Inside (the ward, 5 x 7): three beds along each wall with their heads to the wall, a bedside table between them, an
   aisle down the middle. At the front: the healer's chest (left) and the dispensary table (right); at the back: the
@@ -12,7 +13,7 @@ oak eaves, spruce top plates and a slab ridge, one block of overhang all round, 
 - The herb store (lean-to, x 9..10, z 6..9): a composter of herb cuttings, barrels, a hay bale.
 Level 2 (the ward at work): a brewing stand on the dispensary table and a cauldron beside it, candles and pots on the
 bedside tables, lanterns on chains from the roof, white carpets in the aisle, flower boxes under the front windows,
-a door canopy with lanterns, the white banner over the door (its red cross by the decoration step), herbs drying in
+a door canopy with lanterns, the white banner on the lean-to post (its red cross by the decoration step), herbs drying in
 the lean-to.
 Level 3 (herb garden and care): a herb garden along the left side (ferns, flowers, berry bushes) with a stepping
 path, herb pots on the windowsills, banners with the red cross by the door, a bench by the door, vines, and a lantern
@@ -54,7 +55,13 @@ def infirmary():
     # the hearth's chimney: a brick breast outside the back wall, a stack through the back overhang to the ridge
     chimney = [(mid, y, z1 + 1) for y in range(3, 9)]
     gable_roof(s, x0, x1, z0, z1, top, front=1, back=1, gable='spruce_planks', plates='spruce_log', skip=chimney)
-    P(s, mid, top + 3, z0 - 1, 'spruce_planks')                 # closes the front barge board under the ridge
+    # the infirmary sign (Carlton: "add a red cross"): a plaque in the front gable overhang, over the door, a red
+    # cross (bricks: red wool and red concrete are not builder-tested yet) on white plaster; it also closes the barge
+    # board under the ridge
+    for x, y in ((mid, top + 1), (mid, top + 2), (mid, top + 3), (mid - 1, top + 2), (mid + 1, top + 2)):
+        P(s, x, y, z0 - 1, 'bricks')
+    for x in (mid - 1, mid + 1):
+        P(s, x, top + 1, z0 - 1, 'white_terracotta')
     for x in (mid - 1, mid, mid + 1):
         for y in (0, 1, 2):
             P(s, x, y, z1 + 1, 'bricks')
@@ -123,8 +130,8 @@ def infirmary():
     P(s, mid - 1, 3, z1 + 1, 'brick_stairs', facing='east', **STAIR)                      # the chimney's shoulders
     P(s, mid + 1, 3, z1 + 1, 'brick_stairs', facing='west', **STAIR)
     flower_box(s, x1 + 1, 1, 4, 'east', 'allium')                                         # under the right front window
-    P(s, mid, 4, z0 - 1, 'white_wall_banner', facing='north')
-    s.decorate(mid, 4, z0 - 1, 'banner_pattern', banner='white_wall_banner', note='a red cross (the infirmary sign)')
+    P(s, W - 1, 2, 5, 'white_wall_banner', facing='north')                                # on the lean-to's front post
+    s.decorate(W - 1, 2, 5, 'banner_pattern', banner='white_wall_banner', note='a red cross (the infirmary sign)')
     for z in (7, 8):
         s.decorate(x1 + 1, 2, z, 'item', item='minecraft:fern', note='bundles of herbs drying under the lean-to roof')
     P(s, x1 + 1, 2, 7, 'brown_carpet')
@@ -163,9 +170,10 @@ def infirmary():
 
 
 STRUCTURES = [dict(path='infirmary', name='Infirmary', tier=4, zone='inner', role='health', group='infirmary',
-                   terrain='ground_level', door='front', make=infirmary, changes='Quality check round 1: the hole in the front barge board under the ridge is closed (every level); '
-                           'the L3 bench by the front now faces away from the wall.',
-                   description='Over budget: 448 blocks vs 285 (first build 379 vs 235). White plaster ward in a dark oak frame under a spruce gable roof: six '
+                   terrain='ground_level', door='front', make=infirmary, changes='Carlton: "add a red cross". A red cross of blocks (bricks: red wool is not builder-tested '
+                           'yet) on white plaster in the front gable overhang over the door, on every level; the L2 '
+                           'banner moved to the lean-to post so it does not cover it.',
+                   description='Over budget: 448 blocks vs 285 (first build 379 vs 235). White plaster ward in a dark oak frame under a spruce gable roof, a red cross (bricks) in the front gable: six '
                                'beds (three on each side, heads to the wall, a window over each), bedside tables, a '
                                'hearth, herb barrels and shelves, a lean-to herb store; L2 adds the brewing stand and '
                                'cauldron, candles, lanterns, flower boxes, a door canopy and the banner; L3 a herb '

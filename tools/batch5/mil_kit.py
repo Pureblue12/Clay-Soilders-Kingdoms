@@ -50,13 +50,12 @@ def ring(s, x0, z0, x1, z1, y, block, add=False, **props):
                 put(s, x, y, z, block, **props)
 
 
-def cone(s, x0, z0, x1, z1, y, stairs='spruce_stairs', body='spruce_planks', eave=None):
-    """A steep turret cone over the square tower x0..x1, z0..z1 (odd size) starting at y: an eave course one block
-    out, then each ring two stair courses high (shingles: 2 up for every 1 in) and one block further in, up to a
-    centre post. Every visible block is a stair of one material, so it reads as one cone, not stacked tiers.
-    Returns the y above the last block (where a finial goes)."""
-    ring_stairs(s, x0 - 1, z0 - 1, x1 + 1, z1 + 1, y, eave or stairs)
-    k, yy = 0, y
+def cone(s, x0, z0, x1, z1, y, stairs='spruce_stairs', body='spruce_planks'):
+    """A steep turret cone over the square tower x0..x1, z0..z1 (odd size) starting at y: rings of stairs two courses
+    high (shingles), each ring one block further in (2 up for every 1 in, a straight witch-hat profile, no flare),
+    from an eave ring one block out round the tower up to a centre block. Returns the y above the top (where a
+    finial goes)."""
+    k, yy = -1, y
     while x0 + k < x1 - k:
         ring_stairs(s, x0 + k, z0 + k, x1 - k, z1 - k, yy, stairs)
         ring_stairs(s, x0 + k, z0 + k, x1 - k, z1 - k, yy + 1, stairs)
