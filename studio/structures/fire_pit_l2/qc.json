@@ -173,6 +173,68 @@
           "sheet"
         ]
       }
+    },
+    "5": {
+      "version": 5,
+      "checkedAt": "2026-10-10T05:31:02.214Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 90,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: short_grass, cauldron, dandelion, fern."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "76 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 76,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.7368421052631579,
+          "types": 22,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.17105263157894737
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "levels": "Clearly different from L1: a young oak (4-high log trunk with a leaf tuft, persistent leaves) between the left and back bench, plus red cushions, a cauldron, a second lantern post and plants",
+          "roof": "Open fire pit, no roof wanted",
+          "scale": "The young tree reads as a sapling-stage tree, not a full tree, which is what L2 should show",
+          "artefacts": "Nothing floating; both lanterns stand on fence posts; flowers and grass sit on the ground"
+        },
+        "summary": "Level 2 adds a young oak growing beside the benches, cushions on the benches, a cauldron by the ring and a second lantern post. The young tree makes it tell apart from L1 at a glance.",
+        "problems": [
+          "Reachability: 76 of 81 standing places reached; the 5 unreached are tops of the oak's leaves, which is fine"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

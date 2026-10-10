@@ -273,6 +273,80 @@
           "sheet"
         ]
       }
+    },
+    "6": {
+      "version": 6,
+      "checkedAt": "2026-10-10T05:30:42.522Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 50,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Drawn for the decoration step, not built: minecraft:water."
+          },
+          {
+            "level": "warn",
+            "check": "too-small",
+            "message": "Only 45 blocks: too bare for a common (at least 50). Carlton wants more detail, not less."
+          },
+          {
+            "level": "warn",
+            "check": "detail",
+            "message": "11 % detail blocks: on the bare side, aim for 20 %+."
+          }
+        ],
+        "stats": {
+          "blocks": 45,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.1111111111111111,
+          "types": 7,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.35555555555555557
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 0,
+          "purpose": 1,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 0,
+          "levels": 2
+        },
+        "notes": {
+          "artefacts": "0 because it ignores Carlton's note: rim still not circular. Ignores Carlton's note 'still not circular': the rim course at y=1 has exactly the same outline as the rejected v5 (5x5 with the four corners cut, square 3x3 pool inside); from the top it still reads as a square with notched corners.",
+          "scale": "Rim 1 block tall: met. Circular: NOT met. Ignores Carlton's note 'still not circular': the rim course at y=1 has exactly the same outline as the rejected v5 (5x5 with the four corners cut, square 3x3 pool inside); from the top it still reads as a square with notched corners.",
+          "purpose": "Reads as a well (posts, beam, chain, water), but not the round well Carlton asked for.",
+          "roof": "No roof at L1 by design (posts and windlass beam only); L2 adds it.",
+          "detail": "45 blocks, 11 % detail: bare round the base."
+        },
+        "summary": "Level 1: sunk cobblestone well with a one-course rim, two dark oak posts, a windlass beam and chain, a barrel and two poppies.",
+        "problems": [
+          "Ignores Carlton's note 'still not circular': the rim course at y=1 has exactly the same outline as the rejected v5 (5x5 with the four corners cut, square 3x3 pool inside); from the top it still reads as a square with notched corners.",
+          "Make the rim read as a round ring without growing past a middle size: e.g. keep the cut outer corners AND fill the inner corners of the ring at y=1 (1,1),(3,1),(1,3),(3,3) so the ring is an even-thickness octagon round a plus-shaped pool, or go to a 6x6 ring (.####. / #....# / ... / .####.) with chamfered corners; v3's 7x7 was 'too big'.",
+          "The barrel at (4,1,0) sits ON the rim's cut corner and squares it off again; put it on the grass outside the ring.",
+          "Still bare (45 blocks, 11 % detail): add e.g. a bucket/stone step by the rim.",
+          "Rim height is now correct: one course (y=1) above the grass with the water flush at y=0 (groundLayer 0, noted, not a fault).",
+          "Reachability: open well, every rim spot reachable; fine."
+        ],
+        "views": [
+          "sheet",
+          "top"
+        ]
+      }
     }
   }
 }

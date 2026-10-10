@@ -1,0 +1,69 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "tree_farm_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:28:46.379Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 90,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cauldron, oak_sapling, birch_sapling, spruce_sapling."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 265,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4641509433962264,
+          "types": 27,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.14339622641509434
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 1,
+          "levels": 2
+        },
+        "notes": {
+          "levels": "Clearly different from L1: lychgate roof over the entrance, lanterns on all four piers, saplings in every row, sawhorse and cauldron in the yard.",
+          "roof": "Automatic overhang warning is a false alarm (one block all round).",
+          "purpose": "Rows of oak, birch and spruce saplings with a sawhorse and log pile read as a managed tree plantation with a working yard."
+        },
+        "summary": "L1 plus a covered lychgate with hanging lanterns, lanterns on the corner piers, oak/birch/spruce saplings in every row, a sawhorse, cauldron, barrel and shutters on the shed window.",
+        "problems": [
+          "Leaves of the two young oaks run into the shed eave: leaf at (8,5,6) sits on the roof stair and leaves at (2,3,6)/(8,3,6) press against the shed posts, so from the front the canopies swallow the shed; trim them back so the eave at z=6 is clear.",
+          "Shed interior is a 3 x 1 alcove (x4..6, z8) holding chest, grindstone and barrel in a row: reads as a stall more than a woodcutter's shed; give it a real working depth (2 deep) or turn it into an open-fronted lean-to with a bench.",
+          "Reach: the shed floor, workstation (chest, grindstone, barrel), yard and every planting row are reached; the unreached places are roof slopes, leaf tops, pier tops and the gateway roof, which is fine."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}
