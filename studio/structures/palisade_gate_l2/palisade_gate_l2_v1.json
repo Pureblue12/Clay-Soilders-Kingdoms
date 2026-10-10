@@ -1,0 +1,71 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "palisade_gate_l2",
+  "version": 1,
+  "size": [5,7,3],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T01:57:48.705Z",
+    "description": "Palisade gate, level 2 of 3: L1 plus flourish 2. Two log towers and a 3 wide, 3 high opening (no fence gate); the walk crosses over it. Not yet builder-tested: white_banner. Decoration step adds: banner_pattern.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "wall",
+      "gate"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "A": "minecraft:spruce_fence",
+    "B": "minecraft:spruce_log[axis=x]",
+    "C": "minecraft:spruce_log[axis=y]",
+    "D": "minecraft:spruce_slab[type=bottom,waterlogged=false]",
+    "E": "minecraft:spruce_slab[type=top,waterlogged=false]",
+    "F": "minecraft:wall_torch[facing=east]",
+    "G": "minecraft:wall_torch[facing=west]",
+    "H": "minecraft:white_banner[rotation=8]"
+  },
+  "layers": [
+    [
+      "C...C",
+      "C...C",
+      "C...C"
+    ],
+    [
+      "C...C",
+      "C...C",
+      "C...C"
+    ],
+    [
+      "CF#GC",
+      "E...E",
+      "C...C"
+    ],
+    [
+      "CBBBC",
+      ".DDD.",
+      "CBBBC"
+    ],
+    [
+      "CAAAC",
+      ".....",
+      "A...A"
+    ],
+    [
+      "A...A",
+      ".....",
+      "....."
+    ],
+    [
+      "H...H",
+      ".....",
+      "....."
+    ]
+  ]
+}

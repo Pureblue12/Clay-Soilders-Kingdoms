@@ -1,0 +1,57 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "palisade_stepped_l2",
+  "version": 1,
+  "size": [5,6,2],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T01:57:46.528Z",
+    "description": "Palisade, stepped, level 2 of 3: L1 plus flourish 2. Like the straight module, but the walk rises 1 block (2.5 to 3.5) in two half steps.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:oak_fence",
+    "A": "minecraft:spruce_fence",
+    "B": "minecraft:spruce_log[axis=y]",
+    "C": "minecraft:spruce_slab[type=bottom,waterlogged=false]",
+    "D": "minecraft:spruce_slab[type=top,waterlogged=false]",
+    "E": "minecraft:wall_torch[facing=south]"
+  },
+  "layers": [
+    [
+      "BBBBB",
+      "#####"
+    ],
+    [
+      "BBBBB",
+      "#####"
+    ],
+    [
+      "BBBBB",
+      "CCD##"
+    ],
+    [
+      "ABABB",
+      ".E.CC"
+    ],
+    [
+      ".A.BA",
+      "...E."
+    ],
+    [
+      "...A.",
+      "....."
+    ]
+  ]
+}

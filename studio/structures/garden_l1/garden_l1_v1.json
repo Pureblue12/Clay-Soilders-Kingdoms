@@ -1,0 +1,69 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "garden_l1",
+  "version": 1,
+  "size": [7,4,7],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T01:57:42.033Z",
+    "description": "Garden (level 1), level 1 of 3: shell and fittings (what soldiers build first). A 7 x 7 ornamental garden: gravel cross, poppy beds, benches and a tool chest; later levels add hedges, a pond and a leafy pergola.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "inner",
+      "civic"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:chest[facing=west,type=single,waterlogged=false]",
+    "A": "minecraft:coarse_dirt",
+    "B": "minecraft:cobblestone",
+    "C": "minecraft:gravel",
+    "D": "minecraft:oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "E": "minecraft:poppy"
+  },
+  "layers": [
+    [
+      "...C...",
+      ".AACAA.",
+      ".AACAA.",
+      "CCCBCCC",
+      "A..C...",
+      "A..C...",
+      "...C..."
+    ],
+    [
+      ".......",
+      ".EE.EE.",
+      ".EE.EE.",
+      ".......",
+      "E......",
+      "E.....#",
+      ".DD..D."
+    ],
+    [
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      "......."
+    ],
+    [
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      ".......",
+      "......."
+    ]
+  ]
+}

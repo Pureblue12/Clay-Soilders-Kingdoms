@@ -1,0 +1,119 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "stables_l1",
+  "version": 1,
+  "size": [9,6,11],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T01:57:51.315Z",
+    "description": "Pens and stables, level 1 of 3: shell and fittings (what soldiers build first). Fenced pen (front opening, no gate) before an open-sided log stable with two stalls, a shallow spruce slab roof and a hay loft under the ridge; the stable wants level ground.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "outer",
+      "farm"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:chest[facing=north,type=single,waterlogged=false]",
+    "A": "minecraft:cobblestone",
+    "B": "minecraft:hay_block[axis=x]",
+    "C": "minecraft:hay_block[axis=y]",
+    "D": "minecraft:hay_block[axis=z]",
+    "E": "minecraft:oak_fence",
+    "F": "minecraft:oak_log[axis=x]",
+    "G": "minecraft:oak_log[axis=y]",
+    "H": "minecraft:oak_log[axis=z]",
+    "I": "minecraft:oak_planks",
+    "J": "minecraft:spruce_planks",
+    "K": "minecraft:spruce_slab[type=bottom,waterlogged=false]",
+    "L": "minecraft:spruce_slab[type=top,waterlogged=false]",
+    "M": "minecraft:wall_torch[facing=north]"
+  },
+  "layers": [
+    [
+      "EEEE.EEEE",
+      "E.......E",
+      "E.......E",
+      "E.......E",
+      "E.......E",
+      "EA..A..AE",
+      ".........",
+      ".........",
+      ".........",
+      ".AAAAAAA.",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".G..G..G.",
+      ".E..E..E.",
+      ".E..E..E.",
+      ".EC.#.CE.",
+      ".GIIGIIG.",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".M.....M.",
+      ".G..G..G.",
+      ".........",
+      ".........",
+      ".........",
+      ".GIIGIIG.",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".GFFGFFG.",
+      ".H.....H.",
+      ".HJJHJJH.",
+      ".H.....H.",
+      ".GFFGFFG.",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "KKKKKKKKK",
+      "LLLLLLLLL",
+      ".D.....D.",
+      ".DBBBBBD.",
+      ".D.....D.",
+      "LLLLLLLLL",
+      "KKKKKKKKK"
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "KKKKKKKKK",
+      "LLLLLLLLL",
+      "KKKKKKKKK",
+      ".........",
+      "........."
+    ]
+  ]
+}

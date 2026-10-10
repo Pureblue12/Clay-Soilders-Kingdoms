@@ -1,0 +1,116 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "watchtower_l1",
+  "version": 1,
+  "size": [6,9,6],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T01:57:52.606Z",
+    "description": "Watchtower, level 1 of 3: shell and fittings (what soldiers build first). Log watchtower: spiral stair inside four posts up to a railed lookout (floor at y 4), hip roof; 4 x 4 core, not 3 x 3 (a walkable stair needs it).",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:oak_fence",
+    "A": "minecraft:oak_log[axis=y]",
+    "B": "minecraft:oak_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "C": "minecraft:oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "D": "minecraft:oak_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "E": "minecraft:spruce_planks",
+    "F": "minecraft:spruce_slab[type=top,waterlogged=false]",
+    "G": "minecraft:spruce_stairs[facing=east,half=bottom,shape=outer_left,waterlogged=false]",
+    "H": "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "I": "minecraft:spruce_stairs[facing=north,half=bottom,shape=outer_left,waterlogged=false]",
+    "J": "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "K": "minecraft:spruce_stairs[facing=south,half=bottom,shape=outer_left,waterlogged=false]",
+    "L": "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "M": "minecraft:spruce_stairs[facing=west,half=bottom,shape=outer_left,waterlogged=false]",
+    "N": "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "O": "minecraft:torch",
+    "P": "minecraft:wall_torch[facing=east]"
+  },
+  "layers": [
+    [
+      "......",
+      ".A..A.",
+      "..C...",
+      "......",
+      ".A..A.",
+      "......"
+    ],
+    [
+      "......",
+      ".A..A.",
+      "...B..",
+      "......",
+      ".AP.A.",
+      "......"
+    ],
+    [
+      "......",
+      ".A..A.",
+      "......",
+      "...C..",
+      ".A..A.",
+      "......"
+    ],
+    [
+      "......",
+      ".A..A.",
+      "......",
+      "..D...",
+      ".A..A.",
+      "......"
+    ],
+    [
+      "......",
+      ".AEEA.",
+      ".EEEE.",
+      ".E..E.",
+      ".AEEA.",
+      "......"
+    ],
+    [
+      "......",
+      ".A##A.",
+      ".#..#.",
+      ".#..#.",
+      ".A##A.",
+      "......"
+    ],
+    [
+      "......",
+      ".A..A.",
+      ".O....",
+      "......",
+      ".A..A.",
+      "......"
+    ],
+    [
+      "KLLLLM",
+      "HA..AN",
+      "H....N",
+      "H....N",
+      "HA..AN",
+      "GJJJJI"
+    ],
+    [
+      "......",
+      ".KLLM.",
+      ".HFFN.",
+      ".HFFN.",
+      ".GJJI.",
+      "......"
+    ]
+  ]
+}

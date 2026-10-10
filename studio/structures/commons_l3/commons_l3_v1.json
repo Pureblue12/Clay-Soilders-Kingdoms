@@ -1,0 +1,107 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "commons_l3",
+  "version": 1,
+  "size": [9,5,9],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T01:57:40.241Z",
+    "description": "Commons (level 1), level 3 of 3: L2 plus flourish 3. A 9 x 9 village green on a road junction: gravel paths to a fire pit, the well, three benches; later levels add lanterns, flower beds and banners. Not yet builder-tested: allium, cornflower, dandelion, moss_carpet, oxeye_daisy, white_banner. Decoration step adds: banner_pattern, potted_plant, water.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "inner",
+      "civic"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:allium",
+    "A": "minecraft:campfire[facing=north,lit=false,signal_fire=false,waterlogged=false]",
+    "B": "minecraft:chain[axis=y]",
+    "C": "minecraft:coarse_dirt",
+    "D": "minecraft:cobblestone",
+    "E": "minecraft:cobblestone_slab[type=bottom,waterlogged=false]",
+    "F": "minecraft:cobblestone_wall",
+    "G": "minecraft:cornflower",
+    "H": "minecraft:dandelion",
+    "I": "minecraft:flower_pot",
+    "J": "minecraft:gravel",
+    "K": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "L": "minecraft:moss_carpet",
+    "M": "minecraft:oak_fence",
+    "N": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "O": "minecraft:oak_log[axis=x]",
+    "P": "minecraft:oak_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "Q": "minecraft:oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "R": "minecraft:oak_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]",
+    "S": "minecraft:oak_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]",
+    "T": "minecraft:oxeye_daisy",
+    "U": "minecraft:poppy",
+    "V": "minecraft:spruce_slab[type=bottom,waterlogged=false]",
+    "W": "minecraft:torch",
+    "X": "minecraft:white_banner[rotation=8]"
+  },
+  "layers": [
+    [
+      ".CC.J.CC.",
+      "....J....",
+      "...DJD...",
+      "..DDDDD..",
+      "JJJDDDJJJ",
+      "..DDDDD..",
+      "...DJDDDD",
+      "....J.D.D",
+      ".CC.J.DDD"
+    ],
+    [
+      "MHGX.XUHM",
+      "SPPR.SPPR",
+      "N.......N",
+      "N..EEE..N",
+      "...EAE...",
+      "...EEE.OO",
+      "......DDD",
+      "SQQR..D.D",
+      "MT#...DDD"
+    ],
+    [
+      "K.......K",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "........O",
+      "......WLI",
+      "......F.F",
+      "K.....ILK"
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "......FBF",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "......VVV",
+      "......VVV",
+      "......VVV"
+    ]
+  ]
+}

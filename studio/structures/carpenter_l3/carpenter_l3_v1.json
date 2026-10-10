@@ -1,0 +1,111 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "carpenter_l3",
+  "version": 1,
+  "size": [7,7,6],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T01:57:38.900Z",
+    "description": "Carpenter or fletcher, level 3 of 3: L2 plus flourish 3. Timber workshop entered by an open front bay (crafting table, fletching table from L2), back door to the yard; log stack and sawhorse under the side eaves. Not yet builder-tested: fletching_table, moss_carpet. Decoration step adds: item_frame, sign_text.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "inner",
+      "workshop"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=north,open=false]",
+    "A": "minecraft:barrel[facing=up,open=false]",
+    "B": "minecraft:chain[axis=y]",
+    "C": "minecraft:chest[facing=east,type=single,waterlogged=false]",
+    "D": "minecraft:cobblestone",
+    "E": "minecraft:crafting_table",
+    "F": "minecraft:fletching_table",
+    "G": "minecraft:glass_pane",
+    "H": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "I": "minecraft:moss_carpet",
+    "J": "minecraft:oak_door[facing=south,half=lower,hinge=left,open=false,powered=false]",
+    "K": "minecraft:oak_door[facing=south,half=upper,hinge=left,open=false,powered=false]",
+    "L": "minecraft:oak_fence",
+    "M": "minecraft:oak_log[axis=x]",
+    "N": "minecraft:oak_log[axis=y]",
+    "O": "minecraft:oak_log[axis=z]",
+    "P": "minecraft:oak_planks",
+    "Q": "minecraft:oak_pressure_plate[powered=false]",
+    "R": "minecraft:oak_slab[type=bottom,waterlogged=false]",
+    "S": "minecraft:oak_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "T": "minecraft:oak_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "U": "minecraft:oak_wall_sign[facing=east,waterlogged=false]",
+    "V": "minecraft:spruce_planks",
+    "W": "minecraft:spruce_slab[type=bottom,waterlogged=false]",
+    "X": "minecraft:spruce_trapdoor[facing=east,half=bottom,open=true,powered=false,waterlogged=false]",
+    "Y": "minecraft:spruce_trapdoor[facing=west,half=bottom,open=true,powered=false,waterlogged=false]",
+    "Z": "minecraft:stripped_oak_log[axis=y]",
+    "a": "minecraft:wall_torch[facing=north]"
+  },
+  "layers": [
+    [
+      ".Z....#",
+      ".DDDDD.",
+      "ODPPPDL",
+      "ODPPPD.",
+      "ODPPPDL",
+      ".DDDDDV"
+    ],
+    [
+      ".......",
+      ".N...N.",
+      "OPE.SPR",
+      "OPF.SPR",
+      ".PC.APR",
+      ".NPJPNW"
+    ],
+    [
+      ".......",
+      ".N...NU",
+      "YPQ..PX",
+      "IG...G.",
+      "YP..APX",
+      ".NGKGN."
+    ],
+    [
+      ".......",
+      ".NMMMN.",
+      ".P...P.",
+      ".P.H.P.",
+      ".Pa.aP.",
+      ".NPPPN."
+    ],
+    [
+      "S.....T",
+      "SOVVVOT",
+      "SO...OT",
+      "SO.B.OT",
+      "SO...OT",
+      "SOVVVOT"
+    ],
+    [
+      ".S.H.T.",
+      ".SVVVT.",
+      ".S...T.",
+      ".S...T.",
+      ".S...T.",
+      ".SVVVT."
+    ],
+    [
+      "..SPT..",
+      "..SPT..",
+      "..SPT..",
+      "..SPT..",
+      "..SPT..",
+      "..SPT.."
+    ]
+  ]
+}

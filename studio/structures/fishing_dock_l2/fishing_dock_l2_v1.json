@@ -1,0 +1,100 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "fishing_dock_l2",
+  "version": 1,
+  "size": [7,5,9],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T01:57:41.117Z",
+    "description": "Fishing dock, level 2 of 3: L1 plus flourish 2. Oak jetty on log pilings with a spruce net hut at the shore end and a fishing seat at the far end; meant to run out over water (shown on flat ground, pilings at y 0).",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "outer",
+      "food"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:barrel[facing=west,open=false]",
+    "B": "minecraft:chest[facing=north,type=single,waterlogged=false]",
+    "C": "minecraft:glass_pane",
+    "D": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "E": "minecraft:oak_fence",
+    "F": "minecraft:oak_log[axis=y]",
+    "G": "minecraft:oak_planks",
+    "H": "minecraft:oak_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "I": "minecraft:spruce_door[facing=north,half=lower,hinge=left,open=false,powered=false]",
+    "J": "minecraft:spruce_door[facing=north,half=upper,hinge=left,open=false,powered=false]",
+    "K": "minecraft:spruce_planks",
+    "L": "minecraft:spruce_slab[type=bottom,waterlogged=false]",
+    "M": "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "N": "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "O": "minecraft:spruce_trapdoor[facing=west,half=bottom,open=false,powered=false,waterlogged=false]",
+    "P": "minecraft:torch",
+    "Q": "minecraft:white_carpet"
+  },
+  "layers": [
+    [
+      "FGF....",
+      "GGGFIF.",
+      "GGGK.K#",
+      "GGGKBK#",
+      "FGFFKFA",
+      "GGG....",
+      "GGG....",
+      "GGG....",
+      "FGF...."
+    ],
+    [
+      ".......",
+      "...FJF.",
+      "...K.KO",
+      "...CDK.",
+      "...FKF.",
+      "E......",
+      "..E....",
+      "E......",
+      "EHE...."
+    ],
+    [
+      "..M...N",
+      "..MFKFN",
+      "..MK.KN",
+      "..MK.KN",
+      "..MFKFN",
+      "E......",
+      "E.D....",
+      "E......",
+      "P.P...."
+    ],
+    [
+      "...M.N.",
+      "...MKN.",
+      "...M.N.",
+      "...M.N.",
+      "...MKN.",
+      "Q......",
+      "Q......",
+      "Q......",
+      "......."
+    ],
+    [
+      "....L..",
+      "....L..",
+      "....L..",
+      "....L..",
+      "....L..",
+      ".......",
+      ".......",
+      ".......",
+      "......."
+    ]
+  ]
+}

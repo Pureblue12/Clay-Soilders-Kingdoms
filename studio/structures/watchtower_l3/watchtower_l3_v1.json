@@ -1,0 +1,122 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "watchtower_l3",
+  "version": 1,
+  "size": [6,9,6],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T01:57:53.507Z",
+    "description": "Watchtower, level 3 of 3: L2 plus flourish 3. Log watchtower: spiral stair inside four posts up to a railed lookout (floor at y 4), hip roof; 4 x 4 core, not 3 x 3 (a walkable stair needs it). Not yet builder-tested: moss_carpet, white_wall_banner. Decoration step adds: banner_pattern.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:campfire[facing=south,lit=false,signal_fire=false,waterlogged=false]",
+    "A": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "B": "minecraft:moss_carpet",
+    "C": "minecraft:oak_fence",
+    "D": "minecraft:oak_log[axis=y]",
+    "E": "minecraft:oak_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "F": "minecraft:oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "G": "minecraft:oak_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "H": "minecraft:spruce_planks",
+    "I": "minecraft:spruce_slab[type=top,waterlogged=false]",
+    "J": "minecraft:spruce_stairs[facing=east,half=bottom,shape=outer_left,waterlogged=false]",
+    "K": "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "L": "minecraft:spruce_stairs[facing=north,half=bottom,shape=outer_left,waterlogged=false]",
+    "M": "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "N": "minecraft:spruce_stairs[facing=south,half=bottom,shape=outer_left,waterlogged=false]",
+    "O": "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "P": "minecraft:spruce_stairs[facing=west,half=bottom,shape=outer_left,waterlogged=false]",
+    "Q": "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "R": "minecraft:stripped_spruce_log[axis=x]",
+    "S": "minecraft:stripped_spruce_log[axis=z]",
+    "T": "minecraft:torch",
+    "U": "minecraft:wall_torch[facing=east]",
+    "V": "minecraft:white_wall_banner[facing=west]"
+  },
+  "layers": [
+    [
+      "......",
+      "BD..D.",
+      "..F...",
+      "......",
+      "BD..DB",
+      "......"
+    ],
+    [
+      "......",
+      ".D..D.",
+      "...E..",
+      "......",
+      ".DU.D.",
+      "......"
+    ],
+    [
+      "......",
+      ".D..D.",
+      ".S..S.",
+      ".S.FS.",
+      ".DRRD.",
+      "......"
+    ],
+    [
+      "......",
+      ".D..D.",
+      "......",
+      "..G...",
+      ".D..D.",
+      "......"
+    ],
+    [
+      "......",
+      ".DHHD.",
+      ".HHHH.",
+      ".H..H.",
+      ".DHHD.",
+      "......"
+    ],
+    [
+      "......",
+      ".DCCD.",
+      "VC..C.",
+      ".C..C.",
+      ".DCCD.",
+      "......"
+    ],
+    [
+      "......",
+      ".D#.D.",
+      ".T....",
+      "......",
+      ".D.AD.",
+      "......"
+    ],
+    [
+      "NOOOOP",
+      "KD..DQ",
+      "K....Q",
+      "K....Q",
+      "KD..DQ",
+      "JMMMML"
+    ],
+    [
+      "......",
+      ".NOOP.",
+      ".KIIQ.",
+      ".KIIQ.",
+      ".JMML.",
+      "......"
+    ]
+  ]
+}

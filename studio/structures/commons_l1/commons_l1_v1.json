@@ -1,0 +1,92 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "commons_l1",
+  "version": 1,
+  "size": [9,5,9],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T01:57:39.356Z",
+    "description": "Commons (level 1), level 1 of 3: shell and fittings (what soldiers build first). A 9 x 9 village green on a road junction: gravel paths to a fire pit, the well, three benches; later levels add lanterns, flower beds and banners. Decoration step adds: water.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "inner",
+      "civic"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:campfire[facing=north,lit=false,signal_fire=false,waterlogged=false]",
+    "A": "minecraft:chain[axis=y]",
+    "B": "minecraft:cobblestone",
+    "C": "minecraft:cobblestone_slab[type=bottom,waterlogged=false]",
+    "D": "minecraft:cobblestone_wall",
+    "E": "minecraft:gravel",
+    "F": "minecraft:oak_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "G": "minecraft:oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "H": "minecraft:spruce_slab[type=bottom,waterlogged=false]",
+    "I": "minecraft:torch"
+  },
+  "layers": [
+    [
+      "....E....",
+      "....E....",
+      "...BEB...",
+      "..BBBBB..",
+      "EEEBBBEEE",
+      "..BBBBB..",
+      "...BEBBBB",
+      "....E.B.B",
+      "....E.BBB"
+    ],
+    [
+      ".........",
+      ".FF...FF.",
+      ".........",
+      "...CCC...",
+      "...C#C...",
+      "...CCC...",
+      "......BBB",
+      ".GG...B.B",
+      "......BBB"
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "......I..",
+      "......D.D",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "......DAD",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "......HHH",
+      "......HHH",
+      "......HHH"
+    ]
+  ]
+}
