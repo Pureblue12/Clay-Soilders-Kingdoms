@@ -377,6 +377,27 @@
     "round": 1,
     "checkedAt": "2026-10-10T04:07:53.444Z"
   },
+  "infirmary_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 72,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:10:27.907Z"
+  },
+  "infirmary_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 89,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:10:28.441Z"
+  },
+  "infirmary_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 86,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:10:29.033Z"
+  },
   "inn_l1": {
     "version": 1,
     "verdict": "revise",

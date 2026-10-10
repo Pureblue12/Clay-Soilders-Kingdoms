@@ -1,0 +1,73 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "infirmary_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:10:27.907Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 72,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "378 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 378,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.42328042328042326,
+          "types": 21,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.21693121693121692
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 1,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "Interior is well furnished (six beds with slab bedside tables, carpet-free aisle, furnace hearth, chests, barrels, shelves), but the outside is bare: no sills, shutters, boxes or lanterns on any face.",
+          "purpose": "From outside it reads as a plain cottage; the ward of six red beds only reads through the windows and in the floor view.",
+          "depth": "Logs, terracotta infill, the beam at y3 and the cobblestone plinth all sit in one plane (x=2/x=8, z=2/z=10); only the eaves and lean-to cast shadows.",
+          "roof": "The automatic 'no overhang' warning is a false alarm: stairs overhang one block on all four sides (x=1, x=9, z=1, z=11). Steep, slab ridge, dark oak eave row. A 1-block gap under the front ridge at (5,6,1) shows as a dark slot in the front view.",
+          "life": "Nothing growing and no outside light at L1 (fine for a shell level, but it scores 0)."
+        },
+        "summary": "An 11x13 timber-framed ward with a spruce gable roof, six beds, hearth and a lean-to herb store; the working shell soldiers build first.",
+        "problems": [
+          "Front barge board has a hole under the ridge at (5,6,1) (dark slot in the front view): fill it, e.g. a spruce stair or log end.",
+          "Walls are flat: consider pushing the cobblestone plinth or the corner posts one block out, or sills under the windows at y1, so faces get shadow.",
+          "Reachability: every room, the ward aisle and the lean-to are reached; only roof slopes, shelf trapdoor tops and the chimney shoulders are not. Fine."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "front"
+        ]
+      }
+    }
+  }
+}
