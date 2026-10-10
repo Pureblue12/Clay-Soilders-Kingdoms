@@ -1,0 +1,83 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "market_stall_l3",
+  "version": 1,
+  "size": [7,4,6],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T04:40:49.246Z",
+    "description": "Market stall, level 3 of 3: L2 plus flourish 3. Over budget: 61 blocks vs 17 (and 3 x 3 instead of 3 x 2, so the trader has a spot behind the counter). Spruce-post stall with a plank counter under a stepped, striped blue wool awning; trader enters from the side; L2 opens for trade (produce, cake, lanterns, shelf), L3 adds the sign post, banner, flower pots, a stool and crates. Not yet builder-tested: cake, melon, pumpkin, red_wall_banner. Decoration step adds: item, potted_plant, sign_text.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch3",
+      "tier3",
+      "inner",
+      "market"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=east,open=false]",
+    "A": "minecraft:barrel[facing=up,open=false]",
+    "B": "minecraft:blue_wool",
+    "C": "minecraft:cake[bites=0]",
+    "D": "minecraft:chest[facing=north,type=single,waterlogged=false]",
+    "E": "minecraft:composter",
+    "F": "minecraft:flower_pot",
+    "G": "minecraft:hay_block[axis=y]",
+    "H": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "I": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "J": "minecraft:light_blue_wool",
+    "K": "minecraft:melon",
+    "L": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "M": "minecraft:oak_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "N": "minecraft:oak_wall_sign[facing=east,waterlogged=false]",
+    "O": "minecraft:poppy",
+    "P": "minecraft:pumpkin",
+    "Q": "minecraft:red_wall_banner[facing=north]",
+    "R": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "S": "minecraft:spruce_log[axis=y]",
+    "T": "minecraft:spruce_planks",
+    "U": "minecraft:spruce_trapdoor[facing=north,half=bottom,open=false,powered=false,waterlogged=false]",
+    "V": "minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]",
+    "W": "minecraft:spruce_trapdoor[facing=north,half=top,open=false,powered=false,waterlogged=false]"
+  },
+  "layers": [
+    [
+      "SNMV...",
+      ".KSTSP.",
+      ".....G.",
+      "..SDSA.",
+      "#A....L",
+      "...E..O"
+    ],
+    [
+      "R...Q..",
+      ".ISCSI.",
+      ".....F.",
+      "..SASU.",
+      ".F.....",
+      "......."
+    ],
+    [
+      "HBJBJB.",
+      ".BJBJB.",
+      ".......",
+      "..SWS..",
+      ".......",
+      "......."
+    ],
+    [
+      ".......",
+      ".......",
+      ".BJBJB.",
+      ".BJBJB.",
+      ".BJBJB.",
+      "......."
+    ]
+  ]
+}

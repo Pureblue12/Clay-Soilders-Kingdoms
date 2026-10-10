@@ -152,7 +152,7 @@ def quarry():
 
 STRUCTURES = [dict(path='quarry', name='Quarry', tier=3, zone='outer', role='resource', group='quarry',
                    terrain='flexible', door='front', make=quarry, ground_layer=0, changes='First version.',
-                   description='Over budget: 274 blocks vs 88 (the flush yard and quarry-floor paving is 70 of them). '
+                   description='Over budget: 296 blocks vs 88 (the flush yard and quarry-floor paving is 70 of them). '
                                'Flush piece (ground_layer 0: the mod does not support it yet). Cobblestone shed with a '
                                'spruce gable roof by a gravel yard of cut blocks and a broken-rock quarry floor the '
                                'quarrymen dig down from (builders never dig); L2 adds the log crane over the cut, the '

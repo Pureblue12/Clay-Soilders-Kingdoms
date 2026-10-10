@@ -16,7 +16,7 @@ LEAVES = dict(persistent='true', distance='1', waterlogged='false')
 
 def storehouse():
     """Storehouse (barn, variant A). Walls x 1..8, z 2..10 (8 by 9): a cobblestone base course and a cobblestone lower
-    course, spruce plank walls above in a stripped spruce post frame (corners, door posts, every 4 along the sides),
+    course, white plaster (white terracotta) above in a dark oak post frame (corners, door posts, every 4 along the sides),
     dark oak top plates, a spruce stair gable roof with dark oak eaves and a slab-free double ridge, one block of
     overhang all round. Double oak doors in the middle of the front (x 4..5), a step before them.
     Inside: an aisle from the doors to the back; chests along the left wall, barrels stacked along the right, the
@@ -44,11 +44,11 @@ def storehouse():
                     continue
                 post = (x in (x0, x1) and z in posts_z) or (z in (z0, z1) and x in (3, 6))
                 if post:
-                    put_id(s, x, y, z, 'stripped_spruce_log', axis='y')
+                    put_id(s, x, y, z, 'dark_oak_log', axis='y')
                 elif y == 1:
                     put_id(s, x, y, z, 'mossy_cobblestone' if noise(x, y, z, 7) < 0.2 else 'cobblestone')
                 else:
-                    put_id(s, x, y, z, 'spruce_planks')
+                    put_id(s, x, y, z, 'white_terracotta')   # plaster infill
     for x in (4, 5):                                 # double doors
         s.remove(x, 1, z0); s.remove(x, 2, z0)
     s.door(4, 1, z0, 'north', block='oak_door', hinge='left')
@@ -71,7 +71,8 @@ def storehouse():
     for z in (z0, z1):                               # gable ends
         for i in range(3):
             for x in range(x0 + 1 + i, x1 - i):
-                put_id(s, x, top + 1 + i, z, 'spruce_planks')
+                hatch = i == 0 and x in (4, 5)       # the loft hatch the hoist serves (dark oak boards)
+                put_id(s, x, top + 1 + i, z, 'dark_oak_planks' if hatch else 'spruce_planks')
     for z in (z0 - 1, z1 + 1):                       # upside-down stairs under the gable overhangs
         put_id(s, x0, top, z, 'spruce_stairs', facing='west', **UPSIDE)
         put_id(s, x1, top, z, 'spruce_stairs', facing='east', **UPSIDE)
@@ -110,7 +111,11 @@ def storehouse():
         put_id(s, 11, 1, z, 'spruce_fence'); put_id(s, 11, 2, z, 'spruce_fence')
     for x in (9, 10, 11):
         for z in range(3, 10):
-            put_id(s, x, 3, z, 'spruce_slab', **BOTTOM)
+            if x == 11 or z in (3, 9):                   # a stair edge, so the awning slopes off at its rim
+                f = 'west' if x == 11 else 'south' if z == 3 else 'north'
+                put_id(s, x, 3, z, 'spruce_stairs', facing=f, **STAIR)
+            else:
+                put_id(s, x, 3, z, 'spruce_slab', **TOP)
     for x, y, z in ((10, 1, 4), (11, 1, 4), (10, 2, 4), (11, 1, 5), (10, 1, 8), (11, 1, 8), (10, 2, 8)):
         put_id(s, x, y, z, 'barrel', facing='up' if y == 2 else 'east', open='false')   # x 9 stays a walkway
     for z in (6, 7):                                 # crates: plank boxes with trapdoor lids
@@ -151,4 +156,8 @@ def storehouse():
 
 STRUCTURES = [dict(path='storehouse', name='Storehouse', tier=3, zone='inner', role='storage', group='storehouse',
                    terrain='skirt', door='front', make=storehouse, changes='First version.',
-                   description='draft')]
+                   description='Over budget: 432 blocks vs 270 (first build 361 vs 230). Half-timbered barn (plaster '
+                               'in a dark oak frame on a cobblestone course, spruce gable roof) with double oak doors; '
+                               'chests and barrels along the walls and a desk inside; L2 adds the lectern ledger, the '
+                               'hoist beam with a barrel on its chain, the side awning with crates, shelves and door '
+                               'lanterns; L3 hay and crates out front, sign, banners, planters, bushes.')]
