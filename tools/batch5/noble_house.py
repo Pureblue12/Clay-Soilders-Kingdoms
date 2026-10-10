@@ -1,8 +1,9 @@
 """Noble house (tier 5, town style A): a stone and timber manor for a noble family (steward, captain) near the keep
 (docs/STRUCTURES.md, "Noble house"; variant A, manor). Terrain: skirt (layer 0 is the base course and floor).
 
-Layout (16 wide x 13 deep, front z = 0): the house x 6..14, z 3..9 (9 x 7, its long side to the street), a garden on
-its left (x 0..4).
+Layout (16 wide x 13 deep, front z = 0). The code below builds it with the garden on the left (x 0..4) and the house
+at x 6..14, z 3..9 (9 x 7, its long side to the street), then mirrors it (mirror_x) so the garden ends up on the RIGHT
+(x 11..15), the side the Studio's iso view shows; "left" and "right" in the comments are before the mirror.
 - Walls: a stone brick base and ground course, white plaster (white terracotta) above it in a dark oak frame (corner
   posts, posts by the door and in the middle of each side), a dark oak beam at y 4.
 - Roof: a spruce gable roof with its ridge along the street (dark oak eaves, a slab ridge, one block of overhang all
@@ -13,15 +14,15 @@ its left (x 0..4).
   chest); a staircase up along the back wall; a side door to the garden.
 - Upper floor (under the roof): three bedrooms side by side, each with a bed and a chest, off a passage at the back
   where the stairs come up; windows in both gables and in the cross gable.
-- The garden: stepping stones from the front steps round to the side door, a bench, poppies.
+- The garden: cobblestone slab stepping stones from the front steps round to the side door, a bench, poppies.
 Level 1 (KNOWN-OK only): all of the above.
 Level 2 (a noble's house): the porch: stone brick columns carrying a balcony (a dark oak floor with a fence rail)
 under the cross gable window, lanterns under it; shutters, flower boxes under the front windows, red banners on the
 front corners, bookshelves and a lectern in the study, rugs, brick shoulders on the chimney, a log pile at the back,
 flower beds and two lantern posts in the garden.
 Level 3 (wealth): a stone brick garden wall with pillars and lantern caps round the garden (an opening at the
-front), a small statue of a clay soldier on a pedestal in the garden, potted plants on the balcony, banners on the
-porch columns, candles and carpets inside, vines on the walls."""
+front), a little obelisk with a gold-look tip on a carved pedestal in the garden, flowering bushes by the steps,
+potted plants on the balcony, a candle and carpets inside, vines on the garden-side wall."""
 from make_batch1_structures import Structure
 from batch3.ws_kit import P, A, STAIR, TOP, SLAB, SLAB_TOP, OPEN, HANG, STAND, connect, shutters
 from batch5.roofkit import height_roof, corbels, dormer, mirror_x
@@ -245,4 +246,11 @@ def noble_house():
 
 STRUCTURES = [dict(path='noble_house', name='Noble house', tier=5, zone='inner', role='house', group='noble_house',
                    terrain='skirt', door='front', make=noble_house, changes='First version.',
-                   description='Stone and timber manor.')]
+                   description='Over budget: 553 blocks vs 420 (first build 442 vs 310). A stone and timber manor, '
+                               'its long side to the street: stone ground course, white plaster in a dark oak frame, a '
+                               'spruce gable roof with half-timbered gables, a front cross gable and a back dormer, a '
+                               'brick chimney on the left gable. Inside: hall, study, dining table and kitchen below, '
+                               'three bedrooms under the roof (staircase, side door to the garden). L2 a balcony on '
+                               'stone brick porch columns, lanterns, shutters, flower boxes, banners, bookshelves and '
+                               'a lectern, garden flowers and lantern posts; L3 a walled garden with lantern pillars and '
+                               'an obelisk, bushes, pots, candles, carpets, vines.')]

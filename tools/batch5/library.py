@@ -166,7 +166,7 @@ def library():
 
 STRUCTURES = [dict(path='library', name='Library or school', tier=5, zone='inner', role='civic', group='library',
                    terrain='ground_level', door='front', make=library, changes='First version.',
-                   description='Stone reading hall whose front rises into a great round window over the door; book '
+                   description='Over budget: 469 blocks vs 310 (first build 394 vs 260). Stone reading hall whose front rises into a great round window over the door; book '
                                'stacks stand out from both walls between the windows, a reading table down the middle, '
                                'hearth, archive and scribe\'s desk at the back; L2 fills the stacks with bookshelves and '
                                'adds the lectern, candles, lanterns, banners, shutters and flower boxes; L3 carpets, a '
