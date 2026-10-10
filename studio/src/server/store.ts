@@ -216,6 +216,14 @@ export class Store {
     return this.file(name, version);
   }
 
+  /** "Apply to all levels": the SAME version number of every level that has it (keep_l1 v2 -> keep_l2 v2, keep_l3 v2).
+   *  Never "the latest": a newer version can arrive from GitHub while Carlton looks at an older one. */
+  levelTargets(name: string, version: number): [string, number][] {
+    return this.levels(name)
+      .filter((n) => n === name || this.versions(n).includes(version))
+      .map((n) => [n, version] as [string, number]);
+  }
+
   /** The levels of a structure family: bench_l1, bench_l2, ... for "bench_l2" (just [name] without a _lN suffix). */
   levels(name: string): string[] {
     const m = /^(.*)_l(\d+)$/.exec(name);
