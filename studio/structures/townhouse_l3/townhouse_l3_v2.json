@@ -4,14 +4,14 @@
   "version": 2,
   "size": [9,9,12],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T05:22:59.252Z",
     "description": "Townhouse, level 3 of 3: L2 plus flourish 3. Over budget: 355 blocks vs 265 (first build 267 vs 205). Narrow two-storey town house: stone ground floor (kitchen-living room with hearth, table, stores under the stairs), plaster and dark oak upper storey jettied over the street on brackets, 3 beds upstairs by a staircase; L2 shutters, planters, lanterns and a log pile, L3 a back garden, jetty flower boxes, chimney smoke and a lantern post. Not yet builder-tested: allium, azure_bluet, brick_stairs, cornflower, fern, oxeye_daisy, red_tulip, red_wall_banner, spruce_fence_gate, vine. Decoration step adds: banner_pattern, potted_plant.",
     "changes": "Quality check round 1: the gable flower boxes are now soil in trapdoor boxes (no flowers on slabs); the back garden fence is closed on the east side (a fence and a gate, decoration only); the empty flower pot in the garden is a fern; little windows in the upper knee walls (L1). The box is one row deeper at the front for the flower boxes.",
     "parent": 1,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T08:51:14.863Z",
     "tags": [
       "batch4",
       "tier4",
