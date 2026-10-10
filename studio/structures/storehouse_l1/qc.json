@@ -120,6 +120,72 @@
           "front"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T08:53:14.177Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 75,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "760 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "13 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          }
+        ],
+        "stats": {
+          "blocks": 760,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.35789473684210527,
+          "types": 24,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.17894736842105263
+          },
+          "height": 13,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 1,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Shutters, wall torches, dormers and the outside stone stair are good, but the outside shows nothing of storage and the base is bare stone; fine for the shell level.",
+          "purpose": "From outside it reads as a big timber house; the chests and barrels are only visible inside.",
+          "roof": "Steep with overhang and two dormers, dark oak eave course; but one flat spruce colour and the front gable is plain stepped spruce with no trim or plaster infill.",
+          "shape": "Long box on an undercroft; the jetty and the outside stair break it a little.",
+          "scale": "9 by 13 hall on a stone undercroft: right for a kingdom storehouse and what Carlton asked for (bigger, cellar)."
+        },
+        "summary": "Shell level: a jettied plaster-and-dark-oak hall on a raised stone undercroft (the 'cellar'), outside stone stair to the door, back cart door, 12 chests and 16 barrels inside. Carlton's v1 notes (larger, cellar, more chests, scaling with levels) are addressed. (v3 only fixes the white terracotta block; same build as v2.)",
+        "problems": [
+          "Roof is one flat spruce colour and the front/back gables are bare stepped spruce: add gable trim (e.g. dark oak stairs/barge board along the verges) or a plaster/frame gable so the ridge and gables read finished.",
+          "Reachability: every floor is reached (undercroft, hall, stairs); only roof slopes, dormer/hoist tops and the tops of racks, chests and barrels are not, which is right."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "front"
+        ]
+      }
     }
   }
 }

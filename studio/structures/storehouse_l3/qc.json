@@ -133,6 +133,80 @@
           "front"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T08:53:16.123Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 95,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: azure_bluet, cornflower, dandelion, lectern, red_wall_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "1120 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "13 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 1120,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.47410714285714284,
+          "types": 37,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.14017857142857143
+          },
+          "height": 13,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "roof": "The automatic 'no overhang' warning is a false alarm: renders show a 1-block overhang all round (the lean-to and yard props confuse the check). Still one flat spruce colour with plain gables.",
+          "life": "Bushes, flowers along the base, flower box by the door, hay and a fenced wood yard.",
+          "levels": "Adds a goods lean-to, fenced wood yard, hay stack, red banners, flowers and a chest-filled loft: clearly different from L2."
+        },
+        "summary": "The full storehouse: adds a goods lean-to and a fenced wood yard with hay outside, banners and flowers, and fills the loft and cellar (76 chests, 71 barrels). (v3 only fixes the white terracotta block; same build as v2.)",
+        "problems": [
+          "Same roof note as L1/L2: add verge/gable trim so the roof isn't one flat spruce mass.",
+          "Reachability: every floor is reached (undercroft, hall, stairs); only roof slopes, dormer/hoist tops and the tops of racks, chests and barrels are not, which is right. The goods lean-to roof (x0..1 y4 z3..13) is unreached, which is right."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "front"
+        ]
+      }
     }
   }
 }
