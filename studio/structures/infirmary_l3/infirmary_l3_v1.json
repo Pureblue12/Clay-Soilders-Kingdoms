@@ -4,14 +4,14 @@
   "version": 1,
   "size": [11,9,13],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "approved",
+    "notes": "Add a red cross or something to show that its a hospital and then its good",
     "author": "claude",
     "created": "2026-10-10T05:05:13.281Z",
     "description": "Infirmary, level 3 of 3: L2 plus flourish 3. Over budget: 447 blocks vs 285 (first build 378 vs 235). White plaster ward in a dark oak frame under a spruce gable roof: six beds (three on each side, heads to the wall, a window over each), bedside tables, a hearth, herb barrels and shelves, a lean-to herb store; L2 adds the brewing stand and cauldron, candles, lanterns, flower boxes, a door canopy and the banner; L3 a herb garden, herb pots, more banners, a bench and a lantern post. Not yet builder-tested: allium, brewing_stand, brick_stairs, candle, cauldron, cornflower, dandelion, fern, oxeye_daisy, sweet_berry_bush, white_wall_banner. Decoration step adds: banner_pattern, item, potted_plant.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:20:54.306Z",
     "tags": [
       "batch4",
       "tier4",
