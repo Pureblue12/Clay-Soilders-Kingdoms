@@ -1,0 +1,64 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "stone_wall_corner_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:58:21.170Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 75,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "too-small",
+            "message": "Only 42 blocks: too bare for a common (at least 50). Carlton wants more detail, not less."
+          }
+        ],
+        "stats": {
+          "blocks": 42,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.21428571428571427,
+          "types": 5,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.5476190476190477
+          },
+          "height": 8,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 0,
+          "scale": 1,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "Shell only: footing stairs, corbels and crenels; acceptable for an L1 wall module.",
+          "roof": "Crenellated parapet on corbels with a 2-wide walk that turns the corner.",
+          "shape": "Tiny 3x3 module; the corner pier is only the flush corner column one block higher with a stair cap, so it hardly reads as a pier.",
+          "scale": "Wall module: block count warning ignored per standing rules."
+        },
+        "summary": "Outside corner module of the stone wall: battered footing, corbelled crenellated parapet and a walk that turns the corner, with a corner column topped by a stair at (0,7,0).",
+        "problems": [
+          "Open ends match the straight profile (footing stair y0, wall z1-2/x1-2, corbel stair y4, parapet y5, walk standing at y5, merlons at even positions), so it joins cleanly. Note for the whole wall set, not this piece: odd-length modules with merlons at both ends put two merlons side by side at every joint (corner x2 next to straight x0, same as straight x4 next to straight x0).",
+          "Optional: the corner 'pier' at x0 z0 is flush with both parapets; make it stick out or rise properly (e.g. a 2-high cap instead of the single south-facing stair at (0,7,0), which looks like a stray step from the east)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

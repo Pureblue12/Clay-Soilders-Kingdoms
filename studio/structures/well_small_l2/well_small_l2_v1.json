@@ -4,14 +4,14 @@
   "version": 1,
   "size": [5,6,4],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:41:12.586Z",
     "description": "Well variant (small), level 2 of 3: L1 plus flourish 2. Over budget: 45 blocks vs 10. Tiny stone well (3 x 3 rim): eight cobblestone blocks round one block of water (decoration step), fence posts and axle, a chain and a little spruce gable roof; L2 a water barrel with a lantern, a seat and an open barrel; L3 a water tub, flowers, a bush and moss. Decoration step adds: item, water.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T04:54:04.833Z",
     "tags": [
       "batch3",
       "tier1",

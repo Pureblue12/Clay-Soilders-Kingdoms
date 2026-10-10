@@ -1,0 +1,66 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "quarry_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:51:03.926Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 94,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: azure_bluet, stone, stonecutter, dandelion, cornflower, andesite, stone_brick_slab, red_wall_banner."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 296,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3108108108108108,
+          "types": 36,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.20608108108108109
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 1,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {
+          "roof": "automatic roof warning is a miss (crane beam)",
+          "materials": "pale birch crane boom, as on L2"
+        },
+        "summary": "Adds lamp posts, banner, plants and a spoil heap behind. Lively.",
+        "problems": [
+          "Reachability (flood fill from the ground outside): every floor and room is reached; only roof slopes and the tops of furniture are not, which is right"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

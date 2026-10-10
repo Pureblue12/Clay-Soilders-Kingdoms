@@ -1,0 +1,57 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "stone_wall_stairs_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:58:22.951Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 81,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 81,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.18518518518518517,
+          "types": 5,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.49382716049382713
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 1,
+          "grandeur": 1
+        },
+        "notes": {
+          "purpose": "Clearly a wall section with a stair up to the walk on the town side.",
+          "detail": "Blind arrow slits, corbels, footing; bare stair flight.",
+          "shape": "The diagonal flight breaks the box nicely."
+        },
+        "summary": "Straight wall module with a stone-brick stair flight on the town side (z3) climbing east from x0 to the walk at x4.",
+        "problems": [
+          "Profile of z0-z2 is identical to stone_wall_straight_l1, so both open ends join cleanly (only the set-wide double-merlon-at-joints note applies).",
+          "Reachability: 29/29 standing places reached; the flight reaches the walk at (4,5,2)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

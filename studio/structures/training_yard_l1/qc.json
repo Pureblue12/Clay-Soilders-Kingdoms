@@ -1,0 +1,60 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "training_yard_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:58:15.838Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 64,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 134,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3208955223880597,
+          "types": 12,
+          "dominant": {
+            "name": "gravel",
+            "share": 0.23880597014925373
+          },
+          "height": 5,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 1,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "purpose": "Hay bales on posts and a hay stack inside a fenced cobble pen read as much as an animal pen as a drill yard; nothing says archery or weapons yet.",
+          "detail": "Torches on the corner posts, a bench and two storage blocks; the floor is a busy gravel/coarse-dirt patchwork.",
+          "roof": "A yard, no roof: judged on the post tops (torches on logs).",
+          "life": "Moss on the curb, torches; no plants."
+        },
+        "summary": "Fenced, raised gravel drill yard with spruce corner posts, two hay-bale dummies, hay butts at the back and a bench and store by the entrance.",
+        "problems": [
+          "Does not read as a training yard yet: give at least one dummy fence arms (x=1/x=3 at y=2 beside the dummy at x=2, z=3) or put a weapon rack/chest marker by the entrance so L1 says 'military', not 'pen'.",
+          "Floor patchwork of coarse dirt (y=0) is noisy; group it into a worn path along the dummies and the archery lane instead of scattered patches.",
+          "Reach: whole yard floor reached; only the post tops and hay dummy top are unreached (fine)."
+        ],
+        "views": [
+          "sheet",
+          "iso"
+        ]
+      }
+    }
+  }
+}

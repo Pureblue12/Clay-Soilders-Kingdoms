@@ -1,0 +1,52 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "quarry_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:51:02.708Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 86,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 221,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.24434389140271492,
+          "types": 17,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.248868778280543
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {},
+        "summary": "Stone hut beside a yard of cut blocks and rubble. Layer 0 is flush with the grass (groundLayer 0): the mod's builders never dig, so the mod side must handle that.",
+        "problems": [
+          "Reachability (flood fill from the ground outside): every floor and room is reached; only roof slopes and the tops of furniture are not, which is right"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

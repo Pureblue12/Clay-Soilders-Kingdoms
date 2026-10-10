@@ -1,0 +1,68 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "stone_wall_corner_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:58:21.729Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 67,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: stone_brick_wall, red_banner."
+          },
+          {
+            "level": "warn",
+            "check": "too-small",
+            "message": "Only 46 blocks: too bare for a common (at least 50). Carlton wants more detail, not less."
+          }
+        ],
+        "stats": {
+          "blocks": 46,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.2826086956521739,
+          "types": 9,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.5
+          },
+          "height": 8,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 0,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 1,
+          "grandeur": 1
+        },
+        "notes": {
+          "artefacts": "the wall torch at (1,6,1) facing south hangs on the red banner at (1,6,0); a banner can't hold a torch, so in game it pops off when placed",
+          "detail": "Adds only 4 blocks: banner in the corner crenel, lantern post, torch."
+        },
+        "summary": "L1 plus a red standing banner in the corner crenel, a lantern on a wall post at the inner corner of the walk and a wall torch.",
+        "problems": [
+          "Wall torch at (1,6,1) [facing=south] is unsupported: the block north of it, (1,6,0), is the red banner. Attach it to a merlon instead, e.g. at (2,6,1) facing south against merlon (2,6,0).",
+          "Lantern post (stone_brick_wall at (2,5,2) + lantern (2,6,2)) sits on the walk and narrows the turning walk to 1 block at the corner; consider moving it to the outer edge or onto a merlon.",
+          "Open ends match the straight profile (footing stair y0, wall z1-2/x1-2, corbel stair y4, parapet y5, walk standing at y5, merlons at even positions), so it joins cleanly. Note for the whole wall set, not this piece: odd-length modules with merlons at both ends put two merlons side by side at every joint (corner x2 next to straight x0, same as straight x4 next to straight x0)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "market_stall_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:51:08.200Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 33,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "too-small",
+            "message": "Only 41 blocks: too bare for a common (at least 50). Carlton wants more detail, not less."
+          },
+          {
+            "level": "warn",
+            "check": "detail",
+            "message": "12 % detail blocks: on the bare side, aim for 20 %+."
+          }
+        ],
+        "stats": {
+          "blocks": 41,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.12195121951219512,
+          "types": 7,
+          "dominant": {
+            "name": "blue_wool",
+            "share": 0.36585365853658536
+          },
+          "height": 4,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 0,
+          "artefacts": 2,
+          "purpose": 1,
+          "depth": 1,
+          "roof": 0,
+          "materials": 0,
+          "shape": 1,
+          "life": 0,
+          "scale": 1,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "solid two-layer wool block, not an awning",
+          "materials": "neon blue and cyan wool"
+        },
+        "summary": "Spruce posts and a counter with barrels under a striped wool canopy. The canopy dominates and the colours clash.",
+        "problems": [
+          "The canopy is two full layers of solid blue and light-blue wool, bigger and heavier than the stall under it: from every view the stall is a bright blue box. Make the awning one block thick (or wool on the front edge and carpet/trapdoors behind), sloping down to the front",
+          "Colours: the saturated blue/cyan clashes with the medieval palette of every other structure. Use red and white like the butcher's awning, or brown/white, yellow/white",
+          "The counter and goods sit deep under the canopy and are half hidden; push the goods to the front edge so they show",
+          "Prop, so 'too small' is a false alarm; but L1 has almost no goods"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

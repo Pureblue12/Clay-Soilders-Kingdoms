@@ -1,0 +1,71 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "barracks_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:58:15.219Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 81,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: red_banner, cornflower, carved_pumpkin, candle."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "439 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 439,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4646924829157175,
+          "types": 34,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.18906605922551253
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "Shutters on both long sides, a weapon-rack fence, barrel bench, log pile, hay bale, banner and leaf bushes: the long sides are now rich.",
+          "depth": "Shutters help the long sides, but the back wall and both gables are still flat planes.",
+          "roof": "Unchanged: flat spruce colour, untrimmed gables."
+        },
+        "summary": "L2 plus shutters, an outdoor weapon rack and bench, a log pile, a red banner and bushes; the finished barracks looks lived in from the sides and front.",
+        "problems": [
+          "Back wall (z=12) still has no window or detail apart from the chimney: the back view is the weakest of all three levels.",
+          "Gables still plain spruce planks; a dark oak beam or verge trim would finish the roof.",
+          "Reach: unchanged from L1; only roof slopes unreached (fine)."
+        ],
+        "views": [
+          "sheet",
+          "right",
+          "iso_back"
+        ]
+      }
+    }
+  }
+}

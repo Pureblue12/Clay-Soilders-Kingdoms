@@ -1,0 +1,64 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "training_yard_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:58:16.436Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: target, carved_pumpkin, red_banner."
+          }
+        ],
+        "stats": {
+          "blocks": 152,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.375,
+          "types": 17,
+          "dominant": {
+            "name": "oak_fence",
+            "share": 0.2236842105263158
+          },
+          "height": 5,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "Targets on the hay butts, pumpkin heads and fence arms on the dummies, lanterns at the gate, a red shooting-line carpet, barrels and a banner.",
+          "purpose": "Now unmistakably a training yard: dummies and archery targets.",
+          "life": "Lanterns and the banner, but still no plants."
+        },
+        "summary": "L1 plus archery targets, armed pumpkin-headed dummies, a shooting-line carpet, gate lanterns and a banner; it now clearly reads as a drill yard.",
+        "problems": [
+          "Still no greenery; fine for L2 since L3 adds flowers, but the curb could take a little moss carpet or grass.",
+          "Reach: whole floor reached; target tops, dummy heads and post tops unreached (fine)."
+        ],
+        "views": [
+          "sheet",
+          "iso"
+        ]
+      }
+    }
+  }
+}

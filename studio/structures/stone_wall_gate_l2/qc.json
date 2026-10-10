@@ -1,0 +1,80 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "stone_wall_gate_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:58:19.924Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 61,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: stone_brick_wall, iron_bars, red_wall_banner."
+          },
+          {
+            "level": "warn",
+            "check": "too-small",
+            "message": "Only 164 blocks: too bare for a landmark (at least 200). Carlton wants more detail, not less."
+          },
+          {
+            "level": "warn",
+            "check": "variety",
+            "message": "stone_bricks is 55 % of the build: break it up with a second material."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 164,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.24390243902439024,
+          "types": 10,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.5548780487804879
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 1,
+          "scale": 1,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "Adds iron bars in the corner notches, red banners front and back, a hanging lantern under the arch and lanterns on wall posts; still sparse for a gate.",
+          "roof": "Same flat spruce caps as L1.",
+          "depth": "Front faces are flat apart from the arch corbels."
+        },
+        "summary": "L1 plus iron-bar windows, red banners over the arch and on the back of the towers, and lanterns; the corner notches are now filled.",
+        "problems": [
+          "Tower caps are still flat spruce stair pairs at y8 with exposed stair ends: give the towers a proper top.",
+          "Towers barely rise above the walk merlons; a landmark gate should stand taller.",
+          "Big flat stone-brick faces on the towers (sides x0 and x6, z3 back): add a plinth, string course or buttress for depth.",
+          "Reachability: walk at y5 has no stair in this piece; reached from a neighbouring wall_tower - fine for a module."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

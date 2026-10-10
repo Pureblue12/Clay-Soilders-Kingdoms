@@ -1,0 +1,52 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "smithy_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:50:54.129Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 233,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.37339055793991416,
+          "types": 16,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.19313304721030042
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 1,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {},
+        "summary": "Stone forge with an open front bay, timber frame and a brick chimney breast. A sound shell; inside it is still bare and nothing outside says smithy yet.",
+        "problems": [
+          "Reachability (flood fill from the ground outside): every floor and room is reached; only roof slopes and the tops of furniture are not, which is right"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

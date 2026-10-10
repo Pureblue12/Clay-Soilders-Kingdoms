@@ -1,0 +1,60 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "tannery_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:50:57.037Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 94,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: fern, cauldron, dandelion, cornflower, oxeye_daisy, brown_wall_banner."
+          }
+        ],
+        "stats": {
+          "blocks": 252,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5634920634920635,
+          "types": 34,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.15873015873015872
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 1,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {
+          "materials": "walls and roof share one dark brown"
+        },
+        "summary": "Adds a second rack, tubs, flowers and bushes all round. Busy and believable.",
+        "problems": [
+          "Reachability (flood fill from the ground outside): every floor and room is reached; only roof slopes and the tops of furniture are not, which is right"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

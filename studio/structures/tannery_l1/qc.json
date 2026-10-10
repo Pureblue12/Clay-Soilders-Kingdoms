@@ -1,0 +1,54 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "tannery_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T04:50:55.923Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 191,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.42408376963350786,
+          "types": 19,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.2094240837696335
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 1,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "materials": "almost all dark wood: the walls and roof are close in colour, a lighter infill (stripped log or plaster) would separate them"
+        },
+        "summary": "Timber house with soaking tubs out front (trapdoor vats). The vats already say tannery.",
+        "problems": [
+          "Reachability (flood fill from the ground outside): every floor and room is reached; only roof slopes and the tops of furniture are not, which is right"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}
