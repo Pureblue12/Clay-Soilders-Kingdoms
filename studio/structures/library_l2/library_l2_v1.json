@@ -4,14 +4,14 @@
   "version": 1,
   "size": [11,9,11],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T05:43:27.632Z",
     "description": "Library or school, level 2 of 3: L1 plus flourish 2. Over budget: 469 blocks vs 310 (first build 394 vs 260). Stone reading hall whose front rises into a great round window over the door; book stacks stand out from both walls between the windows, a reading table down the middle, hearth, archive and scribe's desk at the back; L2 fills the stacks with bookshelves and adds the lectern, candles, lanterns, banners, shutters and flower boxes; L3 carpets, a globe and map table, a bench, flowers, vines and a lantern post. Not yet builder-tested: bookshelf, candle, cornflower, lectern, red_wall_banner. Decoration step adds: banner_pattern, item.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T09:01:15.888Z",
     "tags": [
       "batch5",
       "tier5",
