@@ -1029,25 +1029,25 @@
     "checkedAt": "2026-10-10T03:52:30.591Z"
   },
   "well_l1": {
-    "version": 5,
-    "verdict": "pass",
-    "score": 78,
+    "version": 6,
+    "verdict": "revise",
+    "score": 50,
     "round": 1,
-    "checkedAt": "2026-10-10T04:06:37.091Z"
+    "checkedAt": "2026-10-10T05:30:42.522Z"
   },
   "well_l2": {
-    "version": 5,
-    "verdict": "pass",
-    "score": 83,
+    "version": 6,
+    "verdict": "revise",
+    "score": 68,
     "round": 1,
-    "checkedAt": "2026-10-10T04:06:37.607Z"
+    "checkedAt": "2026-10-10T05:30:43.019Z"
   },
   "well_l3": {
-    "version": 5,
-    "verdict": "pass",
-    "score": 97,
+    "version": 6,
+    "verdict": "revise",
+    "score": 65,
     "round": 1,
-    "checkedAt": "2026-10-10T04:06:38.128Z"
+    "checkedAt": "2026-10-10T05:30:43.534Z"
   },
   "well_small_l1": {
     "version": 1,

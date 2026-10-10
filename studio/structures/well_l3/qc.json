@@ -282,6 +282,79 @@
           "sheet"
         ]
       }
+    },
+    "6": {
+      "version": 6,
+      "checkedAt": "2026-10-10T05:30:43.534Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 65,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Drawn for the decoration step, not built: minecraft:water."
+          },
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cauldron, moss_carpet, lever, dark_oak_slab."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 79,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.46835443037974683,
+          "types": 16,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.20253164556962025
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 0,
+          "purpose": 1,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 0,
+          "levels": 1
+        },
+        "notes": {
+          "artefacts": "0 because it ignores Carlton's note: rim still not circular. Ignores Carlton's note 'still not circular': the rim course at y=1 has exactly the same outline as the rejected v5 (5x5 with the four corners cut, square 3x3 pool inside); from the top it still reads as a square with notched corners.",
+          "scale": "Rim 1 block tall: met. Circular: NOT met; worse than L1/L2 because the barrel (4,1,0) and cauldron (0,1,4) fill two opposite rim corners, so the top view outline is nearly a full square.",
+          "levels": "Adds a cauldron tub, flower pot, moss carpets and two more lanterns: visible, but mostly props rather than a new feature.",
+          "roof": "Same roof as L2, no overhang past the posts."
+        },
+        "summary": "Level 3 adds a cauldron water tub, a flower pot on the barrel, moss carpets on the rim and extra lanterns.",
+        "problems": [
+          "Ignores Carlton's note 'still not circular': the rim course at y=1 has exactly the same outline as the rejected v5 (5x5 with the four corners cut, square 3x3 pool inside); from the top it still reads as a square with notched corners.",
+          "Make the rim read as a round ring without growing past a middle size: e.g. keep the cut outer corners AND fill the inner corners of the ring at y=1 (1,1),(3,1),(1,3),(3,3) so the ring is an even-thickness octagon round a plus-shaped pool, or go to a 6x6 ring (.####. / #....# / ... / .####.) with chamfered corners; v3's 7x7 was 'too big'.",
+          "Cauldron at (0,1,4) and barrel at (4,1,0) stand in the rim's cut corners and make the top view square; move both onto the grass outside the ring.",
+          "L3's additions are mostly props: give it one clearer new feature (e.g. a trough or stone step/path to the well).",
+          "Rim height is now correct: one course (y=1) above the grass with the water flush at y=0 (groundLayer 0, noted, not a fault).",
+          "Reachability: fine."
+        ],
+        "views": [
+          "sheet",
+          "top"
+        ]
+      }
     }
   }
 }
