@@ -46,8 +46,8 @@ world first, so every run starts fresh.
 
 GitHub Actions (`.github/workflows/ci.yml`) runs `runData` then `tools/suite.sh` on every push to `main` and every pull
 request; the logs (`build/suite.log`, `build/build.log`) are attached to the run as `suite-logs`. Builder tests that
-can end a few blocks short on CI (batch-1 builds, the corner tower) write `CSR stall report` lines shortly before their
-timeout (`BuildStallReport`: blocks left, chest, builders, items on the ground, last BUILD/PATHING events); the run prints
+can end short on CI (batch-1 builds, the scaffold builds) write `CSR stall report` lines shortly before their
+timeout (`BuildStallReport`: blocks left, chest, builders, items on the ground, last recorded events); the run prints
 them in its "Stall reports" step. GitHub's machines are slower: the one wall-clock limit
 (`ScaffoldPlannerGameTests.PLAN_MILLIS`) is doubled there (`CI=true`).
 

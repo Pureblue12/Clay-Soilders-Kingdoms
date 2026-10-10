@@ -21,8 +21,8 @@ import java.util.TreeMap;
 
 /**
  * Explains a builder test that is about to time out: the CI builds sometimes end 1 to 5 blocks short, and the suite log
- * is all there is to go on. Records BUILD and PATHING for the test (so it must have its own batch, the recorder is
- * world-wide), and shortly before the timeout, if the easel isn't finished, writes "CSR stall report" lines to the log:
+ * is all there is to go on. Records BUILD, PATHING and SCAFFOLD for the test unless it already records (so it must have its own
+ * batch, the recorder is world-wide), and shortly before the timeout, if the easel isn't finished, writes "CSR stall report" lines to the log:
  * every block still listed (spot, cooldown, request), the chest's contents, every builder (alive, where, carrying,
  * goal), items lying on the ground, and the last recorded events. The CI workflow prints these lines when the suite
  * fails. Changes nothing in the test's outcome.
@@ -40,9 +40,13 @@ final class BuildStallReport {
      * Starts recording and arranges the report. Call at the start of the test; {@code timeoutTicks} is the test's own.
      */
     static void watch(GameTestHelper helper, String what, int timeoutTicks, EaselBlockEntity easel, ChestBlockEntity chest, List<ClaySoldierEntity> builders) {
-        DebugLog.reset();
-        for (String category : List.of("BUILD", "PATHING")) {
-            DebugCategory.byId(category).ifPresent(c -> DebugLog.setEnabled(c, true, helper.getLevel().getServer()));
+        // A test that records for its own checks keeps its recorder as it set it up; the report then shows its events.
+        boolean ownRecorder = !DebugLog.isRecording();
+        if (ownRecorder) {
+            DebugLog.reset();
+            for (String category : List.of("BUILD", "PATHING", "SCAFFOLD")) {
+                DebugCategory.byId(category).ifPresent(c -> DebugLog.setEnabled(c, true, helper.getLevel().getServer()));
+            }
         }
         boolean[] done = {false};
         helper.onEachTick(() -> {
@@ -51,11 +55,15 @@ final class BuildStallReport {
             }
             if (easel.isFinished()) {
                 done[0] = true;
-                DebugLog.reset();
+                if (ownRecorder) {
+                    DebugLog.reset();
+                }
             } else if (helper.getTick() >= timeoutTicks - BEFORE_TIMEOUT) {
                 done[0] = true;
                 report(helper, what, easel, chest, builders).forEach(line -> ClaySoldiersCommon.LOGGER.info("CSR stall report {}: {}", what, line));
-                DebugLog.reset();
+                if (ownRecorder) {
+                    DebugLog.reset();
+                }
             }
         });
     }
@@ -91,7 +99,7 @@ final class BuildStallReport {
         lines.add(items.size() + " item(s) on the ground within 24 blocks of the easel");
         items.stream().limit(10).forEach(item -> lines.add("  item " + item.getItem() + " at " + item.blockPosition().toShortString()));
         List<DebugEvent> events = DebugLog.lastEvents(EVENTS);
-        lines.add("last " + events.size() + " recorded events (BUILD, PATHING), oldest first:");
+        lines.add("last " + events.size() + " recorded events, oldest first:");
         events.forEach(event -> lines.add("  " + event.toLine()));
         return lines;
     }

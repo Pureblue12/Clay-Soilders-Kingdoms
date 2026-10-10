@@ -100,6 +100,7 @@ public class ScaffoldBuildGameTests {
      * fail) once everything else holds.
      */
     static void finishesAndCleansUp(GameTestHelper helper, Scenario scenario, String what, Runnable alsoCheck) {
+        BuildStallReport.watch(helper, what, LONG_TIMEOUT, scenario.easel(), scenario.chest(), scenario.builders());
         long[] structureDone = {-1};
         helper.onEachTick(() -> {
             if (structureDone[0] < 0 && scenario.easel().isFinished()) {
@@ -159,7 +160,6 @@ public class ScaffoldBuildGameTests {
     @GameTest(template = TERRAIN, batch = "scaffold_corner_tower", timeoutTicks = LONG_TIMEOUT, skyAccess = true)
     public static void builderFinishesCornerTowerOnWall(GameTestHelper helper) {
         Scenario scenario = scenario(helper, TestStructures.Shape.WALL_TOWER, 10, new BlockPos(16, 2, 4), new BlockPos(8, 2, 4));
-        BuildStallReport.watch(helper, "corner tower", LONG_TIMEOUT, scenario.easel(), scenario.chest(), scenario.builders());
         finishesAndCleansUp(helper, scenario, "corner tower 14 on walls 10");
     }
 
