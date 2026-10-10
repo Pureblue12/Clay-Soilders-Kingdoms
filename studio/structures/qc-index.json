@@ -35,25 +35,25 @@
     "checkedAt": "2026-10-10T03:41:21.304Z"
   },
   "commons_l1": {
-    "version": 3,
-    "verdict": "revise",
-    "score": 39,
-    "round": 2,
-    "checkedAt": "2026-10-10T04:06:19.970Z"
+    "version": 4,
+    "verdict": "pass",
+    "score": 78,
+    "round": 3,
+    "checkedAt": "2026-10-10T04:14:44.601Z"
   },
   "commons_l2": {
-    "version": 3,
+    "version": 4,
     "verdict": "pass",
     "score": 97,
     "round": 1,
-    "checkedAt": "2026-10-10T04:06:20.474Z"
+    "checkedAt": "2026-10-10T04:14:45.134Z"
   },
   "commons_l3": {
-    "version": 3,
+    "version": 4,
     "verdict": "pass",
-    "score": 94,
+    "score": 100,
     "round": 1,
-    "checkedAt": "2026-10-10T04:06:21.018Z"
+    "checkedAt": "2026-10-10T04:14:45.743Z"
   },
   "cottage_l1": {
     "version": 3,

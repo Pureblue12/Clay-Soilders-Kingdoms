@@ -104,6 +104,55 @@
           "sheet"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T04:14:44.601Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 3,
+      "score": 78,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 247,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3076923076923077,
+          "types": 12,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.38461538461538464
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "no roof at this level"
+        },
+        "summary": "Level 1 now reads as a square: benches round a stepped plinth with a plaque, lantern posts at the corners and poppies in the planters. Much better than the bare version.",
+        "problems": [
+          "Carlton asked for slightly bigger: the plaza is still about 11 across; one more ring of paving would help",
+          "The plinth's top is still empty at L1; a lantern or a flagpole would give it a focus until the statue arrives"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }
