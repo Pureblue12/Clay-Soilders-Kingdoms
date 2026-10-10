@@ -1,0 +1,78 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "market_stall_l1",
+  "version": 2,
+  "size": [7,5,6],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T04:55:24.644Z",
+    "description": "Market stall, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 83 blocks vs 17 (and 3 x 3 instead of 3 x 2, so the trader has a spot behind the counter). Spruce-post stall with a plank counter under a thin, sloped awning of red and white carpet stripes on trapdoor boards; trader enters from the side; L1 has barrels, a crate, grain and a trade sign; L2 adds the striped wool front edge, lanterns, produce, grain and a shelf; L3 the sign post, banner, stool, back barrel, scraps bin and flowers. Decoration step adds: sign_text.",
+    "changes": "Quality check: the awning is now one block thick (spruce trapdoor boards with red and white carpet stripes instead of two layers of solid blue wool) and slopes down to the front; level 2 adds a red and white wool front edge one step lower. Goods moved to the front corners and level 1 now has goods too (barrels, a crate, grain on the counter, a trade sign).",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "batch3",
+      "tier3",
+      "inner",
+      "market"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:chest[facing=north,type=single,waterlogged=false]",
+    "B": "minecraft:hay_block[axis=x]",
+    "C": "minecraft:oak_wall_sign[facing=north,waterlogged=false]",
+    "D": "minecraft:red_carpet",
+    "E": "minecraft:spruce_log[axis=y]",
+    "F": "minecraft:spruce_planks",
+    "G": "minecraft:spruce_trapdoor[facing=north,half=bottom,open=false,powered=false,waterlogged=false]",
+    "H": "minecraft:spruce_trapdoor[facing=north,half=bottom,open=true,powered=false,waterlogged=false]",
+    "I": "minecraft:spruce_trapdoor[facing=north,half=top,open=false,powered=false,waterlogged=false]",
+    "J": "minecraft:white_carpet"
+  },
+  "layers": [
+    [
+      "...H...",
+      ".#EFE#.",
+      ".....#.",
+      "..EAE..",
+      ".......",
+      "......."
+    ],
+    [
+      "..C....",
+      "..EBE..",
+      ".....G.",
+      "..E#E..",
+      ".......",
+      "......."
+    ],
+    [
+      ".......",
+      ".IEIEI.",
+      ".IIIII.",
+      "..E.E..",
+      ".......",
+      "......."
+    ],
+    [
+      ".......",
+      ".DJDJD.",
+      ".DJDJD.",
+      ".FEFEF.",
+      ".FFFFF.",
+      "......."
+    ],
+    [
+      ".......",
+      ".......",
+      ".......",
+      ".DJDJD.",
+      ".DJDJD.",
+      "......."
+    ]
+  ]
+}

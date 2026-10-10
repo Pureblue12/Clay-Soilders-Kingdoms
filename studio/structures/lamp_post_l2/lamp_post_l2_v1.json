@@ -1,0 +1,70 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "lamp_post_l2",
+  "version": 1,
+  "size": [3,6,3],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T04:58:39.990Z",
+    "description": "Lamp post, level 2 of 3: L1 plus flourish 2. Over budget: 20 blocks vs 5 (a 3 x 3 stepped foot so it is not a bare post). Slim spruce fence post on a dark oak foot and a stepped cobblestone base, a short arm to the street with a hanging lantern (L1); L2 a second arm with a lantern on a chain, a lantern on top, slab corners; L3 a street-name sign, a tulip and a little bush at the foot.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch4",
+      "tier4",
+      "all",
+      "decoration"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:chain[axis=y]",
+    "A": "minecraft:cobblestone",
+    "B": "minecraft:cobblestone_slab[type=bottom,waterlogged=false]",
+    "C": "minecraft:cobblestone_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "D": "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "E": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "F": "minecraft:cobblestone_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "G": "minecraft:dark_oak_log[axis=y]",
+    "H": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "I": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "J": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "K": "minecraft:spruce_fence[east=false,north=false,south=true,waterlogged=false,west=false]",
+    "L": "minecraft:spruce_fence[east=false,north=true,south=false,waterlogged=false,west=false]"
+  },
+  "layers": [
+    [
+      "BE.",
+      "CAF",
+      ".DB"
+    ],
+    [
+      "...",
+      ".G.",
+      "..."
+    ],
+    [
+      "...",
+      ".J.",
+      ".I."
+    ],
+    [
+      ".I.",
+      ".J.",
+      ".#."
+    ],
+    [
+      ".K.",
+      ".L.",
+      ".L."
+    ],
+    [
+      "...",
+      ".H.",
+      "..."
+    ]
+  ]
+}
