@@ -4,14 +4,14 @@
   "version": 1,
   "size": [10,9,11],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:41:07.036Z",
     "description": "Bakery, level 3 of 3: L2 plus flourish 3. Over budget: 269 blocks vs 170. Plaster and timber cottage bakery with a brick oven built onto the back gable (furnace mouth, chimney past the ridge) and the smoker as workstation; L2 domes the oven, adds smoke, flour sacks, shutters, flower boxes, sign and bench; L3 a bread stall, wheat bales, banner, lanterns and flowers. Not yet builder-tested: brick_slab, brick_stairs, cornflower, dandelion, fern, oxeye_daisy, red_wall_banner, white_wool. Decoration step adds: banner_pattern, item, sign_text.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:06:49.432Z",
     "tags": [
       "batch3",
       "tier3",
