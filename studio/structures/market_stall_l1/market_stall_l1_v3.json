@@ -4,14 +4,14 @@
   "version": 3,
   "size": [7,5,6],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T05:12:20.429Z",
     "description": "Market stall, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 83 blocks vs 17 (and 3 x 3 instead of 3 x 2, so the trader has a spot behind the counter). Spruce-post stall with a plank counter under a thin, sloped awning of red and white carpet stripes on trapdoor boards; trader enters from the side; L1 has barrels, a crate, grain and a trade sign; L2 adds the striped wool front edge, lanterns, produce, grain and a shelf; L3 the sign post, banner, stool, back barrel, scraps bin and flowers. Decoration step adds: potted_plant, sign_text.",
     "changes": "Quality check round 2: level 1 is less bare: a flower pot (tulip by the decoration step) and a bale of grain on the front barrels at the counter edge; level 2 puts a pumpkin out at the front edge and a melon beside the stall. (Round 1: one-block-thick sloped red and white awning instead of solid blue wool, goods at the front, goods on level 1.)",
     "parent": 2,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:24:21.175Z",
     "tags": [
       "batch3",
       "tier3",
