@@ -4,14 +4,14 @@
   "version": 2,
   "size": [9,9,11],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "Needs something indicating that its a barracks maybe a sword or something",
     "author": "claude",
     "created": "2026-10-10T05:35:40.051Z",
     "description": "Barracks, level 1 of 3: shell and fittings (what soldiers build first). Over budget from level 2: 379 blocks vs 350 (first build 344). Stone and timber house (7 x 8, half-timbered gables, spruce and dark oak roof): four beds and a footlocker along a centre aisle, an arms store by the door, a hearth under a brick chimney, a grindstone, a table and a weapon shelf at the back; shutters on every window, planters at the front, the training dummy stands at the door.",
     "changes": "Carlton: \"bloated, slim down and add more detail\"; quality check round 1. Slimmed from 7 x 11 to 7 x 8 (4 beds, 344 blocks at L1 instead of 388). Half-timbered gables (plaster in a dark oak frame), posts beside the door and back window, a window in the back wall, shutters on every window and sills from L1, dark oak barge boards and ridge so the roof is two colours, upside-down stairs and a beam end under the gable overhangs, leaf bushes and poppies from L1, a grindstone inside. L2: trapdoor-faced planters with flowers instead of dirt cubes, lanterns under both gables, a duty-roster sign. L3: log pile, spear rack, barrel, ivy on the corner posts, flowers at the back.",
     "parent": 1,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T08:46:41.260Z",
     "tags": [
       "batch3",
       "tier3",
