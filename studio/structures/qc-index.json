@@ -477,10 +477,10 @@
   },
   "mine_l3": {
     "version": 1,
-    "verdict": "pass",
+    "verdict": "revise",
     "score": 89,
     "round": 1,
-    "checkedAt": "2026-10-10T04:51:05.725Z"
+    "checkedAt": "2026-10-10T05:09:39.399Z"
   },
   "notice_board_l1": {
     "version": 3,
@@ -775,6 +775,27 @@
     "score": 86,
     "round": 1,
     "checkedAt": "2026-10-10T04:58:27.670Z"
+  },
+  "stonemason_l1": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 67,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:09:37.582Z"
+  },
+  "stonemason_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 83,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:09:38.135Z"
+  },
+  "stonemason_l3": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 86,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:09:38.690Z"
   },
   "storehouse_l1": {
     "version": 1,

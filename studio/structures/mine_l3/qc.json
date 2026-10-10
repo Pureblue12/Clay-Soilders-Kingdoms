@@ -4,9 +4,9 @@
   "reports": {
     "1": {
       "version": 1,
-      "checkedAt": "2026-10-10T04:51:05.725Z",
+      "checkedAt": "2026-10-10T05:09:39.399Z",
       "by": "claude-qc",
-      "verdict": "pass",
+      "verdict": "revise",
       "round": 1,
       "score": 89,
       "auto": {
@@ -15,6 +15,11 @@
             "level": "info",
             "check": "buildability",
             "message": "Not yet placed by a builder GameTest: rail, red_wall_banner, moss_carpet, cornflower, fern, dandelion."
+          },
+          {
+            "level": "fail",
+            "check": "plant-soil",
+            "message": "Plant with no dirt or grass under it (can't be placed in game; use a flower pot, or dirt under it) at (1, 2, 8), (3, 3, 9), (4, 4, 5), (6, 4, 9)."
           },
           {
             "level": "warn",
