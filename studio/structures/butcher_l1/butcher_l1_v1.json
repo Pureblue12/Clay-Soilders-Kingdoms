@@ -4,14 +4,14 @@
   "version": 1,
   "size": [10,8,10],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:41:07.497Z",
     "description": "Butcher / meat hall, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 245 blocks vs 165. Stone butcher shop with a plaster gable: door between two serving windows, smoker (workstation), chopping table and meat hooks on a tie beam; L2 a striped awning, lanterns, salt barrel and sink; L3 a fenced holding pen with hay and trough, sign, banner and flowers.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:02:28.651Z",
     "tags": [
       "batch3",
       "tier3",

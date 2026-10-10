@@ -4,14 +4,14 @@
   "version": 1,
   "size": [10,8,10],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:41:08.420Z",
     "description": "Butcher / meat hall, level 3 of 3: L2 plus flourish 3. Over budget: 245 blocks vs 165. Stone butcher shop with a plaster gable: door between two serving windows, smoker (workstation), chopping table and meat hooks on a tie beam; L2 a striped awning, lanterns, salt barrel and sink; L3 a fenced holding pen with hay and trough, sign, banner and flowers. Not yet builder-tested: cauldron, cornflower, dandelion, fern, oxeye_daisy, red_wall_banner, red_wool, white_wool. Decoration step adds: banner_pattern, item, item_frame, sign_text, water_cauldron.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:02:28.654Z",
     "tags": [
       "batch3",
       "tier3",

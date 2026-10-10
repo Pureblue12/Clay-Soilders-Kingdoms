@@ -59,9 +59,9 @@ export function categoryOf(s: StructureFile): Category {
   const tags = s.meta.tags ?? [];
   const n = s.name;
   // wall and palisade pieces (their gates too) are modules; a gate tag alone means a gatehouse
-  if (tags.includes('module') || /^(wall|palisade)/.test(n)) return 'module';
+  if (tags.includes('module') || /^(wall|palisade|stone_wall)/.test(n)) return 'module';
   if (tags.includes('landmark') || tags.includes('keep') || tags.includes('gate') || /^keep/.test(n)) return 'landmark';
-  if (/^(bench|signpost|notice_board|hitching_post|flower_bed|fire_pit)/.test(n)) return 'prop';
+  if (/^(bench|signpost|notice_board|hitching_post|flower_bed|fire_pit|lamp_post|banner_pole|market_stall|well_small)/.test(n)) return 'prop';
   return 'common';
 }
 
