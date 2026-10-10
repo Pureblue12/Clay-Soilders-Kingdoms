@@ -79,6 +79,85 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:54:21.628Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 85,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: vine, iron_bars, red_wall_banner, moss_carpet, dark_oak_fence, red_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "227 blocks, over the module budget of 60 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "13 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          },
+          {
+            "level": "warn",
+            "check": "door",
+            "message": "No door on the front half (z = 0 is the front, toward the easel)."
+          }
+        ],
+        "stats": {
+          "blocks": 227,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.43612334801762115,
+          "types": 19,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.3392070484581498
+          },
+          "height": 13,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 0,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "roof": "The overhang is fixed: the y9 ring spans x0..6, z0..6, 1 block beyond the walls on every side. But the cone is all plain spruce stairs, with no trim course or different eave colour (e.g. dark oak stairs at the eave ring). It also rests on the merlons only along edges: y9 is air at x1..5, so (1,9,1) and the rest of that ring are empty between the merlon tops (y8) and the y10 ring.",
+          "levels": "The cone roof, the flag and the vines read at a glance.",
+          "life": "Vines on the town face, moss carpet on the platform, hay and a barrel by the door.",
+          "artefacts": "The front-window torch at (3,6,2) has nothing to hang on (floating at L1, on iron bars at L2/L3), so it drops in game. Use a lantern on a block or a wall torch on solid stone."
+        },
+        "summary": "Level 3: L2 under a spruce cone roof with a 1-block overhang all round, topped by a red banner on a fence pole, with vines, moss, hay and a barrel at the door.",
+        "problems": [
+          "The front-window torch at (3,6,2) has nothing to hang on (floating at L1, on iron bars at L2/L3), so it drops in game. Use a lantern on a block or a wall torch on solid stone.",
+          "Wall torch at (3,6,2) facing south hangs on the iron bars at (3,6,1): iron bars have no solid face, so in game the torch drops. Move it beside the window onto (2,6,1) or (4,6,1).",
+          "Cone roof: it touches the merlons only along edges, because y9 at x1..5, z1..5 is air (for example (1,9,1) and (3,9,1)). Put a ring of spruce planks or slabs on y9 over the wall line x1..5 so the roof sits on the tower. The pole base, planks at (3,10,3), also has air under it at (3,9,3).",
+          "Give the eave ring (y9) a different colour from the rest of the cone (dark oak stairs), so the roof isn't one flat colour.",
+          "Joining: the 7 x 7 box puts the tower walls at x1..5 and z1..5, so x0 and x6 are empty from y0 to y8. Placed box to box beside stone_wall_straight v2 (3 deep: parapet z0, 2-wide walk z1-2 with floor at y4), this leaves a 1-block air gap at x0 and x6 with no walk floor, and the tower's walk (z2-3) sits 1 block behind the wall's walk (z1-2). Either fill x0/x6 with the wall profile (floor (0,4,2..3) and (6,4,2..3), parapet at z1), or state the (-1,-1) placement offset in the meta so the layout overlaps the empty ring.",
+          "Last round fixed: the overhang is now 1 block all round, and the west walk entrance is 2 wide.",
+          "Reachability: fine. The walk room, stair and platform are reached; unreached are only the cone slopes (y10-12) and (2,5,4) beside the stair."
+        ],
+        "views": [
+          "sheet",
+          "front"
+        ]
+      }
     }
   }
 }

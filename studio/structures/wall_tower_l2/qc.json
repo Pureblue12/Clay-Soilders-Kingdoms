@@ -77,6 +77,90 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:54:21.016Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 65,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: iron_bars, red_wall_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "168 blocks, over the module budget of 60 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "13 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          },
+          {
+            "level": "warn",
+            "check": "door",
+            "message": "No door on the front half (z = 0 is the front, toward the easel)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 168,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.24404761904761904,
+          "types": 13,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.4583333333333333
+          },
+          "height": 13,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 0,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "levels": 1
+        },
+        "notes": {
+          "detail": "Capped at 1 by the levels rule: L2 adds only small decoration (iron bars in the slits, a red banner and two torches on the town door, a lantern and a barrel on the platform).",
+          "levels": "From the field side (front, iso), L2 can hardly be told from L1: the only change is the iron bars. The banner shows only from the town side.",
+          "artefacts": "The front-window torch at (3,6,2) has nothing to hang on (floating at L1, on iron bars at L2/L3), so it drops in game. Use a lantern on a block or a wall torch on solid stone. Torch on iron bars at (3,6,2) won't hold. A lantern stands on the top stair step at (2,8,3), right in the roof hatch.",
+          "roof": "Same crenellated platform as L1; the roof warning is the usual flat-top one."
+        },
+        "summary": "Level 2: L1 plus iron bars in the arrow slits, a red banner and two torches on the town-side door, and a lantern and a barrel on the archer platform.",
+        "problems": [
+          "The front-window torch at (3,6,2) has nothing to hang on (floating at L1, on iron bars at L2/L3), so it drops in game. Use a lantern on a block or a wall torch on solid stone.",
+          "L2 needs one clearly visible new feature over L1, seen from the front too, e.g. hoarding brackets, a machicolation row on the corbels, a flag on the platform or a brazier. Right now the change is only small props.",
+          "Wall torch at (3,6,2) facing south hangs on the iron bars at (3,6,1): iron bars have no solid face, so in game the torch drops. Move it beside the window onto (2,6,1) or (4,6,1).",
+          "The lantern at (2,8,3) stands on the top stair step (2,7,3), where soldiers come out of the stair hatch. Move it to a merlon corner, e.g. on top of (1,8,3).",
+          "Joining: the 7 x 7 box puts the tower walls at x1..5 and z1..5, so x0 and x6 are empty from y0 to y8. Placed box to box beside stone_wall_straight v2 (3 deep: parapet z0, 2-wide walk z1-2 with floor at y4), this leaves a 1-block air gap at x0 and x6 with no walk floor, and the tower's walk (z2-3) sits 1 block behind the wall's walk (z1-2). Either fill x0/x6 with the wall profile (floor (0,4,2..3) and (6,4,2..3), parapet at z1), or state the (-1,-1) placement offset in the meta so the layout overlaps the empty ring.",
+          "Reachability: fine. 70 of 71 standing places are reached (only (2,5,4) beside the stair is not); soldiers get around the lantern by way of (1,7,4)."
+        ],
+        "views": [
+          "sheet",
+          "front",
+          "back"
+        ]
+      }
     }
   }
 }

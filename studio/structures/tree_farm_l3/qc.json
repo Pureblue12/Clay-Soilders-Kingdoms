@@ -66,6 +66,78 @@
           "iso"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:54:23.350Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 80,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: dandelion, oak_sapling, azure_bluet, cornflower, oxeye_daisy, birch_sapling, cauldron, oak_hanging_sign, green_wall_banner, moss_carpet."
+          },
+          {
+            "level": "warn",
+            "check": "door",
+            "message": "No door on the front half (z = 0 is the front, toward the easel)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 323,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4953560371517028,
+          "types": 38,
+          "dominant": {
+            "name": "spruce_planks",
+            "share": 0.16408668730650156
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 0,
+          "purpose": 1,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 1,
+          "levels": 2
+        },
+        "notes": {
+          "levels": "The new lean-to drying shed over the log yard shows in iso and back views (last round's 'no new feature' problem is fixed). Also new: banners by the shed door, flowers and potted saplings.",
+          "artefacts": "Ignores Carlton's v1 note: the sapling spots must be clear and decoration moved outside the plot. The beds still hold fake young trees (log + leaves), and props stand inside the plot. The back edge of the lean-to roof hangs in the air (see problems).",
+          "purpose": "Five flowers are added inside the plot, against Carlton's note.",
+          "roof": "False alarm on the roof warning (see L1)."
+        },
+        "summary": "Level 3: L2 plus a lean-to drying shed over the log yard, green banners at the shed door, a hanging sign in the gateway, a shelf of potted saplings in the shed, flowers along the path and moss on the logs.",
+        "problems": [
+          "Ignores Carlton's v1 note: the sapling spots must be clear and decoration moved outside the plot. The beds still hold fake young trees (log + leaves), and props stand inside the plot.",
+          "Carlton's v1 note (all levels) is not met: sapling spots must stay clear, and decoration belongs outside the planting area. L3 adds flowers inside the plot at (4,0,1), (6,0,1), (6,0,2), (4,0,3) and (6,0,3), on the verges next to the planting rows. Put them outside the fence or in a bed by the shed.",
+          "Lean-to roof: its high back edge, slabs at (7..9,4,9) and (7..9,4,10), has nothing under it. The post (8,0..1,10) stops two blocks short and (7..9,2..3,10) is air, so from the back the roof floats. Carry the post up to y3, with dark oak logs at (8,2,10) and (8,3,10) (better: posts at x7 and x9 too), or slope the roof down toward the back.",
+          "Same sapling spacing and fake-tree problems as L2.",
+          "Reachability: fine. The shed, the yard, the path and the beds are reached; the log-pile top under the lean-to (7..9,2,8..9) is not, which is fine."
+        ],
+        "views": [
+          "sheet",
+          "back"
+        ]
+      }
     }
   }
 }

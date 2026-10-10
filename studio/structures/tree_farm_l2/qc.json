@@ -64,6 +64,79 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:54:22.823Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 80,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: oak_sapling, birch_sapling, cauldron."
+          },
+          {
+            "level": "warn",
+            "check": "door",
+            "message": "No door on the front half (z = 0 is the front, toward the easel)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 291,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.43986254295532645,
+          "types": 27,
+          "dominant": {
+            "name": "spruce_planks",
+            "share": 0.18213058419243985
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 0,
+          "purpose": 1,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 1,
+          "levels": 2
+        },
+        "notes": {
+          "levels": "The lychgate roof with hanging lanterns, the lanterns on the piers and the sapling rows read at a glance.",
+          "purpose": "Same as L1: fake trees fill the beds, and L2 adds more decoration inside the plot.",
+          "scale": "Saplings stand in solid rows with no gaps (x1, x2, x3), right next to the fake trees: there is no room for them to grow.",
+          "roof": "False alarm on the roof warning (see L1).",
+          "artefacts": "Ignores Carlton's v1 note: the sapling spots must be clear and decoration moved outside the plot. The beds still hold fake young trees (log + leaves), and props stand inside the plot."
+        },
+        "summary": "Level 2: L1 plus oak and birch sapling rows, a little roof with two hanging lanterns on the gateway, lanterns on all four piers, window shutters, a sawhorse bench in front of the log yard, and a barrel and a cauldron by the path.",
+        "problems": [
+          "Ignores Carlton's v1 note: the sapling spots must be clear and decoration moved outside the plot. The beds still hold fake young trees (log + leaves), and props stand inside the plot.",
+          "Carlton's v1 note (all levels) is not met: sapling spots must stay clear, and decoration belongs outside the planting area. L2 adds a barrel at (4,0,4) and a cauldron at (6,0,5) inside the plot beside the path. Move them by the shed or the log yard.",
+          "Sapling spacing: oak saplings at (1..3,0,2) and (7..9,0,2), and birch saplings at (1..3,0,4) and (7..9,0,4), stand shoulder to shoulder, with the fake young trees one block away. Plant every other spot (e.g. x1, x3) on clear beds so each tree has room to grow.",
+          "The fake log+leaf trees from L1 are still in the beds (see L1).",
+          "Reachability: fine. The same places as L1 are reached; only the gateway roof top (5,5,0) is added to the unreached list."
+        ],
+        "views": [
+          "sheet",
+          "front"
+        ]
+      }
     }
   }
 }

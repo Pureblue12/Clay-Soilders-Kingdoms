@@ -987,25 +987,25 @@
     "checkedAt": "2026-10-10T08:43:51.763Z"
   },
   "tree_farm_l1": {
-    "version": 1,
+    "version": 2,
     "verdict": "revise",
-    "score": 65,
-    "round": 1,
-    "checkedAt": "2026-10-10T05:28:45.581Z"
+    "score": 70,
+    "round": 2,
+    "checkedAt": "2026-10-10T08:54:22.229Z"
   },
   "tree_farm_l2": {
-    "version": 1,
-    "verdict": "pass",
-    "score": 90,
+    "version": 2,
+    "verdict": "revise",
+    "score": 80,
     "round": 1,
-    "checkedAt": "2026-10-10T05:28:46.379Z"
+    "checkedAt": "2026-10-10T08:54:22.823Z"
   },
   "tree_farm_l3": {
-    "version": 1,
-    "verdict": "pass",
-    "score": 78,
+    "version": 2,
+    "verdict": "revise",
+    "score": 80,
     "round": 1,
-    "checkedAt": "2026-10-10T05:28:47.252Z"
+    "checkedAt": "2026-10-10T08:54:23.350Z"
   },
   "visitors_camp_l1": {
     "version": 3,
@@ -1029,25 +1029,25 @@
     "checkedAt": "2026-10-10T03:44:51.051Z"
   },
   "wall_tower_l1": {
-    "version": 1,
-    "verdict": "pass",
-    "score": 75,
+    "version": 2,
+    "verdict": "revise",
+    "score": 68,
     "round": 1,
-    "checkedAt": "2026-10-10T04:58:17.585Z"
+    "checkedAt": "2026-10-10T08:54:20.436Z"
   },
   "wall_tower_l2": {
-    "version": 1,
-    "verdict": "pass",
-    "score": 78,
+    "version": 2,
+    "verdict": "revise",
+    "score": 65,
     "round": 1,
-    "checkedAt": "2026-10-10T04:58:18.142Z"
+    "checkedAt": "2026-10-10T08:54:21.016Z"
   },
   "wall_tower_l3": {
-    "version": 1,
-    "verdict": "pass",
-    "score": 92,
+    "version": 2,
+    "verdict": "revise",
+    "score": 85,
     "round": 1,
-    "checkedAt": "2026-10-10T04:58:18.741Z"
+    "checkedAt": "2026-10-10T08:54:21.628Z"
   },
   "watchtower_l1": {
     "version": 4,

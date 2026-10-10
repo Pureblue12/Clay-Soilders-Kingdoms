@@ -75,6 +75,85 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:54:20.436Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 68,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "157 blocks, over the module budget of 60 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "13 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          },
+          {
+            "level": "warn",
+            "check": "door",
+            "message": "No door on the front half (z = 0 is the front, toward the easel)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 157,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.1910828025477707,
+          "types": 10,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.49044585987261147
+          },
+          "height": 13,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 0,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Arrow-slit windows, chest, two barrels, a torch by the stair, a chest on the platform: right for the shell level, but the faces are mostly plain stone.",
+          "artefacts": "The front-window torch at (3,6,2) has nothing to hang on (floating at L1, on iron bars at L2/L3), so it drops in game. Use a lantern on a block or a wall torch on solid stone. Torch at (3,6,2) floats in the front window; the empty x0/x6 ring breaks the join with the wall pieces.",
+          "roof": "Crenellated archer platform: merlons at x1/3/5 on every side over a corbel ring of upside-down stairs. The automatic roof warning is the usual one for a flat-topped wall piece; ignore it.",
+          "depth": "Cobblestone patches and the corbel ring break the walls a little. The corbels sit in the wall line, so they don't stick out and cast no shadow.",
+          "levels": "L1 is the base. L3's cone roof is clearly different; L2 is close to it (see L2).",
+          "purpose": "The door warning is expected: the field side is the front (z1, where the wall's parapet is) and the door is on the town side (z5)."
+        },
+        "summary": "Level 1: a 5 x 5 stone-brick tower that the 2-wide wall walk passes through at y5, with an inside stair from the town-side door up to the walk room and a crenellated archer platform.",
+        "problems": [
+          "The front-window torch at (3,6,2) has nothing to hang on (floating at L1, on iron bars at L2/L3), so it drops in game. Use a lantern on a block or a wall torch on solid stone.",
+          "Floating wall torch at (3,6,2) facing south: the block it hangs on, (3,6,1), is the open window, so the torch hangs in the air. Move it to a solid wall face, e.g. (2,6,2) or (4,6,2) against stone bricks (2,6,1)/(4,6,1).",
+          "Joining: the 7 x 7 box puts the tower walls at x1..5 and z1..5, so x0 and x6 are empty from y0 to y8. Placed box to box beside stone_wall_straight v2 (3 deep: parapet z0, 2-wide walk z1-2 with floor at y4), this leaves a 1-block air gap at x0 and x6 with no walk floor, and the tower's walk (z2-3) sits 1 block behind the wall's walk (z1-2). Either fill x0/x6 with the wall profile (floor (0,4,2..3) and (6,4,2..3), parapet at z1), or state the (-1,-1) placement offset in the meta so the layout overlaps the empty ring.",
+          "Last round fixed: the walk now enters 2 wide from both sides (y5-6 at z2-3 are open at x1 and x5).",
+          "Reachability: fine. 75 of 77 standing places are reached; only the window sill (1,2,3) and the spot beside the stair (2,5,4) are not, and the walk room, the stair and the archer platform are all reached."
+        ],
+        "views": [
+          "sheet",
+          "front"
+        ]
+      }
     }
   }
 }

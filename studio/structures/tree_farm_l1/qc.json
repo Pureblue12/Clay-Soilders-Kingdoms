@@ -63,6 +63,74 @@
           "iso"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:54:22.229Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 2,
+      "score": 70,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "door",
+            "message": "No door on the front half (z = 0 is the front, toward the easel)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 254,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4094488188976378,
+          "types": 21,
+          "dominant": {
+            "name": "spruce_planks",
+            "share": 0.20866141732283464
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 0,
+          "purpose": 1,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 1,
+          "levels": 2
+        },
+        "notes": {
+          "purpose": "From the outside it reads as a fenced plot with a woodcutter's shed and a log yard. But the planting beds are filled with permanent 'young trees' (an oak log with persistent leaves on top), which Carlton asked to keep clear for saplings to grow.",
+          "roof": "False alarm on the roof warning: the shed's roof overhangs 1 block on both eave sides (dark oak stairs at x0 and x6) and at both gable ends (z5, z10).",
+          "scale": "The 2-tall log+leaf 'young trees' read as hedges or bushes, not trees.",
+          "detail": "The shed is good (2-deep inside with chest, grindstone and barrel, windows, door). The plot is bare apart from the fake trees and a composter.",
+          "artefacts": "Ignores Carlton's v1 note: the sapling spots must be clear and decoration moved outside the plot. The beds still hold fake young trees (log + leaves), and props stand inside the plot. No floating blocks. Layer 0 stands on the grass (groundLayer -1), so the dirt beds and the coarse-dirt path are raised 1 block; the path block (5,0,0) shows as a lump in the gateway."
+        },
+        "summary": "Level 1: an 11 x 11 spruce-fenced plantation on capped cobblestone piers, with a dark oak gateway, raised dirt beds of young trees either side of a coarse-dirt path, a 5 x 4 gabled woodcutter's shed (chest, grindstone, barrel) and a log pile at the back.",
+        "problems": [
+          "Ignores Carlton's v1 note: the sapling spots must be clear and decoration moved outside the plot. The beds still hold fake young trees (log + leaves), and props stand inside the plot.",
+          "Carlton's v1 note (all levels) is not met: sapling spots must stay clear, and decoration belongs outside the planting area. The L1 beds at z1 and z3 (x1..3 and x7..9) are filled with log+leaf props: oak logs at (1,1,1), (3,1,1), (7,1,1), (9,1,1) and the same at z3, a leaf at (2,1,z)/(8,1,z) between them, and leaf heads at y2. Leave the beds as bare dirt (or real saplings), so soldiers can plant and the trees can grow.",
+          "Decoration inside the plot: the composter (9,0,5) and the chopping block (1,0,5) stand at the head of the tree rows. Move them to the log yard or outside the fence.",
+          "Last round fixed: the corner piers are capped (cobblestone walls), the big oaks are gone from the shed eave, and the shed is now 2 deep inside.",
+          "Reachability: fine. The shed floor and workstation, the yard, the path and all beds are reached; unreached are only roof slopes, leaf tops and the gateway top."
+        ],
+        "views": [
+          "sheet",
+          "iso"
+        ]
+      }
     }
   }
 }
