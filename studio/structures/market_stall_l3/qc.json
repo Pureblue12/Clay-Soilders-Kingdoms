@@ -58,6 +58,65 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T05:02:44.517Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 92,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: dandelion, red_wall_banner, pumpkin, melon, red_wool, white_wool."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "83 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 83,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.6265060240963856,
+          "types": 22,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.18072289156626506
+          },
+          "height": 5,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "Still a little heavy: the back canopy is wool on a full plank layer (two blocks thick); a single layer would look lighter. Not blocking."
+        },
+        "summary": "Adds crates around it, a lamp post, a bush and flowers.",
+        "problems": [
+          "Round 1 fixes are in: red and white stripes instead of neon blue, and the front awning is one layer stepping down from the back. Still a little heavy: the back canopy is wool on a full plank layer (two blocks thick); a single layer would look lighter. Not blocking."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

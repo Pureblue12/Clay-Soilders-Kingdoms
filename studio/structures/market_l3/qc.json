@@ -1,0 +1,71 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "market_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:03:48.829Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 94,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: pumpkin, lectern, red_wall_banner, white_wall_banner, melon, cornflower, dandelion, oxeye_daisy, red_banner, white_banner, red_wool, white_wool, yellow_wool, chiseled_stone_bricks, stone_brick_wall."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "620 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 620,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.41935483870967744,
+          "types": 37,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.15806451612903225
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {
+          "detail": "Wall banners on the stall backs, stools, stacked hay, pumpkins and crates at the sides, flower pots at the corners, flower beds by the cross.",
+          "roof": "Same flat wool awnings as L2.",
+          "life": "Flower beds, potted plants, lanterns and banners: busy and lived in."
+        },
+        "summary": "Level 3 dresses the market for a busy day: flower beds round the cross, red and white banners on the stall backs, stall stools and goods stacked along the sides, potted plants at the corners.",
+        "problems": [
+          "Minor: the four flower beds are single raised coarse_dirt cubes on the paving at (5,1,5), (9,1,5), (5,1,9), (9,1,9); they read as lumps of dirt. Sink them into the paving (replace the cobblestone at y 0) or rim them with trapdoors.",
+          "Note only: meta.groundLayer 0, the paving replaces the grass.",
+          "Reachability: 280 of 282 standing places reached; only the two cross-step tops at (6,6,7) and (8,6,7) are not, which is fine."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "front"
+        ]
+      }
+    }
+  }
+}
