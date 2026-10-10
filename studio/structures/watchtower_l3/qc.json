@@ -61,6 +61,110 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:00:50.726Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 2,
+      "score": 69,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: moss_carpet, white_wall_banner."
+          }
+        ],
+        "stats": {
+          "blocks": 109,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5596330275229358,
+          "types": 18,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.29357798165137616
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 1,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "The most finished one, with a lantern and moss; same one-colour roof as the others.",
+        "problems": [
+          "The roof is one spruce brown: give it a darker eaves course",
+          "The legs are bare poles below the platform: put the side rails between the posts in level 1 for depth"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:01:28.990Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 3,
+      "score": 75,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: moss_carpet, white_wall_banner."
+          }
+        ],
+        "stats": {
+          "blocks": 109,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5596330275229358,
+          "types": 19,
+          "dominant": {
+            "name": "oak_log",
+            "share": 0.25688073394495414
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "The fullest version: lantern, back rail and moss at the feet on top of level 2.",
+        "problems": [
+          "Still sparse for Carlton's taste: a bell or a horn stand on the platform and a flag on the roof cap would make it more of a lookout",
+          "Below the platform the legs are still mostly open: diagonal braces (upside-down stairs) between the posts would add depth"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

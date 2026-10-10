@@ -1,0 +1,129 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "watchtower_l3",
+  "version": 2,
+  "size": [6,9,6],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude-qc",
+    "created": "2026-10-10T03:00:07.757Z",
+    "description": "Watchtower, level 3 of 3: L2 plus flourish 3. Log watchtower: spiral stair inside four posts up to a railed lookout (floor at y 4), hip roof; 4 x 4 core, not 3 x 3 (a walkable stair needs it). Not yet builder-tested: moss_carpet, white_wall_banner. Decoration step adds: banner_pattern.",
+    "changes": "Quality check round 2: cobblestone footings under the four posts, the platform rail joined up (no lone fence posts), a lantern on a chain under the roof, hay, a barrel and a bush at the foot (all from level 1).",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:campfire[facing=south,lit=false,signal_fire=false,waterlogged=false]",
+    "B": "minecraft:chain[axis=y]",
+    "C": "minecraft:cobblestone",
+    "D": "minecraft:hay_block[axis=y]",
+    "E": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "F": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "G": "minecraft:moss_carpet",
+    "H": "minecraft:oak_fence[east=false,north=true,south=true,waterlogged=false,west=false]",
+    "I": "minecraft:oak_fence[east=true,north=false,south=false,waterlogged=false,west=true]",
+    "J": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "K": "minecraft:oak_log[axis=y]",
+    "L": "minecraft:oak_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "M": "minecraft:oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "N": "minecraft:oak_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "O": "minecraft:spruce_planks",
+    "P": "minecraft:spruce_slab[type=top,waterlogged=false]",
+    "Q": "minecraft:spruce_stairs[facing=east,half=bottom,shape=outer_left,waterlogged=false]",
+    "R": "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "S": "minecraft:spruce_stairs[facing=north,half=bottom,shape=outer_left,waterlogged=false]",
+    "T": "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "U": "minecraft:spruce_stairs[facing=south,half=bottom,shape=outer_left,waterlogged=false]",
+    "V": "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "W": "minecraft:spruce_stairs[facing=west,half=bottom,shape=outer_left,waterlogged=false]",
+    "X": "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "Y": "minecraft:stripped_spruce_log[axis=x]",
+    "Z": "minecraft:stripped_spruce_log[axis=z]",
+    "a": "minecraft:torch",
+    "b": "minecraft:wall_torch[facing=east]",
+    "c": "minecraft:white_wall_banner[facing=west]"
+  },
+  "layers": [
+    [
+      "......",
+      "GC..CD",
+      "..M..#",
+      "J.....",
+      "GC..CG",
+      "......"
+    ],
+    [
+      "......",
+      ".K..K.",
+      "...L..",
+      "......",
+      ".Kb.K.",
+      "......"
+    ],
+    [
+      "......",
+      ".K..K.",
+      ".Z..Z.",
+      ".Z.MZ.",
+      ".KYYK.",
+      "......"
+    ],
+    [
+      "......",
+      ".K..K.",
+      "......",
+      "..N...",
+      ".K..K.",
+      "......"
+    ],
+    [
+      "......",
+      ".KOOK.",
+      ".OOOO.",
+      ".O..O.",
+      ".KOOK.",
+      "......"
+    ],
+    [
+      "......",
+      ".KIIK.",
+      "cH..H.",
+      ".H..H.",
+      ".KIIK.",
+      "......"
+    ],
+    [
+      "......",
+      ".KA.K.",
+      ".aF...",
+      "......",
+      ".K.EK.",
+      "......"
+    ],
+    [
+      "UVVVVW",
+      "RK..KX",
+      "R.B..X",
+      "R....X",
+      "RK..KX",
+      "QTTTTS"
+    ],
+    [
+      "......",
+      ".UVVW.",
+      ".RPPX.",
+      ".RPPX.",
+      ".QTTS.",
+      "......"
+    ]
+  ]
+}

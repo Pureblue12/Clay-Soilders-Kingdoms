@@ -21,24 +21,24 @@
     "checkedAt": "2026-10-10T02:59:37.669Z"
   },
   "watchtower_l1": {
-    "version": 1,
-    "verdict": "revise",
-    "score": 61,
-    "round": 1,
-    "checkedAt": "2026-10-10T02:56:33.178Z"
+    "version": 3,
+    "verdict": "pass",
+    "score": 75,
+    "round": 3,
+    "checkedAt": "2026-10-10T03:01:27.891Z"
   },
   "watchtower_l2": {
-    "version": 1,
-    "verdict": "revise",
-    "score": 61,
-    "round": 1,
-    "checkedAt": "2026-10-10T02:56:33.695Z"
+    "version": 3,
+    "verdict": "pass",
+    "score": 75,
+    "round": 3,
+    "checkedAt": "2026-10-10T03:01:28.482Z"
   },
   "watchtower_l3": {
-    "version": 1,
-    "verdict": "revise",
-    "score": 64,
-    "round": 1,
-    "checkedAt": "2026-10-10T02:56:34.206Z"
+    "version": 3,
+    "verdict": "pass",
+    "score": 75,
+    "round": 3,
+    "checkedAt": "2026-10-10T03:01:28.990Z"
   }
 }
