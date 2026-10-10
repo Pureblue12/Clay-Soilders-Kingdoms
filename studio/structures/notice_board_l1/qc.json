@@ -1,0 +1,58 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "notice_board_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T03:29:41.758Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 14,
+      "auto": {
+        "issues": [
+          {
+            "level": "fail",
+            "check": "too-small",
+            "message": "Only 6 blocks: too bare for a prop (at least 10). Carlton wants more detail, not less."
+          }
+        ],
+        "stats": {
+          "blocks": 6,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.6666666666666666,
+          "types": 3,
+          "dominant": {
+            "name": "gravel",
+            "share": 0.3333333333333333
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 0,
+          "artefacts": 0,
+          "purpose": 1,
+          "depth": 0,
+          "roof": 0,
+          "materials": 1,
+          "shape": 0,
+          "life": 0,
+          "scale": 1,
+          "grandeur": 0
+        },
+        "summary": "Notice board level 1: two fence posts and a trapdoor board behind a raised gravel block; tiny and reads as a glitch.",
+        "problems": [
+          "Far too small (6 to 8 blocks; the automatic check fails it): Carlton called a 2-block signpost \"minimal effort trash\". Build a proper board: two log posts, a plank board, a little roof.",
+          "The gravel pad was meant to replace the ground, but the mod builds layer 0 on top of the ground, so it stands as a raised block and the board floats behind it."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

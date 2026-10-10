@@ -1,0 +1,47 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "hitching_post_l1",
+  "version": 2,
+  "size": [5,3,3],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude-qc",
+    "created": "2026-10-10T03:29:45.022Z",
+    "description": "Hitching post, level 1 of 2: shell and fittings (what soldiers build first). Two dark oak posts and a fence rail with a lantern and stacked hay; level 2 adds a trough, barrel, bush and flowers.",
+    "changes": "Quality check round 2: rebuilt standing on the ground (no raised pad): two dark oak log posts with a joined fence rail, a lantern and stacked hay; level 2 adds a trough, barrel, bush, flowers and a second lantern",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "inner",
+      "decoration"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:dark_oak_log[axis=y]",
+    "A": "minecraft:hay_block[axis=x]",
+    "B": "minecraft:hay_block[axis=z]",
+    "C": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "D": "minecraft:oak_fence[east=true,north=false,south=false,waterlogged=false,west=true]"
+  },
+  "layers": [
+    [
+      ".....",
+      "#...#",
+      "A...."
+    ],
+    [
+      ".....",
+      "#DDD#",
+      "B...."
+    ],
+    [
+      ".....",
+      "....C",
+      "....."
+    ]
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "notice_board_l1",
+  "version": 2,
+  "size": [4,4,2],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude-qc",
+    "created": "2026-10-10T03:29:43.961Z",
+    "description": "Notice board, level 1 of 2: shell and fittings (what soldiers build first). Two dark oak posts with a spruce plank board under a small gable roof; level 2 pins two signs, a lantern, a barrel and flowers.",
+    "changes": "Quality check round 2: rebuilt standing on the ground (no raised pad): two dark oak log posts, a spruce plank board under a small dark oak gable roof; level 2 adds two signs, a hanging lantern, a barrel and flowers",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "inner",
+      "decoration"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:dark_oak_log[axis=y]",
+    "A": "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "B": "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "C": "minecraft:spruce_planks"
+  },
+  "layers": [
+    [
+      "....",
+      "#..#"
+    ],
+    [
+      "....",
+      "#CC#"
+    ],
+    [
+      "....",
+      "#CC#"
+    ],
+    [
+      "BBBB",
+      "AAAA"
+    ]
+  ]
+}

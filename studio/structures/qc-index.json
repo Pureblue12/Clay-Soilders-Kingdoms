@@ -118,6 +118,20 @@
     "round": 1,
     "checkedAt": "2026-10-10T03:24:44.133Z"
   },
+  "hitching_post_l1": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 25,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:29:42.907Z"
+  },
+  "hitching_post_l2": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 33,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:29:43.422Z"
+  },
   "house": {
     "version": 4,
     "verdict": "pass",
@@ -166,6 +180,20 @@
     "score": 64,
     "round": 1,
     "checkedAt": "2026-10-10T03:22:59.988Z"
+  },
+  "notice_board_l1": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 14,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:29:41.758Z"
+  },
+  "notice_board_l2": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 14,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:29:42.351Z"
   },
   "road_l1": {
     "version": 2,
