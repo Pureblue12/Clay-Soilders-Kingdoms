@@ -24,7 +24,7 @@ front), a small statue of a clay soldier on a pedestal in the garden, potted pla
 porch columns, candles and carpets inside, vines on the walls."""
 from make_batch1_structures import Structure
 from batch3.ws_kit import P, A, STAIR, TOP, SLAB, SLAB_TOP, OPEN, HANG, STAND, connect, shutters
-from batch5.roofkit import height_roof, corbels
+from batch5.roofkit import height_roof, corbels, dormer, mirror_x
 
 FLOWERS = ('poppy', 'cornflower', 'oxeye_daisy', 'allium', 'azure_bluet', 'dandelion')
 
@@ -108,6 +108,7 @@ def noble_house():
     stack = [(chimney_x, y, chimney_z) for y in range(4, 9)]
     for pos in stack:
         P(s, *pos, 'bricks')
+    dormer(s, MID, 5, Z1, 'south')                                  # a back dormer over the passage
     height_roof(s, Hm, EAVE, skip=stack)
     corbels(s, Hm, [(X0 - 1, z) for z in range(Z0 - 1, Z1 + 2)])
     corbels(s, Hm, [(X1 + 1, z) for z in range(Z0 - 1, Z1 + 2) if z != chimney_z])
@@ -200,10 +201,10 @@ def noble_house():
     # the chimney's shoulders, a log pile at the back
     P(s, chimney_x, 3, chimney_z - 1, 'brick_stairs', facing='south', **STAIR)
     P(s, chimney_x, 3, chimney_z + 1, 'brick_stairs', facing='north', **STAIR)
-    for x in (9, 10, 11):
+    for x in (12, 13):                                              # a log pile at the back (log ends out)
         for y in (0, 1):
-            if not (y == 1 and x == 11):
-                P(s, x, y, Z1 + 1, 'spruce_log', axis='x')
+            P(s, x, y, Z1 + 1, 'spruce_log', axis='z')
+    P(s, 11, 0, Z1 + 1, 'spruce_log', axis='z')
     P(s, 11, 1, Z1 + 1, 'spruce_slab', **SLAB)
     # the garden: flower beds and two lantern posts
     for i, (x, z) in enumerate(((3, 6), (3, 7), (3, 8), (1, 3), (0, 10), (1, 9), (2, 11), (4, 11))):
@@ -220,22 +221,22 @@ def noble_house():
             A(s, x, 0, z, 'stone_bricks'); P(s, x, 1, z, 'stone_bricks'); P(s, x, 2, z, 'lantern', **STAND)
         else:
             A(s, x, 0, z, 'stone_brick_wall')
-    # the statue: a clay soldier on a pedestal in the garden
-    P(s, 2, 0, 10, 'chiseled_stone_bricks')
-    P(s, 2, 1, 10, 'stone_brick_wall')
-    P(s, 2, 2, 10, 'white_terracotta')
+    # the statue: a garden urn on a carved pedestal
+    P(s, 2, 0, 10, 'stone_bricks')
+    P(s, 2, 1, 10, 'chiseled_stone_bricks')
+    P(s, 2, 2, 10, 'decorated_pot', facing='north', cracked='false', waterlogged='false')
     # potted plants on the balcony, banners on the porch columns, candles and carpets inside
     for x in (MID - 2, MID + 2):
         P(s, x, 5, 1, 'flower_pot'); s.decorate(x, 5, 1, 'potted_plant', plant='red_tulip')
-        P(s, x, 2, 0, 'white_wall_banner', facing='north')
-        s.decorate(x, 2, 0, 'banner_pattern', banner='white_wall_banner', note='the family arms')
     P(s, 7, 2, 6, 'candle', candles='2', lit='true', waterlogged='false')
     for x, z in ((10, 7), (11, 7), (9, 7)):
         A(s, x, 1, z, 'brown_carpet')
+    for x in (MID - 3, MID + 3):                                    # flowering bushes by the steps
+        A(s, x, 0, 0, 'flowering_azalea_leaves', persistent='true', distance='1', waterlogged='false')
     # vines on the left wall's plaster
     for z in (4, 7):
         A(s, X0 - 1, 2, z, 'vine', east='true', north='false', south='false', west='false', up='false')
-    return connect(s)
+    return connect(mirror_x(s))
 
 
 STRUCTURES = [dict(path='noble_house', name='Noble house', tier=5, zone='inner', role='house', group='noble_house',
