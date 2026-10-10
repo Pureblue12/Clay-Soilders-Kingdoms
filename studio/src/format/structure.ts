@@ -14,6 +14,16 @@ export const FORMAT_ID = 'csr-studio-structure/1';
 export const STATUSES = ['pending', 'approved', 'rejected'] as const;
 export type Status = (typeof STATUSES)[number];
 
+/** What happens next with a structure, shown on the page. Worked out from the latest version and work.json. */
+export const STAGES = ['review', 'queued', 'revising', 'approved'] as const;
+export type Stage = (typeof STAGES)[number];
+export const STAGE_LABELS: Record<Stage, string> = {
+  review: 'Needs your review', // latest version pending
+  queued: 'Queued for revision', // latest version rejected, nobody working on it yet
+  revising: 'Revising', // latest version rejected, an agent said it is working on it (work.json)
+  approved: 'Approved', // latest version approved
+};
+
 /** Palette value meaning "leave whatever is there" (not written to NBT). */
 export const VOID_BLOCK = 'minecraft:structure_void';
 export const AIR_BLOCK = 'minecraft:air';

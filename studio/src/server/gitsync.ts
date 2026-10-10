@@ -1,6 +1,7 @@
 // Keeps the structure library in step with GitHub, so the owner never has to type git commands:
 //   pull()          on every page load: brings in new structures agents pushed (git pull --rebase --autostash)
 //   commitVersion() after approve / reject / notes / rollback: commits that one version file and pushes it
+//   commitFile()    the same for any one file under studio/structures/ (the CLI's work.json)
 // Only files under studio/structures/ are ever committed here. Set STUDIO_GIT=off to turn it all off.
 // Git runs one command at a time (a queue), so a review made during a pull waits for it.
 import { execFile } from 'node:child_process';
@@ -61,14 +62,19 @@ export function pull(): Promise<GitResult> {
 
 /** Commits one version file (a review, or a rollback's new version) and pushes it. Nothing else is committed. */
 export function commitVersion(name: string, version: number, message: string): Promise<GitResult> {
+  return commitFile(path.join(STRUCTURES_DIR, name, `${name}_v${version}.json`), message);
+}
+
+/** Commits one file under studio/structures/ (a version, or a work.json) and pushes it. Also for a deleted file. */
+export function commitFile(absFile: string, message: string): Promise<GitResult> {
   if (!gitEnabled()) return Promise.resolve({ ok: true, message: '' });
   return serial(async () => {
-    const file = path.relative(REPO, path.join(STRUCTURES_DIR, name, `${name}_v${version}.json`));
+    const file = path.relative(REPO, absFile);
     if (!file.startsWith(path.join('studio', 'structures') + path.sep)) return { ok: false, message: 'Not a structure file' };
-    const add = await git('add', '--', file);
+    const add = await git('add', '-A', '--', file);
     if (add.code) return { ok: false, message: `Couldn't save to git: ${add.out.split('\n')[0]}` };
     const commit = await git('commit', '--quiet', '-m', message, '--', file);
-    if (commit.code && !/nothing to commit|no changes added/.test(commit.out)) {
+    if (commit.code && !/nothing to commit|no changes added|did not match any file/.test(commit.out)) {
       return { ok: false, message: `Couldn't commit: ${commit.out.split('\n')[0]}` };
     }
     const pulled = await pullNow();

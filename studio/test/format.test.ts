@@ -78,3 +78,24 @@ test('the shipped samples are valid', () => {
     for (const v of store.versions(name))
       assert.deepEqual(validateStructure(store.load(name, v)).filter((i) => i.level === 'error'), [], `${name} v${v}`);
 });
+
+test('stages: review, queued after a reject, revising while an agent works, review again after the next save', () => {
+  const store = new Store(fs.mkdtempSync(path.join(os.tmpdir(), 'studio-')));
+  store.saveNewVersion(sample());
+  assert.equal(store.summary('tiny').stage, 'review');
+  assert.throws(() => store.setWork('tiny', 'claude'), /not rejected/);
+  store.setReview('tiny', 1, 'rejected', 'sunk into the ground');
+  assert.equal(store.summary('tiny').stage, 'queued');
+  store.setWork('tiny', 'claude', 'raise it one block');
+  assert.equal(store.summary('tiny').stage, 'revising');
+  assert.equal(store.summary('tiny').work?.note, 'raise it one block');
+  assert.deepEqual(store.versions('tiny'), [1]); // work.json is not a version
+  store.setWork('tiny', null);
+  assert.equal(store.summary('tiny').stage, 'queued');
+  store.setWork('tiny', 'claude');
+  store.saveNewVersion(sample());
+  assert.equal(store.summary('tiny').stage, 'review');
+  assert.equal(store.work('tiny'), null);
+  store.setReview('tiny', 2, 'approved', '');
+  assert.equal(store.summary('tiny').stage, 'approved');
+});

@@ -1,12 +1,14 @@
 // The structure library on disk: structures/<name>/<name>_v<N>.json.
 // Versions are never overwritten: a new version always gets the next free number (written with the "wx" flag).
 // The only change allowed to an existing version is its review metadata (status, notes, reviewedAt).
+// structures/<name>/work.json (optional) says whether an agent has picked up a rejected structure; see Stage.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   FORMAT_ID,
   STATUSES,
+  type Stage,
   blockCounts,
   stringifyStructure,
   validateStructure,
@@ -15,9 +17,18 @@ import {
 } from '../format/structure.ts';
 
 export const STUDIO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
+export { STAGES, STAGE_LABELS, type Stage } from '../format/structure.ts';
 export const STRUCTURES_DIR = path.join(STUDIO_ROOT, 'structures');
 
 const FILE_RE = /^([a-z0-9_]+)_v(\d+)\.json$/;
+
+/** structures/<name>/work.json, written by agents (CLI "work"). Removed when the next version is saved. */
+export interface WorkState {
+  state: 'revising';
+  by: string;
+  since: string; // ISO date-time
+  note: string; // e.g. "raising the floor one block, adding a saw mill"
+}
 
 export interface VersionSummary {
   version: number;
@@ -40,6 +51,8 @@ export interface StructureSummary {
   approvedVersion: number | null; // newest approved version, if any
   versions: VersionSummary[];
   tags: string[];
+  stage: Stage;
+  work: WorkState | null;
 }
 
 export class Store {
@@ -99,6 +112,9 @@ export class Store {
     });
     const latest = versions[versions.length - 1];
     const approved = [...versions].reverse().find((v) => v.status === 'approved');
+    const work = latest.status === 'rejected' ? this.work(name) : null;
+    const stage: Stage =
+      latest.status === 'approved' ? 'approved' : latest.status === 'pending' ? 'review' : work ? 'revising' : 'queued';
     return {
       name,
       latest: latest.version,
@@ -106,7 +122,36 @@ export class Store {
       approvedVersion: approved?.version ?? null,
       versions: versions.map(({ tags: _t, ...v }) => v),
       tags: latest.tags,
+      stage,
+      work,
     };
+  }
+
+  private workFile(name: string) {
+    return path.join(this.dir, name, 'work.json');
+  }
+
+  work(name: string): WorkState | null {
+    try {
+      return JSON.parse(fs.readFileSync(this.workFile(name), 'utf8')) as WorkState;
+    } catch {
+      return null;
+    }
+  }
+
+  /** An agent says it is revising the structure (null: stopped, back in the queue). Only for a rejected latest version. */
+  setWork(name: string, by: string | null, note = ''): WorkState | null {
+    const vs = this.versions(name);
+    if (!vs.length) throw new Error(`no structure "${name}"`);
+    if (by === null) {
+      fs.rmSync(this.workFile(name), { force: true });
+      return null;
+    }
+    const latest = this.load(name);
+    if (latest.meta.status !== 'rejected') throw new Error(`${name} v${latest.version} is ${latest.meta.status}, not rejected`);
+    const w: WorkState = { state: 'revising', by, since: new Date().toISOString(), note };
+    fs.writeFileSync(this.workFile(name), JSON.stringify(w, null, 2) + '\n');
+    return w;
   }
 
   list(): StructureSummary[] {
@@ -138,6 +183,7 @@ export class Store {
     if (errors.length) throw new Error('invalid structure:\n' + errors.map((e) => '  ' + e.message).join('\n'));
     fs.mkdirSync(path.join(this.dir, name), { recursive: true });
     fs.writeFileSync(this.file(name, version), stringifyStructure(out), { flag: 'wx' });
+    fs.rmSync(this.workFile(name), { force: true }); // the revision is done: it waits for review now
     return version;
   }
 

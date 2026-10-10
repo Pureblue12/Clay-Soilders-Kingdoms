@@ -1,6 +1,6 @@
 // The studio app: library with thumbnails, 3D view, review panel (approve / reject / notes), versions with
 // compare and rollback, layer view and test terrain.
-import { blockCounts, type Status, type StructureFile } from '../format/structure.ts';
+import { blockCounts, STAGE_LABELS, type Stage, type Status, type StructureFile } from '../format/structure.ts';
 import { buildability } from '../format/modrules.ts';
 import { BlockLibrary, HttpAssets } from '../render/blocks.ts';
 import { DEFAULT_SCENE, showStructure, type SceneOptions } from '../render/scene.ts';
@@ -15,7 +15,7 @@ const PRESET_LABELS: Record<CameraPreset, string> = {
 
 const state = {
   list: [] as StructureSummary[],
-  filter: 'all' as 'all' | Status,
+  filter: 'all' as 'all' | Stage,
   search: '',
   name: null as string | null,
   version: 0,
@@ -59,7 +59,37 @@ async function getFile(name: string, version: number): Promise<StructureFile> {
 async function refreshList() {
   state.list = await api<StructureSummary[]>('/api/structures');
   renderList();
+  renderCounts();
   void makeThumbnails();
+}
+
+/** "3 need review · 5 queued · 1 revising · 2 approved" under the title. */
+function renderCounts() {
+  const n = (st: Stage) => state.list.filter((s) => s.stage === st).length;
+  const parts: string[] = [];
+  if (n('review')) parts.push(`<b class="stage-text review">${n('review')}</b> need your review`);
+  if (n('queued')) parts.push(`<b class="stage-text queued">${n('queued')}</b> queued`);
+  if (n('revising')) parts.push(`<b class="stage-text revising">${n('revising')}</b> revising`);
+  if (n('approved')) parts.push(`<b class="stage-text approved">${n('approved')}</b> approved`);
+  $('#counts').innerHTML = parts.join(' · ') || 'No structures yet';
+}
+
+function stagePill(s: StructureSummary) {
+  const who = s.work ? ` title="${escapeHtml(`${s.work.by} since ${new Date(s.work.since).toLocaleString()}${s.work.note ? `: ${s.work.note}` : ''}`)}"` : '';
+  return `<span class="pill stage ${s.stage}"${who}>${s.stage === 'revising' ? '<i class="spin"></i>' : ''}${STAGE_LABELS[s.stage]}</span>`;
+}
+
+/** Every 30 s: pull from GitHub and redraw the list, so new versions and "Revising" show up without a reload. */
+function startAutoRefresh() {
+  window.setInterval(async () => {
+    if (document.hidden) return;
+    const sync = await api<{ ok: boolean; message: string }>('/api/sync', { method: 'POST' }).catch(
+      () => ({ ok: true, message: '' }));
+    const before = JSON.stringify(state.list);
+    await refreshList().catch(() => undefined);
+    if (sync.message) toast(sync.message, !sync.ok);
+    if (JSON.stringify(state.list) !== before && summary()) renderReview();
+  }, 30_000);
 }
 
 function summary(): StructureSummary | undefined {
@@ -82,7 +112,7 @@ function renderList() {
   ul.innerHTML = '';
   const q = state.search.toLowerCase();
   for (const s of state.list) {
-    if (state.filter !== 'all' && s.status !== state.filter) continue;
+    if (state.filter !== 'all' && s.stage !== state.filter) continue;
     if (q && !s.name.includes(q)) continue;
     const li = document.createElement('li');
     li.dataset.name = s.name;
@@ -94,7 +124,7 @@ function renderList() {
       <div>
         <div class="name">${s.name}</div>
         <div class="sub">v${s.latest} · ${latest.size.join('×')} · ${latest.blocks} blocks</div>
-        <div class="sub"><span class="pill ${s.status}">${s.status}</span>${s.approvedVersion && s.approvedVersion !== s.latest ? ` <span class="muted">v${s.approvedVersion} approved</span>` : ''}</div>
+        <div class="sub">${stagePill(s)}${s.approvedVersion && s.approvedVersion !== s.latest ? ` <span class="muted">v${s.approvedVersion} approved</span>` : ''}</div>
       </div>`;
     li.onclick = () => select(s.name, s.latest);
     ul.appendChild(li);
@@ -236,6 +266,10 @@ function renderReview() {
   $('#r-meta').textContent = `${v.size.join(' × ')} (x × y × z) · ${v.blocks} blocks · by ${v.author} · ${new Date(v.created).toLocaleString()}${v.parent ? ` · from v${v.parent}` : ''}`;
   $('#r-desc').textContent = v.description;
   $('#r-status').innerHTML = `Status: <span class="pill ${v.status}">${v.status}</span>${v.reviewedAt ? ` <span class="muted">reviewed ${new Date(v.reviewedAt).toLocaleString()}</span>` : ''}`;
+  const w = s.work;
+  $('#r-stage').innerHTML = `Next: ${stagePill(s)}${
+    w ? ` <span class="muted">${escapeHtml(w.by)} since ${new Date(w.since).toLocaleString()}</span>${w.note ? `<div class="vnotes"><b>Plan:</b> ${escapeHtml(w.note)}</div>` : ''}`
+      : s.stage === 'queued' ? ' <span class="muted">waiting for Claude to pick it up</span>' : ''}`;
   $('#approve').classList.toggle('current', v.status === 'approved');
   $('#reject').classList.toggle('current', v.status === 'rejected');
   const notes = $<HTMLTextAreaElement>('#notes');
@@ -449,6 +483,7 @@ async function main() {
     (e: Error) => ({ ok: false, message: e.message }));
   if (sync.message) toast(sync.message, !sync.ok);
   await refreshList();
+  startAutoRefresh();
   const hash = new URLSearchParams(location.hash.slice(1));
   const first = hash.get('s') ?? state.list[0]?.name;
   const s = state.list.find((x) => x.name === first);

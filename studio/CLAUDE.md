@@ -28,6 +28,19 @@ The owner never types git commands for reviews (`src/server/gitsync.ts`):
   to the branch the owner has checked out show up on refresh.
 - Approve, reject, notes and rollback commit only that one version file (`Studio review: <name> vN <status>`) and push.
 - The toast says what happened; failures (offline, conflict) stay local and show in red. `STUDIO_GIT=off` turns it off.
+- The open page also pulls and redraws the list every 30 s, so new versions and stage changes show up without a reload.
+
+## Revision queue (stages)
+
+Each structure shows what happens next (`STAGES` in `src/format/structure.ts`, worked out in `Store.summary`):
+**Needs your review** (latest version pending), **Queued for revision** (latest rejected, nobody on it),
+**Revising** (latest rejected and `structures/<name>/work.json` says who is on it), **Approved**.
+- `npm run studio -- queue` lists the rejected structures with Carlton's notes: start every session with it (after a
+  pull). `--all` also lists the ones waiting for his review.
+- Before revising one: `npm run studio -- work <name> --by <you> --note "plan"`. It writes `work.json`, commits and
+  pushes it, so the page shows "Revising" (from a branch, it shows once the branch is merged). `--stop` puts it back.
+- Saving the next version (`save`) deletes `work.json`: the structure goes back to "Needs your review". Commit the
+  deletion with the new version.
 
 ## Minecraft assets
 
@@ -66,6 +79,7 @@ One JSON file per version: `structures/<name>/<name>_v<N>.json`.
 
 ## Agent workflow (the loop)
 
+0. `npm run studio -- queue`; pick one, `work <name> --by <you> --note "plan"`.
 1. Read `STYLE.md` (and the brief in `../docs/STRUCTURES.md` if there is one).
 2. Write the structure: in code with `samples/builder.ts` (see `samples/house.ts`), or start from
    `npm run studio -- template <name> x y z -o draft.json`.
