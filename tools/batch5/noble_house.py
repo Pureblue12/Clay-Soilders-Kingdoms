@@ -26,7 +26,7 @@ from make_batch1_structures import Structure
 from batch3.ws_kit import P, A, STAIR, TOP, SLAB, SLAB_TOP, OPEN, HANG, STAND, connect, shutters
 from batch5.roofkit import height_roof, corbels
 
-FLOWERS = ('poppy', 'cornflower', 'oxeye_daisy', 'allium', 'azure_bluet', 'dandelion', 'red_tulip', 'lily_of_the_valley')
+FLOWERS = ('poppy', 'cornflower', 'oxeye_daisy', 'allium', 'azure_bluet', 'dandelion')
 
 W, D, H = 16, 13, 9
 X0, X1, Z0, Z1 = 6, 14, 3, 9           # the house walls
@@ -129,7 +129,7 @@ def noble_house():
     for x, y, z in stairs:
         P(s, x, y, z, 'spruce_stairs', facing='east', **STAIR)
     # the study (left): a chest, a desk with a chair
-    P(s, 7, 1, 4, 'chest', facing='east', type='single', waterlogged='false')
+    P(s, 7, 1, 4, 'chest', facing='south', type='single', waterlogged='false')
     P(s, 7, 1, 6, 'spruce_slab', **SLAB_TOP)
     P(s, 8, 1, 6, 'spruce_stairs', facing='east', **STAIR)
     # the hall (by the door): a settle under the front windows
@@ -143,7 +143,7 @@ def noble_house():
     P(s, 13, 1, 7, 'smoker', facing='west', lit='false')
     P(s, 13, 1, 6, 'crafting_table')
     P(s, 13, 1, 5, 'barrel', facing='up', open='false')
-    P(s, 13, 1, 4, 'chest', facing='west', type='single', waterlogged='false')
+    P(s, 13, 1, 4, 'chest', facing='south', type='single', waterlogged='false')
     P(s, 13, 1, 8, 'barrel', facing='up', open='false')            # under the top of the stairs
     for x, z, f in ((MID - 1, Z0 + 1, 'south'), (MID + 1, Z0 + 1, 'south'), (X0 + 1, 6, 'east'), (X1 - 1, 6, 'west')):
         if (x, 3, z) not in s.blocks:
@@ -222,7 +222,7 @@ def noble_house():
             A(s, x, 0, z, 'stone_brick_wall')
     # the statue: a clay soldier on a pedestal in the garden
     P(s, 2, 0, 10, 'chiseled_stone_bricks')
-    P(s, 2, 1, 10, 'cobblestone_wall')
+    P(s, 2, 1, 10, 'stone_brick_wall')
     P(s, 2, 2, 10, 'white_terracotta')
     # potted plants on the balcony, banners on the porch columns, candles and carpets inside
     for x in (MID - 2, MID + 2):
