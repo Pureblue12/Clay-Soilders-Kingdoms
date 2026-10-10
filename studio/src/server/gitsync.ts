@@ -3,6 +3,7 @@
 //   commitVersion() after approve / reject / notes / rollback: commits that one version file and pushes it
 //   commitFile()    the same for any one file under studio/structures/ (the CLI's work.json)
 //   commitLater()   notes saved while typing: one commit LATER_MS after the last change
+//   branchWork()    which structures a GitHub branch that isn't merged yet is changing (shown as "Revising")
 // Only files under studio/structures/ are ever committed here. Set STUDIO_GIT=off to turn it all off.
 // Git runs one command at a time (a queue), so a review made during a pull waits for it.
 import { execFile } from 'node:child_process';
@@ -53,12 +54,55 @@ async function pullNow(): Promise<GitResult> {
   return { ok: true, message: n ? `${n} new or updated structure file(s) from GitHub` : 'Updated from GitHub' };
 }
 
+// ---------------------------------------------------------------- work on other branches
+
+export interface BranchWork {
+  branch: string; // e.g. claude/project-thread-9yrjt2
+  since: string; // ISO date-time of the branch's last commit
+}
+
+/** Branches older than this are ignored (forgotten branches would otherwise say "Revising" forever). */
+const BRANCH_MAX_AGE_MS = 24 * 3600_000;
+let branchWorkCache = new Map<string, BranchWork>();
+
+/** Structure name -> the newest unmerged branch changing it. Updated after each pull (git pull fetches all branches). */
+export function branchWork(): Map<string, BranchWork> {
+  return branchWorkCache;
+}
+
+export async function scanBranches() {
+  const current = (await git('rev-parse', '--abbrev-ref', 'HEAD')).out;
+  const refs = await git('for-each-ref', '--format=%(refname:short) %(committerdate:unix)', 'refs/remotes/origin');
+  const found = new Map<string, BranchWork>();
+  for (const line of refs.out.split('\n')) {
+    const [ref, time] = line.split(' ');
+    if (!ref || ref === 'origin/HEAD' || ref === 'origin' || ref === `origin/${current}`) continue;
+    const when = Number(time) * 1000;
+    if (!when || Date.now() - when > BRANCH_MAX_AGE_MS) continue;
+    // what the branch changed since it split from ours (nothing once it is merged)
+    const diff = await git('diff', '--name-only', `HEAD...${ref}`, '--', 'studio/structures');
+    if (diff.code || !diff.out) continue;
+    for (const file of diff.out.split('\n')) {
+      const name = file.split('/')[2];
+      const prev = found.get(name);
+      if (name && (!prev || Date.parse(prev.since) < when)) {
+        found.set(name, { branch: ref.replace(/^origin\//, ''), since: new Date(when).toISOString() });
+      }
+    }
+  }
+  branchWorkCache = found;
+}
+
 /** Pulls at most once every 10 seconds (page reloads in a row reuse the last result). */
 export function pull(): Promise<GitResult> {
   if (!gitEnabled()) return Promise.resolve({ ok: true, message: '' });
   if (Date.now() - lastPull < 10_000) return Promise.resolve({ ok: true, message: '' });
   lastPull = Date.now();
-  return serial(pullNow);
+  return serial(async () => {
+    const r = await pullNow();
+    await scanBranches().catch(() => undefined);
+    return r;
+  });
 }
 
 /** Commits one version file (a review, or a rollback's new version) and pushes it. Nothing else is committed. */

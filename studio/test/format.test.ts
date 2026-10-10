@@ -111,3 +111,15 @@ test('levels: a family is every name_lN, sorted by level; notes-only reviews kee
   assert.equal(store.load('house', 1).meta.status, 'rejected');
   assert.equal(store.load('house', 1).meta.notes, 'too plain, add flowers');
 });
+
+test('a rejected structure that an unmerged branch is changing shows as revising', () => {
+  const store = new Store(fs.mkdtempSync(path.join(os.tmpdir(), 'studio-')));
+  store.saveNewVersion(sample());
+  store.setReview('tiny', 1, 'rejected', 'more detail');
+  assert.equal(store.summary('tiny').stage, 'queued');
+  store.branchWork = () => new Map([['tiny', { branch: 'claude/x', since: '2026-10-10T03:00:00.000Z' }]]);
+  assert.equal(store.summary('tiny').stage, 'revising');
+  assert.match(store.summary('tiny').work!.by, /claude\/x/);
+  store.setReview('tiny', 1, 'approved', '');
+  assert.equal(store.summary('tiny').stage, 'approved'); // a branch never changes a decided structure
+});

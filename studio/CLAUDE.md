@@ -38,7 +38,9 @@ The owner never types git commands for reviews (`src/server/gitsync.ts`):
 
 Each structure shows what happens next (`STAGES` in `src/format/structure.ts`, worked out in `Store.summary`):
 **Needs your review** (latest version pending), **Queued for revision** (latest rejected, nobody on it),
-**Revising** (latest rejected and `structures/<name>/work.json` says who is on it), **Approved**.
+**Revising** (latest rejected, and `structures/<name>/work.json` says who is on it, or a GitHub branch that isn't
+merged yet and had a commit in the last 24 h changes its files: `gitsync.branchWork`, scanned after each pull),
+**Approved**. So pushing a branch with the new version is enough for "Revising"; `work` shows it before that.
 - `npm run studio -- queue` lists the rejected structures with Carlton's notes: start every session with it (after a
   pull). `--all` also lists the ones waiting for his review.
 - Before revising one: `npm run studio -- work <name> --by <you> --note "plan"`. It writes `work.json`, commits and
