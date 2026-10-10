@@ -4,8 +4,8 @@
 Layout (11 wide x 13 deep, front z = 0): walls x 2..8, z 2..10 (7 x 9). Cobblestone base course, white terracotta
 (plaster) walls in a dark oak frame (corner posts and posts in the long walls), a spruce stair gable roof with dark
 oak eaves, spruce top plates and a slab ridge, one block of overhang all round, spruce plank gables.
-- Front: the door in the middle (spruce) with a step, a window on each side, and the red cross (bricks on white
-  plaster) in the gable overhang above the door, from level 1.
+- Front: the door in the middle (spruce) with a step, a window on each side, and the red cross (red wool on a white
+  wool field) in the gable overhang above the door, from level 1.
 - Sides: three windows each, one over every bed head; on the right, an open lean-to herb store under its own roof.
 - Inside (the ward, 5 x 7): three beds along each wall with their heads to the wall, a bedside table between them, an
   aisle down the middle. At the front: the healer's chest (left) and the dispensary table (right); at the back: the
@@ -52,16 +52,16 @@ def infirmary():
     windows = [(mid - 2, 2, z0), (mid + 2, 2, z0)] + [(x, 2, z) for z in beds for x in (x0, x1)] + [(mid - 2, 2, z1), (mid + 2, 2, z1)]
     for w in windows:
         s.remove(*w)
+    # the infirmary sign (Carlton: "add a red cross"): a red wool cross on a white field, set in the front gable overhang
+    # over the door (placed before the roof, so the white corners take the place of the top two corbels); it also
+    # closes the barge board under the ridge
+    for x, y in ((mid, top + 1), (mid - 1, top + 2), (mid, top + 2), (mid + 1, top + 2), (mid, top + 3)):
+        P(s, x, y, z0 - 1, 'red_wool')
+    for x, y in ((mid - 1, top + 1), (mid + 1, top + 1), (mid - 1, top + 3), (mid + 1, top + 3)):
+        P(s, x, y, z0 - 1, 'white_wool')
     # the hearth's chimney: a brick breast outside the back wall, a stack through the back overhang to the ridge
     chimney = [(mid, y, z1 + 1) for y in range(3, 9)]
     gable_roof(s, x0, x1, z0, z1, top, front=1, back=1, gable='spruce_planks', plates='spruce_log', skip=chimney)
-    # the infirmary sign (Carlton: "add a red cross"): a plaque in the front gable overhang, over the door, a red
-    # cross (bricks: red wool and red concrete are not builder-tested yet) on white plaster; it also closes the barge
-    # board under the ridge
-    for x, y in ((mid, top + 1), (mid, top + 2), (mid, top + 3), (mid - 1, top + 2), (mid + 1, top + 2)):
-        P(s, x, y, z0 - 1, 'bricks')
-    for x in (mid - 1, mid + 1):
-        P(s, x, top + 1, z0 - 1, 'white_terracotta')
     for x in (mid - 1, mid, mid + 1):
         for y in (0, 1, 2):
             P(s, x, y, z1 + 1, 'bricks')
@@ -100,6 +100,9 @@ def infirmary():
     for z in (5, 7):                                                                      # torches on the posts
         P(s, x0 + 1, 3, z, 'wall_torch', facing='east')
         P(s, x1 - 1, 3, z, 'wall_torch', facing='west')
+    P(s, 1, 0, z0, 'spruce_stairs', facing='east', **STAIR)                              # a bench by the front left
+    P(s, 1, 0, z0 + 1, 'spruce_stairs', facing='east', **STAIR)
+    P(s, 1, 0, z0 - 1, 'coarse_dirt'); P(s, 1, 1, z0 - 1, 'poppy')                        # a planter beside it
     # the herb store's contents
     P(s, x1 + 1, 1, 6, 'composter', level='3')
     P(s, x1 + 1, 1, 7, 'barrel', facing='up', open='false')
@@ -137,6 +140,11 @@ def infirmary():
     P(s, x1 + 1, 2, 7, 'brown_carpet')
     P(s, W - 1, 2, 8, 'flower_pot'); s.decorate(W - 1, 2, 8, 'potted_plant', plant='fern')
 
+    for z in beds:                                                                        # sills under the left windows
+        P(s, x0 - 1, 1, z, 'spruce_slab', **SLAB_TOP)
+    for x in (mid - 2, mid + 2):                                                          # and under the back windows
+        P(s, x, 1, z1 + 1, 'spruce_slab', **SLAB_TOP)
+
     s.at(3, 'flourish3')
     # the herb garden along the left side: coarse dirt beds with herbs and a stepping path
     for z in range(4, 10):
@@ -147,7 +155,7 @@ def infirmary():
         else:
             P(s, 0, 1, z, f)
     for x, z in ((0, 3), (0, 10)):
-        P(s, x, 0, z, 'spruce_fence'); P(s, x, 1, z, 'spruce_fence')
+        P(s, x, 0, z, 'spruce_fence'); P(s, x, 1, z, 'lantern', **STAND)          # lantern posts at the bed ends
     for x, z, plant in ((x0 + 1, z0 + 1, 'blue_orchid'), (mid - 1, z1 - 1, 'fern'), (mid + 1, z1 - 1, 'azure_bluet')):
         P(s, x, 2, z, 'flower_pot')                                                       # herb pots
         s.decorate(x, 2, z, 'potted_plant', plant=plant)
@@ -170,10 +178,10 @@ def infirmary():
 
 
 STRUCTURES = [dict(path='infirmary', name='Infirmary', tier=4, zone='inner', role='health', group='infirmary',
-                   terrain='ground_level', door='front', make=infirmary, changes='Carlton: "add a red cross". A red cross of blocks (bricks: red wool is not builder-tested '
-                           'yet) on white plaster in the front gable overhang over the door, on every level; the L2 '
-                           'banner moved to the lean-to post so it does not cover it.',
-                   description='Over budget: 448 blocks vs 285 (first build 379 vs 235). White plaster ward in a dark oak frame under a spruce gable roof, a red cross (bricks) in the front gable: six '
+                   terrain='ground_level', door='front', make=infirmary, changes='The red cross now reads as one: red wool on a white wool field in the front gable overhang '
+                           '(QC: the brick cross looked like chimney masonry); L1 gets a bench and a planter by the '
+                           'front, L2 sills under the side and back windows, L3 lanterns on the herb-bed end posts.',
+                   description='Over budget: 448 blocks vs 285 (first build 379 vs 235). White plaster ward in a dark oak frame under a spruce gable roof, a red wool cross on white in the front gable: six '
                                'beds (three on each side, heads to the wall, a window over each), bedside tables, a '
                                'hearth, herb barrels and shelves, a lean-to herb store; L2 adds the brewing stand and '
                                'cauldron, candles, lanterns, flower boxes, a door canopy and the banner; L3 a herb '

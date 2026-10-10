@@ -178,19 +178,22 @@ def quarry():
     P(s, 11, 1, 12, 'stone_bricks')
     s.decorate(11, 1, 4, 'minecart', note='a minecart of dressed stone on the track')
 
-    # the treadwheel crane: a wheel two blocks wide (x 15..16, centre z 11, y 3) on an axle between two posts, the
-    # 7-high mast (x 13) and the long spruce boom (x 9..17) over the track, a block of dressed stone on the chain
+    # the treadwheel crane: a wheel (x 15, centre z 11, y 3; a ring of planks rounded with stairs, fence spokes) on
+    # an axle between two posts, the 7-high mast (x 13) and the long spruce boom (x 9..17), a dressed block on the chain
     wz, wy = 11, 3
-    for x in (15, 16):
-        for dz, dy in ((-1, -2), (0, -2), (1, -2), (-1, 2), (0, 2), (1, 2), (-2, -1), (-2, 0), (-2, 1), (2, -1),
-                       (2, 0), (2, 1)):
-            P(s, x, wy + dy, wz + dz, 'spruce_planks')
-        for dz, dy in ((-1, 0), (1, 0), (0, -1), (0, 1)):   # spokes
-            P(s, x, wy + dy, wz + dz, 'spruce_fence')
-    for x in (14, 17):
+    for dz, dy in ((-1, -2), (0, -2), (1, -2), (-1, 2), (0, 2), (1, 2), (-2, -1), (-2, 0), (-2, 1), (2, -1), (2, 0),
+                   (2, 1)):
+        P(s, 15, wy + dy, wz + dz, 'stripped_spruce_log' if dz in (-2, 2) else 'spruce_planks',
+          **({'axis': 'y'} if dz in (-2, 2) else {}))
+    for dz, f in ((-2, 'south'), (2, 'north')):      # rounded corners: upside-down stairs on top, stairs below
+        P(s, 15, wy + 2, wz + dz, 'spruce_stairs', facing=f, **TOP)
+        P(s, 15, wy - 2, wz + dz, 'spruce_stairs', facing=f, **STAIR)
+    for dz, dy in ((-1, 0), (1, 0), (0, -1), (0, 1)):   # spokes
+        P(s, 15, wy + dy, wz + dz, 'spruce_fence')
+    for x in (14, 16):
         for y in (1, 2):
             P(s, x, y, wz, 'spruce_log', axis='y')
-    for x in (14, 15, 16, 17):
+    for x in (14, 15, 16):
         P(s, x, wy, wz, 'oak_log', axis='x')
     P(s, 15, 6, wz, 'chain', axis='y')               # the rope from the wheel up to the boom
     P(s, 13, 0, wz, 'stone_bricks')
@@ -243,7 +246,8 @@ def quarry():
                        (5, 1, 13, 'poppy'), (4, 1, 12, 'dandelion'), (7, 4, 14, 'poppy'), (9, 4, 14, 'leaves'),
                        (12, 4, 14, 'cornflower'), (16, 4, 14, 'leaves'), (8, 3, 15, 'dandelion'), (14, 3, 15, 'poppy'),
                        (11, 2, 16, 'leaves'), (6, 2, 16, 'azure_bluet')):
-        y = max(y, max((yy + 1 for (xx, yy, zz) in s.blocks if (xx, zz) == (x, z)), default=y))
+        if z >= 14:                                  # on the hill: on top of its grass
+            y = max(yy for (xx, yy, zz) in s.blocks if (xx, zz) == (x, z)) + 1
         P(s, x, y, z, 'oak_leaves', **LEAVES) if b == 'leaves' else P(s, x, y, z, b)
     connect(s)
     return s

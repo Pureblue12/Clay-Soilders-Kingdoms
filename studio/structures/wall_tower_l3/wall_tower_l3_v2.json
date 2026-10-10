@@ -1,0 +1,184 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "wall_tower_l3",
+  "version": 2,
+  "size": [7,13,7],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T05:36:13.841Z",
+    "description": "Wall tower, level 3 of 3: L2 plus flourish 3. Needs scaffolding: 13 tall (level 3 cone roof; levels 1 and 2 are 9 tall). Over budget: 227 blocks vs 160. Box 7 x 7 for the roof overhang: the tower stands at x 1..5, z 1..5. Square stone tower the wall walk runs through (stand at 5); a door on the town side and a stone stair up to the walk room and the archer platform on the roof. Not yet builder-tested: dark_oak_fence, iron_bars, moss_carpet, red_banner, red_wall_banner, vine. Decoration step adds: banner_pattern.",
+    "changes": "Quality check round 1: the wall walk enters the tower 2 wide from both sides (it was 1 wide from the west); the level 3 cone roof overhangs 1 block all round (the box is 1 wider on every side for it, so the tower front is at z 1).",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "batch3",
+      "tier3",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:chest[facing=west,type=single,waterlogged=false]",
+    "B": "minecraft:cobblestone",
+    "C": "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "D": "minecraft:dark_oak_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "E": "minecraft:hay_block[axis=y]",
+    "F": "minecraft:iron_bars[east=false,north=false,south=true,waterlogged=false,west=false]",
+    "G": "minecraft:iron_bars[east=false,north=true,south=true,waterlogged=false,west=false]",
+    "H": "minecraft:iron_bars[east=true,north=false,south=false,waterlogged=false,west=true]",
+    "I": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "J": "minecraft:moss_carpet",
+    "K": "minecraft:mossy_cobblestone",
+    "L": "minecraft:red_banner[rotation=8]",
+    "M": "minecraft:red_wall_banner[facing=south]",
+    "N": "minecraft:spruce_door[facing=north,half=lower,hinge=left,open=false,powered=false]",
+    "O": "minecraft:spruce_door[facing=north,half=upper,hinge=left,open=false,powered=false]",
+    "P": "minecraft:spruce_planks",
+    "Q": "minecraft:spruce_stairs[facing=east,half=bottom,shape=outer_left,waterlogged=false]",
+    "R": "minecraft:spruce_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "S": "minecraft:spruce_stairs[facing=north,half=bottom,shape=outer_left,waterlogged=false]",
+    "T": "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "U": "minecraft:spruce_stairs[facing=south,half=bottom,shape=outer_left,waterlogged=false]",
+    "V": "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "W": "minecraft:spruce_stairs[facing=west,half=bottom,shape=outer_left,waterlogged=false]",
+    "X": "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "Y": "minecraft:stone_brick_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "Z": "minecraft:stone_brick_stairs[facing=east,half=top,shape=outer_left,waterlogged=false]",
+    "a": "minecraft:stone_brick_stairs[facing=east,half=top,shape=straight,waterlogged=false]",
+    "b": "minecraft:stone_brick_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "c": "minecraft:stone_brick_stairs[facing=north,half=top,shape=outer_left,waterlogged=false]",
+    "d": "minecraft:stone_brick_stairs[facing=north,half=top,shape=straight,waterlogged=false]",
+    "e": "minecraft:stone_brick_stairs[facing=south,half=top,shape=outer_left,waterlogged=false]",
+    "f": "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "g": "minecraft:stone_brick_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "h": "minecraft:stone_brick_stairs[facing=west,half=top,shape=outer_left,waterlogged=false]",
+    "i": "minecraft:stone_brick_stairs[facing=west,half=top,shape=straight,waterlogged=false]",
+    "j": "minecraft:stone_bricks",
+    "k": "minecraft:vine[east=false,north=true,south=false,up=false,west=false]",
+    "l": "minecraft:wall_torch[facing=north]",
+    "m": "minecraft:wall_torch[facing=south]"
+  },
+  "layers": [
+    [
+      ".......",
+      ".KKBKB.",
+      ".BBBBK.",
+      ".KBBBB.",
+      ".BBBBB.",
+      ".KKKBB.",
+      ".#.C.E."
+    ],
+    [
+      ".......",
+      ".BjjjB.",
+      ".B#.AB.",
+      ".j...B.",
+      ".jg.#j.",
+      ".jBNjj.",
+      "..k.k.."
+    ],
+    [
+      ".......",
+      ".jjHjj.",
+      ".j...j.",
+      ".Gb..G.",
+      ".j...j.",
+      ".jjOjj.",
+      "..m.m.."
+    ],
+    [
+      ".......",
+      ".jBjjj.",
+      ".j...B.",
+      ".j.Y.j.",
+      ".j.l.j.",
+      ".jjjjj.",
+      "..k.k.."
+    ],
+    [
+      ".......",
+      ".jBBBj.",
+      ".BjjjB.",
+      ".B..YB.",
+      ".BjjjB.",
+      ".jBBBj.",
+      "...M..."
+    ],
+    [
+      ".......",
+      ".jjjjj.",
+      ".......",
+      ".......",
+      ".j.X.j.",
+      ".jBjjj.",
+      "......."
+    ],
+    [
+      ".......",
+      ".jjHjj.",
+      "...m...",
+      ".......",
+      ".FX..F.",
+      ".jjjjj.",
+      "......."
+    ],
+    [
+      ".......",
+      ".efffh.",
+      ".ajBji.",
+      ".aTjBi.",
+      ".a..ji.",
+      ".Zdddc.",
+      "......."
+    ],
+    [
+      ".......",
+      ".j.j.j.",
+      "..J.J..",
+      ".j.IAj.",
+      "....#..",
+      ".j.j.j.",
+      "......."
+    ],
+    [
+      "UVVVVVW",
+      "R.....X",
+      "R.....X",
+      "R.....X",
+      "R.....X",
+      "R.....X",
+      "QTTTTTS"
+    ],
+    [
+      ".......",
+      ".UVVVW.",
+      ".R...X.",
+      ".R.P.X.",
+      ".R...X.",
+      ".QTTTS.",
+      "......."
+    ],
+    [
+      ".......",
+      ".......",
+      "..UVW..",
+      "..RDX..",
+      "..QTS..",
+      ".......",
+      "......."
+    ],
+    [
+      ".......",
+      ".......",
+      ".......",
+      "...L...",
+      ".......",
+      ".......",
+      "......."
+    ]
+  ]
+}

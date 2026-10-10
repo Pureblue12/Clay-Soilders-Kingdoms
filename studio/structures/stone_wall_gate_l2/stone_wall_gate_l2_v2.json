@@ -1,0 +1,107 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "stone_wall_gate_l2",
+  "version": 2,
+  "size": [7,9,5],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T05:35:57.215Z",
+    "description": "Stone wall gate, level 2 of 3: L1 plus flourish 2. Over budget: 151 blocks vs 60. Its wall line is z 0..2 like the others, the towers also reach z 3. Two small crenellated towers and an arched opening 3 wide (no fence gate); the walk crosses over it and through the towers. Not yet builder-tested: red_wall_banner, stone_brick_wall. Decoration step adds: banner_pattern.",
+    "changes": "Quality check round 1: the merlon pattern changed across the whole set so modules tile end to end (a cobblestone-slab half merlon at x 0, merlons at x 2 and 4: neighbours now alternate high / low instead of two merlons side by side). The open notches at the front corners (arrow slits) are filled. The towers end in chequered stone merlons 2 above the wall merlons instead of flat spruce stair caps. A stone lintel at y 5 over the L3 portcullis bars. More detail from L1: a battered foot and a corbel course on the towers in line with the parapet corbels, the arch's front ring, lanterns in the arch; a watch lantern on each tower top from L2.",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "batch3",
+      "tier3",
+      "wall",
+      "gate"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:cobblestone",
+    "A": "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "B": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "C": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "D": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "E": "minecraft:mossy_cobblestone",
+    "F": "minecraft:red_wall_banner[facing=north]",
+    "G": "minecraft:red_wall_banner[facing=south]",
+    "H": "minecraft:stone_brick_stairs[facing=east,half=top,shape=straight,waterlogged=false]",
+    "I": "minecraft:stone_brick_stairs[facing=north,half=top,shape=straight,waterlogged=false]",
+    "J": "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "K": "minecraft:stone_brick_stairs[facing=west,half=top,shape=straight,waterlogged=false]",
+    "L": "minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,waterlogged=false,west=none]",
+    "M": "minecraft:stone_bricks",
+    "N": "minecraft:wall_torch[facing=east]",
+    "O": "minecraft:wall_torch[facing=north]",
+    "P": "minecraft:wall_torch[facing=west]"
+  },
+  "layers": [
+    [
+      "BB...BB",
+      "##...##",
+      "#E...EE",
+      "AA...AA",
+      "L.....L"
+    ],
+    [
+      "##N.PMM",
+      "##...MM",
+      "M#...#M",
+      "##...#M",
+      "C.....C"
+    ],
+    [
+      "MM...MM",
+      "MMKDHMM",
+      "MMKDH#M",
+      "M#...MM",
+      "......."
+    ],
+    [
+      "MMKFHMM",
+      "MMMMMMM",
+      "MMMMMMM",
+      "MM...#M",
+      ".G...G."
+    ],
+    [
+      "JJJJJJJ",
+      "#MM#MM#",
+      "MMM#MMM",
+      "II...II",
+      "......."
+    ],
+    [
+      "#MMMMMM",
+      ".......",
+      ".......",
+      "MM...MM",
+      "......."
+    ],
+    [
+      "MM.M.MM",
+      ".......",
+      ".O...O.",
+      "MM...MM",
+      "......."
+    ],
+    [
+      "MM...MM",
+      "MM...MM",
+      "MM...M#",
+      "M#...#M",
+      "......."
+    ],
+    [
+      "M.....M",
+      ".M...M.",
+      "MC...CM",
+      ".M...M.",
+      "......."
+    ]
+  ]
+}

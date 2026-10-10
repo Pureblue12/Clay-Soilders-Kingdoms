@@ -170,4 +170,14 @@ STRUCTURES = [dict(path='tree_farm', name='Tree farm', tier=6, zone='outer', rol
                            'dirt; caps on the corner piers; the two big oaks that ran into the shed are gone; the shed '
                            'is now a real 5 x 4 gabled shed with a door and windows; L3 adds a lean-to drying shed over '
                            'the log yard.',
-                   description='TBD')]
+                   description='Over budget: 323 blocks vs 102 (the lumber camp brief; the tree farm has no budget of '
+                               'its own), first build 254 vs 200. The lumber camp\'s tier-6 upgrade: an 11 x 11 fenced '
+                               'plantation (spruce fence on capped cobblestone corner piers, a timber gateway) with rows '
+                               'of young trees either side of a coarse dirt path, the woodcutter\'s 5 x 4 gabled shed at '
+                               'the back in the sawmill\'s look (dark oak frame, spruce walls, oak roof with dark oak '
+                               'eaves; oak door; chest, grindstone workstation, barrel) and a log yard. L1: plot, shed, '
+                               'four rows of young trees (log stem and leaf head), log pile, chopping block, composter. '
+                               'L2: oak and birch sapling rows between them, a lychgate roof with lanterns, lanterns on '
+                               'the piers, window shutters, a sawhorse, cauldron and barrel. L3: a lean-to drying shed '
+                               'over the log yard, a hanging sign (the Studio does not draw hanging signs), banners by '
+                               'the shed door, a shelf of potted saplings, flowers, moss, an axe in the block.')]
