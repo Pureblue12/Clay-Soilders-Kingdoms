@@ -60,6 +60,70 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:54:57.314Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "66 blocks, over the module budget of 60 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "detail",
+            "message": "17 % detail blocks: on the bare side, aim for 20 %+."
+          }
+        ],
+        "stats": {
+          "blocks": 66,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.16666666666666666,
+          "types": 6,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.5151515151515151
+          },
+          "height": 7,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Shell only: niches, corbels, battered footing; 17 % detail blocks.",
+          "depth": "Front has the corbelled overhang, footing and niches; inner (back, z2) face is still flat brick y0-y4.",
+          "roof": "Top = half merlon at x0, merlons x2/x4 on a corbelled parapet; tiles cleanly.",
+          "life": "Only mossy cobblestone; no plants or lights (fine for L1).",
+          "levels": "L1 base; L2 and L3 differ visibly."
+        },
+        "summary": "Level 1 straight wall module: battered cobblestone footing, niche row, corbelled crenellated parapet and a 2-wide walk; the reference profile the other pieces join to.",
+        "problems": [
+          "Inner (back, z2) face is flat brick y0-y4; a plinth course or a pair of buttress stairs would add depth (minor, not blocking).",
+          "Joins: this is the reference end profile (half merlon slab at x0 y6, merlons x2/x4, corbels y4, walk floor y4) and it continues stone_wall_corner v2 (corner merlon at its x2, then this half merlon). OK."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

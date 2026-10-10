@@ -75,6 +75,74 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:55:01.204Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 88,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: stone_brick_wall, red_wall_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "160 blocks, over the module budget of 60 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "variety",
+            "message": "stone_bricks is 57 % of the build: break it up with a second material."
+          }
+        ],
+        "stats": {
+          "blocks": 160,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.25,
+          "types": 9,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.575
+          },
+          "height": 9,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 1,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Banner in the arch (x3 y3 z0), banners on both tower backs (x1,x5 y3 z4), lantern posts at the back corners, watch lanterns on the tower tops.",
+          "materials": "57 % stone bricks; plain tower faces.",
+          "levels": "Banners and watch lanterns make it visibly the dressed gate."
+        },
+        "summary": "Level 2 dresses the gate: red banners in the arch and on the town side of both towers, lantern posts at the back corners and a watch lantern on each tower top.",
+        "problems": [
+          "Last round's tower-cap and height notes fixed (chequered merlons at y8); flat faces partly fixed (battered foot, corbel course).",
+          "Tower sides (x0/x6) and backs still mostly plain brick (minor).",
+          "Joins OK (same as L1)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

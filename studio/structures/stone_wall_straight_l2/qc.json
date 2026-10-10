@@ -59,6 +59,69 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:54:57.853Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 88,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: iron_bars, red_wall_banner, stone_brick_wall."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "73 blocks, over the module budget of 60 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 73,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.2465753424657534,
+          "types": 11,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.4657534246575342
+          },
+          "height": 7,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Barred arrow slits (x1,x3 y2 z1), red banner under the corbels (x2 y3 z0), torches on the merlons, lamp post on the walk.",
+          "depth": "Back face still flat.",
+          "levels": "L2 reads as a manned, lit wall (bars, banner, lights): clearly different from L1."
+        },
+        "summary": "Level 2 adds barred arrow slits, a red banner on the front and torches plus a lamp post on the walk, so the wall reads as manned and lit.",
+        "problems": [
+          "Inner (back) face still flat (minor).",
+          "Lamp post at x3 z2 y5-6 leaves the walk 1 wide (z1) there; fine for soldiers.",
+          "Joins: ends unchanged from L1, match corner v2 and the other modules. OK."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

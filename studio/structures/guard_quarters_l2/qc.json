@@ -1,0 +1,67 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "guard_quarters_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T08:55:04.538Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 70,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: brick_stairs, red_wall_banner."
+          }
+        ],
+        "stats": {
+          "blocks": 439,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.44419134396355353,
+          "types": 26,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.18223234624145787
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "levels": 1
+        },
+        "notes": {
+          "detail": "Capped at 1: L2 adds only props (two front banners, shutters, lanterns, carpets, a barrel, brick stairs at the chimney foot).",
+          "purpose": "The red banners over the door make it read as a guard house.",
+          "roof": "Steep, 1-block overhang, slab ridge and a dark oak eave row, but from the side it is one big flat spruce surface; no verge/barge trim or second tone.",
+          "levels": "The author's worry is right: from the iso and side views L2 is hard to tell from L1; only the two banners on the front gable stand out."
+        },
+        "summary": "L1 plus red banners on the jetty, side-window shutters, lanterns and red carpets; a decoration pass, not a new feature.",
+        "problems": [
+          "L2 adds no clearly visible new feature or job, only props: give it something that changes the silhouette, e.g. a covered porch/guard post with a bench at the door (z0..1), an outside stair to the loft, or a lookout window/balcony in the front gable.",
+          "Side walls still flat apart from the shutters (see L1).",
+          "Chimney still ends flush with the roof (x3 y7 z11).",
+          "Reachability: fine; only roof slopes are unreached, every room (mess room, bed loft) is reached."
+        ],
+        "views": [
+          "sheet",
+          "front"
+        ]
+      }
+    }
+  }
+}

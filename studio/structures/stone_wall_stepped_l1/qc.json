@@ -66,6 +66,64 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:54:58.951Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 83,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "72 blocks, over the module budget of 60 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 72,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.18055555555555555,
+          "types": 6,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.5277777777777778
+          },
+          "height": 8,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "artefacts": "Last round's corbel problem is fixed: corbels x2-x4 now at y5 z0 with air at y4, stepping with the parapet.",
+          "roof": "Half merlon x0 y6, crenel x1, raised parapet y6 x2-4 with merlons x2/x4 at y7.",
+          "shape": "The step gives the piece a second height.",
+          "depth": "Back face flat."
+        },
+        "summary": "Level 1 stepped wall module: the straight profile on the left half, rising 1 block from x2 via a stair (x2 z1-2 y5) with parapet and corbels stepping up with it.",
+        "problems": [
+          "Corbel fix confirmed: right end (x4) now equals the straight profile raised by 1 (corbel y5, parapet y6, merlon y7, walk floor y5); left end (x0) equals straight exactly, and so joins corner v2. OK.",
+          "Inner (back) face flat (minor)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

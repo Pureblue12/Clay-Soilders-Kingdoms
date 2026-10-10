@@ -52,6 +52,62 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:55:02.348Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 88,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "81 blocks, over the module budget of 60 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 81,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.19753086419753085,
+          "types": 6,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.48148148148148145
+          },
+          "height": 7,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "purpose": "Stone stair flight on the town side up to the walk: reads as the wall's access stair.",
+          "life": "None at L1."
+        },
+        "summary": "Level 1 stair module: the straight wall profile plus a supported stone stair flight on the town side (z3, x0 y0 up to x4 y4) to the walk.",
+        "problems": [
+          "Joins: z0-z2 identical to stone_wall_straight_l1 v2 at both ends, so it joins straight and corner v2. OK.",
+          "Reachability (qc_reach): 29/29 standing places reached; the flight reaches the walk at (4,5,2)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

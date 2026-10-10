@@ -59,6 +59,68 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:54:59.474Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 93,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: iron_bars, red_wall_banner, stone_brick_wall."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "79 blocks, over the module budget of 60 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 79,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.25316455696202533,
+          "types": 11,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.4810126582278481
+          },
+          "height": 8,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Barred slits, banner, merlon torches x2/x4 y7, lamp post on the low walk.",
+          "levels": "Same manned-and-lit step as straight L2: visible."
+        },
+        "summary": "Level 2 adds barred slits, a banner and torches, and the lamp post now stands on the low walk (x1 z2) away from the join.",
+        "problems": [
+          "Last round's notes fixed: corbels step with the parapet; lamp post moved off the right-hand join to x1 z2.",
+          "Inner (back) face flat (minor).",
+          "Joins OK at both ends."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

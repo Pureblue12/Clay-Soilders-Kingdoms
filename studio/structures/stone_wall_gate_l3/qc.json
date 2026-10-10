@@ -70,6 +70,68 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:55:01.811Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 95,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: stone_brick_wall, vine, red_wall_banner, iron_bars, moss_carpet, red_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "178 blocks, over the module budget of 60 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 178,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.3089887640449438,
+          "types": 15,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.5337078651685393
+          },
+          "height": 9,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "artefacts": "Last round's floating portcullis fixed: bars (x2-4 y3-4 z3) now hang from a stone lintel at y5 z3.",
+          "levels": "Portcullis + lintel, standing banner on the middle merlon, supplies (hay, barrel) and ivy: clearly the fortified level.",
+          "depth": "Portcullis and lintel add depth at the back; tower sides still plain."
+        },
+        "summary": "Level 3 fortifies the gate: an iron portcullis under a stone lintel on the town side, a standing banner over the arch, hay and a barrel by the towers and ivy.",
+        "problems": [
+          "Tower sides (x0/x6) still plain brick (minor).",
+          "Joins OK (same as L1); walk y5 still clear over the arch (moss carpets only)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

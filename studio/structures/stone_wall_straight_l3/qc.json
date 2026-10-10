@@ -59,6 +59,70 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:54:58.404Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: vine, iron_bars, red_wall_banner, moss_carpet, stone_brick_wall."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "82 blocks, over the module budget of 60 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 82,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.32926829268292684,
+          "types": 14,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.4146341463414634
+          },
+          "height": 7,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 2,
+          "scale": 2,
+          "levels": 1
+        },
+        "notes": {
+          "detail": "Capped at 1 by Carlton's levels rule: L3 adds only weathering and one prop.",
+          "levels": "L3 = L2 plus vines on the front, moss carpets and one arrow barrel: weathering and a prop, no new feature or job.",
+          "life": "Vines, moss, lights."
+        },
+        "summary": "Level 3 is L2 weathered: ivy on the front face, moss on the walk and an arrow barrel at x1 z2 y5.",
+        "problems": [
+          "L3 adds only ivy, moss carpets and one barrel over L2: no clearly visible new feature or job (Carlton's note 2). Give L3 one real addition, e.g. a timber hoarding or brattice over a crenel, a brazier on a merlon, or a shield/weapon rack along the back of the walk.",
+          "Inner (back) face still flat (minor).",
+          "Barrel (x1 z2) and post (x3 z2) leave the walk 1 wide at those spots; fine.",
+          "Joins: ends unchanged, match corner v2. OK."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

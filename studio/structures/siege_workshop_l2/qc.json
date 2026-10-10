@@ -1,0 +1,74 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "siege_workshop_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T08:55:06.177Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 60,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: red_wall_banner, cauldron."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "438 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 438,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4680365296803653,
+          "types": 25,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.182648401826484
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 1,
+          "depth": 2,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 1,
+          "scale": 1,
+          "levels": 1
+        },
+        "notes": {
+          "detail": "Capped at 1: the new A-frame and throwing arm are inside, out of sight; outside only two banners and lean-to shutters are new.",
+          "purpose": "Catapult is almost invisible: hidden under the low roof in every iso, and from the front only a pale block mass shows behind the dark beam at (3..7,4,1).",
+          "levels": "The author's worry is right: L2 is indistinguishable from L1 in iso, back and right views; only two red banners at the front show.",
+          "scale": "The A-frame (fences at x4/x6 z6) and arm (stairs at (5,4,7),(5,5,8), cauldron at (5,6,9)) are in proportion, but nobody can see them."
+        },
+        "summary": "L1 plus the catapult's A-frame, axle, throwing arm and cauldron bucket, front banners and lean-to shutters; the new feature is hidden inside the shed.",
+        "problems": [
+          "The L2 feature (catapult A-frame and arm) cannot be seen from outside: move or show it (front opening, lowered front beam at y4 z1, an open side bay without the lean-to in front of it) so L2 tells apart from L1 at a glance.",
+          "Floating blocks: oak slabs at (6,2,2) and (7,2,2) have nothing under them (y1 is air there); add the bench legs or remove them.",
+          "Back gable has a 1-block hole at (5,5,11) (row 'VTT.TTW'); fill it or make it a clear vent (trapdoor/fence).",
+          "Front gable is completely open (y5..6 at z1); for a shed that is acceptable, but give it barge boards or a partial infill so it looks finished.",
+          "Lean-to roof (spruce slabs at y3, x9..12 z2..10) is dead flat and reads as a deck; slope it with stairs down to x12.",
+          "Reachability: fine; unreached places are roof slopes, the flat lean-to roof and catapult/bench tops, no room or floor is cut off."
+        ],
+        "views": [
+          "sheet",
+          "front"
+        ]
+      }
+    }
+  }
+}

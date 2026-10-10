@@ -335,6 +335,27 @@
     "round": 1,
     "checkedAt": "2026-10-10T05:10:18.744Z"
   },
+  "guard_quarters_l1": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 68,
+    "round": 1,
+    "checkedAt": "2026-10-10T08:55:03.998Z"
+  },
+  "guard_quarters_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 70,
+    "round": 1,
+    "checkedAt": "2026-10-10T08:55:04.538Z"
+  },
+  "guard_quarters_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 80,
+    "round": 1,
+    "checkedAt": "2026-10-10T08:55:05.090Z"
+  },
   "hitching_post_l1": {
     "version": 3,
     "verdict": "pass",
@@ -699,6 +720,27 @@
     "round": 2,
     "checkedAt": "2026-10-10T03:45:16.414Z"
   },
+  "siege_workshop_l1": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 63,
+    "round": 1,
+    "checkedAt": "2026-10-10T08:55:05.662Z"
+  },
+  "siege_workshop_l2": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 60,
+    "round": 1,
+    "checkedAt": "2026-10-10T08:55:06.177Z"
+  },
+  "siege_workshop_l3": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 60,
+    "round": 1,
+    "checkedAt": "2026-10-10T08:55:06.737Z"
+  },
   "signpost_l1": {
     "version": 3,
     "verdict": "pass",
@@ -777,88 +819,88 @@
     "checkedAt": "2026-10-10T08:43:53.675Z"
   },
   "stone_wall_gate_l1": {
-    "version": 1,
-    "verdict": "revise",
-    "score": 53,
-    "round": 1,
-    "checkedAt": "2026-10-10T04:58:19.363Z"
+    "version": 2,
+    "verdict": "pass",
+    "score": 80,
+    "round": 2,
+    "checkedAt": "2026-10-10T08:55:00.627Z"
   },
   "stone_wall_gate_l2": {
-    "version": 1,
-    "verdict": "revise",
-    "score": 61,
-    "round": 1,
-    "checkedAt": "2026-10-10T04:58:19.924Z"
+    "version": 2,
+    "verdict": "pass",
+    "score": 88,
+    "round": 2,
+    "checkedAt": "2026-10-10T08:55:01.204Z"
   },
   "stone_wall_gate_l3": {
-    "version": 1,
+    "version": 2,
     "verdict": "pass",
-    "score": 72,
+    "score": 95,
     "round": 1,
-    "checkedAt": "2026-10-10T04:58:20.574Z"
+    "checkedAt": "2026-10-10T08:55:01.811Z"
   },
   "stone_wall_stairs_l1": {
-    "version": 1,
+    "version": 2,
     "verdict": "pass",
-    "score": 81,
+    "score": 88,
     "round": 1,
-    "checkedAt": "2026-10-10T04:58:22.951Z"
+    "checkedAt": "2026-10-10T08:55:02.348Z"
   },
   "stone_wall_stairs_l2": {
-    "version": 1,
+    "version": 2,
+    "verdict": "pass",
+    "score": 98,
+    "round": 1,
+    "checkedAt": "2026-10-10T08:55:02.903Z"
+  },
+  "stone_wall_stairs_l3": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 100,
+    "round": 1,
+    "checkedAt": "2026-10-10T08:55:03.467Z"
+  },
+  "stone_wall_stepped_l1": {
+    "version": 2,
     "verdict": "pass",
     "score": 83,
     "round": 1,
-    "checkedAt": "2026-10-10T04:58:23.527Z"
+    "checkedAt": "2026-10-10T08:54:58.951Z"
   },
-  "stone_wall_stairs_l3": {
-    "version": 1,
+  "stone_wall_stepped_l2": {
+    "version": 2,
     "verdict": "pass",
-    "score": 94,
+    "score": 93,
     "round": 1,
-    "checkedAt": "2026-10-10T04:58:24.167Z"
+    "checkedAt": "2026-10-10T08:54:59.474Z"
   },
-  "stone_wall_stepped_l1": {
-    "version": 1,
+  "stone_wall_stepped_l3": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 83,
+    "round": 1,
+    "checkedAt": "2026-10-10T08:55:00.030Z"
+  },
+  "stone_wall_straight_l1": {
+    "version": 2,
     "verdict": "pass",
     "score": 78,
     "round": 1,
-    "checkedAt": "2026-10-10T04:58:24.778Z"
-  },
-  "stone_wall_stepped_l2": {
-    "version": 1,
-    "verdict": "pass",
-    "score": 89,
-    "round": 1,
-    "checkedAt": "2026-10-10T04:58:25.391Z"
-  },
-  "stone_wall_stepped_l3": {
-    "version": 1,
-    "verdict": "pass",
-    "score": 92,
-    "round": 1,
-    "checkedAt": "2026-10-10T04:58:25.972Z"
-  },
-  "stone_wall_straight_l1": {
-    "version": 1,
-    "verdict": "pass",
-    "score": 72,
-    "round": 1,
-    "checkedAt": "2026-10-10T04:58:26.557Z"
+    "checkedAt": "2026-10-10T08:54:57.314Z"
   },
   "stone_wall_straight_l2": {
-    "version": 1,
+    "version": 2,
     "verdict": "pass",
-    "score": 83,
+    "score": 88,
     "round": 1,
-    "checkedAt": "2026-10-10T04:58:27.116Z"
+    "checkedAt": "2026-10-10T08:54:57.853Z"
   },
   "stone_wall_straight_l3": {
-    "version": 1,
+    "version": 2,
     "verdict": "pass",
-    "score": 86,
+    "score": 78,
     "round": 1,
-    "checkedAt": "2026-10-10T04:58:27.670Z"
+    "checkedAt": "2026-10-10T08:54:58.404Z"
   },
   "stonemason_l1": {
     "version": 3,

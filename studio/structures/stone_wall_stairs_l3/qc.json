@@ -63,6 +63,67 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:55:03.467Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 100,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: stone_brick_wall, vine, iron_bars, red_wall_banner, moss_carpet."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "99 blocks, over the module budget of 60 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 99,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.3434343434343434,
+          "types": 16,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.3939393939393939
+          },
+          "height": 7,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "artefacts": "Last round's crenel slab at (3,6,0) is removed: crenel rhythm now matches every module.",
+          "levels": "A supply corner at the foot of the stair (hay, stacked barrels, flower pot) plus ivy: a visible new use."
+        },
+        "summary": "Level 3 adds a supply corner at the foot of the stair (hay, stacked barrels, a pot), ivy on the front and moss on the walk.",
+        "problems": [
+          "Joins OK (z0-z2 = straight).",
+          "Reachability (qc_reach): 30/30 standing places reached; entry to the flight from the west (x-1, z3) stays open."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

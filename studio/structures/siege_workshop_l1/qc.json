@@ -1,0 +1,76 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "siege_workshop_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T08:55:05.662Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 63,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "417 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 417,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.44844124700239807,
+          "types": 21,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.18705035971223022
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 1,
+          "depth": 2,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 0,
+          "scale": 1,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Workbench row, chests, crafting table, log piles, but the catapult is only a flat 1-high log frame with trapdoor wheels.",
+          "artefacts": "Two floating slabs and a gable hole.",
+          "purpose": "Reads as a barn/house with an open front; nothing visible says siege engines. Catapult is almost invisible: hidden under the low roof in every iso, and from the front only a pale block mass shows behind the dark beam at (3..7,4,1).",
+          "depth": "Posts, open bays, plinth corners and lean-to give good shadows.",
+          "roof": "Steep with overhang and slab ridge, but the front gable is open, the back gable has a hole and the lean-to roof is flat.",
+          "materials": "Four woods (oak, spruce, dark oak, stripped oak) with little stone; very brown overall.",
+          "shape": "Main shed with a side lean-to and log piles: not a box.",
+          "life": "No plants, no outside light.",
+          "scale": "The L1 catapult is a 1-high flat frame that reads as a floor pattern, not an engine."
+        },
+        "summary": "Open-bay timber shed with a deck, a half-built catapult base, workbench row and a tool lean-to; the catapult itself does not show.",
+        "problems": [
+          "Catapult is almost invisible: hidden under the low roof in every iso, and from the front only a pale block mass shows behind the dark beam at (3..7,4,1). Make it visible: put the catapult under the open front gable (z1..4) and raise or remove the front beam, or let a part of it stand out on a front apron.",
+          "Floating blocks: oak slabs at (6,2,2) and (7,2,2) have nothing under them (y1 is air there); add the bench legs or remove them.",
+          "Back gable has a 1-block hole at (5,5,11) (row 'VTT.TTW'); fill it or make it a clear vent (trapdoor/fence).",
+          "Front gable is completely open (y5..6 at z1); for a shed that is acceptable, but give it barge boards or a partial infill so it looks finished.",
+          "Lean-to roof (spruce slabs at y3, x9..12 z2..10) is dead flat and reads as a deck; slope it with stairs down to x12.",
+          "No life at all: add a lantern at the front, hay or plants at the base.",
+          "Reachability: fine; unreached places are roof slopes, the flat lean-to roof and catapult/bench tops, no room or floor is cut off."
+        ],
+        "views": [
+          "sheet",
+          "front",
+          "floor_top"
+        ]
+      }
+    }
+  }
+}

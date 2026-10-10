@@ -1,0 +1,76 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "siege_workshop_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T08:55:06.737Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 60,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: red_wall_banner, cauldron."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "460 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 460,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.48043478260869565,
+          "types": 30,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.17391304347826086
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 1,
+          "depth": 2,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 1,
+          "scale": 1,
+          "levels": 1
+        },
+        "notes": {
+          "detail": "Adds lanterns on chains, barrels and a ram frame, still sparse outside.",
+          "purpose": "The battering ram doesn't read as one: Catapult is almost invisible: hidden under the low roof in every iso, and from the front only a pale block mass shows behind the dark beam at (3..7,4,1).",
+          "scale": "Ram is 2 blocks of dark oak log (0,1,9..10) hung from a spruce beam, pushed against the west wall outside the eave; it reads as a stick on the wall, not a ram in a frame.",
+          "levels": "L3 is barely different from L2 in iso: a barrel stack at the front corner and a thin frame on the back side."
+        },
+        "summary": "L2 plus a small battering ram frame on the west side, lanterns on chains and stacked barrels; the ram is too small and tucked away to read.",
+        "problems": [
+          "Battering ram at x0 z8..11 is too short (2-block ram) and squeezed against the wall outside the eave; make it a proper 4-5 block ram with a head, in its own A-frame shed or out front, so L3 reads at a glance.",
+          "Floating blocks: oak slabs at (6,2,2) and (7,2,2) have nothing under them (y1 is air there); add the bench legs or remove them.",
+          "Back gable has a 1-block hole at (5,5,11) (row 'VTT.TTW'); fill it or make it a clear vent (trapdoor/fence).",
+          "Front gable is completely open (y5..6 at z1); for a shed that is acceptable, but give it barge boards or a partial infill so it looks finished.",
+          "Lean-to roof (spruce slabs at y3, x9..12 z2..10) is dead flat and reads as a deck; slope it with stairs down to x12.",
+          "Catapult still hidden (see L1/L2).",
+          "Reachability: fine; unreached places are roof slopes, the flat lean-to roof and catapult/bench tops, no room or floor is cut off."
+        ],
+        "views": [
+          "sheet",
+          "iso_back",
+          "front"
+        ]
+      }
+    }
+  }
+}

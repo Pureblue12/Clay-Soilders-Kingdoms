@@ -1,0 +1,69 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "guard_quarters_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T08:55:05.090Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 80,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: stone_brick_wall, target, brick_stairs, vine, carved_pumpkin, red_wall_banner."
+          }
+        ],
+        "stats": {
+          "blocks": 461,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.46637744034707157,
+          "types": 33,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.17787418655097614
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Drill corner (straw dummy, target, hay, bench, barrel), lamp post, vines, bush and a smoking chimney: now well dressed.",
+          "artefacts": "The dummy's face looks into the house wall.",
+          "life": "Vines, a bush, a lamp post and chimney smoke.",
+          "levels": "Clear new job: the drill corner on the east side changes the look from every view."
+        },
+        "summary": "L2 plus a drill corner with a straw dummy, target and bench on the east side, a lamp post, vines and a campfire on the chimney; a clear step up.",
+        "problems": [
+          "Straw dummy carved_pumpkin at (9,2,4) faces west into the house wall one block away; turn it to facing=east so it faces the yard/bench.",
+          "Drill corner is squeezed into the 2-block strip x9..10 against the wall; it reads as a pile of props. Spread it out (fence the yard, keep the target opposite the dummy) if the footprint allows.",
+          "Campfire on the chimney top (3,8,11) sits at ridge height and reads as an odd orange lump in the iso; fine if the chimney is raised a block as asked for L1.",
+          "Flat side walls and one-tone roof as in L1.",
+          "Reachability: fine; only roof slopes are unreached, every room (mess room, bed loft) is reached."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "right"
+        ]
+      }
+    }
+  }
+}

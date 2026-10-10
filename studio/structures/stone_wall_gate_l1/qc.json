@@ -79,6 +79,71 @@
           "iso"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T08:55:00.627Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 80,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "151 blocks, over the module budget of 60 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "variety",
+            "message": "stone_bricks is 61 % of the build: break it up with a second material."
+          }
+        ],
+        "stats": {
+          "blocks": 151,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.2052980132450331,
+          "types": 7,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.609271523178808
+          },
+          "height": 9,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 1,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "artefacts": "Last round's open corner notches are filled.",
+          "roof": "Towers now end in chequered merlons at y8 (2 above the wall merlons, roof y7) instead of flat spruce stair caps: fixed.",
+          "materials": "61 % stone bricks: big plain tower faces, only a few cobble patches.",
+          "depth": "Battered foot and a corbel course in line with the parapet now; tower sides and backs still flat.",
+          "life": "Lanterns hanging in the arch, torches in the opening."
+        },
+        "summary": "Level 1 gate: two crenellated towers either side of a 3-wide arched opening with lanterns, the walk crossing over the arch and through both towers.",
+        "problems": [
+          "Tower faces are mostly plain stone brick (61 %); more cobble/mossy patches or a string course on the tower sides would break them up (minor).",
+          "Inside the passage the clear height is 2 (y0-1 at z1-z2 under the arch stairs and lanterns at y2): fine for soldiers and players.",
+          "Joins: walk floor y4 / stand y5 (z1-2), corbel course y4 z0 and footing stairs y0 z0 match stone_wall_straight v2; the open tower sides at x0/x6 y5-6 are the walk entries. OK. The walk has no stair here (reached from a neighbouring piece), fine for a module."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

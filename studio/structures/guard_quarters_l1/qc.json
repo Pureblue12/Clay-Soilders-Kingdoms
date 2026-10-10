@@ -1,0 +1,66 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "guard_quarters_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T08:55:03.998Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 68,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 415,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.41204819277108434,
+          "types": 23,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.1927710843373494
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 1,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Interior is good (long table, hearth, fence weapon rack, 8 beds in the loft) but the outside is bare: no shutters, sills, flower boxes or outside light.",
+          "purpose": "From outside it reads as a generic stone cottage; nothing says barracks until L2/L3.",
+          "depth": "Side walls are flat stone between the corner logs; floor/plinth flush with the wall, no mid posts or sills.",
+          "roof": "Steep, 1-block overhang, slab ridge and a dark oak eave row, but from the side it is one big flat spruce surface; no verge/barge trim or second tone.",
+          "shape": "Plain box with a front jetty, porch and back chimney.",
+          "life": "Nothing living, no outside lantern.",
+          "levels": "Base level; see L2 for the weak step to L2."
+        },
+        "summary": "Compact stone barracks (7 x 9) with a mess room, hearth, weapon rack and 8 beds in the roof loft; the shell is sound but plain outside.",
+        "problems": [
+          "Outside is bare: add window sills/shutters or flower boxes on the long sides (windows at x1 z4, x1 z8, x7 z8, y2) and a light by the door.",
+          "Side walls are flat: add a log post or sill line midway along x1 and x7 (z6) or step the cobble plinth out by one.",
+          "Chimney (bricks at x3 z11) stops at y7, flush with the roof slope; let it rise one or two blocks above the roof so it reads as a chimney.",
+          "Roof is one flat spruce colour from the sides: add a dark oak verge/barge trim on the gables or a contrasting ridge.",
+          "Reachability: fine; only roof slopes are unreached, every room (mess room, bed loft) is reached."
+        ],
+        "views": [
+          "sheet",
+          "front",
+          "right"
+        ]
+      }
+    }
+  }
+}
