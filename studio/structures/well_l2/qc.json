@@ -1,0 +1,170 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "well_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T03:14:00.048Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 25,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "too-small",
+            "message": "Only 26 blocks: too bare for a common (at least 50). Carlton wants more detail, not less."
+          }
+        ],
+        "stats": {
+          "blocks": 26,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.6923076923076923,
+          "types": 7,
+          "dominant": {
+            "name": "oak_slab",
+            "share": 0.34615384615384615
+          },
+          "height": 4,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 0,
+          "purpose": 1,
+          "depth": 0,
+          "roof": 0,
+          "materials": 1,
+          "shape": 0,
+          "life": 1,
+          "scale": 1,
+          "grandeur": 0
+        },
+        "notes": {
+          "artefacts": "cobblestone_wall posts without properties render as '?'"
+        },
+        "summary": "Well level 2: a 3 x 3 cobblestone ring with a slab lid; too small and plain, and the wall posts show as placeholder blocks.",
+        "problems": [
+          "Far too small and bare for the kingdom's water source (23 to 28 blocks): build a 5 x 5 well with a raised two-course stone basin, posts, a windlass beam with a rope or chain and a proper roof.",
+          "The cobblestone wall posts have no connection properties and show as \"?\" placeholder blocks; use log posts instead.",
+          "The flat oak slab lid reads as a box: give it a steep gable roof with dark eaves and ridge.",
+          "Give each level its own extras (a trough and a bucket barrel at level 2, bushes, flowers and moss at level 3)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:15:25.164Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 2,
+      "score": 67,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cauldron."
+          }
+        ],
+        "stats": {
+          "blocks": 58,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5172413793103449,
+          "types": 12,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.2413793103448276
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 1,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "steep and well trimmed, but far too big for the small basin"
+        },
+        "summary": "Well level 2: now a real well with posts, windlass and a steep roof, but the roof dwarfs the small 3 x 3 basin.",
+        "problems": [
+          "The roof is two blocks wider than the 3 x 3 basin on every side, so the well looks top-heavy (a mushroom): widen the basin to 5 x 5 under the same kind of roof.",
+          "Level 1 has no life at all; fine for a first level, but the levels above should keep adding plants and props."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:16:09.879Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 3,
+      "score": 75,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cauldron."
+          }
+        ],
+        "stats": {
+          "blocks": 103,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.49514563106796117,
+          "types": 12,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.27184466019417475
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "scale": 2,
+          "grandeur": 1,
+          "detail": 1,
+          "life": 1
+        },
+        "summary": "Well level 2: the well plus a drinking trough, a bucket barrel, flower pots and a lantern under the gable.",
+        "problems": [
+          "Bushes or flowers at the base would add life.",
+          "The full dark plank ridge reads a little heavy."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

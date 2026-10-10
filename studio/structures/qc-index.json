@@ -61,5 +61,26 @@
     "score": 75,
     "round": 3,
     "checkedAt": "2026-10-10T03:01:28.990Z"
+  },
+  "well_l1": {
+    "version": 3,
+    "verdict": "pass",
+    "score": 72,
+    "round": 3,
+    "checkedAt": "2026-10-10T03:16:09.355Z"
+  },
+  "well_l2": {
+    "version": 3,
+    "verdict": "pass",
+    "score": 75,
+    "round": 3,
+    "checkedAt": "2026-10-10T03:16:09.879Z"
+  },
+  "well_l3": {
+    "version": 3,
+    "verdict": "pass",
+    "score": 86,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:16:10.489Z"
   }
 }

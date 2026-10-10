@@ -1,0 +1,110 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "well_l1",
+  "version": 3,
+  "size": [7,8,7],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude-qc",
+    "created": "2026-10-10T03:15:32.534Z",
+    "description": "Well, level 1 of 3: shell and fittings (what soldiers build first). Stone well: two-course cobblestone basin, dark oak posts and windlass beam with a chain, steep spruce gable roof; 5 x 5 basin under a 7 x 7 roof, water by the decoration step. Decoration step adds: water.",
+    "changes": "Quality check round 3: basin widened to 5 x 5 round a 3 x 3 pool under a 7 x 7 roof (the small basin looked top-heavy); posts, windlass and extras moved to match",
+    "parent": 2,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier1",
+      "core",
+      "water"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:chain[axis=y]",
+    "A": "minecraft:cobblestone",
+    "B": "minecraft:dark_oak_log[axis=x]",
+    "C": "minecraft:dark_oak_log[axis=y]",
+    "D": "minecraft:dark_oak_planks",
+    "E": "minecraft:dark_oak_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "F": "minecraft:dark_oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "G": "minecraft:mossy_cobblestone",
+    "H": "minecraft:oak_fence[east=false,north=false,south=false,waterlogged=false,west=true]",
+    "I": "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "J": "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]"
+  },
+  "layers": [
+    [
+      ".......",
+      ".AGAAA.",
+      ".A...A.",
+      ".A...A.",
+      ".A...A.",
+      ".AAAAA.",
+      "......."
+    ],
+    [
+      ".......",
+      ".AAAAA.",
+      ".A...G.",
+      ".A...A.",
+      ".G...A.",
+      ".AAAGA.",
+      "......."
+    ],
+    [
+      ".......",
+      ".......",
+      ".......",
+      ".C...C.",
+      ".......",
+      ".......",
+      "......."
+    ],
+    [
+      ".......",
+      ".......",
+      ".......",
+      ".C.#.C.",
+      ".......",
+      ".......",
+      "......."
+    ],
+    [
+      "FFFFFFF",
+      ".......",
+      ".......",
+      ".C.#.C.",
+      ".......",
+      ".......",
+      "EEEEEEE"
+    ],
+    [
+      ".......",
+      "JJJJJJJ",
+      ".......",
+      ".C.#.CH",
+      ".......",
+      "IIIIIII",
+      "......."
+    ],
+    [
+      ".......",
+      ".......",
+      "JJJJJJJ",
+      ".BBBBB.",
+      "IIIIIII",
+      ".......",
+      "......."
+    ],
+    [
+      ".......",
+      ".......",
+      ".......",
+      "DDDDDDD",
+      ".......",
+      ".......",
+      "......."
+    ]
+  ]
+}
