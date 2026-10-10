@@ -1,12 +1,14 @@
-"""Barracks, tier 3 (docs/STRUCTURES.md): a long stone and timber house where 6 soldiers sleep.
+"""Barracks, tier 3 (docs/STRUCTURES.md): a stone and timber house where 4 soldiers sleep.
 
-Plan (box x 0..8, z 0..13; z = 0 is the front): the house is 7 x 11 (x 1..7, z 2..12) on a cobblestone plinth; walls
-are a cobblestone course with white plaster above in a dark oak frame (posts at the corners and every 3 to 4), a dark
-oak top plate, a spruce gable roof with dark oak eaves overhanging 1 all round (z 1 and z 13, x 0 and x 8). The door
+Plan (box x 0..8, z 0..10; z = 0 is the front): the house is 7 x 8 (x 1..7, z 2..9) on a cobblestone plinth; walls
+are a cobblestone course with white plaster above in a dark oak frame (posts at the corners, every 3 to 4 on the long
+walls and beside the door and back window), a dark oak top plate, half-timbered gables, a spruce gable roof with dark
+oak eaves, dark oak barge boards on the gable overhangs, a dark oak ridge with spruce slabs, and upside-down stairs and
+a ridge-beam end under each gable overhang. Every window has spruce shutters (and a sill on the long walls); the door
 is in the middle of the front with a step; the training dummy (the signature) stands beside it.
-Inside (x 2..6, z 3..11), an aisle down the middle (x 4) from the door to the hearth: three beds on each side with
-their heads to the long walls and footlockers between them; by the door the arms store (chest, barrels); at the back
-the hearth under a brick chimney, a table with stools, and a weapon shelf.
+Inside (x 2..6, z 3..8), an aisle down the middle (x 4) from the door to the hearth: two beds on each side with their
+heads to the long walls and a footlocker between them; by the door the arms store (chest, barrel); at the back the
+hearth under a brick chimney, a grindstone, a table with stools and a weapon shelf.
 """
 from make_batch1_structures import Structure
 from revise1.blockconn import connect, noise, put_id
@@ -177,7 +179,17 @@ def barracks():
 
 
 STRUCTURES = [dict(path='barracks', name='Barracks', tier=3, zone='inner', role='military', group='barracks',
-                   terrain='skirt', door='front', changes='First version.', make=barracks,
-                   description='Over budget: 439 blocks vs 290 (first build 388 vs 245). Long stone and timber house (7 x 11, spruce gable roof): six beds with footlockers along '
-                               'a centre aisle, an arms store by the door, a hearth under a brick chimney, a table and a '
-                               'weapon shelf at the back; the training dummy stands at the door.')]
+                   terrain='skirt', door='front', make=barracks,
+                   changes='Carlton: "bloated, slim down and add more detail"; quality check round 1. Slimmed from 7 x 11 '
+                           'to 7 x 8 (4 beds, 344 blocks at L1 instead of 388). Half-timbered gables (plaster in a dark '
+                           'oak frame), posts beside the door and back window, a window in the back wall, shutters on '
+                           'every window and sills from L1, dark oak barge boards and ridge so the roof is two colours, '
+                           'upside-down stairs and a beam end under the gable overhangs, leaf bushes and poppies from L1, '
+                           'a grindstone inside. L2: trapdoor-faced planters with flowers instead of dirt cubes, lanterns '
+                           'under both gables, a duty-roster sign. L3: log pile, spear rack, barrel, ivy on the corner '
+                           'posts, flowers at the back.',
+                   description='Over budget from level 2: 379 blocks vs 350 (first build 344). Stone and timber house '
+                               '(7 x 8, half-timbered gables, spruce and dark oak roof): four beds and a footlocker along '
+                               'a centre aisle, an arms store by the door, a hearth under a brick chimney, a grindstone, a '
+                               'table and a weapon shelf at the back; shutters on every window, planters at the front, '
+                               'the training dummy stands at the door.')]

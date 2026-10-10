@@ -241,15 +241,13 @@ def keep():
         s.put(x, DECK - 1, z, 'lantern', hanging='true', waterlogged='false')
 
     # ---------------------------------------------------------------- level 1 polish (v6, KNOWN-OK blocks only)
-    # a belt course of upside-down stairs at the upper floor line all round (the upper windows' sills); on the back only
-    # beside the great hall of level 2
+    # a belt course of upside-down stairs at the upper floor line on the front and sides (the upper windows' sills; the
+    # back is the great hall's wall from level 2 on)
     for z in range(KZ0, KZ1 + 1):
         s.put(K0 - 1, UPPER, z, 'stone_brick_stairs', facing='east', **TOP)
         s.put(K1 + 1, UPPER, z, 'stone_brick_stairs', facing='west', **TOP)
     for x in range(K0, K1 + 1):
         s.put(x, UPPER, KZ0 - 1, 'stone_brick_stairs', facing='south', **TOP)
-        if not HX0 <= x <= HX1:
-            s.put(x, UPPER, KZ1 + 1, 'stone_brick_stairs', facing='north', **TOP)
 
     def shutters(x, z, along, facing, ys):
         """Open spruce trapdoors flat against the wall either side of a window (facing away from the wall)."""
@@ -264,7 +262,7 @@ def keep():
     shutters(K1 + 1, 15, 'z', 'east', (2, 3, 6, 7))
     # the doors: a lantern on a stone bracket over each, torches on the door posts (front)
     for z, f in ((KZ0 - 1, 'south'), (KZ1 + 1, 'north')):
-        s.put(CX, 4, z, 'stone_brick_stairs', facing=f, **TOP)
+        s.put(CX, 4, z, 'stone_brick_stairs', facing=f, **TOP)          # (the back one inside the hall from L2)
         s.put(CX, 3, z, 'lantern', hanging='true', waterlogged='false')
     for x in (CX - 1, CX + 1):
         s.put(x, 2, KZ0 - 1, 'wall_torch', facing='north')
@@ -442,9 +440,10 @@ def keep():
         for x in range(HX0 + 1, HX1):                                # and in front of the dais
             if (x, 1, z) not in s.blocks:
                 s.put(x, 1, z, 'red_carpet')
-    for x, f in ((HX0 - 1, 'east'), (HX1 + 1, 'west')):
-        s.put(x, 4, SIDE_DOOR, 'stone_brick_stairs', facing=f, **TOP)   # a lantern on a bracket over each side door
-        s.put(x, 3, SIDE_DOOR, 'lantern', hanging='true', waterlogged='false')
+    for x in (HX0 - 2, HX1 + 2):                                     # a lantern post by each side door
+        s.put(x, 1, SIDE_DOOR + 1, 'dark_oak_fence'); s.put(x, 2, SIDE_DOOR + 1, 'dark_oak_fence')
+        s.put(x, 3, SIDE_DOOR + 1, 'lantern', hanging='false', waterlogged='false')
+    for x in (HX0 - 1, HX1 + 1):
         for z in (25, 26, 28):                                       # flower beds under the hall windows, between
             s.put(x, 0, z, 'coarse_dirt')                            # the chimney and the buttresses
             s.put(x, 1, z, flowers[(z * 3 + (x > CX)) % len(flowers)])
@@ -690,20 +689,25 @@ def keep():
         s.add(x, 2, 0, 'wall_torch', facing='north')
 
     # ---- level 3 polish (v6)
-    def in_curtain_line(x, z):
-        return (x, z) in curtain_set or in_tower(x, z) or in_gatehouse(x, z)
     curtain_set = set(curtain)
     # buttresses on the long outer faces of the curtain (and one on each front and back stretch), capped with a stair
-    butts = [(WALL_X0 - 1, z, 'east') for z in (9, 14, 19, 24)] + [(WALL_X1 + 1, z, 'west') for z in (9, 14, 19, 24)]
-    butts += [(x, WALL_Z - 1, 'south') for x in (9, W - 1 - 9)] + [(x, BACK_Z + 1, 'north') for x in (8, W - 1 - 8)]
+    # (all under merlons, so the string course over them can't be stepped onto from a crenel)
+    butts = [(WALL_X0 - 1, z, 'east') for z in (9, 15, 21)] + [(WALL_X1 + 1, z, 'west') for z in (9, 15, 21)]
+    butts += [(x, WALL_Z - 1, 'south') for x in (9, W - 1 - 9)] + [(x, BACK_Z + 1, 'north') for x in (7, W - 1 - 7)]
     for x, z, f in butts:
         s.add(x, 0, z, 'cobblestone')
         s.add(x, 1, z, base_mix(x, 1, z))
         for y in (2, 3):
             s.add(x, y, z, brick_mix(x, y, z))
         s.add(x, 4, z, 'stone_brick_stairs', facing=f, **BOT)
-    # a string course of upside-down stairs at y 5 round the whole outside of the curtain, towers and gatehouse
-    # (the cells of the open ground outside, next to their walls)
+    # a string course of upside-down stairs at y 5 round the outside of the towers and gatehouse, and corbels under
+    # every merlon of the curtain (machicolations). Never next to a crenel: soldiers on the wall walk must not be able
+    # to step out onto it.
+    def merlon(x, z):
+        return (x, z) in curtain_set and (x + z) % 2 == 0
+
+    def crenel(x, z):
+        return (x, z) in curtain_set and (x + z) % 2 == 1
     from collections import deque
     seen, todo = set(), deque()
     for x in range(W):
@@ -718,8 +722,12 @@ def keep():
                 seen.add(n); todo.append(n)
     assert not any(6 <= x <= 24 and 6 <= z <= 26 for x, z in seen), 'string course flood leaked inside'
     for x, z in sorted(seen):
-        for f, (dx, dz) in (('south', (0, 1)), ('north', (0, -1)), ('east', (1, 0)), ('west', (-1, 0))):
-            if in_curtain_line(x + dx, z + dz) and (x + dx, 5, z + dz) in s.blocks:
+        sides = (('south', (0, 1)), ('north', (0, -1)), ('east', (1, 0)), ('west', (-1, 0)))
+        if any(crenel(x + dx, z + dz) for _, (dx, dz) in sides):
+            continue
+        for f, (dx, dz) in sides:
+            if (merlon(x + dx, z + dz) or in_tower(x + dx, z + dz) or in_gatehouse(x + dx, z + dz)) and \
+                    (x + dx, 5, z + dz) in s.blocks:
                 s.add(x, 5, z, 'stone_brick_stairs', facing=f, **TOP)
                 break
     # red banners on the corner towers' outer faces, under the corbels; vines on their side faces
@@ -739,7 +747,7 @@ def keep():
         for z in range(7, 26):
             n = noise(vx, 1, z, 13)
             if n < 0.3 and (vx, 1, z) not in s.blocks:
-                for y in range(4, 4 - (1 + int(n * 10)), -1):
+                for y in range(3, 3 - (1 + int(n * 10)), -1):           # 1..3 long, never up to the corbels
                     s.add(vx, y, z, 'vine', east=str(sx > 0).lower(), west=str(sx < 0).lower(),
                           north='false', south='false', up='false')
     # lanterns: on the merlons along the side walks, under the arch of the gate, in every tower's lookout and on the

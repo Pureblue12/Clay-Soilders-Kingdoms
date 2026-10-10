@@ -167,11 +167,10 @@ def storehouse():
     for z in (7, 8):
         chest(s, 3, 5, z, 'east')
     for x in (5, 7):                                  # two free-standing racks of barrels on their sides
-        P(s, x, 4, 3, 'spruce_fence'); P(s, x, 5, 3, 'spruce_fence')
-        P(s, x, 4, 9, 'spruce_fence'); P(s, x, 5, 9, 'spruce_fence')
-        for z in range(4, 9):
+        for z in range(4, 9):                         # (aisles stay open at both ends: z 3 and z 9)
             barrel(s, x, 4, z, 'east' if x == 7 else 'west')
             barrel(s, x, 5, z, 'east' if x == 7 else 'west')
+            P(s, x, 6, z, 'spruce_slab', **SLAB)      # the rack's top board
     for z in (5, 9):                                  # tie beams over the hall, lanterns under them
         for x in range(X0 + 1, X1):
             P(s, x, PLATE, z, 'dark_oak_log', axis='x')
@@ -282,8 +281,8 @@ def storehouse():
         dz = -1 if side == 'north' else 1
         P(s, x, 4, z, 'coarse_dirt'); P(s, x, 4, z + dz, 'spruce_trapdoor', facing=side, **OPEN)
         P(s, x, 5, z, flower)
-    # a fenced wood and hay yard behind the awning (open toward the cellar door)
-    for x, z in [(14, z) for z in range(13, 18)] + [(x, 17) for x in range(11, 14)] + [(12, 13), (13, 13)]:
+    # a fenced wood and hay yard behind the awning (open toward the cellar door and the awning)
+    for x, z in [(14, z) for z in range(13, 18)] + [(x, 17) for x in range(11, 14)]:
         P(s, x, 0, z, 'oak_fence')
     P(s, 14, 1, 13, 'oak_fence'); P(s, 14, 2, 13, 'lantern', hanging='false', waterlogged='false')
     for x in (12, 13):                                # a stack of logs and hay inside
@@ -291,9 +290,9 @@ def storehouse():
             P(s, x, 0, z, 'spruce_log', axis='x')
         P(s, x, 1, 15, 'spruce_log', axis='x')
     P(s, 13, 0, 14, 'hay_block', axis='y'); P(s, 12, 0, 14, 'barrel', facing='up', open='false')
-    for x, z, b in ((0, 3, 'leaves'), (1, 0, 'poppy'), (0, 6, 'azure_bluet'), (1, 13, 'leaves'), (0, 9, 'dandelion'),
-                    (8, 0, 'leaves'), (9, 0, 'poppy'), (10, 0, 'cornflower'), (14, 2, 'leaves'), (14, 14, 'leaves'),
-                    (12, 15, 'poppy'), (1, 16, 'leaves'), (14, 6, 'dandelion')):
+    for x, z, b in ((0, 1, 'leaves'), (1, 0, 'poppy'), (0, 0, 'azure_bluet'), (0, 15, 'leaves'), (0, 17, 'dandelion'),
+                    (8, 0, 'leaves'), (9, 0, 'poppy'), (10, 0, 'cornflower'), (14, 2, 'leaves'), (14, 10, 'poppy'),
+                    (1, 16, 'leaves'), (14, 6, 'dandelion'), (2, 17, 'cornflower')):
         if b == 'leaves':
             P(s, x, 0, z, 'oak_leaves', **LEAVES)
         else:

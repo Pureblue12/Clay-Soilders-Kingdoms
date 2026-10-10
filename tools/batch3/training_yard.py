@@ -1,10 +1,11 @@
-"""Training yard, tier 3 (docs/STRUCTURES.md): a fenced gravel yard where recruits drill.
+"""Training yard, tier 3 (docs/STRUCTURES.md): a fenced drill yard where recruits train.
 
-Plan (x 0..8, z 0..9; z = 0 is the front): a cobblestone curb with an oak fence on it encloses a gravel and coarse
-dirt floor laid on the ground (soldiers stand at y 1). The way in is a stone step and a gap in the middle of the
-front fence. Left half: the melee dummies (a fence post with a hay body). Right half: the archery lane, a shooting
-line at the front and hay butts at the back. A bench and the weapon store by the entrance; from level 3 the drill
-master's shelter in the back left corner.
+Plan (x 0..10, z 0..10; z = 0 is the front): a cobblestone curb with an oak fence and spruce posts on it encloses a
+floor laid on the ground (soldiers stand at y 1), in three clear parts: a stone brick drill path down the middle
+(x 5) from the entrance step to the flag post at the back; on the left the sparring ground (one solid coarse dirt
+floor) with two staggered dummies (a fence post, a hay body, fence arms), a weapon rack (barrels with a rail of spear
+shafts) and a bench by the entrance; on the right the archery range: a stone brick shooting line, a gravel lane edged
+with stone bricks, and hay butts at the end. From level 3 the drill master's shelter in the back left corner.
 """
 from make_batch1_structures import Structure
 from revise1.blockconn import connect, noise, put_id
@@ -100,7 +101,16 @@ def training_yard():
 
 
 STRUCTURES = [dict(path='training_yard', name='Training yard', tier=3, zone='inner', role='military',
-                   group='training_yard', terrain='flexible', door='front', changes='First version.', make=training_yard,
-                   description='Over budget: 186 blocks vs 85 (first build 134 vs 60; the curb and floor are most of it). Fenced gravel drill yard (9 x 10): melee dummies on the left, an archery lane with hay '
-                               'butts on the right, a bench and weapon store by the entrance; targets, dummy heads and '
-                               'lanterns from L2, the drill master\'s shelter and flowers from L3.')]
+                   group='training_yard', terrain='flexible', door='front', make=training_yard,
+                   changes='Quality check round 1 ("reads as an animal pen"). Now 11 x 11 and laid out as a drill yard '
+                           'from L1: dummies with fence arms, a weapon rack (barrels with a spear rail), a bench, a '
+                           'stone brick drill path, an archery lane edged with stone bricks behind a stone brick '
+                           'shooting line, butts at its end; the scattered coarse dirt is gone (one solid sparring '
+                           'floor). Posts at the entrance and the sides. L2: pumpkin heads, targets, a red shooting '
+                           'line, lanterns on the entrance posts, flag, arrow and water barrels. L3: the drill '
+                           'master\'s shelter now has posts at all four corners, lane posts with lanterns, flowers.',
+                   description='Over budget: 183 blocks vs 85 at level 1 (the curb and floor are most of it). Fenced '
+                               'drill yard (11 x 11): a stone brick drill path to the flag post, the sparring ground '
+                               'with two armed dummies and a weapon rack on the left, an archery lane with a shooting '
+                               'line and hay butts on the right; targets, dummy heads and lanterns from L2, the drill '
+                               'master\'s shelter, lane lanterns and flowers from L3.')]
