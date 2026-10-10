@@ -188,7 +188,7 @@ STRUCTURES = [dict(path='stonemason', name='Stonemason', tier=4, zone='inner', r
                            'overhang over the bay; L1 yard filled (water and tool barrels, a sledge, a half-dressed block, lanterns '
                            'on the gate piers from L1); L2 adds shutters and stone corbels on the long side walls; L3 '
                            'flowers no longer stand on gravel (flower pots on the stacks and wall instead).',
-                   description='Over budget: 332 blocks vs 125 (first build 278 vs 90; the walled, paved yard is most of it). Flush piece (ground_layer 0: the mod does not support it yet). '
+                   description='Over budget: 331 blocks vs 125 (first build 277 vs 90; the walled, paved yard is most of it). Flush piece (ground_layer 0: the mod does not support it yet). '
                                'Walled stone yard round an open stone brick shed under a spruce gable roof: grindstone, '
                                'cutting bench, rough and dressed stone, a banker; L2 adds the stonecutter and a stand '
                                'of half-cut blocks along the front wall; L3 a statue in progress with its scaffold, '

@@ -50,22 +50,21 @@ def ring(s, x0, z0, x1, z1, y, block, add=False, **props):
                 put(s, x, y, z, block, **props)
 
 
-def cone(s, x0, z0, x1, z1, y, stairs='spruce_stairs', body='spruce_planks', eave='dark_oak_stairs', tip=True):
-    """A steep cone over the square tower x0..x1, z0..z1 (odd size) starting at y: an eave ring of stairs one block
-    out, then each ring 2 high (a plank course, then a stair course) and one block further in, up to a centre
-    column. Returns the y above the last block (where a finial goes)."""
-    ring_stairs(s, x0 - 1, z0 - 1, x1 + 1, z1 + 1, y, eave)
+def cone(s, x0, z0, x1, z1, y, stairs='spruce_stairs', body='spruce_planks', eave=None):
+    """A steep turret cone over the square tower x0..x1, z0..z1 (odd size) starting at y: an eave course one block
+    out, then each ring two stair courses high (shingles: 2 up for every 1 in) and one block further in, up to a
+    centre post. Every visible block is a stair of one material, so it reads as one cone, not stacked tiers.
+    Returns the y above the last block (where a finial goes)."""
+    ring_stairs(s, x0 - 1, z0 - 1, x1 + 1, z1 + 1, y, eave or stairs)
     k, yy = 0, y
     while x0 + k < x1 - k:
-        ring(s, x0 + k, z0 + k, x1 - k, z1 - k, yy, body)
-        ring(s, x0 + k, z0 + k, x1 - k, z1 - k, yy + 1, body)
-        ring_stairs(s, x0 + k, z0 + k, x1 - k, z1 - k, yy + 2, stairs)
+        ring_stairs(s, x0 + k, z0 + k, x1 - k, z1 - k, yy, stairs)
+        ring_stairs(s, x0 + k, z0 + k, x1 - k, z1 - k, yy + 1, stairs)
         k += 1
         yy += 2
     cx, cz = (x0 + x1) // 2, (z0 + z1) // 2
     P(s, cx, yy, cz, body)
-    P(s, cx, yy + 1, cz, body)
-    return yy + 2
+    return yy + 1
 
 
 def vine(s, x, y, z, side):
