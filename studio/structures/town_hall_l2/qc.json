@@ -1,0 +1,80 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "town_hall_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T08:51:37.554Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 80,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: bookshelf, lectern, candle, red_wall_banner, dark_oak_button."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "1089 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "18 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          }
+        ],
+        "stats": {
+          "blocks": 1089,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.31588613406795224,
+          "types": 28,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.27548209366391185
+          },
+          "height": 18,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 1
+        },
+        "notes": {
+          "detail": "Adds red banners on the tower front, lanterns under the arcade and in the hall roof (all hung from blocks above), bookshelves, a lectern, candle and button clock hands. The banners are the only addition visible at a glance; the market stalls read as a few barrels, a hay bale and a chest, so detail is at most 1 here.",
+          "purpose": "Banners and the records room make it read as a civic seat.",
+          "depth": "Same shell as L1; back face still flat.",
+          "roof": "Unchanged from L1, good.",
+          "life": "Lanterns only; no plants yet.",
+          "levels": "Visibly different from L1 only by the two tower banners; the 'market stalls' new job does not read as stalls (no counters with goods, no awnings)."
+        },
+        "summary": "L2 adds the town's market and records: barrels, hay and a chest under the arcade, records shelves and a lectern in the hall, lanterns, red banners on the tower and clock hands.",
+        "problems": [
+          "Market stalls under the arcade (barrels x4 z8-9, hay x8 z8, chest x8 z11, slab counter x4 z11-12, y1) read as storage, not stalls: give them counters facing the arches, goods on top and a small awning (e.g. wool/carpet or slab canopy) so L2's new job is visible from outside.",
+          "Clock hands are dark oak buttons on dark oak log ends (x6 y13 z0, x3/x9 y13 z3): invisible against the log; use a contrasting dial.",
+          "Back face still flat (see L1).",
+          "Reachability: same as L1 (hall, arcade, tower office and back stair reached; tower clock chamber at y10 x5..7 z2..4 unreached; bookshelf tops unreached: fine)."
+        ],
+        "views": [
+          "sheet",
+          "right",
+          "front"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "town_hall_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T08:51:36.968Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "1051 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "18 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          }
+        ],
+        "stats": {
+          "blocks": 1051,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.291151284490961,
+          "types": 20,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.285442435775452
+          },
+          "height": 18,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 1,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Interior is furnished (council table with chairs, chests, clerks' desk in the tower, notice signs, back stair), but the outside has no window sills, shutters or lanterns; only torches.",
+          "purpose": "Reads as a civic hall with a tower, but the clock face at L1 is just a dark log end on plaster (looks like a small window), so 'town hall with clock' only comes with L2/L3.",
+          "depth": "Jetty brackets, corbelled tower ledge, dormers and the arcade arches give good shadows on the sides; the back face (stone ground floor, flat plaster gable) is plain.",
+          "roof": "Steep spruce roof with overhang, ridge slabs, dark oak barge trim and two side dormers; flared hip roof on the tower. Good.",
+          "materials": "Cobble plinth, stone bricks, dark oak frame, white terracotta infill, spruce roof: Style A, nothing clashing.",
+          "shape": "Tall front clock tower, raised hall over an open arcade, dormers: not a box.",
+          "life": "No plants, flowers or lanterns at L1 (by design: those come at L2/L3).",
+          "scale": "Big, but right for a landmark; tower 5x5 and 18 tall reads as a clock tower.",
+          "levels": "Three levels tell apart (banners and stalls at L2, flower boxes, bushes and benches at L3)."
+        },
+        "summary": "L1 is the shell: a half-timbered council hall on a stone market arcade with a stone clock tower and porch at the front, a furnished council chamber, clerks' office and back stair.",
+        "problems": [
+          "Clock faces (log ends at x6 y13 z1, x4/x8 y13 z3) read as small dark windows at L1; consider a clearer clock disc (e.g. a ring of dark oak trapdoors or a white/terracotta dial around the log end) so the tower reads as a clock tower before L2.",
+          "Back face (z16-17) is flat: plain stone ground floor and a bare plaster gable; add a jetty, beam or small window/sill in the gable.",
+          "Hall windows (glass panes at x2/x10 y7) have no sills or shutters at any level.",
+          "Reachability: hall floor, arcade, tower clerks' office and back stair are reached; the tower clock chamber (floor y9, standing y10, x5..7 z2..4) has no ladder or stair and is unreached (not needed by soldiers, but it is a sealed room). Other unreached places are roof slopes, the tower ledge and the dormer tops: fine."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "front",
+          "right"
+        ]
+      }
+    }
+  }
+}
