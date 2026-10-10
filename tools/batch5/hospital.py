@@ -340,6 +340,8 @@ def hospital():
         P(s, x, 4, 2, 'spruce_planks')
     for x in (MID - 1, MID + 1):
         P(s, x, 2, 1, 'lantern', **HANG)
+    P(s, 6, 2, 0, 'dark_oak_stairs', facing='west', **TOP)                       # brackets by the posts
+    P(s, 10, 2, 0, 'dark_oak_stairs', facing='east', **TOP)
     for x, f in ((6, 'cornflower'), (10, 'allium')):                        # two more planters under the porch
         P(s, x, 0, FW - 1, 'coarse_dirt')
         P(s, x, 0, FW - 2, 'spruce_trapdoor', facing='north', **OPEN)
@@ -350,18 +352,16 @@ def hospital():
     s.at(3, 'flourish3')
     for x in (OX0, OX1):                                                    # red banners on the front corners
         P(s, x, 3, FW - 1, 'red_wall_banner', facing='north')
-    # the front herb garden either side of the porch: beds with trapdoor edges, lantern posts at the porch
-    for xs in ((1, 2, 3), (13, 14, 15)):
-        for x in xs:
-            P(s, x, 0, 0, 'coarse_dirt')
-        for x, f in zip(xs, ('fern', 'oxeye_daisy', 'sweet_berry_bush') if xs[0] == 1 else
-                        ('sweet_berry_bush', 'azure_bluet', 'fern')):
+    # the front herb garden either side of the porch: beds with trapdoor fronts, lantern posts by the porch
+    for xs, plants in (((0, 1, 2), ('fern', 'oxeye_daisy', 'sweet_berry_bush')),
+                       ((14, 15, 16), ('sweet_berry_bush', 'azure_bluet', 'fern'))):
+        for x, f in zip(xs, plants):
+            P(s, x, 0, 1, 'coarse_dirt')
+            P(s, x, 0, 0, 'spruce_trapdoor', facing='north', **OPEN)
             if f == 'sweet_berry_bush':
-                P(s, x, 1, 0, f, age='2')
+                P(s, x, 1, 1, f, age='2')
             else:
-                P(s, x, 1, 0, f)
-        P(s, xs[0] - 1 if xs[0] == 1 else xs[-1] + 1, 0, 0, 'spruce_trapdoor',
-          facing='west' if xs[0] == 1 else 'east', **OPEN)
+                P(s, x, 1, 1, f)
     for x in (4, 12):
         P(s, x, 0, 0, 'cobblestone')
         P(s, x, 1, 0, 'spruce_fence')
@@ -379,7 +379,7 @@ STRUCTURES = [dict(path='hospital', name='Hospital', tier=6, zone='inner', role=
                            '(the building moved back 2 rows). L2: a covered entrance porch with hanging lanterns and '
                            'benches, two more planters with trapdoor fronts. L3: a front herb garden either side of '
                            'the porch with lantern posts.',
-                   description='Needs scaffolding: 13 tall. Over budget: about 1,600 blocks vs the infirmary\'s 285 (no '
+                   description='Needs scaffolding: 13 tall. Over budget: 1,654 blocks (L1 1,447) vs the infirmary\'s 285 (no '
                                'hospital budget in the brief; under the landmark 1,800). The infirmary\'s tier-6 big '
                                'brother, a two-storey cloister hospital round a 5 x 5 herb courtyard: stone brick '
                                'ground storey, white plaster in a dark oak frame above with the red wool cross over '
