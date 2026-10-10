@@ -129,6 +129,64 @@
           "back"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T05:37:46.189Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 80,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 277,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.36462093862815886,
+          "types": 22,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.18772563176895307
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "roof": "Automatic 'no overhang' warning is a false alarm: the renders show a 2-row front overhang over the bay and eaves past the long walls; half-timbered gables.",
+          "detail": "Yard has grindstone, bench, barrels, sledge, rough and dressed stone, pier lanterns; side walls still fairly plain at L1, fine for a first build.",
+          "artefacts": "No floating blocks; pier lanterns stand on stone bricks.",
+          "materials": "groundLayer 0: layer 0 flush with the grass (noted, not failed)."
+        },
+        "summary": "Level 1: walled stone yard round an open stone brick shed under a spruce gable roof with grindstone, cutting bench, rough and dressed stone; reads clearly as a stonemason's yard.",
+        "problems": [
+          "Minor: long side walls still mostly flat apart from the centre pane at L1; a sill under the pane would add depth.",
+          "Reachability fine: only roof slopes, the ridge and three single wall/pier tops (10,2,0), (10,2,9), (5,3,0) unreached; shed floor and yard all reached."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

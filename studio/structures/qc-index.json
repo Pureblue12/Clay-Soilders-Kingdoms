@@ -840,25 +840,25 @@
     "checkedAt": "2026-10-10T04:58:27.670Z"
   },
   "stonemason_l1": {
-    "version": 2,
+    "version": 3,
     "verdict": "pass",
     "score": 80,
-    "round": 2,
-    "checkedAt": "2026-10-10T05:26:22.889Z"
+    "round": 1,
+    "checkedAt": "2026-10-10T05:37:46.189Z"
   },
   "stonemason_l2": {
-    "version": 2,
-    "verdict": "revise",
-    "score": 88,
-    "round": 1,
-    "checkedAt": "2026-10-10T05:26:23.504Z"
+    "version": 3,
+    "verdict": "pass",
+    "score": 93,
+    "round": 2,
+    "checkedAt": "2026-10-10T05:37:46.738Z"
   },
   "stonemason_l3": {
-    "version": 2,
-    "verdict": "revise",
-    "score": 90,
-    "round": 2,
-    "checkedAt": "2026-10-10T05:26:24.152Z"
+    "version": 3,
+    "verdict": "pass",
+    "score": 95,
+    "round": 3,
+    "checkedAt": "2026-10-10T05:37:47.322Z"
   },
   "storehouse_l1": {
     "version": 1,
