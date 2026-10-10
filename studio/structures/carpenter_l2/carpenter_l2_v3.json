@@ -4,14 +4,14 @@
   "version": 3,
   "size": [7,7,6],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "Better would like to see more detail fron the l2 to l3 to diffreiatice from eachother",
     "author": "claude-qc",
     "created": "2026-10-10T02:58:57.567Z",
     "description": "Carpenter or fletcher, level 2 of 3: L1 plus flourish 2. Timber workshop entered by an open front bay (crafting table, fletching table from L2), back door to the yard; log stack and sawhorse under the side eaves. Not yet builder-tested: fletching_table. Decoration step adds: sign_text.",
     "changes": "Quality check round 3: shutters on the side windows, the log pile and the sawhorse from level 1 (it reads as a carpenter at once), a dark oak eaves row under the spruce roof.",
     "parent": 2,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T03:01:26.321Z",
     "tags": [
       "batch2",
       "tier2",
