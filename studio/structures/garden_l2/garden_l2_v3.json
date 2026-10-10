@@ -4,14 +4,14 @@
   "version": 3,
   "size": [15,7,15],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "Much better on this fron I do want the trees to be more majestic looking I also want it to provide shade for the grarden make it a little wider ever so slightly and add more flowers and maybe a water aspect with a little pad small section",
     "author": "claude",
     "created": "2026-10-10T04:02:22.333Z",
     "description": "Garden (level 1), level 2 of 3: L1 plus flourish 2. A 15 x 15 cottage garden set into the lawn: a low hedge, gravel paths and a round walk round a sundial bed, curved flower borders; later levels add trees, azaleas, an arbor, benches, lanterns and dense mixed flowers. Not yet builder-tested: allium, azalea, azalea_leaves, azure_bluet, birch_leaves, birch_log, cherry_leaves, cherry_log, cornflower, dandelion, flowering_azalea, flowering_azalea_leaves, grass_block, lily_of_the_valley, orange_tulip, oxeye_daisy, pink_tulip, red_tulip, white_tulip.",
     "changes": "Bigger (15 x 15) and level with the grass: paths and beds are set into the lawn with no raised rim, and it is now a proper cottage garden with a round walk round a sundial bed, curved borders of a dozen flower kinds, a birch, a cherry, azalea bushes, a flowering arbor and benches.",
     "parent": 2,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T04:08:32.911Z",
     "tags": [
       "batch2",
       "tier2",
