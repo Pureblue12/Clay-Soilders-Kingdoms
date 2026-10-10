@@ -17,11 +17,11 @@ def food_hall(width=7, depth=11):
     Inside: one long table (spruce slabs) with a bench on each side, the hearth (a campfire inside the brick hearth),
     the kitchen corner (smoker, barrels, a chest) by the kitchen door, the bar on the left (a counter and kegs),
     torches.
-    L2 (open for business): a projecting sign on a bracket, lanterns under the front gable and on a chain over the
-    door, chandeliers over the table, shutters, red banners on the front, firewood at the
-    hearth and by the kitchen door, a step at the kitchen door, plates on the table.
-    L3 (the beer garden): a little terrace on the left with two outdoor tables and benches under a lantern post,
-    flower boxes under the windows, candles on the long table, kegs and a crate outside the kitchen, flowers and
+    L2 (open for business, a bigger kitchen): an outdoor kitchen under a lean-to by the kitchen door (second smoker,
+    prep table, supply barrel), a serving hatch, a table for two; a projecting sign, lanterns, chandeliers, shutters,
+    red banners, firewood, plates on the table.
+    L3 (oven, storeroom, beer garden): a brick bread oven opening into the outdoor kitchen, a storeroom shed, a terrace
+    with two outdoor tables (extra dining) under a lantern post, candles, flower boxes, a hay bale, flowers and
     bushes, sign text (decoration step)."""
     W, D, H = width + 6, depth + 4, 9
     s = Structure('food_hall', (W, H, D), palette='oak_a2')
@@ -230,8 +230,10 @@ def food_hall(width=7, depth=11):
 
 
 STRUCTURES = [dict(path='food_hall', name='Tavern / food hall', tier=4, zone='inner', role='food', group='food_hall',
-                   terrain='skirt', door='front', make=food_hall, changes='First version.',
-                   description='Over budget: 504 blocks vs 345 (first build 417 vs 280). Long timber food hall: one long table with benches under a dormer, a big brick hearth and chimney at '
-                               'the far end, a kitchen corner (smoker) by a side door and a bar of kegs; L2 a '
-                               'projecting sign, lanterns, chandeliers, banners and a chimney up to the ridge; L3 a beer-garden terrace, '
-                               'candles, flower boxes and kegs by the kitchen.')]
+                   terrain='skirt', door='front', make=food_hall, changes='Carlton: each level must also add function. L2 now adds a bigger kitchen (an outdoor kitchen under a lean-to by the kitchen door with a second smoker, a prep table and a supply barrel), a serving hatch between kitchen and hall, and a table for two. L3 adds a brick bread oven opening into the outdoor kitchen and a storeroom shed (barrels, chest, potatoes) behind the beer-garden terrace (the extra dining area). Quality check: the chimney now rises to the top of the ridge; the flower boxes have trapdoor ends. The decorations of v1 are kept.',
+                   description='Over budget: 564 blocks vs 345 (first build 418 vs 280). Long timber food hall: one long table '
+                               'with benches under a dormer, a big brick hearth and chimney at the far end, a kitchen '
+                               'corner (smoker) by a side door and a bar of kegs. L2 adds function: an outdoor kitchen '
+                               'under a lean-to (second smoker, prep table, supplies), a serving hatch and a table for '
+                               'two, plus sign, lanterns, chandeliers and banners. L3 adds a bread oven, a storeroom '
+                               'shed and a beer-garden terrace (extra dining), plus candles and flower boxes.')]

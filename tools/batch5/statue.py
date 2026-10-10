@@ -63,23 +63,26 @@ def statue():
         else:
             P(s, x, 0, z, 'mossy_cobblestone' if noise(x, 0, z, 9) < 0.25 else 'cobblestone')
     ring_stairs(s, 2, 1, 'bottom')                                      # the step round the plinth
-    s.fill(C - 1, 1, C - 1, C + 1, 2, C + 1, 'stone_bricks')            # the plinth's body
-    P(s, C, 3, C, 'stone_bricks')                                       # the cornice: corbels round a core
-    ring_stairs(s, 1, 3, 'top')
-    P(s, C, 2, C - 2, 'oak_wall_sign', facing='north', waterlogged='false')   # the plaque
-    s.decorate(C, 2, C - 2, 'sign_text', lines=['', 'Our Founder', 'the First King', ''])
+    s.remove(C, 1, C - 2)
+    P(s, C, 1, C - 2, 'stone_bricks')                                   # the plaque's block in the step
+    s.fill(C - 1, 1, C - 1, C + 1, 1, C + 1, 'stone_bricks')            # the plinth's body
+    P(s, C, 2, C, 'stone_bricks')                                       # the cornice: corbels round a core
+    ring_stairs(s, 1, 2, 'top')
+    P(s, C, 1, C - 3, 'oak_wall_sign', facing='north', waterlogged='false')   # the plaque
+    s.decorate(C, 1, C - 3, 'sign_text', lines=['', 'Our Founder', 'the First King', ''])
 
     s.at(1, 'fittings')                                                 # the figure (faces the front)
+    P(s, C, 3, C, 'cobblestone_wall')                                   # legs
     P(s, C, 4, C, 'white_terracotta')                                   # fired clay: a clay soldier
-    P(s, C - 1, 4, C, 'stone_brick_stairs', facing='east', **STAIR)     # its hem flaring out
+    P(s, C - 1, 4, C, 'stone_brick_stairs', facing='east', **STAIR)     # the mail skirt flaring out
     P(s, C + 1, 4, C, 'stone_brick_stairs', facing='west', **STAIR)
     P(s, C, 5, C, 'white_terracotta')                                   # chest
-    P(s, C - 1, 5, C, 'cobblestone_wall')                               # left arm, down
-    P(s, C - 1, 6, C, 'stone_brick_stairs', facing='east', **TOP)       # shoulders
+    P(s, C - 1, 5, C, 'cobblestone_wall')                               # the left arm, down
+    P(s, C - 1, 5, C - 1, 'spruce_trapdoor', facing='north', **OPEN)    # the shield on it
+    P(s, C - 1, 6, C, 'stone_brick_stairs', facing='east', **TOP)       # pauldrons
     P(s, C + 1, 6, C, 'stone_brick_stairs', facing='west', **TOP)
     P(s, C, 6, C, 'white_terracotta')                                   # neck and collar
     P(s, C, 7, C, 'white_terracotta')                                   # head
-    P(s, C - 1, 5, C - 1, 'spruce_trapdoor', facing='north', **OPEN)    # the shield on the left arm
     P(s, C + 1, 7, C, 'cobblestone_wall')                               # the right arm raised, the fist round the grip
     P(s, C + 1, 8, C, 'chain', axis='y')                                # the blade
 
@@ -96,12 +99,12 @@ def statue():
             P(s, bx, 1, bz, 'flowering_azalea_leaves' if (bx + bz) % 2 else 'azalea_leaves', **LEAVES)
     s.at(3, 'flourish3')
     P(s, C, 8, C, 'light_weighted_pressure_plate', power='0')           # the gold-look crown
-    for y in (5, 6):                                                    # the cloak down his back
+    for y in (4, 5, 6):                                                 # the cloak down his back
         P(s, C, y, C + 1, 'red_wool')
-    P(s, C, 4, C + 1, 'red_carpet')
+    P(s, C, 3, C + 1, 'red_carpet')
     P(s, C - 1, 7, C, 'red_carpet')                                     # over the shoulders
     for x, z in ((C - 1, C - 1), (C + 1, C - 1)):                       # candles on the cornice's front corners
-        A(s, x, 4, z, 'candle', candles='3', lit='true', waterlogged='false')
+        A(s, x, 3, z, 'candle', candles='3', lit='true', waterlogged='false')
     for i, (x, z) in enumerate(posts):                                  # banners on the lantern posts
         side = 'north' if z < C else 'south'
         bz = z + (-1 if z < C else 1)

@@ -1,163 +1,288 @@
-"""Storehouse (tier 3, look A): a stout timber and stone barn with double doors, a hoist beam and a side awning."""
+"""Storehouse (tier 3, look A): a big jettied timber hall on a stone undercroft (the cellar), storage that grows per level."""
 from make_batch1_structures import Structure
-from revise1.blockconn import connect, noise, put_id
+from batch3.ws_kit import P, A, STAIR, TOP, SLAB, SLAB_TOP, OPEN, HANG, LEAVES, connect, noise, gable_roof
 
-STAIR = dict(half='bottom', shape='straight', waterlogged='false')
-UPSIDE = dict(half='top', shape='straight', waterlogged='false')
-BOTTOM = dict(type='bottom', waterlogged='false')
-TOP = dict(type='top', waterlogged='false')
-HANG = dict(hanging='true', waterlogged='false')
-STAND = dict(hanging='false', waterlogged='false')
-OPEN = dict(half='bottom', open='true', powered='false', waterlogged='false')
 SHUT = dict(half='bottom', open='false', powered='false', waterlogged='false')
-SHELF = dict(half='top', open='false', powered='false', waterlogged='false')
-LEAVES = dict(persistent='true', distance='1', waterlogged='false')
+X0, X1, U0, U1, Z0, Z1, MID = 2, 10, 3, 9, 2, 14, 6     # hall walls, undercroft walls, depth, door column
+FLOOR, TOPW = 3, 5                                        # hall floor layer, last hall wall layer (plates at 6)
+
+
+def chest(s, x, y, z, facing):
+    P(s, x, y, z, 'chest', facing=facing, type='single', waterlogged='false')
+
+
+def barrel(s, x, y, z, facing='up'):
+    P(s, x, y, z, 'barrel', facing=facing, open='false')
 
 
 def storehouse():
-    """Storehouse (barn, variant A). Walls x 1..8, z 2..10 (8 by 9): a cobblestone base course and a cobblestone lower
-    course, white plaster (white terracotta) above in a dark oak post frame (corners, door posts, every 4 along the sides),
-    dark oak top plates, a spruce stair gable roof with dark oak eaves and a slab-free double ridge, one block of
-    overhang all round. Double oak doors in the middle of the front (x 4..5), a step before them.
-    Inside: an aisle from the doors to the back; chests along the left wall, barrels stacked along the right, the
-    storekeeper's desk at the back.
+    """Storehouse. The Structure can't go below layer 0 and builders never dig, so the cellar is a raised UNDERCROFT:
+    layer 0 stands on the ground as usual, the stone undercroft (floor y 0, room y 1..2) carries the hall floor at
+    y 3. The hall (x 2..10, z 2..14, 9 by 13) juts out one block over the undercroft (x 3..9) on both long sides, on
+    stone corbels: Carlton's jetty. Hall walls y 4..5 (plaster in a dark oak frame), plates at y 6, a 45-degree spruce
+    roof (ridge along z, cap at y 11: 12 tall, so it is marked "needs scaffolding").
 
-    Level 1: the barn and its storage (chests, barrels, desk and stool, torches, shutters).
-    Level 2: the working storehouse: a lectern ledger on the desk (the workstation; not builder-tested yet), a hoist
-    beam out of the front gable with a chain and a hoisted barrel, the side awning on posts (right side) with crates and
-    barrels under it, lanterns by the doors, shelves inside.
-    Level 3: the busy yard: hay bales and crates by the front, flower boxes under the side windows, a shop sign over the
-    doors (text by the decoration step), a banner, a lantern under the awning, a hand cart (decoration step), bushes."""
-    s = Structure('storehouse', (12, 9, 13), palette='oak_a2')
-    x0, x1, z0, z1 = 1, 8, 2, 10
-    top = 4                                          # top plates
-    posts_z = (z0, 6, z1)
+    Ways in, all on foot: an outside stone stair along the front wall up to a landing and the hall door (x 6); a
+    straight stair down inside the hall to the cellar (x 4..5, z 10..11, railed); a back cellar door at ground level
+    for carts (x 6, z 14). L3 adds the loft over the hall (floor at the plate level y 6) and its stair (x 8).
+
+    Level 1: hall and cellar, with some storage: a row of chests and barrels on each floor, the storekeeper's desk.
+    Level 2: much more storage: free-standing racks of barrels on their sides in the hall, chests stacked two high,
+    the cellar lined two high; the tie beams with lanterns, the lectern ledger; outside the hoist beam over the loft
+    door and the covered loading awning on the right side with crates and barrels, door lanterns.
+    Level 3: full: the loft floor and its stair with rows of chests under the roof, the cellar filled to the back; a
+    lean-to of goods under the left jetty, a back yard (hay, crates, cart), sign, banners, flower boxes, flowers."""
+    s = Structure('storehouse', (15, 12, 18), palette='oak_a2')
+
+    # ---------------------------------------------------------------- level 1: shell
     s.at(1, 'shell')
-    s.ring(x0, z0, x1, z1, 0, 'cobblestone')
-    for x in range(x0 + 1, x1):
-        for z in range(z0 + 1, z1):
-            put_id(s, x, 0, z, 'spruce_planks' if x in (4, 5) else 'oak_planks')   # aisle in spruce
-    for y in range(1, top):
-        for x in range(x0, x1 + 1):
-            for z in range(z0, z1 + 1):
-                if not (x in (x0, x1) or z in (z0, z1)):
-                    continue
-                post = (x in (x0, x1) and z in posts_z) or (z in (z0, z1) and x in (3, 6))
-                if post:
-                    put_id(s, x, y, z, 'dark_oak_log', axis='y')
-                elif y == 1:
-                    put_id(s, x, y, z, 'mossy_cobblestone' if noise(x, y, z, 7) < 0.2 else 'cobblestone')
+    for x in range(U0, U1 + 1):                       # undercroft: base course, walls y 1..2, flagstone floor
+        for z in range(Z0, Z1 + 1):
+            edge = x in (U0, U1) or z in (Z0, Z1)
+            if not edge:
+                P(s, x, 0, z, 'stone_bricks')
+                continue
+            for y in range(0, 3):
+                corner = x in (U0, U1) and z in (Z0, Z1)
+                if corner:
+                    P(s, x, y, z, 'stone_bricks')
                 else:
-                    put_id(s, x, y, z, 'white_terracotta')   # plaster infill
-    for x in (4, 5):                                 # double doors
-        s.remove(x, 1, z0); s.remove(x, 2, z0)
-    s.door(4, 1, z0, 'north', block='oak_door', hinge='left')
-    s.door(5, 1, z0, 'north', block='oak_door', hinge='right')
-    windows = [(x0, 2, 4), (x0, 2, 8), (x1, 2, 4), (x1, 2, 8), (2, 2, z0), (7, 2, z0), (2, 2, z1), (7, 2, z1)]
+                    P(s, x, y, z, 'mossy_cobblestone' if noise(x, y, z, 17) < 0.22 else 'cobblestone')
+    vents = [(U0, 2, z) for z in (4, 8, 12)] + [(U1, 2, z) for z in (4, 8, 12)] + [(4, 2, Z1), (8, 2, Z1)]
+    for v in vents:
+        s.remove(*v)
+    s.remove(MID, 1, Z1); s.remove(MID, 2, Z1)
+    s.door(MID, 1, Z1, 'south', block='spruce_door')  # the cart door into the cellar
+    P(s, MID, 0, Z1 + 1, 'cobblestone_stairs', facing='north', **STAIR)
+    for z in (5, 8):                                  # stone pillars down the middle of the cellar
+        for y in (1, 2):
+            P(s, MID, y, z, 'stone_bricks')
+
+    for x in range(X0, X1 + 1):                       # hall floor: sill beams round the edge, planks, joists
+        for z in range(Z0, Z1 + 1):
+            if z in (Z0, Z1):
+                P(s, x, FLOOR, z, 'dark_oak_log', axis='x')
+            elif x in (X0, X1):
+                P(s, x, FLOOR, z, 'dark_oak_log', axis='z')
+            elif z in (5, 8, 11):
+                P(s, x, FLOOR, z, 'dark_oak_log', axis='x')   # joists, seen from the cellar
+            else:
+                P(s, x, FLOOR, z, 'spruce_planks' if x == MID else 'oak_planks')
+    for x in (4, 5):                                  # the stair hole down to the cellar
+        for z in (10, 11):
+            s.remove(x, FLOOR, z)
+    for z in (2, 6, 10, 14):                          # corbels under the jetty, both long sides
+        P(s, X0, 2, z, 'stone_brick_stairs', facing='east', **TOP)
+        P(s, X1, 2, z, 'stone_brick_stairs', facing='west', **TOP)
+
+    posts = {(x, Z0) for x in (X0, 5, 7, X1)} | {(x, Z1) for x in (X0, MID, X1)} | \
+        {(x, z) for x in (X0, X1) for z in (2, 6, 10, 14)}
+    for y in (4, TOPW):                               # hall walls: dark oak frame, plaster infill
+        for x in range(X0, X1 + 1):
+            for z in range(Z0, Z1 + 1):
+                if not (x in (X0, X1) or z in (Z0, Z1)):
+                    continue
+                P(s, x, y, z, 'dark_oak_log' if (x, z) in posts else 'white_terracotta', axis='y')
+    windows = [(X0, 5, z) for z in (4, 8, 12)] + [(X1, 5, z) for z in (4, 8, 12)] + [(4, 5, Z0), (8, 5, Z0),
+                                                                                   (4, 5, Z1), (8, 5, Z1)]
     for w in windows:
         s.remove(*w)
-    for x in range(x0, x1 + 1):                      # top plates all round
-        for z in (z0, z1):
-            put_id(s, x, top, z, 'dark_oak_log', axis='x')
-    for z in range(z0 + 1, z1):
-        for x in (x0, x1):
-            put_id(s, x, top, z, 'dark_oak_log', axis='z')
-    for z in range(z0 - 1, z1 + 2):                  # gable roof along z
-        put_id(s, x0 - 1, top, z, 'dark_oak_stairs', facing='east', **STAIR)
-        put_id(s, x1 + 1, top, z, 'dark_oak_stairs', facing='west', **STAIR)
-        for i in range(4):
-            put_id(s, x0 + i, top + 1 + i, z, 'spruce_stairs', facing='east', **STAIR)
-            put_id(s, x1 - i, top + 1 + i, z, 'spruce_stairs', facing='west', **STAIR)
-    for z in (z0, z1):                               # gable ends
-        for i in range(3):
-            for x in range(x0 + 1 + i, x1 - i):
-                hatch = i == 0 and x in (4, 5)       # the loft hatch the hoist serves (dark oak boards)
-                put_id(s, x, top + 1 + i, z, 'dark_oak_planks' if hatch else 'spruce_planks')
-    for z in (z0 - 1, z1 + 1):                       # upside-down stairs under the gable overhangs
-        put_id(s, x0, top, z, 'spruce_stairs', facing='west', **UPSIDE)
-        put_id(s, x1, top, z, 'spruce_stairs', facing='east', **UPSIDE)
+    s.remove(MID, 4, Z0); s.remove(MID, 5, Z0)
+    s.door(MID, 4, Z0, 'north', block='oak_door')
+    for x in range(X0, X1 + 1):                       # gable-end plates (the eave plates come with the roof)
+        for z in (Z0, Z1):
+            P(s, x, 6, z, 'dark_oak_log', axis='x')
+    s.door(MID, 7, Z0, 'north', block='spruce_door', hinge='right')    # the loft door in the front gable
+    P(s, MID, 8, Z1, 'glass_pane', east='true', west='true', north='false', south='false', waterlogged='false')
+    gable_roof(s, X0, X1, Z0, Z1, TOPW)
+
+    # the outside stair along the front wall: three steps up from the left to a landing before the door
+    for x in (5, 6, 7):
+        for y in range(0, FLOOR + 1):
+            P(s, x, y, 1, 'stone_bricks' if y == FLOOR else
+              'mossy_cobblestone' if noise(x, y, 1, 4) < 0.25 else 'cobblestone')
+    for x, h in ((4, 2), (3, 1), (2, 0)):
+        for y in range(0, h):
+            P(s, x, y, 1, 'cobblestone')
+        P(s, x, h, 1, 'stone_brick_stairs', facing='east', **STAIR)
+
+    # the stair down to the cellar (x 4..5, from z 9 down toward the back)
+    for x in (4, 5):
+        P(s, x, 2, 10, 'spruce_stairs', facing='north', **STAIR)
+        P(s, x, 1, 10, 'cobblestone')
+        P(s, x, 1, 11, 'spruce_stairs', facing='north', **STAIR)
+
+    # ---------------------------------------------------------------- level 1: fittings (some storage)
     s.at(1, 'fittings')
+    for x, y, z in windows + vents:
+        side = x in (X0, X1, U0, U1) and z not in (Z0, Z1)
+        P(s, x, y, z, 'glass_pane', north=side, south=side, east=not side, west=not side, waterlogged='false')
     for x, y, z in windows:
-        side = x in (x0, x1)
-        put_id(s, x, y, z, 'glass_pane', north=side, south=side, east=not side, west=not side, waterlogged='false')
-    for x, y, z in windows[:4]:                      # shutters on the side windows
-        out, f = (x - 1, 'west') if x == x0 else (x + 1, 'east')
-        for dz in (-1, 1):
-            put_id(s, out, y, z + dz, 'spruce_trapdoor', facing=f, **OPEN)
-    for z in range(z0 + 2, z1 - 1):                  # chests along the left wall, barrels along the right
-        put_id(s, x0 + 1, 1, z, 'chest', facing='east', type='single', waterlogged='false')
-        put_id(s, x1 - 1, 1, z, 'barrel', facing='up', open='false')
-        if z % 2 == 0:
-            put_id(s, x1 - 1, 2, z, 'barrel', facing='west', open='false')
-    put_id(s, x0 + 1, 1, z0 + 1, 'barrel', facing='up', open='false')
-    put_id(s, 5, 1, z1 - 1, 'oak_fence'); put_id(s, 5, 2, z1 - 1, 'oak_pressure_plate', powered='false')   # desk
-    put_id(s, 6, 1, z1 - 1, 'oak_stairs', facing='east', **STAIR)                                        # stool
-    for x in (3, 6):                                 # torches on the door posts, inside, and on the back posts
-        put_id(s, x, 2, z0 + 1, 'wall_torch', facing='south')
-        put_id(s, x, 2, z1 - 1, 'wall_torch', facing='north')
-    for x in (4, 5):                                 # a step before the doors
-        put_id(s, x, 0, z0 - 1, 'cobblestone_stairs', facing='south', **STAIR)
+        if x in (X0, X1):
+            out, f = (x - 1, 'west') if x == X0 else (x + 1, 'east')
+            for dz in (-1, 1):
+                P(s, out, y, z + dz, 'spruce_trapdoor', facing=f, **OPEN)
+    for x in (MID, 4, 5):                             # railing round the stair hole
+        P(s, x, 4, 12, 'spruce_fence')
+    for z in (10, 11):
+        P(s, MID, 4, z, 'spruce_fence')
+    for z in (10, 11, 12):                            # barrels on the other side of the hole (x 3)
+        barrel(s, 3, 4, z)
+    for z in range(3, 9):                             # hall: chests along the right wall
+        chest(s, 9, 4, z, 'west')
+    for z in range(3, 7):                             # barrels along the left wall, two chests after them
+        barrel(s, 3, 4, z)
+    for z in (7, 8):
+        chest(s, 3, 4, z, 'east')
+    P(s, 7, 4, 13, 'oak_fence'); P(s, 7, 5, 13, 'oak_pressure_plate', powered='false')     # the storekeeper's desk
+    P(s, 7, 4, 12, 'oak_stairs', facing='north', **STAIR)                                  # his stool
+    barrel(s, 9, 4, 13); barrel(s, 9, 4, 12)
+    for z in range(3, 10):                            # cellar: barrels along the right wall
+        barrel(s, 8, 1, z)
+    for z in range(3, 7):                             # chests along the left
+        chest(s, 4, 1, z, 'east')
+    for x, z, f in ((MID, 4, 'north'), (MID, 9, 'south')):   # torches on the pillars
+        P(s, x, 2, z, 'wall_torch', facing=f)
+    for x in (5, 7):                                  # torches by the hall door, inside on the back wall
+        P(s, x, 5, 1, 'wall_torch', facing='north')
+    P(s, 5, 5, Z1 - 1, 'wall_torch', facing='north')
 
+    # ---------------------------------------------------------------- level 2: many more chests and racks
     s.at(2, 'flourish2')
-    put_id(s, 4, 1, z1 - 1, 'lectern', facing='south', has_book='false', powered='false')   # the ledger
-    s.decorate(4, 1, z1 - 1, 'item', item='minecraft:writable_book', note='the ledger on the lectern')
-    put_id(s, 4, 7, z0 - 1, 'spruce_log', axis='z')                  # hoist beam out of the front gable
-    put_id(s, 4, 7, z0 - 2, 'spruce_log', axis='z')
-    for y in (6, 5):
-        put_id(s, 4, y, z0 - 2, 'chain', axis='y')
-    put_id(s, 4, 4, z0 - 2, 'barrel', facing='up', open='false')     # a barrel on its way up
-    # side awning (right): posts at x 11, slab roof from under the eave out to them, goods under it
-    for z in (3, 9):
-        put_id(s, 11, 1, z, 'spruce_fence'); put_id(s, 11, 2, z, 'spruce_fence')
-    for x in (9, 10, 11):
-        for z in range(3, 10):
-            if x == 11 or z in (3, 9):                   # a stair edge, so the awning slopes off at its rim
-                f = 'west' if x == 11 else 'south' if z == 3 else 'north'
-                put_id(s, x, 3, z, 'spruce_stairs', facing=f, **STAIR)
+    for z in range(3, 9):                             # chests stacked two high on the right wall
+        chest(s, 9, 5, z, 'west')
+    for z in range(3, 7):
+        barrel(s, 3, 5, z)
+    for z in (7, 8):
+        chest(s, 3, 5, z, 'east')
+    for x in (5, 7):                                  # two free-standing racks of barrels on their sides
+        P(s, x, 4, 3, 'spruce_fence'); P(s, x, 5, 3, 'spruce_fence')
+        P(s, x, 4, 9, 'spruce_fence'); P(s, x, 5, 9, 'spruce_fence')
+        for z in range(4, 9):
+            barrel(s, x, 4, z, 'east' if x == 7 else 'west')
+            barrel(s, x, 5, z, 'east' if x == 7 else 'west')
+    for z in (5, 9):                                  # tie beams over the hall, lanterns under them
+        for x in range(X0 + 1, X1):
+            P(s, x, 6, z, 'dark_oak_log', axis='x')
+        P(s, MID, 5, z, 'lantern', **HANG)
+    P(s, 8, 4, 13, 'lectern', facing='north', has_book='false', powered='false')   # the ledger (workstation)
+    s.decorate(8, 4, 13, 'item', item='minecraft:writable_book', note='the ledger on the lectern')
+    for z in range(3, 10):                            # cellar: barrels two high on the right
+        barrel(s, 8, 2, z)
+    for z in range(3, 9):                             # chests two high on the left
+        if z >= 7:
+            chest(s, 4, 1, z, 'east')
+        chest(s, 4, 2, z, 'east')
+    for z in (6, 7):                                  # a rack of barrels between the pillars
+        barrel(s, MID, 1, z, 'east'); barrel(s, MID, 2, z, 'east')
+    for z in (4, 9):                                  # lanterns hung from the joists
+        P(s, 5, 2, z + (1 if z == 4 else -1), 'lantern', **HANG)
+    # hoist beam out of the front gable over the loft door, a barrel on its chain
+    P(s, MID, 9, 1, 'spruce_log', axis='z'); P(s, MID, 9, 0, 'spruce_log', axis='z')
+    for y in (8, 7):
+        P(s, MID, y, 0, 'chain', axis='y')
+    barrel(s, MID, 6, 0)
+    # the loading awning on the right side, under the jetty: a slab roof on posts, goods under it
+    for z in (4, 8, 12):
+        for y in range(0, 3):
+            P(s, 13, y, z, 'spruce_fence')
+    for x in (11, 12, 13):
+        for z in range(4, 13):
+            if x == 13:
+                P(s, x, 3, z, 'spruce_stairs', facing='west', **STAIR)
+            elif z in (4, 12):
+                P(s, x, 3, z, 'spruce_stairs', facing='south' if z == 4 else 'north', **STAIR)
             else:
-                put_id(s, x, 3, z, 'spruce_slab', **TOP)
-    for x, y, z in ((10, 1, 4), (11, 1, 4), (10, 2, 4), (11, 1, 5), (10, 1, 8), (11, 1, 8), (10, 2, 8)):
-        put_id(s, x, y, z, 'barrel', facing='up' if y == 2 else 'east', open='false')   # x 9 stays a walkway
-    for z in (6, 7):                                 # crates: plank boxes with trapdoor lids
-        put_id(s, 10, 1, z, 'spruce_planks')
-        put_id(s, 10, 2, z, 'spruce_trapdoor', facing='east', **SHUT)
-    for z in (4, 6, 8):                              # shelves inside over the chests
-        put_id(s, x0 + 1, 3, z, 'spruce_trapdoor', facing='east', **SHELF)
-    for x in (3, 6):                                 # lanterns by the doors, hung from fence brackets on the plate
-        put_id(s, x, top, z0 - 1, 'spruce_fence')
-        put_id(s, x, top - 1, z0 - 1, 'lantern', **HANG)
+                P(s, x, 3, z, 'spruce_slab', **SLAB_TOP)
+    for x, y, z in ((11, 0, 5), (12, 0, 5), (11, 1, 5), (12, 0, 6), (11, 0, 10), (12, 0, 10), (11, 1, 10),
+                    (12, 0, 11), (11, 0, 11)):
+        barrel(s, x, y, z, 'up' if y else 'east')
+    for z in (7, 8, 9):                               # crates: plank boxes with trapdoor lids
+        P(s, 12, 0, z, 'spruce_planks'); P(s, 12, 1, z, 'spruce_trapdoor', facing='east', **SHUT)
+    P(s, 11, 0, 8, 'spruce_planks'); P(s, 11, 1, 8, 'spruce_trapdoor', facing='east', **SHUT)
+    P(s, 12, 2, 8, 'lantern', **HANG)
+    for x in (4, 8):                                  # lanterns by the hall door, on fence brackets from the plate
+        P(s, x, 6, 1, 'spruce_fence')
+        P(s, x, 5, 1, 'lantern', **HANG)
 
+    # ---------------------------------------------------------------- level 3: the loft, a full cellar, the yard
     s.at(3, 'flourish3')
-    put_id(s, 4, 3, z0 - 1, 'oak_wall_sign', facing='north', waterlogged='false')   # sign over the doors
-    s.decorate(4, 3, z0 - 1, 'sign_text', lines=['', 'Storehouse', '', ''])
-    for x in (x0, x1):                               # banners on the front corner posts
-        put_id(s, x, 3, z0 - 1, 'red_wall_banner', facing='north')
-    for z, flower in ((4, 'poppy'), (8, 'dandelion')):   # planters under the left windows
-        put_id(s, x0 - 1, 0, z, 'dirt'); put_id(s, x0 - 1, 1, z, flower)
-    for x, z, b in ((1, 0, 'hay'), (2, 0, 'hay'), (1, 1, 'hay'), (7, 0, 'barrel'), (8, 0, 'barrel'), (8, 1, 'crate')):
+    hole = {(8, 10), (8, 11)}
+    for x in range(X0 + 1, X1):                       # the loft floor at the plate level
+        for z in range(Z0 + 1, Z1):
+            if (x, z) not in hole:
+                A(s, x, 6, z, 'spruce_planks')
+    P(s, 8, 4, 10, 'spruce_stairs', facing='south', **STAIR)   # the loft stair (x 8, up toward the back)
+    P(s, 8, 4, 11, 'spruce_planks')
+    P(s, 8, 5, 11, 'spruce_stairs', facing='south', **STAIR)
+    P(s, 7, 7, 10, 'spruce_fence'); P(s, 7, 7, 11, 'spruce_fence')     # rails on the loft side of the hole
+    for z in range(Z0 + 1, Z1):                       # loft: chests under the eaves on both sides
+        chest(s, 3, 7, z, 'east')
+        chest(s, 9, 7, z, 'west')
+        if z <= 9:
+            chest(s, 4, 7, z, 'east')
+            chest(s, 8, 7, z, 'west')
+    for z in (10, 11, 12):                            # cellar: chests to the back on the right
+        chest(s, 8, 1, z, 'west'); chest(s, 8, 2, z, 'west')
+    chest(s, 4, 1, 13, 'east'); chest(s, 4, 2, 13, 'east')
+    for x in (5, 7):                                  # and across the front
+        chest(s, x, 1, 3, 'south'); chest(s, x, 2, 3, 'south')
+    # under the left jetty: a lean-to of goods (barrels, crates, firewood)
+    for z, b in ((4, 'barrel'), (5, 'barrel'), (6, 'crate'), (7, 'crate'), (9, 'wood'), (10, 'wood'), (11, 'barrel')):
+        if b == 'barrel':
+            barrel(s, 2, 0, z, 'west'); barrel(s, 2, 1, z)
+        elif b == 'crate':
+            P(s, 2, 0, z, 'spruce_planks'); P(s, 2, 1, z, 'spruce_trapdoor', facing='west', **SHUT)
+        else:
+            P(s, 2, 0, z, 'spruce_log', axis='z'); P(s, 2, 1, z, 'spruce_log', axis='z')
+    # the back yard: hay, crates, barrels, a cart
+    for x, z, b in ((3, 16, 'hay'), (4, 16, 'hay'), (3, 17, 'hay'), (3, 16, 'hay2'), (9, 16, 'crate'),
+                    (10, 16, 'barrel'), (10, 17, 'barrel'), (9, 17, 'crate'), (10, 16, 'barrel2')):
         if b == 'hay':
-            put_id(s, x, 0, z, 'hay_block', axis='y')
+            P(s, x, 0, z, 'hay_block', axis='y')
+        elif b == 'hay2':
+            P(s, x, 1, z, 'hay_block', axis='x')
+        elif b == 'crate':
+            P(s, x, 0, z, 'spruce_planks'); P(s, x, 1, z, 'spruce_trapdoor', facing='south', **SHUT)
         elif b == 'barrel':
-            put_id(s, x, 0, z, 'barrel', facing='up', open='false')
+            barrel(s, x, 0, z)
         else:
-            put_id(s, x, 0, z, 'spruce_planks'); put_id(s, x, 1, z, 'spruce_trapdoor', facing='north', **SHUT)
-    put_id(s, 1, 1, 0, 'hay_block', axis='x')
-    put_id(s, 11, 2, 6, 'lantern', **HANG)          # a lantern under the awning
-    s.decorate(10, 0, 11, 'hand_cart', note='a hand cart by the awning')
-    for x, z, b in ((0, 3, 'leaves'), (0, 9, 'leaves'), (0, 6, 'poppy'), (9, 11, 'leaves'), (2, 11, 'dandelion'),
-                    (6, 11, 'leaves')):
+            barrel(s, x, 1, z)
+    s.decorate(7, 0, 16, 'hand_cart', note='a hand cart of sacks by the cellar door')
+    P(s, MID, 6, 1, 'oak_wall_sign', facing='north', waterlogged='false')   # sign over the hall door
+    s.decorate(MID, 6, 1, 'sign_text', lines=['', 'Storehouse', '', ''])
+    for x in (X0, X1):                                # banners on the front corner posts
+        P(s, x, 5, 1, 'red_wall_banner', facing='north')
+    for z, flower in ((4, 'poppy'), (8, 'cornflower'), (12, 'dandelion')):   # flower boxes under the side windows
+        P(s, X0 - 1, 4, z, 'coarse_dirt'); P(s, X0 - 2, 4, z, 'spruce_trapdoor', facing='west', **OPEN)
+        P(s, X0 - 1, 5, z, flower)
+        P(s, X1 + 1, 4, z, 'coarse_dirt'); P(s, X1 + 2, 4, z, 'spruce_trapdoor', facing='east', **OPEN)
+        P(s, X1 + 1, 5, z, 'poppy' if flower == 'dandelion' else 'dandelion')
+    for x, z, b in ((0, 3, 'leaves'), (1, 0, 'poppy'), (0, 6, 'azure_bluet'), (1, 13, 'leaves'), (0, 9, 'dandelion'),
+                    (8, 0, 'leaves'), (9, 0, 'poppy'), (10, 0, 'cornflower'), (14, 2, 'leaves'), (14, 14, 'leaves'),
+                    (12, 15, 'poppy'), (1, 16, 'leaves'), (14, 6, 'dandelion')):
         if b == 'leaves':
-            put_id(s, x, 0, z, 'oak_leaves', **LEAVES)
+            P(s, x, 0, z, 'oak_leaves', **LEAVES)
         else:
-            put_id(s, x, 0, z, b)
+            P(s, x, 0, z, b)
     connect(s)
     return s
 
 
 STRUCTURES = [dict(path='storehouse', name='Storehouse', tier=3, zone='inner', role='storage', group='storehouse',
-                   terrain='skirt', door='front', make=storehouse, changes='First version.',
-                   description='Over budget: 432 blocks vs 270 (first build 361 vs 230). Half-timbered barn (plaster '
-                               'in a dark oak frame on a cobblestone course, spruce gable roof) with double oak doors; '
-                               'chests and barrels along the walls and a desk inside; L2 adds the lectern ledger, the '
-                               'hoist beam with a barrel on its chain, the side awning with crates, shelves and door '
-                               'lanterns; L3 hay and crates out front, sign, banners, planters, bushes.')]
+                   terrain='skirt', door='front', make=storehouse, max_height=12,
+                   changes='Carlton: "needs to be larger, add a cellar, more chests, should scale with levels". Much '
+                           'bigger (hall 9 by 13 instead of 8 by 9) and on two floors plus a loft. The cellar: the '
+                           'mod cannot build below the ground (no layers under 0, builders never dig), so it is a '
+                           'raised stone undercroft: the hall stands on it one storey up (reached by an outside stone '
+                           'stair), and a railed stair inside goes down to it; carts also get in through a back door '
+                           'at ground level. No ladders. Storage grows per level: L1 about 12 chests and 14 barrels; '
+                           'L2 about 32 chests and 50 barrels (racks of barrels on their sides, everything two high, '
+                           'the cellar lined); L3 adds the loft under the roof full of chests (its own stair) and fills '
+                           'the cellar, over 70 chests. 12 tall: needs scaffolding (or a builder on the hall floor).',
+                   description='Needs scaffolding: 12 tall (over the 9 rule; the roof is within reach from the hall '
+                               'floor, so the planner may need none). Over budget on purpose (Carlton: bigger, more '
+                               'storage). Jettied timber hall (plaster in a dark oak frame, spruce roof) on a stone '
+                               'undercroft cellar; outside stone stair to the door, inside stair to the cellar, back '
+                               'cart door. L1 some chests and barrels; L2 barrel racks, chests two high, hoist, loading '
+                               'awning; L3 loft full of chests, cellar full, yard, flowers.')]
