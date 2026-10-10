@@ -4,14 +4,14 @@
   "version": 1,
   "size": [12,8,10],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:41:10.839Z",
     "description": "Tannery, level 2 of 3: L1 plus flourish 2. Over budget: 252 blocks vs 132. Spruce work shed open on one side to a yard of soaking vats (composters, open barrels); crafting table as workstation, scraping bench; L2 adds a long hide drying rack, lime pits, leather and lanterns; L3 stretching frames, barrels of finished leather, rinse troughs, sign, banner and flowers. Wants level ground. Not yet builder-tested: cauldron. Decoration step adds: item, water_cauldron.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T04:59:40.819Z",
     "tags": [
       "batch3",
       "tier3",

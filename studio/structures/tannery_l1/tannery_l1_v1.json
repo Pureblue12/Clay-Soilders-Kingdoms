@@ -4,14 +4,14 @@
   "version": 1,
   "size": [12,8,10],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:41:10.339Z",
     "description": "Tannery, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 252 blocks vs 132. Spruce work shed open on one side to a yard of soaking vats (composters, open barrels); crafting table as workstation, scraping bench; L2 adds a long hide drying rack, lime pits, leather and lanterns; L3 stretching frames, barrels of finished leather, rinse troughs, sign, banner and flowers. Wants level ground.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T04:59:40.816Z",
     "tags": [
       "batch3",
       "tier3",
