@@ -58,9 +58,52 @@ def build(entry):
     return s
 
 
+FULL = ('_planks', '_log', '_wood', 'cobblestone', 'stone_bricks', 'bricks', 'terracotta', 'hay_block', 'barrel',
+        '_wool', 'stone', 'dirt', 'gravel', 'crafting_table', 'furnace', 'smoker', 'glass')
+SIDES = {'north': (0, -1), 'south': (0, 1), 'west': (-1, 0), 'east': (1, 0)}
+
+
+def family(name):
+    """'fence', 'pane' or 'wall' for blocks that join their neighbours, else None."""
+    if name.endswith('_fence') and not name.startswith('nether_brick'):
+        return 'fence'
+    if name.endswith('_pane') or name == 'iron_bars':
+        return 'pane'
+    if name.endswith('_wall'):
+        return 'wall'
+    return None
+
+
+def join_connections(blocks):
+    """Fills in north/east/south/west (and a wall's up) on fences, panes and walls that were placed without them,
+    the way the game joins them: fences to fences and full blocks, panes and walls to each other and full blocks.
+    Without this the Studio draws lone posts (Carlton's note on the stables: "Fences are broken")."""
+    out = dict(blocks)
+    for (x, y, z), (name, props) in blocks.items():
+        fam = family(name)
+        if not fam or any(k in props for k in SIDES):
+            continue
+        joined = {}
+        for side, (dx, dz) in SIDES.items():
+            o = blocks.get((x + dx, y, z + dz))
+            ofam = family(o[0]) if o else None
+            full = o is not None and o[0].endswith(FULL) and not o[0].endswith(('_slab', '_stairs'))
+            joined[side] = bool(o) and (full or (ofam == 'fence' if fam == 'fence' else ofam in ('pane', 'wall')))
+        p = dict(props)
+        if fam == 'wall':
+            straight = joined['north'] == joined['south'] and joined['east'] == joined['west'] and \
+                joined['north'] != joined['east']
+            p.update({k: 'low' if v else 'none' for k, v in joined.items()}, up='false' if straight else 'true')
+        else:
+            p.update({k: str(v).lower() for k, v in joined.items()})
+        p.setdefault('waterlogged', 'false')
+        out[(x, y, z)] = (name, p)
+    return out
+
+
 def studio_file(entry, s, level):
     """The Studio JSON of one level (layers[y][z] strings, x along the string)."""
-    blocks = s.level_blocks(level)
+    blocks = join_connections(s.level_blocks(level))
     palette, keys = {'.': 'minecraft:air'}, {}
     for name, props in sorted(set((b[0], tuple(sorted(b[1].items()))) for b in blocks.values())):
         state = 'minecraft:' + name + ('[' + ','.join(f'{k}={v}' for k, v in props) + ']' if props else '')
