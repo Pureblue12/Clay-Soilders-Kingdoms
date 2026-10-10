@@ -65,6 +65,57 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:27:33.903Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 92,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: moss_carpet, dandelion, candle, azure_bluet."
+          }
+        ],
+        "stats": {
+          "blocks": 329,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5592705167173252,
+          "types": 35,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.13677811550151975
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 1,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Cottage level 3: adds a lean-to woodshed on the side with logs and crates, so it clearly differs from level 2.",
+        "problems": [
+          "Wood is all browns; a white plaster panel or two would lift it."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

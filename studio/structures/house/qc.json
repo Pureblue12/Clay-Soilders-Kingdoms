@@ -63,6 +63,62 @@
           "sheet"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T03:27:35.594Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 92,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: moss_carpet, bookshelf, vine, azure_bluet, candle."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 282,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.524822695035461,
+          "types": 36,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.12411347517730496
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "House: timber-framed house with dark eaves, porch, flower boxes, log pile and garden fence; the lone fence is fixed.",
+        "problems": [
+          "The gable ends are still flush (no overhang front and back)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

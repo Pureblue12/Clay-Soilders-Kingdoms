@@ -35,25 +35,25 @@
     "checkedAt": "2026-10-10T02:59:37.669Z"
   },
   "cottage_l1": {
-    "version": 2,
-    "verdict": "revise",
-    "score": 61,
-    "round": 1,
-    "checkedAt": "2026-10-10T03:18:43.484Z"
+    "version": 3,
+    "verdict": "pass",
+    "score": 78,
+    "round": 2,
+    "checkedAt": "2026-10-10T03:27:32.867Z"
   },
   "cottage_l2": {
-    "version": 2,
+    "version": 3,
     "verdict": "pass",
-    "score": 81,
+    "score": 92,
     "round": 1,
-    "checkedAt": "2026-10-10T03:18:44.029Z"
+    "checkedAt": "2026-10-10T03:27:33.389Z"
   },
   "cottage_l3": {
-    "version": 2,
+    "version": 3,
     "verdict": "pass",
-    "score": 72,
+    "score": 92,
     "round": 1,
-    "checkedAt": "2026-10-10T03:18:44.560Z"
+    "checkedAt": "2026-10-10T03:27:33.903Z"
   },
   "farm_field_carrots_l1": {
     "version": 1,
@@ -119,11 +119,11 @@
     "checkedAt": "2026-10-10T03:24:44.133Z"
   },
   "house": {
-    "version": 3,
+    "version": 4,
     "verdict": "pass",
-    "score": 86,
+    "score": 92,
     "round": 1,
-    "checkedAt": "2026-10-10T03:21:05.213Z"
+    "checkedAt": "2026-10-10T03:27:35.594Z"
   },
   "keep_l1": {
     "version": 2,
@@ -189,18 +189,18 @@
     "checkedAt": "2026-10-10T03:24:42.396Z"
   },
   "signpost_l1": {
-    "version": 2,
+    "version": 3,
     "verdict": "pass",
-    "score": 78,
+    "score": 83,
     "round": 1,
-    "checkedAt": "2026-10-10T03:18:46.237Z"
+    "checkedAt": "2026-10-10T03:27:34.482Z"
   },
   "signpost_l2": {
-    "version": 2,
+    "version": 3,
     "verdict": "pass",
-    "score": 86,
+    "score": 92,
     "round": 1,
-    "checkedAt": "2026-10-10T03:18:46.768Z"
+    "checkedAt": "2026-10-10T03:27:35.023Z"
   },
   "stables_l1": {
     "version": 2,

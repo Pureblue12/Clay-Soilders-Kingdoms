@@ -47,6 +47,57 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:27:34.482Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 83,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "31 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 31,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.6774193548387096,
+          "types": 8,
+          "dominant": {
+            "name": "oak_wall_sign",
+            "share": 0.25806451612903225
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Signpost level 1: a dark log post on a flowered base with four direction boards at two heights and a lantern on top; reads as a signpost now.",
+        "problems": [
+          "Over the prop budget by one block; Carlton decides."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }
