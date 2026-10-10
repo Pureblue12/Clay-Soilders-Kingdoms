@@ -62,6 +62,63 @@
           "iso"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T05:22:50.429Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 93,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "497 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 497,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.358148893360161,
+          "types": 20,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.1891348088531187
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "roof": "Stall awnings are flat striped canopies, right for stalls but not a pitched roof.",
+          "life": "Flush poppy beds round the cross; no lanterns yet (they come at L2).",
+          "levels": "Base of the set: paved square, four stalls, stepped cross, benches. L2 and L3 build visibly on it."
+        },
+        "summary": "The market square shell: paved square with gravel aisles, four striped stalls with barrels and produce, a stepped stone cross with flush flower beds and benches.",
+        "problems": [
+          "Note only: meta.groundLayer 0, the paving replaces the grass (builders can't do that yet).",
+          "Reachability: 192 of 276 standing places reached; unreached are only awning tops (y 4..5) and four barrel tops under the awnings. Square, aisles and stall fronts are reached."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

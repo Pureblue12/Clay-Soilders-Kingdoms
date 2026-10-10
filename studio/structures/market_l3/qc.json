@@ -66,6 +66,73 @@
           "front"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T05:22:53.150Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 100,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: pumpkin, dandelion, oxeye_daisy, lectern, cornflower, allium, red_wall_banner, white_wall_banner, stone_brick_wall, red_banner, white_banner, red_wool, white_wool, yellow_wool, chiseled_stone_bricks."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "702 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 702,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4188034188034188,
+          "types": 39,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.1339031339031339
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "roof": "The automatic overhang warning is a false alarm: the stepped spruce pyramid over the cross overhangs its stone posts by one block all round and is finished with a lantern; the stall awnings are flat by design.",
+          "levels": "Clearly different from L2 at a glance: the cross is now a covered market cross with a dark pyramid roof that dominates the centre (top and front views), red-white banners on the stall backs, and goods stacks (pumpkins, hay, crates) at the outer corners. Answers Carlton's v1 note."
+        },
+        "summary": "L2 plus a covered market cross with a stepped spruce pyramid roof, banners on the stall backs, stools and goods stacked at the corners: the finished market.",
+        "problems": [
+          "Minor: the four new flower pots stand alone on the border bricks at (5,1,0), (13,1,0), (1,1,14), (9,1,14) and read a little stray; group them with the goods stacks or drop them.",
+          "Reachability: 306 of 330 standing places reached; only the top of the cross's pyramid roof (y 6..7) is not, which is fine."
+        ],
+        "views": [
+          "sheet",
+          "iso"
+        ]
+      }
     }
   }
 }
