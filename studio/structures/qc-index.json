@@ -350,25 +350,25 @@
     "checkedAt": "2026-10-10T03:27:35.023Z"
   },
   "stables_l1": {
-    "version": 2,
+    "version": 3,
     "verdict": "pass",
-    "score": 72,
-    "round": 2,
-    "checkedAt": "2026-10-10T03:12:25.898Z"
+    "score": 83,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:52:11.604Z"
   },
   "stables_l2": {
-    "version": 2,
+    "version": 3,
     "verdict": "pass",
-    "score": 75,
-    "round": 2,
-    "checkedAt": "2026-10-10T03:12:26.396Z"
+    "score": 94,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:52:12.161Z"
   },
   "stables_l3": {
-    "version": 2,
+    "version": 3,
     "verdict": "pass",
-    "score": 86,
-    "round": 2,
-    "checkedAt": "2026-10-10T03:12:26.889Z"
+    "score": 100,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:52:12.677Z"
   },
   "visitors_camp_l1": {
     "version": 3,
@@ -392,45 +392,45 @@
     "checkedAt": "2026-10-10T03:44:51.051Z"
   },
   "watchtower_l1": {
-    "version": 3,
+    "version": 4,
     "verdict": "pass",
-    "score": 75,
-    "round": 3,
-    "checkedAt": "2026-10-10T03:01:27.891Z"
+    "score": 81,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:52:29.548Z"
   },
   "watchtower_l2": {
-    "version": 3,
+    "version": 4,
     "verdict": "pass",
-    "score": 75,
-    "round": 3,
-    "checkedAt": "2026-10-10T03:01:28.482Z"
+    "score": 94,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:52:30.065Z"
   },
   "watchtower_l3": {
-    "version": 3,
+    "version": 4,
     "verdict": "pass",
-    "score": 75,
-    "round": 3,
-    "checkedAt": "2026-10-10T03:01:28.990Z"
+    "score": 94,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:52:30.591Z"
   },
   "well_l1": {
-    "version": 3,
+    "version": 4,
     "verdict": "pass",
     "score": 72,
-    "round": 3,
-    "checkedAt": "2026-10-10T03:16:09.355Z"
+    "round": 1,
+    "checkedAt": "2026-10-10T03:53:21.003Z"
   },
   "well_l2": {
-    "version": 3,
+    "version": 4,
     "verdict": "pass",
-    "score": 75,
-    "round": 3,
-    "checkedAt": "2026-10-10T03:16:09.879Z"
+    "score": 72,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:53:21.512Z"
   },
   "well_l3": {
-    "version": 3,
+    "version": 4,
     "verdict": "pass",
-    "score": 86,
+    "score": 92,
     "round": 1,
-    "checkedAt": "2026-10-10T03:16:10.489Z"
+    "checkedAt": "2026-10-10T03:53:22.041Z"
   }
 }
