@@ -314,6 +314,27 @@
     "round": 1,
     "checkedAt": "2026-10-10T04:22:15.668Z"
   },
+  "gatehouse_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 80,
+    "round": 1,
+    "checkedAt": "2026-10-10T08:55:17.907Z"
+  },
+  "gatehouse_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 75,
+    "round": 1,
+    "checkedAt": "2026-10-10T08:55:18.523Z"
+  },
+  "gatehouse_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 90,
+    "round": 1,
+    "checkedAt": "2026-10-10T08:55:19.109Z"
+  },
   "graveyard_l1": {
     "version": 1,
     "verdict": "pass",

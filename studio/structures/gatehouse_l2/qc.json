@@ -1,0 +1,68 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "gatehouse_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T08:55:18.523Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 75,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: stone_brick_wall, iron_bars, red_wall_banner."
+          }
+        ],
+        "stats": {
+          "blocks": 619,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.24717285945072698,
+          "types": 29,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.43134087237479807
+          },
+          "height": 20,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 1
+        },
+        "notes": {
+          "detail": "Capped at 1: L2 adds banners, iron-bar windows, lamp posts and barrels/hay at the back, but that is props; the promised portcullis is one row of iron bars at (6..8,3,4) that does not show in any view.",
+          "levels": "Tells apart from L1 by the red banners on the front, but no new feature or job is clearly visible.",
+          "materials": "White terracotta face on the gate-room back wall is still there.",
+          "roof": "Same bare crenellated tops as L1; two barrels and lanterns on the tops help a little."
+        },
+        "summary": "L1 plus red banners on both towers and over the gate, iron bars in the slits, lamp posts and stores at the back; the portcullis is only a single row of bars.",
+        "problems": [
+          "Portcullis: a single row of iron_bars at (6,3,4),(7,3,4),(8,3,4) is invisible; make it a real portcullis (2-3 rows of bars or a dark oak/iron grid hanging in the front arch at z 3), so L2 adds a clearly visible new feature.",
+          "Still no gate leaves at the back (z 7..8); consider spruce doors/fence gates as the gate itself.",
+          "White_terracotta at (6,6,7) and (8,6,7) on the dark oak gate-room back wall reads as a face; swap it.",
+          "Reachability: 241 of 242 standing places reached (only the corner (10,5,2)). Fine."
+        ],
+        "views": [
+          "sheet",
+          "front",
+          "iso_back"
+        ]
+      }
+    }
+  }
+}

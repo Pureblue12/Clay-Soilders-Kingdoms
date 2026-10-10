@@ -1,0 +1,64 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "gatehouse_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T08:55:17.907Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 80,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 572,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.1853146853146853,
+          "types": 21,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.46678321678321677
+          },
+          "height": 20,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Interior is furnished (beds, chests, barrels, furnace, doors) and the towers have corbelled tops, but the outer faces are big flat stone sheets with only a few 1-block slits.",
+          "roof": "Crenellated fighting tops with a corbel ring are right for a gatehouse, but they are all one grey and the merlon tops are bare.",
+          "materials": "Stone brick, cobble and mossy cobble work; the two white_terracotta blocks in the dark oak back wall of the gate room clash and read as a face.",
+          "life": "Only torches; no plants anywhere.",
+          "levels": "L2 banners/bars and L3 slate cones make the three levels tell apart."
+        },
+        "summary": "Shell of a twin-tower stone gatehouse: open 3-wide passage, gate room above it, stairs up to the wall walk and both crenellated fighting tops, beds and stores inside the towers.",
+        "problems": [
+          "Back wall of the gate room (z 7, x 5..9, y 5..6): the white_terracotta at (6,6,7) and (8,6,7) over the glass panes reads as a face in the back view; use stone brick, spruce planks or a pane/shutter instead.",
+          "The passage has no gate at all (x 6..8, z 1..7 open at both ends); a gatehouse should show at least gate leaves or a portcullis groove at L1.",
+          "Gate-room front opening (7,5,3) opens onto a 6-block drop into the open recess x 6..8 z 1..2 y 4..6 over the passage; a soldier stepping out falls. Put a railing/bars there in L1 (L2 already adds bars) or floor the recess.",
+          "Outer tower faces are flat and bare: add sills/stair hoods under the slits, a string course, or a few lanterns on the fronts.",
+          "Reachability: 255 of 258 standing places reached; the 3 unreached are window ledges (4,6,1), (10,6,1) and a corner at (10,5,2). Fine."
+        ],
+        "views": [
+          "sheet",
+          "front",
+          "iso_back"
+        ]
+      }
+    }
+  }
+}
