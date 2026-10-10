@@ -4,14 +4,14 @@
   "version": 4,
   "size": [9,3,9],
   "meta": {
-    "status": "rejected",
-    "notes": "see l3",
+    "status": "approved",
+    "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:03:26.722Z",
     "description": "Fire pit, level 2 of 3: L1 plus flourish 2. An unlit campfire (it never burns) in a stone ring with a cooking spit, three spruce log benches, a woodpile, a chopping stump, supplies, poppies and a lantern post; level 2 a pot, a second lantern, cushions and plants; level 3 a dark oak firewood shelter with a hanging lantern. Not yet builder-tested: cauldron, dandelion, fern, short_grass. Decoration step adds: potted_plant.",
     "changes": "The lone stepping stones are now one joined stone path in from the front with a wider mouth, and leaf bushes and more poppies grow round the edge.",
     "parent": 3,
-    "reviewedAt": "2026-10-10T04:14:56.315Z",
+    "reviewedAt": "2026-10-10T05:35:33.202Z",
     "tags": [
       "revise1",
       "tier1",

@@ -143,6 +143,77 @@
           "front"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T05:34:45.868Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 2,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cauldron, cornflower, brewing_stand, allium, candle, white_wall_banner, brick_stairs."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "422 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 422,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4597156398104265,
+          "types": 36,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.1943127962085308
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 0,
+          "purpose": 1,
+          "depth": 1,
+          "life": 1,
+          "materials": 2,
+          "shape": 2,
+          "scale": 2,
+          "levels": 2,
+          "roof": 2
+        },
+        "notes": {
+          "artefacts": "Carlton's note is not met: the 'red cross' is five plain bricks at (5,4,1),(4..6,5,1),(5,6,1). Bricks are reddish-brown with grey mortar, the same block as the chimney stack, and only the two lower corners (4,4,1),(6,4,1) are white; the upper corners are spruce roof stairs, so the top arm sinks into the brown roof. In the front view a plus shape can just be made out, but it reads as brick masonry or a chimney breast, not a red hospital cross; in the iso view and the sheet thumbnails it is only a brick patch. Carlton's note isn't met, so artefacts 0.",
+          "purpose": "Without a readable red cross it reads as a cottage; only the beds inside show it is an infirmary.",
+          "roof": "The roof warning is a false alarm: the renders show the roof past the side walls and the front gable projecting over the door."
+        },
+        "summary": "L2 adds the brewing stand and cauldron, lanterns, flower boxes, a door canopy and the banner (now on the lean-to post), so the front reads clearly busier than L1.",
+        "problems": [
+          "Carlton's note is not met: the 'red cross' is five plain bricks at (5,4,1),(4..6,5,1),(5,6,1). Bricks are reddish-brown with grey mortar, the same block as the chimney stack, and only the two lower corners (4,4,1),(6,4,1) are white; the upper corners are spruce roof stairs, so the top arm sinks into the brown roof. In the front view a plus shape can just be made out, but it reads as brick masonry or a chimney breast, not a red hospital cross; in the iso view and the sheet thumbnails it is only a brick patch.",
+          "Make the cross read as a hospital cross on every level: use a clearly red block (red_wool or red_concrete; untested blocks are only a warning, L2/L3 already carry several) at (5,4,1),(4,5,1),(5,5,1),(6,5,1),(5,6,1), and put it on a full white field: white_terracotta at all four corners (4,4,1),(6,4,1),(4,6,1),(6,6,1) (replace the spruce stairs at (4,6,1) and (6,6,1)), ideally a white border round it, so the cross stands out against white instead of the brown roof.",
+          "Side and back walls still flat; optional.",
+          "Reachability: ward, aisle and lean-to (and L3 garden) reached; unreached are only roof slopes, shelf/box/canopy tops and chimney shoulders. Fine."
+        ],
+        "views": [
+          "sheet",
+          "front",
+          "iso"
+        ]
+      }
     }
   }
 }

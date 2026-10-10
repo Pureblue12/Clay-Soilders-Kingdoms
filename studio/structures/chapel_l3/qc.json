@@ -146,6 +146,74 @@
           "floor_top"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T05:34:33.610Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 100,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: fern, mossy_cobblestone_slab, dandelion, mossy_stone_brick_stairs, oxeye_daisy, cornflower, azure_bluet, red_wall_banner, lily_of_the_valley, candle, lectern, white_wall_banner, red_stained_glass_pane, yellow_stained_glass_pane, blue_stained_glass_pane, bell."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "600 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "13 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          }
+        ],
+        "stats": {
+          "blocks": 600,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.48833333333333334,
+          "types": 44,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.2816666666666667
+          },
+          "height": 13,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "levels": "Clearly new at a glance: a roofed spruce lych gate with red banners over a cobble path, a low walled churchyard front with headstones and lantern posts, plus coloured glass in the gable window.",
+          "scale": "Lych gate is a small roofed gate, the right size; churchyard wall is low (one block plus coping).",
+          "life": "Flowers and ferns in the churchyard and around the building, lanterns on posts, moss path."
+        },
+        "summary": "L3 adds the churchyard front: a low wall with a roofed lych gate, headstones, a stone path and lantern posts, plus stained glass, banners and more flowers on top of L2.",
+        "problems": [
+          "Reachability: nave, sacristy and churchyard are reached; unreached places are the nave, sacristy and lych gate roofs, buttress caps, window boxes, the bell top and gable slots. Fine."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "front"
+        ]
+      }
     }
   }
 }
