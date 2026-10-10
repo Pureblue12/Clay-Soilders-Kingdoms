@@ -1,0 +1,82 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "hospital_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T08:57:23.371Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 55,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Drawn for the decoration step, not built: minecraft:water, minecraft:lily_pad."
+          },
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cornflower, allium, cauldron, fern, sweet_berry_bush, oxeye_daisy, clay, brewing_stand, candle, white_wall_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "1499 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "12 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          }
+        ],
+        "stats": {
+          "blocks": 1499,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3182121414276184,
+          "types": 40,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.17878585723815876
+          },
+          "height": 12,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 0,
+          "purpose": 1,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 1,
+          "levels": 1
+        },
+        "notes": {
+          "artefacts": "Carlton wanted the infirmary's red cross to read clearly; the hospital's 'red-cross banner' at (8,7,0) is a plain white_wall_banner (the file can't hold banner patterns), so it shows as a white rectangle and no cross is visible anywhere. His note is not met.",
+          "purpose": "Brewing stands, cauldrons and the bed rows read inside, but from outside nothing says hospital.",
+          "levels": "From outside L2 only adds props (shutters, dirt planters, a door canopy, lanterns, a white banner); the front views of L1 and L2 look nearly the same. Detail capped at 1.",
+          "scale": "The planters are bare coarse_dirt cubes standing in front of the wall at (3,0,0),(6,0,0),(10,0,0),(13,0,0): they read as dirt lumps, not flower boxes."
+        },
+        "summary": "Adds the dispensary fittings (brewing stands, cauldrons, candles), chained lanterns, carpets, courtyard herbs, shutters, planters, a door canopy and a banner over the door.",
+        "problems": [
+          "Healing sign does not read: white_wall_banner at (8,7,0) is plain white. Build the red cross in blocks on the upper storey over the door (as the infirmary v4 does with red_wool on white_wool), since banner patterns can't be stored and the banner shows plain white: e.g. red_wool at (8,5,1),(8,6,1),(8,7,1),(7,6,1),(9,6,1) with white_wool at (7,5,1),(9,5,1),(7,7,1),(9,7,1), replacing the posts at x7/x9 y5..7 and the pane at (8,6,1); keep it on every level, and move the banner at (8,7,0) so it doesn't cover the cross.",
+          "Planters are bare coarse_dirt cubes at (3,0,0),(6,0,0),(10,0,0),(13,0,0): rim them with spruce trapdoors or use a slab/trapdoor box against the wall.",
+          "L2 needs a clearly visible new feature from outside (e.g. the red cross plus a proper entrance porch or a herb lean-to), not only props.",
+          "Reach: 312 of 566 reached; unreached are roof, eaves, the canopy top (7..9,4,0) and a brewing stand top: fine."
+        ],
+        "views": [
+          "sheet",
+          "front"
+        ]
+      }
+    }
+  }
+}

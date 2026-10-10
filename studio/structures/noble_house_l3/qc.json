@@ -1,0 +1,78 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "noble_house_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T08:57:22.280Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 90,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: flowering_azalea_leaves, stone_brick_wall, allium, cornflower, oxeye_daisy, dandelion, azure_bluet, lectern, bookshelf, chiseled_stone_bricks, vine, candle, red_wall_banner, brick_stairs, dark_oak_slab, light_weighted_pressure_plate, dark_oak_fence."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "553 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 553,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4972875226039783,
+          "types": 48,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.15732368896925858
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 1,
+          "levels": 2
+        },
+        "notes": {
+          "roof": "Automatic 'no overhang' warning is a false alarm (see L2).",
+          "scale": "The 'walled garden' is a back wall plus loose pillars: from above and in the iso it reads as scattered posts, not an enclosed garden.",
+          "artefacts": "The obelisk (x13 z10) is capped with a flat gold pressure plate that reads as a yellow tile stuck on top; broken slab path from L1 remains.",
+          "levels": "Visibly different: garden pillars with lanterns, obelisk, azalea bushes, vines, candles."
+        },
+        "summary": "Adds a garden with stone brick lantern pillars, an obelisk, azalea bushes, vines, pots and candles around the L2 manor.",
+        "problems": [
+          "Walled garden is not walled: only the back wall (stone_brick_wall y0 x11..14 z12) exists; close the outer side x15 z3..11 and the front edge between the pillars with low stone brick walls, leaving a gate where the path enters.",
+          "Obelisk top: light_weighted_pressure_plate at (13,4,10) looks like a flat yellow tile: use a lantern, a stone brick wall tip or a small point instead.",
+          "Garden path still joins only at corners (cobblestone slabs y0, x10..13 z1..9): make it continuous.",
+          "Reach: 187 of 291 reached; unreached are roof slopes, eaves, the balcony floor and the tops of three garden pillars: fine."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "top"
+        ]
+      }
+    }
+  }
+}

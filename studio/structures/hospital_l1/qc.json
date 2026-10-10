@@ -1,0 +1,79 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "hospital_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T08:57:22.814Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 68,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Drawn for the decoration step, not built: minecraft:water."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "1412 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "12 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          }
+        ],
+        "stats": {
+          "blocks": 1412,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.2804532577903683,
+          "types": 24,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.18980169971671387
+          },
+          "height": 12,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 1,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "purpose": "No hospital sign at all on L1: from outside it is a plain two-storey timber house; only the rows of red beds seen from above show a ward.",
+          "detail": "Exterior is bare: tiny single-pane windows in big plaster and stone panels, no sills, boxes, lanterns or props outside.",
+          "roof": "One even spruce ring round the courtyard, a single colour; the 'cross gable over the door' is only a small notch with a pane at (8,9,1), not a real gable.",
+          "shape": "Reads as a large cube; the chimney is the only break.",
+          "life": "Nothing growing or lit outside."
+        },
+        "summary": "The shell: a two-storey stone and half-timbered cloister hospital round a courtyard, with 14 beds, dispensary, healers' room, herb store, clay room and stairs.",
+        "problems": [
+          "No red cross / healing sign on L1. Build the red cross in blocks on the upper storey over the door (as the infirmary v4 does with red_wool on white_wool), since banner patterns can't be stored and the banner shows plain white: e.g. red_wool at (8,5,1),(8,6,1),(8,7,1),(7,6,1),(9,6,1) with white_wool at (7,5,1),(9,5,1),(7,7,1),(9,7,1), replacing the posts at x7/x9 y5..7 and the pane at (8,6,1); keep it on every level, and move the banner at (8,7,0) so it doesn't cover the cross.",
+          "Front cross gable is too small to read (only the pane at (8,9,1) and stairs around it): give it a real gable face projecting from the front roof slope over the door.",
+          "Exterior bare: add window sills or trapdoor shutters and a lantern by the door already on L1, or larger windows in the wide plaster bays (x2..4 and x12..14, y5..7, z1).",
+          "Reach: 314 of 564 reached; unreached are roof slopes, eaves, attic beam tops and chimney ledges: fine (upper floor and courtyard are reached)."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "front"
+        ]
+      }
+    }
+  }
+}

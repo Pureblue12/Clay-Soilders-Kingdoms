@@ -1,0 +1,74 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "noble_house_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T08:57:21.725Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 95,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: allium, cornflower, oxeye_daisy, dandelion, azure_bluet, stone_brick_wall, lectern, bookshelf, red_wall_banner, brick_stairs, dark_oak_slab, dark_oak_fence."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "521 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 521,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4836852207293666,
+          "types": 41,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.16698656429942418
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "roof": "Automatic 'no overhang' warning is a false alarm: the renders show the eaves overhanging all round; the balcony under the cross gable confuses the check.",
+          "levels": "Clear step up from L1: balcony on stone brick porch columns, red banners, shutters, flower boxes, lantern posts and flower beds.",
+          "artefacts": "Same broken diagonal slab path as L1."
+        },
+        "summary": "Adds the noble look: a front balcony on stone brick porch columns, red wall banners, shutters, flower boxes, lantern posts, garden flowers, bookshelves and a lectern inside.",
+        "problems": [
+          "Garden path still joins only at corners (cobblestone slabs y0 around x10..13, z1..9): make it continuous.",
+          "Reach: 196 of 297 reached; unreached are roof slopes, eaves and the balcony floor (y5 x3..7 z1..2), which builders can place from the ground: fine."
+        ],
+        "views": [
+          "sheet",
+          "front"
+        ]
+      }
+    }
+  }
+}

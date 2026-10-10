@@ -1,0 +1,67 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "noble_house_l1",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T08:57:21.145Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 80,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "442 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 442,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4072398190045249,
+          "types": 23,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.19683257918552036
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 1,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Good interior (beds, kitchen, study) but the outside is bare for a noble house: no shutters, flower boxes or lanterns until L2.",
+          "artefacts": "Garden path of cobblestone slabs steps diagonally and only touches at corners, so it reads as broken pieces; a two-stair bench stands alone in the grass.",
+          "purpose": "Reads as a well-built timber house; nothing yet says noble (that comes in L2).",
+          "life": "Only a few loose poppies."
+        },
+        "summary": "The shell: a stone and half-timbered manor with spruce gable roof, front cross gable, back dormer and brick chimney, furnished hall, kitchen and bedrooms.",
+        "problems": [
+          "Garden path (cobblestone_slab y0: (8..10,1), (11,2..4), (10,5), (12,5), (13,6..8), (12,9)) joins only at corners: make it a continuous 1-wide path with straight runs and full corners.",
+          "Bench at (15,0,6)-(15,0,7) is two bare spruce stairs with no arms: add trapdoor arms (as L2 does) or move it beside the path.",
+          "Reach: 201 of 293 places reached; unreached are roof slopes, eaves and two chimney ledges: fine."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "floor_top"
+        ]
+      }
+    }
+  }
+}

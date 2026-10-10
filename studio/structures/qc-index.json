@@ -391,6 +391,27 @@
     "round": 1,
     "checkedAt": "2026-10-10T03:32:39.241Z"
   },
+  "hospital_l1": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 68,
+    "round": 1,
+    "checkedAt": "2026-10-10T08:57:22.814Z"
+  },
+  "hospital_l2": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 55,
+    "round": 1,
+    "checkedAt": "2026-10-10T08:57:23.371Z"
+  },
+  "hospital_l3": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 57,
+    "round": 1,
+    "checkedAt": "2026-10-10T08:57:24.007Z"
+  },
   "house": {
     "version": 4,
     "verdict": "pass",
@@ -607,6 +628,27 @@
     "score": 89,
     "round": 1,
     "checkedAt": "2026-10-10T05:09:39.399Z"
+  },
+  "noble_house_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 80,
+    "round": 1,
+    "checkedAt": "2026-10-10T08:57:21.145Z"
+  },
+  "noble_house_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 95,
+    "round": 1,
+    "checkedAt": "2026-10-10T08:57:21.725Z"
+  },
+  "noble_house_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 90,
+    "round": 1,
+    "checkedAt": "2026-10-10T08:57:22.280Z"
   },
   "notice_board_l1": {
     "version": 3,
