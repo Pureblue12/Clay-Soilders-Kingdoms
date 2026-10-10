@@ -169,6 +169,15 @@ async function main() {
         console.log(`\n## Last check (v${prev.version}, ${prev.verdict}, ${prev.score}/100): did this version fix it?`);
         for (const p of prev.visual.problems) console.log(`  - ${p}`);
       }
+      const family = store.summary(name).levels ?? [name];
+      if (family.length > 1) {
+        console.log(`\n## Levels of this structure (score "levels": render and compare every one)`);
+        for (const n of family) {
+          const v = store.summary(n);
+          const last = v.versions[v.versions.length - 1];
+          console.log(`  ${n} v${v.latest}: ${last.blocks} blocks${n === name ? '  <- this one' : ''}`);
+        }
+      }
       const notes = carltonNotes(store, name);
       console.log(`\n## Carlton's notes on this structure and its levels (his taste; they outrank the rubric)`);
       if (!notes.length) console.log('  none yet');

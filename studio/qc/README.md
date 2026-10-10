@@ -6,7 +6,7 @@ automatic and to judge by his taste. It never approves or rejects anything: only
 - **Automatic checks** (`src/qc/checks.ts`, no AI): floating blocks, doors and beds missing a half, fences that won't
   connect, too few blocks, too few detail blocks, one block everywhere, flat walls, a roof without overhang, a door on
   the back, block budget, height over builder reach, the buildability validator.
-- **Visual review** (an AI looking at renders): ten criteria scored 0 to 2, weighted by Carlton's past notes
+- **Visual review** (an AI looking at renders): eleven criteria scored 0 to 2, weighted by Carlton's past notes
   (`RUBRIC.md`, `src/qc/rubric.ts`). Research behind it: `RESEARCH.md`.
 - **Verdict:** pass (score 70+, no "must" criterion at 0, no failed automatic check), revise (sent back with a list
   of fixes), or handed over (still failing after 3 rounds: Carlton sees it with the problems listed).

@@ -1,6 +1,6 @@
 # Quality check rubric (the reviewer's checklist)
 
-The reviewer scores every new version on the ten criteria below, 0 (no), 1 (partly) or 2 (yes), after looking at
+The reviewer scores every new version on the eleven criteria below, 0 (no), 1 (partly) or 2 (yes), after looking at
 the renders. The criteria, weights and pass mark live in code (`src/qc/rubric.ts`); this file says what each one means
 and how to judge it. Background: `RESEARCH.md`. Building rules: `../STYLE.md` (it wins where they disagree).
 
@@ -18,6 +18,9 @@ Carlton is the only one who approves. Judge as he would. What his notes so far s
 - **Grand when the role is grand.** The keep "should get bigger, more grand"; the windmill "too small, I'd like to see a
   bigger more detailed version"; "a saw mill style instead of this puny thing".
 - **It must read as what it is.** "Can't even tell what's going on here."
+- **Levels must look different.** On the carpenter v3 (2026-10-10): "Better, would like to see more detail from the l2
+  to l3 to differentiate from each other." Moving extras down into level 1 to pass makes the levels look the same:
+  add to level 1, and keep l2 and l3 each clearly richer.
 - **No glitches.** Holes where there shouldn't be any, "a couch on the roof", fences that don't connect, logs on their
   side.
 - **His reference picture** (`reference/carlton-timber-house.png`): a two-storey timber-frame house with a stone base
@@ -47,6 +50,7 @@ or read `src/render/scene.ts` (`groundLayer` default -1 means fixed). Score what
 | `shape` | 2 | | Not a plain box: a jetty, a lean-to, a porch, a dormer, a chimney, roof parts at two heights, some asymmetry. | iso, iso_back, top |
 | `life` | 1 | | Flowers, leaves, vines at the base and in boxes, lanterns, a path, a fence or garden. | iso, slope |
 | `scale` | 1 | | Soldiers are half a block tall: a cottage is about 5 x 7 with 3-high walls; landmarks clearly bigger than houses. Use the scale markers (player 1.8, soldier 0.5). | iso, front |
+| `levels` | 2 | yes | Each level adds something you can see at a glance: l2 a new part or props, l3 more again (flowers, lanterns, signs, a lean-to). Compare the sheets of every level of the family. Nearly identical levels = 0. Single structures: 2. | every level's sheet |
 | `grandeur` | 1 | | Big and special enough for its role. A windmill has sails and a tall tower; a keep towers over houses; a saw mill has a saw, logs and a yard. | iso |
 
 Small props (benches, signposts, posts) still get all ten scores: "shape" means an interesting silhouette (a hanging
@@ -58,7 +62,7 @@ The review file is JSON (`npm run qc -- record <name> -v N --visual review.json`
 
 ```json
 {
-  "scores": { "detail": 1, "artefacts": 2, "purpose": 2, "depth": 1, "roof": 0, "materials": 2, "shape": 1, "life": 0, "scale": 2, "grandeur": 1 },
+  "scores": { "detail": 1, "artefacts": 2, "purpose": 2, "depth": 1, "roof": 0, "materials": 2, "shape": 1, "life": 0, "scale": 2, "levels": 2, "grandeur": 1 },
   "notes": { "roof": "flush with the walls on the left and right" },
   "summary": "One sentence Carlton can read in the panel: what it is and how good it looks.",
   "problems": ["What to fix, most important first, concrete enough to act on", "..."],

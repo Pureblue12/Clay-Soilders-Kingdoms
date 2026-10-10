@@ -32,6 +32,8 @@ export const CRITERIA: Criterion[] = [
     look: 'Plants, flowers, vines or leaves at the base and in boxes; lanterns; a path or a fence.' },
   { id: 'scale', label: 'Scale', weight: 1,
     look: 'Right size for soldiers (cottage about 5 x 7, walls 3 high); landmarks clearly bigger than houses.' },
+  { id: 'levels', label: 'Levels differ', weight: 2, must: true,
+    look: 'Each level clearly adds to the one before (new props, a new part, more trim): l1, l2 and l3 tell apart at a glance. A structure without levels scores 2.' },
   { id: 'grandeur', label: 'Ambition', weight: 1,
     look: 'Big and special enough for its role: a windmill looks like a windmill, a keep looks grand.' },
 ];
