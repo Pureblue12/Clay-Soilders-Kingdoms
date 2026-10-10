@@ -214,6 +214,74 @@
           "iso"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T05:42:03.876Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 3,
+      "score": 95,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cauldron, cornflower, brewing_stand, allium, candle, white_wall_banner, brick_stairs, white_wool, red_wool."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "431 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 431,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.46403712296983757,
+          "types": 38,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.1902552204176334
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "purpose": "Carlton's note is met: red_wool cross on white in the front gable reads clearly as a hospital cross in front and iso; the door canopy and banner sit below it and hide none of it.",
+          "roof": "Automatic 'no overhang' warning is a false alarm: eaves and gable overhang are visible in the renders.",
+          "depth": "Sills now under side and back windows; the long sides are still mostly flat."
+        },
+        "summary": "L2 adds the apothecary job (brewing stand, cauldron, candles), lanterns, flower boxes, a door canopy and a banner over the L1 ward; the red cross stays clear.",
+        "problems": [
+          "Reachability: ward, aisle and lean-to reached; unreached are roof slopes, box/canopy tops and chimney shoulders. Fine."
+        ],
+        "views": [
+          "sheet",
+          "front",
+          "iso"
+        ]
+      }
     }
   }
 }
