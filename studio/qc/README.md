@@ -6,6 +6,10 @@ automatic and to judge by his taste. It never approves or rejects anything: only
 - **Automatic checks** (`src/qc/checks.ts`, no AI): floating blocks, doors and beds missing a half, fences that won't
   connect, too few blocks, too few detail blocks, one block everywhere, flat walls, a roof without overhang, a door on
   the back, block budget, height over builder reach, the buildability validator.
+- Blocks listed in `meta.decorationBlocks` (`[x, y, z, kind]`: water, lily pads the mod adds in its decoration step,
+  drawn in the Studio file only) don't count for buildability. For a file saved before that field existed, the review
+  JSON can list the positions (`"decorationBlocks": [[x, y, z], ...]`) after checking them against the generator's
+  `decorate()` calls.
 - **Visual review** (an AI looking at renders): ten criteria scored 0 to 2, weighted by Carlton's past notes
   (`RUBRIC.md`, `src/qc/rubric.ts`). Research behind it: `RESEARCH.md`.
 - **Verdict:** pass (score 70+, no "must" criterion at 0, no failed automatic check), revise (sent back with a list

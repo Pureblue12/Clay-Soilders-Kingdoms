@@ -48,6 +48,9 @@ export interface VisualReview {
   /** What to fix, most important first. Becomes the brief for the next version. */
   problems: string[];
   views?: string[]; // which renders the reviewer looked at
+  /** Positions of decoration-step blocks in a file saved before meta.decorationBlocks existed (the reviewer checked
+   * them against the generator's decorate() calls). Not needed for newer files. */
+  decorationBlocks?: [number, number, number][];
 }
 
 export interface QcReport {

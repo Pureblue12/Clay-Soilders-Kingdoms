@@ -185,6 +185,97 @@
           "sheet"
         ]
       }
+    },
+    "5": {
+      "version": 5,
+      "checkedAt": "2026-10-10T04:19:53.533Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 94,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Drawn for the decoration step, not built: minecraft:water."
+          },
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: stonecutter."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 299,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3712374581939799,
+          "types": 24,
+          "dominant": {
+            "name": "spruce_planks",
+            "share": 0.12709030100334448
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "summary": "Level 2 adds a waterwheel in a stone race on the left and a log yard of stacked crates and logs on the right. Clearly a working mill and clearly more than L1. The shed lanterns now hang from the tie beams. The water in the wheel race is drawn for the decoration step, not built.",
+        "problems": [
+          "The waterwheel reads as a dark block from most angles: open spokes (fences or trapdoors) between the paddles would make it read as a wheel"
+        ],
+        "views": [
+          "sheet"
+        ],
+        "decorationBlocks": [
+          [
+            14,
+            0,
+            2
+          ],
+          [
+            14,
+            0,
+            3
+          ],
+          [
+            14,
+            0,
+            4
+          ],
+          [
+            14,
+            0,
+            5
+          ],
+          [
+            14,
+            0,
+            6
+          ]
+        ],
+        "notes": {
+          "artefacts": "none"
+        }
+      }
     }
   }
 }
