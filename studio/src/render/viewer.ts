@@ -32,6 +32,8 @@ export class Viewer {
   private terrainGroup = new THREE.Group();
   private markers = new THREE.Group();
   private world: World | null = null;
+  /** Fog distances measured from the point the camera looks at (render() adds the camera's distance to it). */
+  private fogBase = { near: 120, far: 400 };
   private lib: BlockLibrary | null = null;
   /** Box the camera presets and the sun's shadow frame around (the structures). */
   focus = new THREE.Box3(new THREE.Vector3(0, 0, 0), new THREE.Vector3(8, 8, 8));
@@ -120,10 +122,8 @@ export class Viewer {
     this.rebuildTerrain();
     this.rebuildPlacements();
     // fade the far terrain edge into the horizon
-    const fog = this.scene.fog as THREE.Fog;
     const reach = world.terrain ? world.terrain.size / 2 : 200;
-    fog.near = Math.max(40, reach * 0.55);
-    fog.far = Math.max(80, reach * 1.05);
+    this.fogBase = { near: Math.max(40, reach * 0.55), far: Math.max(80, reach * 1.05) };
   }
 
   private addChunks(group: THREE.Group, chunks: ChunkMeshData[]) {
@@ -236,6 +236,11 @@ export class Viewer {
     if (this.fly.active) this.fly.update();
     else this.controls.update();
     this.onFrame?.();
+    // fog starts beyond what the camera looks at, so big structures (seen from far away) stay clear
+    const fog = this.scene.fog as THREE.Fog;
+    const d = this.camera.position.distanceTo(this.controls.target);
+    fog.near = this.fogBase.near + d;
+    fog.far = this.fogBase.far + d;
     this.renderer.render(this.scene, this.camera);
   }
 

@@ -54,6 +54,9 @@ Rules:
 - Don't fail a structure for known viewer bugs (`RUBRIC.md`, "Known viewer problems").
 - Commit only `studio/structures/`, `studio/tools`-style generator changes and nothing in the mod.
 
+For big buildings soldiers use (keep, castle, town hall), `python3 tools/qc_reach.py <version.json>` flood-fills from
+the ground outside and lists the standing places soldiers can't reach (roof tops show up too; judge by eye).
+
 Run `npm run qc -- check <name|file.json>` while building to catch the automatic problems before saving.
 `npm run qc -- status` lists the newest report of every structure.
 

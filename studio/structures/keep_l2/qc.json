@@ -124,6 +124,70 @@
           "sheet"
         ]
       }
+    },
+    "5": {
+      "version": 5,
+      "checkedAt": "2026-10-10T04:34:55.350Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 97,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: dark_oak_fence, dark_oak_slab, cracked_stone_bricks, mossy_stone_bricks, candle, red_wall_banner, gold_block, red_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "1986 blocks, over the landmark budget of 1800 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 1986,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.29154078549848944,
+          "types": 34,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.3766364551863041
+          },
+          "height": 20,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {
+          "roof": "the automatic roof warning is a miss on this compound plan: the hall roof overhangs its long sides"
+        },
+        "summary": "Level 2 adds the walled forecourt and the great hall with the throne, now with side doors into the gardens so it isn't reached only through the keep. Steep cones on the turrets.",
+        "problems": [
+          "Reachability (flood fill from the ground outside, soldiers half a block tall, jump 1, drop 3, ladders climb): every floor, room, wall walk and tower top is reached; only the roof cones, the tie beams under the hall roof and the tops of log piles and the low forecourt wall are not, which is right"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }
