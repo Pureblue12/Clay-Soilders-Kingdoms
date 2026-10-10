@@ -119,6 +119,9 @@ def infirmary():
         P(s, x, 3, z0 - 1, 'spruce_slab', **SLAB)
     for x in (mid - 1, mid + 1):
         P(s, x, 2, z0 - 1, 'lantern', **HANG)
+    P(s, mid - 1, 3, z1 + 1, 'brick_stairs', facing='east', **STAIR)                      # the chimney's shoulders
+    P(s, mid + 1, 3, z1 + 1, 'brick_stairs', facing='west', **STAIR)
+    flower_box(s, x1 + 1, 1, 4, 'east', 'allium')                                         # under the right front window
     P(s, mid, 4, z0 - 1, 'white_wall_banner', facing='north')
     s.decorate(mid, 4, z0 - 1, 'banner_pattern', banner='white_wall_banner', note='a red cross (the infirmary sign)')
     for z in (7, 8):
@@ -160,7 +163,7 @@ def infirmary():
 
 STRUCTURES = [dict(path='infirmary', name='Infirmary', tier=4, zone='inner', role='health', group='infirmary',
                    terrain='ground_level', door='front', make=infirmary, changes='First version.',
-                   description='Over budget: BUDGET. White plaster ward in a dark oak frame under a spruce gable roof: six '
+                   description='Over budget: 447 blocks vs 285 (first build 378 vs 235). White plaster ward in a dark oak frame under a spruce gable roof: six '
                                'beds (three on each side, heads to the wall, a window over each), bedside tables, a '
                                'hearth, herb barrels and shelves, a lean-to herb store; L2 adds the brewing stand and '
                                'cauldron, candles, lanterns, flower boxes, a door canopy and the banner; L3 a herb '

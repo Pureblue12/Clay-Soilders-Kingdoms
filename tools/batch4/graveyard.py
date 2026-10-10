@@ -116,7 +116,7 @@ def graveyard():
     for x in (0, W - 1):
         P(s, x, 2, cross_z, 'lantern', **STAND)
     # a newer grave at the back left, under the yew
-    headstone(s, 3, 7, 'polished_andesite')
+    P(s, 3, 1, 7, 'polished_andesite_stairs', facing='north', **STAIR)
     for z in (8, 9):
         P(s, 3, 0, z, 'coarse_dirt')
 
@@ -153,7 +153,7 @@ def graveyard():
 
 STRUCTURES = [dict(path='graveyard', name='Graveyard', tier=4, zone='outer', role='civic', group='graveyard',
                    terrain='flexible', door='front', make=graveyard, ground_layer=0, changes='First version.',
-                   description='Flush piece (ground_layer 0: the mod does not support it yet). Walled churchyard '
+                   description='Over budget: 227 blocks vs 105 (first build 115 vs 70). Flush piece (ground_layer 0: the mod does not support it yet). Walled churchyard '
                                '(cobblestone wall, stone brick piers) with gravel paths, graves on both sides, a '
                                'stone cross and benches; L2 adds the yew, a lychgate over the entrance, lanterns and '
                                'a new grave; L3 flowers, candles, moss and vines, a fresh grave.')]
