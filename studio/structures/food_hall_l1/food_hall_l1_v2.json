@@ -4,14 +4,14 @@
   "version": 2,
   "size": [13,9,15],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T05:22:59.871Z",
     "description": "Tavern / food hall, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 564 blocks vs 345 (first build 418 vs 280). Long timber food hall: one long table with benches under a dormer, a big brick hearth and chimney at the far end, a kitchen corner (smoker) by a side door and a bar of kegs. L2 adds function: an outdoor kitchen under a lean-to (second smoker, prep table, supplies), a serving hatch and a table for two, plus sign, lanterns, chandeliers and banners. L3 adds a bread oven, a storeroom shed and a beer-garden terrace (extra dining), plus candles and flower boxes.",
     "changes": "Carlton: each level must also add function. L2 now adds a bigger kitchen (an outdoor kitchen under a lean-to by the kitchen door with a second smoker, a prep table and a supply barrel), a serving hatch between kitchen and hall, and a table for two. L3 adds a brick bread oven opening into the outdoor kitchen and a storeroom shed (barrels, chest, potatoes) behind the beer-garden terrace (the extra dining area). Quality check: the chimney now rises to the top of the ridge; the flower boxes have trapdoor ends. The decorations of v1 are kept.",
     "parent": 1,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:35:45.264Z",
     "tags": [
       "batch4",
       "tier4",
