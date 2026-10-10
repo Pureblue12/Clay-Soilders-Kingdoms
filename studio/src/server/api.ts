@@ -2,9 +2,7 @@
 //   GET  /api/assets                              where the Minecraft assets come from
 //   GET  /api/structures                          every structure with its versions and statuses
 //   GET  /api/structures/:name/:version           one version's file
-//   POST /api/structures/:name/:version/review    { status, notes, also?, commit? }   (the review UI only)
-//        status null = notes only (status and review time unchanged); also = [{ name, version }] gets the same
-//        review (the other levels); commit false = write the files only (autosave while typing), no git
+//   POST /api/structures/:name/:version/review    { status|null, notes, allLevels?, autosave? }   (the review UI only)
 //   POST /api/structures/:name/rollback           { from }            new version copying an old one
 //   POST /api/sync                                pull new structures from GitHub (gitsync.ts)
 //   GET  /mc/<path>                               files from the user's assets (blockstates, models, textures)
@@ -12,7 +10,7 @@ import fs from 'node:fs';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { STATUSES, type Status } from '../format/structure.ts';
 import { assetFile, assetSource } from './assets.ts';
-import { commitVersion, commitVersions, pull } from './gitsync.ts';
+import { commitFiles, commitLater, commitVersion, pull, type GitResult } from './gitsync.ts';
 import { Store } from './store.ts';
 
 type Next = () => void;
@@ -58,27 +56,22 @@ export function createApi(store = new Store()) {
           // The approval button lives in the UI; the header keeps casual scripts from approving by accident.
           if (req.headers['x-studio-ui'] !== 'review') return send(res, 403, { error: 'reviews are made in the studio UI' });
           const body = await readBody(req);
-          const notes = String(body.notes ?? '');
-          const status = body.status == null ? null : (String(body.status) as Status);
-          if (status && !STATUSES.includes(status)) return send(res, 400, { error: 'bad status' });
-          const targets = [{ name, version: Number(parts[3]) }];
-          for (const a of Array.isArray(body.also) ? (body.also as { name: unknown; version: unknown }[]) : []) {
-            targets.push({ name: String(a.name), version: Number(a.version) });
+          // status null = notes only. allLevels: the same review for the latest version of every level
+          // (bench_l1, bench_l2, ...). autosave: notes typed in the box, committed a little later.
+          const status = body.status === null || body.status === undefined ? null : (String(body.status) as Status);
+          if (status !== null && !STATUSES.includes(status)) return send(res, 400, { error: 'bad status' });
+          const version = Number(parts[3]);
+          const targets: [string, number][] = [[name, version]];
+          if (body.allLevels) {
+            for (const n of store.levels(name)) if (n !== name) targets.push([n, store.summary(n).latest]);
           }
-          for (const t of targets) store.load(t.name, t.version); // all exist, or nothing is written
-          for (const t of targets) {
-            if (status) store.setReview(t.name, t.version, status, notes);
-            else store.setNotes(t.name, t.version, notes);
-          }
-          let git = { ok: true, message: '' };
-          if (body.commit !== false) {
-            const what = status ?? 'notes';
-            const label = targets.length > 1
-              ? `${targets.map((t) => `${t.name} v${t.version}`).join(', ')} ${what}`
-              : `${name} v${parts[3]} ${what}`;
-            git = await commitVersions(targets, `Studio review: ${label}`);
-          }
-          return send(res, 200, { summary: store.summary(name), git });
+          for (const [n, v] of targets) store.setReview(n, v, status, String(body.notes ?? ''));
+          const files = targets.map(([n, v]) => store.versionFile(n, v));
+          const what = targets.map(([n, v]) => `${n} v${v}`).join(', ');
+          let git: GitResult = { ok: true, message: '' };
+          if (body.autosave) commitLater(files);
+          else git = await commitFiles(files, `Studio review: ${what} ${status ?? 'notes'}`);
+          return send(res, 200, { summary: store.summary(name), saved: targets.map(([n, v]) => ({ name: n, version: v })), git });
         }
         if (req.method === 'POST' && parts[3] === 'rollback') {
           const body = await readBody(req);

@@ -79,10 +79,14 @@
         <button id="approve" class="approve">✔ Approve</button>
         <button id="reject" class="reject">✖ Reject</button>
       </div>
-      <label class="all-levels" id="all-levels-row" hidden title="Approve, reject and notes go to the newest version of every level of this structure">
-        <input type="checkbox" id="all-levels"> Apply to all levels <span id="all-levels-names" class="muted"></span>
-      </label>
-      <label class="notes-label" for="notes">Notes for this version <span id="notes-state" class="muted"></span></label>
+      <div class="row">
+        <button id="all-levels" class="toggle" hidden>Apply to all levels: off</button>
+      </div>
+      <div id="levels-hint" class="muted small" hidden></div>
+      <div class="notes-head">
+        <label class="notes-label" for="notes">Notes for this version</label>
+        <span id="notes-state" class="muted small"></span>
+      </div>
       <textarea id="notes" rows="4" placeholder="What's good, what to change… (saves as you type)"></textarea>
       <div class="row">
         <button id="set-pending" title="Back to pending">Mark pending</button>

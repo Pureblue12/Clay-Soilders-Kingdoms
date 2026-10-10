@@ -24,6 +24,7 @@ const state = {
   scene: { ...DEFAULT_SCENE, layer: { ...DEFAULT_SCENE.layer } } as SceneOptions,
   worldA: null as World | null,
   worldB: null as World | null,
+  allLevels: (() => { try { return !!localStorage.getItem('studio.allLevels'); } catch { return false; } })(),
 };
 
 const files = new Map<string, StructureFile>();
@@ -274,9 +275,9 @@ function renderReview() {
   $('#reject').classList.toggle('current', v.status === 'rejected');
   const notes = $<HTMLTextAreaElement>('#notes');
   if (document.activeElement !== notes) notes.value = v.notes;
-  const levels = otherLevels(s.name);
-  $('#all-levels-row').hidden = levels.length === 0;
-  $('#all-levels-names').textContent = levels.length ? `(also ${levels.map((l) => `${l.name.replace(/^.*_/, '')} v${l.version}`).join(', ')})` : '';
+  if (notes.dataset.for !== `${s.name}@${v.version}`) notesState(''); // another structure: "Saved ✓" was for the last one
+  notes.dataset.for = `${s.name}@${v.version}`;
+  renderLevelsToggle(s);
 
   const ul = $('#versions');
   ul.innerHTML = '';
@@ -347,82 +348,84 @@ function escapeHtml(s: string) {
   return s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
 }
 
-/** The other levels of a levelled structure (cottage_l1 → cottage_l2, cottage_l3), each at its newest version. */
-function otherLevels(name: string): { name: string; version: number }[] {
-  const m = /^(.*)_l\d+$/.exec(name);
-  if (!m) return [];
-  const re = new RegExp(`^${m[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}_l\\d+$`);
-  return state.list.filter((x) => x.name !== name && re.test(x.name)).map((x) => ({ name: x.name, version: x.latest }));
+/** "Apply to all levels": reviews and notes go to the latest version of every level (bench_l1, bench_l2, ...). */
+function allLevelsOn(s: StructureSummary) {
+  return state.allLevels && s.levels.length > 1;
 }
 
-function allLevelsOn(): boolean {
-  return $<HTMLInputElement>('#all-levels').checked && !$('#all-levels-row').hidden;
+function renderLevelsToggle(s: StructureSummary) {
+  const b = $<HTMLButtonElement>('#all-levels');
+  b.hidden = s.levels.length < 2;
+  b.classList.toggle('on', state.allLevels);
+  b.textContent = state.allLevels ? 'Apply to all levels: ON' : 'Apply to all levels: off';
+  b.title = `Approve, reject and notes also go to the latest version of ${s.levels.join(', ')}`;
+  const hint = $('#levels-hint');
+  hint.hidden = !allLevelsOn(s);
+  hint.textContent = `Goes to ${s.levels.join(', ')} (latest versions)`;
 }
 
-/** Notes typed but not yet pushed: written to disk while typing, committed when the box loses focus. */
-let pendingNotes: { name: string; version: number; notes: string; also: { name: string; version: number }[] } | null = null;
-let notesTimer = 0;
-
-function postReview(name: string, version: number, body: Record<string, unknown>, keepalive = false) {
-  return api<{ git: { ok: boolean; message: string } }>(`/api/structures/${name}/${version}/review`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-Studio-UI': 'review' },
-    body: JSON.stringify(body),
-    keepalive,
-  });
-}
-
-/** Keeps the list's copy of the notes in step without reloading everything. */
-function noteLocally(targets: { name: string; version: number }[], notes: string) {
-  for (const t of targets) {
-    const v = state.list.find((x) => x.name === t.name)?.versions.find((x) => x.version === t.version);
-    if (v) v.notes = notes;
-    files.delete(`${t.name}@${t.version}`);
-  }
-}
-
-function notesTyped() {
-  const s = summary();
-  if (!s) return;
-  const notes = $<HTMLTextAreaElement>('#notes').value;
-  pendingNotes = { name: s.name, version: state.version, notes, also: allLevelsOn() ? otherLevels(s.name) : [] };
-  $('#notes-state').textContent = 'saving…';
-  clearTimeout(notesTimer);
-  notesTimer = window.setTimeout(() => void saveNotes(false), 700);
-}
-
-/** commit false: write the files only (while typing); commit true: also commit and push (when you click away). */
-async function saveNotes(commit: boolean, keepalive = false) {
-  clearTimeout(notesTimer);
-  const p = pendingNotes;
-  if (!p) return;
-  if (commit) pendingNotes = null;
-  try {
-    const r = await postReview(p.name, p.version, { status: null, notes: p.notes, also: p.also, commit }, keepalive);
-    noteLocally([p, ...p.also], p.notes);
-    $('#notes-state').textContent = commit ? (r.git.ok ? 'saved' : 'saved here, not pushed') : 'saved';
-    if (commit && !r.git.ok) toast(`Notes saved. ${r.git.message}`, true);
-  } catch (e) {
-    if (commit) pendingNotes = p;
-    $('#notes-state').textContent = 'not saved';
-    toast(`Notes not saved: ${(e as Error).message}`, true);
-  }
-}
-
+/** Approve / reject / pending. Sends the notes in the box too. */
 async function review(status: Status) {
   const s = summary();
   if (!s) return;
-  clearTimeout(notesTimer);
-  pendingNotes = null; // this review carries the notes
+  cancelAutosave();
   const notes = $<HTMLTextAreaElement>('#notes').value;
-  const also = allLevelsOn() ? otherLevels(s.name) : [];
-  const r = await postReview(s.name, state.version, { status, notes, also });
-  for (const t of [{ name: s.name, version: state.version }, ...also]) files.delete(`${t.name}@${t.version}`);
+  const r = await sendReview(s, state.version, status, notes, false);
+  files.delete(`${s.name}@${state.version}`);
   await refreshList();
   renderReview();
-  $('#notes-state').textContent = '';
-  const what = `${also.length ? `${s.name} and ${also.length} other level(s)` : `${s.name} v${state.version}`}: ${status}`;
-  toast(r.git.message ? `${what}. ${r.git.message}` : what, !r.git.ok);
+  const names = r.saved.length > 1 ? `${r.saved.length} levels (${r.saved.map((x) => x.name).join(', ')})` : `${s.name} v${state.version}`;
+  toast(r.git.message ? `${names}: ${status}. ${r.git.message}` : `${names}: ${status}`, !r.git.ok);
+}
+
+function sendReview(s: StructureSummary, version: number, status: Status | null, notes: string, autosave: boolean) {
+  return api<{ saved: { name: string; version: number }[]; git: { ok: boolean; message: string } }>(
+    `/api/structures/${s.name}/${version}/review`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Studio-UI': 'review' },
+      body: JSON.stringify({ status, notes, allLevels: allLevelsOn(s), autosave }),
+    });
+}
+
+// ---------------------------------------------------------------- notes autosave (while typing, and on leaving the box)
+
+let autosaveTimer = 0;
+let pendingNotes: { s: StructureSummary; version: number; notes: string } | null = null;
+
+function notesState(text: string, error = false) {
+  const el = $('#notes-state');
+  el.textContent = text;
+  el.classList.toggle('error', error);
+}
+
+function cancelAutosave() {
+  clearTimeout(autosaveTimer);
+  pendingNotes = null;
+}
+
+function onNotesInput() {
+  const s = summary();
+  if (!s) return;
+  // remember WHICH structure the text belongs to: clicking another one blurs the box before it changes
+  pendingNotes = { s, version: state.version, notes: $<HTMLTextAreaElement>('#notes').value };
+  notesState('Typing…');
+  clearTimeout(autosaveTimer);
+  autosaveTimer = window.setTimeout(() => void saveNotesNow(), 800);
+}
+
+async function saveNotesNow() {
+  clearTimeout(autosaveTimer);
+  const p = pendingNotes;
+  if (!p) return;
+  pendingNotes = null;
+  try {
+    const r = await sendReview(p.s, p.version, null, p.notes, true);
+    notesState(r.saved.length > 1 ? `Saved to ${r.saved.length} levels ✓` : 'Saved ✓');
+    await refreshList();
+    renderReview(); // the notes box itself is left alone while it has focus
+  } catch (e) {
+    notesState(`Not saved: ${(e as Error).message}`, true);
+  }
 }
 
 // ---------------------------------------------------------------- wiring
@@ -497,18 +500,19 @@ function setupControls() {
     state.scene.layer.y = Number((e.target as HTMLInputElement).value);
     applyLayer();
   };
+  const notes = $<HTMLTextAreaElement>('#notes');
+  notes.addEventListener('input', onNotesInput);
+  notes.addEventListener('blur', () => void saveNotesNow());
+  window.addEventListener('beforeunload', () => void saveNotesNow());
+  $('#all-levels').onclick = () => {
+    state.allLevels = !state.allLevels;
+    try { localStorage.setItem('studio.allLevels', state.allLevels ? '1' : ''); } catch { /* private window */ }
+    const s = summary();
+    if (s) renderLevelsToggle(s);
+  };
   $('#approve').onclick = () => review('approved');
   $('#reject').onclick = () => review('rejected');
   $('#set-pending').onclick = () => review('pending');
-  const notesBox = $<HTMLTextAreaElement>('#notes');
-  notesBox.oninput = notesTyped;
-  notesBox.onblur = () => void saveNotes(true);
-  window.addEventListener('beforeunload', () => void saveNotes(true, true));
-  const allLevels = $<HTMLInputElement>('#all-levels');
-  try { allLevels.checked = localStorage.getItem('studio.allLevels') === '1'; } catch { /* no storage */ }
-  allLevels.onchange = () => {
-    try { localStorage.setItem('studio.allLevels', allLevels.checked ? '1' : '0'); } catch { /* no storage */ }
-  };
   $('#compare').onclick = () => {
     const s = summary();
     if (!s) return;

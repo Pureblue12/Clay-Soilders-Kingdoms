@@ -53,6 +53,8 @@ export interface StructureSummary {
   tags: string[];
   stage: Stage;
   work: WorkState | null;
+  /** Every level of this structure's family, e.g. ["bench_l1", "bench_l2"] ([name] without a _lN suffix). */
+  levels: string[];
 }
 
 export class Store {
@@ -124,6 +126,7 @@ export class Store {
       tags: latest.tags,
       stage,
       work,
+      levels: this.levels(name),
     };
   }
 
@@ -187,23 +190,34 @@ export class Store {
     return version;
   }
 
-  /** Review change from the UI. Only the meta fields change; the blocks of a version stay as they were. */
-  setReview(name: string, version: number, status: Status, notes: string): StructureFile {
-    if (!STATUSES.includes(status)) throw new Error(`bad status "${status}"`);
+  /** Review change from the UI. Only the meta fields change; the blocks of a version stay as they were.
+   *  status null: only the notes change (status and reviewedAt stay). */
+  setReview(name: string, version: number, status: Status | null, notes: string): StructureFile {
+    if (status !== null && !STATUSES.includes(status)) throw new Error(`bad status "${status}"`);
     const s = this.load(name, version);
-    s.meta.status = status;
+    if (status !== null) {
+      s.meta.status = status;
+      s.meta.reviewedAt = new Date().toISOString();
+    }
     s.meta.notes = notes;
-    s.meta.reviewedAt = new Date().toISOString();
     fs.writeFileSync(this.file(name, version), stringifyStructure(s));
     return s;
   }
 
-  /** Notes only (typing autosaves them): the status and review time stay as they are. */
-  setNotes(name: string, version: number, notes: string): StructureFile {
-    const s = this.load(name, version);
-    s.meta.notes = notes;
-    fs.writeFileSync(this.file(name, version), stringifyStructure(s));
-    return s;
+  versionFile(name: string, version: number) {
+    return this.file(name, version);
+  }
+
+  /** The levels of a structure family: bench_l1, bench_l2, ... for "bench_l2" (just [name] without a _lN suffix). */
+  levels(name: string): string[] {
+    const m = /^(.*)_l(\d+)$/.exec(name);
+    if (!m) return [name];
+    const re = new RegExp(`^${m[1].replace(/[^a-z0-9_]/g, '')}_l(\\d+)$`);
+    return this.names()
+      .map((n) => [n, re.exec(n)] as const)
+      .filter((x): x is readonly [string, RegExpExecArray] => !!x[1])
+      .sort((a, b) => Number(a[1][1]) - Number(b[1][1]))
+      .map(([n]) => n);
   }
 
   /** Rollback = a new version that copies an old one. Nothing is deleted. */
