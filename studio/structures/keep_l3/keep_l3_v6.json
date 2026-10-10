@@ -4,14 +4,14 @@
   "version": 6,
   "size": [31,20,33],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T05:38:09.703Z",
     "description": "Keep, level 3 of 3: L2 plus flourish 3. A castle that grows round the approved sample keep, symmetric on one centre line, every part reachable on foot by soldiers. Level 1: the keep, 11 x 11 on a cobblestone apron, battlements on corbels, four corner turrets under steep dark oak cones, a guard hall, the king's chamber and stairs (no ladders) to the roof. Level 2: the royal court, a 9 x 13 great hall behind the keep (side doors, two hearths, long tables, the throne on a dais) and a walled forecourt with a gate, side gateways and posterns. Level 3: the castle, a curtain with a wall walk round the whole site, four corner towers with winding stairs to the walks and a lookout, a gatehouse with a guard chamber and roof, storehouse and guardroom in the forecourt, a well and a forge, and two side wards: flower garden and kitchen (west), training yard and armory (east). 20 tall: needs scaffold in game. Not yet builder-tested: anvil, blast_furnace, candle, cornflower, cracked_stone_bricks, dark_oak_fence, dark_oak_slab, gold_block, mossy_stone_bricks, oxeye_daisy, red_banner, red_wall_banner, smithing_table, target, vine. Decoration step adds: water.",
     "changes": "Polish for Carlton's v5 note: same plan, size and rooms, only small details added. Level 1 (keep): a stone belt course of upside-down stairs at the upper floor line (it is the sill of every upper window), spruce shutters on the front windows and on the middle side windows of both floors, a lantern on a stone bracket over both doors and torches on the front door posts, poppies and bushes in the corners of the apron; on the roof deck a watch fire, barrels and a chest by the parapet and two lantern posts at the stair head; in the king's chamber a barrel wardrobe, a night stand with a lantern and a table for two. Level 2 (royal court): red carpet across the great hall at the side-door aisle and in front of the dais, flower beds (poppy, cornflower, oxeye daisy) under the hall windows and between the back buttresses, lantern posts by both side doors, flowers at the forecourt lantern posts; the keep door banners moved up above the new belt course. Level 3 (castle): buttresses on the long curtain walls and on the front and back stretches, corbels (machicolations) under every merlon and a string course round the towers and gatehouse, red banners and vines on the corner towers, low vines on the curtain, lanterns on the merlons, under the gate arch, in every tower lookout and under the wall-walk ledge over the gardens and training yard, crates by the well and forge, barrels and a chopping block in the back wards, shutters on the lean-to windows and flower boxes under the storehouse and guardroom windows. Every room is still reached on foot (no ladders), checked with the flood fill.",
     "parent": 5,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T08:48:58.857Z",
     "tags": [
       "revise1",
       "tier4",

@@ -4,14 +4,14 @@
   "version": 1,
   "size": [13,9,13],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T08:48:15.709Z",
     "description": "Armory, level 3 of 3: L2 plus flourish 3. Over budget: 486 blocks vs 310. Roof spruce, not stone brick (an all-grey roof read as one block). Strong stone store for the guard's weapons and armour: racks visible through the door, footlockers, grindstone workstation, a stair to the armorer's loft; L2 adds the repair forge lean-to (smithing table, anvil, blast furnace), L3 an outdoor arms rack. Not yet builder-tested: anvil, blast_furnace, cauldron, cornflower, iron_bars, red_wall_banner, smithing_table, stone_brick_wall, vine. Decoration step adds: armor_stand, banner_pattern, item_frame.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T08:49:45.518Z",
     "tags": [
       "batch5",
       "tier6",

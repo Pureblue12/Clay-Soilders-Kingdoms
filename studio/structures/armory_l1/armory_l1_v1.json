@@ -4,14 +4,14 @@
   "version": 1,
   "size": [13,9,13],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T08:48:14.564Z",
     "description": "Armory, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 486 blocks vs 310. Roof spruce, not stone brick (an all-grey roof read as one block). Strong stone store for the guard's weapons and armour: racks visible through the door, footlockers, grindstone workstation, a stair to the armorer's loft; L2 adds the repair forge lean-to (smithing table, anvil, blast furnace), L3 an outdoor arms rack.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T08:49:45.516Z",
     "tags": [
       "batch5",
       "tier6",
