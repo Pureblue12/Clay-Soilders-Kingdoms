@@ -1,0 +1,44 @@
+{
+  "carpenter_l1": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 33,
+    "round": 1,
+    "checkedAt": "2026-10-10T02:56:31.568Z"
+  },
+  "carpenter_l2": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 42,
+    "round": 1,
+    "checkedAt": "2026-10-10T02:56:32.085Z"
+  },
+  "carpenter_l3": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 44,
+    "round": 1,
+    "checkedAt": "2026-10-10T02:56:32.645Z"
+  },
+  "watchtower_l1": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 61,
+    "round": 1,
+    "checkedAt": "2026-10-10T02:56:33.178Z"
+  },
+  "watchtower_l2": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 61,
+    "round": 1,
+    "checkedAt": "2026-10-10T02:56:33.695Z"
+  },
+  "watchtower_l3": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 64,
+    "round": 1,
+    "checkedAt": "2026-10-10T02:56:34.206Z"
+  }
+}

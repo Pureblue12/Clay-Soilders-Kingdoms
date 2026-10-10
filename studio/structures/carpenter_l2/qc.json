@@ -1,0 +1,79 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "carpenter_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T02:56:32.085Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 42,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: fletching_table."
+          },
+          {
+            "level": "warn",
+            "check": "connections",
+            "message": "6 fence/pane/wall block(s) have no north/east/south/west set although a neighbour would connect, so they show as lone posts: (6, 0, 2), (6, 0, 4), (1, 2, 3) and 3 more."
+          },
+          {
+            "level": "warn",
+            "check": "door",
+            "message": "No door on the front half (z = 0 is the front, toward the easel)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 155,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.38064516129032255,
+          "types": 16,
+          "dominant": {
+            "name": "oak_stairs",
+            "share": 0.24516129032258063
+          },
+          "height": 7,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 1,
+          "depth": 1,
+          "roof": 1,
+          "materials": 0,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 0
+        },
+        "notes": {
+          "materials": "one wood colour everywhere"
+        },
+        "summary": "Same all-oak shed as level 1 with a porch slab added: still bare and still one colour.",
+        "problems": [
+          "Everything is the same oak colour: use the style A palette, with a cobblestone plinth, spruce or dark oak posts and beams, white terracotta or oak plank infill and a darker spruce roof",
+          "The roof sits flush with the side walls: give it one block of overhang all round, with upside-down stairs under the gable ends",
+          "Make it read as a carpenter's yard: a log pile, a sawhorse (fence plus slab), planks stacked on a slab, a chopping block and a lantern by the open bay",
+          "The door is at the back; the front (toward the easel) should hold the door or the open work bay",
+          "Add life: a flower box under the window, a few leaves or vines at a corner"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}
