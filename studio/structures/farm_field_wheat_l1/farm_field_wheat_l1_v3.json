@@ -4,14 +4,14 @@
   "version": 3,
   "size": [13,5,9],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:03:24.639Z",
     "description": "Farm field: wheat, level 1 of 1: shell and fittings (what soldiers build first). A raised field bed, one level: dirt in two blocks of 4 rows each side of an open trench, oak log border and fence with an entrance at the front centre, plank boardwalk and composter in front. Builders place the dirt; farmers till it into farmland and the decoration step adds the trench water and the wheat (builders can place neither water, farmland nor crops). Modules tile side by side and around the farmhouse. A scarecrow stands in the left bed; hay by the path; a side path, poppies, a tool rack and a lantern post round the edges. Decoration step adds: crop, farmland, item_frame, water.",
     "changes": "Two blocks wider with simple edges: a plank path down the left side, a tool rack and a lantern post, poppies and a leaf bush.",
     "parent": 2,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T04:14:46.960Z",
     "tags": [
       "revise1",
       "tier1",
