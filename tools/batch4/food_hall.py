@@ -145,9 +145,24 @@ def food_hall(width=7, depth=11):
     for x in (mid - 2, mid + 2):                                       # firewood beside the chimney breast
         P(s, x, 0, z1 + 1, 'spruce_log', axis='z'); P(s, x, 0, z1 + 2, 'spruce_log', axis='z')
         P(s, x, 1, z1 + 1, 'spruce_log', axis='z')
+    # FUNCTION: a bigger kitchen. An outdoor kitchen under a lean-to outside the kitchen door (x 11..12, z 9..12):
+    # a second smoker, a prep table, a barrel of supplies; a serving hatch (counter) between the kitchen corner and
+    # the hall; more seats (a small table for two at the front of the hall).
     P(s, x1 + 1, 0, kdoor, 'cobblestone_stairs', facing='west', **STAIR)   # step at the kitchen door
-    for z in (kdoor + 1, kdoor + 2):                                    # firewood stack by the kitchen door
-        P(s, x1 + 1, 0, z, 'spruce_log', axis='x'); P(s, x1 + 1, 1, z, 'spruce_log', axis='x')
+    for z in range(kdoor - 1, kdoor + 3):                                # lean-to roof against the wall, under the eave
+        P(s, x1 + 1, 3, z, 'spruce_stairs', facing='west', **STAIR)
+        P(s, x1 + 2, 2, z, 'spruce_stairs', facing='west', **STAIR)
+    for z in (kdoor - 1, kdoor + 2):                                     # its posts
+        P(s, x1 + 2, 0, z, 'spruce_fence'); P(s, x1 + 2, 1, z, 'spruce_fence')
+    P(s, x1 + 1, 0, kdoor - 1, 'crafting_table')                        # prep table
+    P(s, x1 + 1, 0, kdoor + 1, 'smoker', facing='east', lit='true')     # the second smoker
+    P(s, x1 + 2, 0, kdoor, 'barrel', facing='up', open='false')         # supplies
+    P(s, x1 + 1, 2, kdoor + 1, 'lantern', **HANG)                        # hangs from the lean-to roof
+    P(s, x1 - 2, 1, kdoor, 'spruce_slab', **SLAB_TOP)                   # serving hatch: the cook passes food here
+    s.decorate(x1 - 2, 2, kdoor, 'item', item='minecraft:cooked_beef', note='a plate waiting on the hatch')
+    P(s, x1 - 1, 1, z0 + 2, 'spruce_slab', **SLAB_TOP)                  # a small table for two by the front window
+    P(s, x1 - 1, 1, z0 + 1, 'oak_stairs', facing='north', **STAIR)
+    P(s, x1 - 2, 1, z0 + 2, 'oak_stairs', facing='west', **STAIR)
     for z in (z0 + 4, z0 + 6):
         s.decorate(mid, 2, z, 'item', item='minecraft:bread', note='bread on the long table')
     P(s, mid - 1, 1, z0 + 1, 'red_carpet'); P(s, mid, 1, z0 + 1, 'red_carpet'); P(s, mid + 1, 1, z0 + 1, 'red_carpet')
@@ -180,12 +195,33 @@ def food_hall(width=7, depth=11):
         P(s, x1 + 2, 0, z, 'spruce_trapdoor', facing='east', **OPEN)
     for z, f in ((z0, 'north'), (z0 + 3, 'south'), (z0 + 4, 'north'), (z0 + 6, 'south')):   # box ends
         P(s, x1 + 1, 0, z, 'spruce_trapdoor', facing=f, **OPEN)
-    # kegs and a crate outside the kitchen
-    P(s, x1 + 2, 0, kdoor + 1, 'barrel', facing='east', open='false')
-    P(s, x1 + 2, 0, kdoor + 2, 'barrel', facing='up', open='true')
-    s.decorate(x1 + 2, 1, kdoor + 2, 'item', item='minecraft:potato', note='potatoes in the open barrel')
-    P(s, x1 + 2, 0, kdoor - 2, 'hay_block', axis='y')
-    for x, z in ((x0 - 1, z1), (x1 + 1, z1 + 1), (x0 - 2, z1 - 1)):
+    # FUNCTION: a bread oven behind the outdoor kitchen (its mouth opens into the lean-to) and a storeroom shed at the
+    # back of the terrace (barrels, a chest, an open barrel of potatoes); the terrace itself is an extra dining area.
+    for x in (x1 + 1, x1 + 2):
+        for z in (z1 + 1, z1 + 2):
+            P(s, x, 0, z, 'bricks'); P(s, x, 1, z, 'bricks')
+            P(s, x, 2, z, 'brick_slab', type='bottom', waterlogged='false')
+    s.remove(x1 + 1, 0, z1 + 1)
+    P(s, x1 + 1, 0, z1 + 1, 'furnace', facing='north', lit='true')     # the oven mouth
+    s.remove(x1 + 2, 2, z1 + 2)
+    P(s, x1 + 2, 2, z1 + 2, 'bricks'); P(s, x1 + 2, 3, z1 + 2, 'brick_wall')   # its little flue
+    P(s, x1 + 2, 0, kdoor - 2, 'hay_block', axis='y')                    # wheat for the oven
+    sx0, sz0, sz1 = 0, z1 - 1, z1 + 2                                     # storeroom shed: x 0..2, z 11..14
+    for z in range(sz0, sz1 + 1):                                        # cobblestone course, plank walls, log corners
+        P(s, sx0, 0, z, 'cobblestone'); P(s, sx0, 1, z, 'spruce_log' if z in (sz0, sz1) else 'spruce_planks', **({'axis': 'y'} if z in (sz0, sz1) else {}))
+    for x in (sx0 + 1, sx0 + 2):
+        P(s, x, 0, sz1, 'cobblestone')
+        P(s, x, 1, sz1, 'spruce_log' if x == sx0 + 2 else 'spruce_planks', **({'axis': 'y'} if x == sx0 + 2 else {}))
+    P(s, sx0 + 2, 0, sz0, 'spruce_fence'); P(s, sx0 + 2, 1, sz0, 'spruce_fence')
+    for x in range(sx0, sx0 + 3):
+        for z in range(sz0, sz1 + 1):
+            P(s, x, 2, z, 'spruce_slab', **SLAB)
+    P(s, sx0 + 1, 0, sz1 - 1, 'barrel', facing='up', open='false'); P(s, sx0 + 1, 1, sz1 - 1, 'barrel', facing='up', open='false')
+    P(s, sx0 + 1, 0, sz1 - 2, 'barrel', facing='east', open='false')
+    P(s, sx0 + 2, 0, sz1 - 1, 'chest', facing='north', type='single', waterlogged='false')
+    P(s, sx0 + 1, 0, sz0, 'barrel', facing='up', open='true')
+    s.decorate(sx0 + 1, 1, sz0, 'item', item='minecraft:potato', note='potatoes in the open barrel')
+    for x, z in ((x0 - 1, z1),):
         A(s, x, 0, z, 'oak_leaves', **LEAVES)
     for x, z, f in ((x0 - 1, z0, 'allium'), (mid - 1, z0 - 1, 'poppy'), (mid + 1, z0 - 1, 'dandelion'),
                     (x1 + 1, z0 - 1, 'azure_bluet'), (x0, z1 + 1, 'cornflower'), (x1, z1 + 1, 'fern')):

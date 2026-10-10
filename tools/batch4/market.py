@@ -72,8 +72,10 @@ def market():
     Level 2 (market day): the cross gets its head (chiselled block, stone arms with two hanging lanterns, a lantern on
     top), the stalls open for trade (red and white or yellow and white wool front edges, lanterns, produce, shelves),
     the weighing scale (a lectern) and the merchants' strongbox by the cross, red and white banners on poles at the
-    north and south entrances, lantern posts at the west and east entrances.
-    Level 3 (a prosperous market): more flowers in the beds, the stalls' banners and stools, red and white wall
+    north and south entrances, and two covered sitting areas: striped wool canopies (red and white west, yellow and
+    white east) on spruce posts over the benches and the west and east entrances, lanterns hung under them.
+    Level 3 (a prosperous market): the covered market cross (four stone posts and a stepped spruce pyramid roof over
+    the cross, its top lantern as the finial), more flowers in the beds, the stalls' banners and stools, red and white wall
     banners on the stalls' backs, goods (hay, crates, pumpkins) stacked against the stalls' outer sides."""
     s = Structure('market', (SIZE, 8, SIZE), palette='oak_a2')
     e = SIZE - 1
@@ -148,14 +150,57 @@ def market():
             put_id(s, x, 1, z, 'spruce_fence')
             put_id(s, x, 2, z, 'spruce_fence')
             put_id(s, x, 3, z, col, rotation=rot)
-    # lantern posts at the west and east entrances
-    for x in (0, e):
+    # covered sitting areas: a striped wool canopy on four spruce posts over the benches and the west and east
+    # entrances (red and white on the west, yellow and white on the east), lanterns hung under them
+    for xa, xb, col in ((0, 2, 'red_wool'), (e - 2, e, 'yellow_wool')):
+        for x in (xa, xb):
+            for z in (c - 2, c + 2):
+                for y in (1, 2, 3):
+                    put_id(s, x, y, z, 'spruce_log', axis='y')
+        for x in range(xa, xb + 1):
+            for z in range(c - 2, c + 3):
+                put_id(s, x, 4, z, col if z % 2 else 'white_wool')
         for z in (c - 1, c + 1):
-            put_id(s, x, 1, z, 'spruce_log', axis='y')
-            put_id(s, x, 2, z, 'spruce_fence')
-            put_id(s, x, 3, z, 'lantern', **STAND)
+            put_id(s, (xa + xb) // 2, 3, z, 'lantern', **HANG)
 
     s.at(3, 'flourish3')
+    # the market cross becomes a covered cross: four stone posts on the step's corners carry a small pyramid roof
+    # (spruce stairs, a dark oak ceiling) round the cross's head, the top lantern as its finial
+    for dx in (-1, 1):
+        for dz in (-1, 1):
+            for y in (2, 3, 4):
+                put_id(s, c + dx, y, c + dz, 'stone_brick_wall')
+    for x in range(c - 2, c + 3):
+        for z in range(c - 2, c + 3):
+            if (x, 5, z) in s.blocks:
+                continue                                          # the cross's head and arms
+            if abs(x - c) == 2 or abs(z - c) == 2:              # eaves, high side inward
+                if abs(z - c) == 2 and abs(x - c) < 2:
+                    f = 'south' if z < c else 'north'
+                elif abs(x - c) == 2 and abs(z - c) < 2:
+                    f = 'east' if x < c else 'west'
+                else:
+                    f = 'south' if z < c else 'north'
+                shape = 'straight'
+                if abs(x - c) == 2 and abs(z - c) == 2:
+                    shape = 'outer_left' if (x < c) == (z < c) else 'outer_right'
+                put_id(s, x, 5, z, 'spruce_stairs', facing=f, half='bottom', shape=shape, waterlogged='false')
+            else:
+                put_id(s, x, 5, z, 'dark_oak_planks')
+    for x in range(c - 1, c + 2):
+        for z in range(c - 1, c + 2):
+            if (x, z) == (c, c):
+                continue
+            if abs(z - c) == 1 and x == c:
+                f = 'south' if z < c else 'north'
+            elif abs(x - c) == 1 and z == c:
+                f = 'east' if x < c else 'west'
+            else:
+                f = 'south' if z < c else 'north'
+            shape = 'straight'
+            if x != c and z != c:
+                shape = 'outer_left' if (x < c) == (z < c) else 'outer_right'
+            put_id(s, x, 6, z, 'spruce_stairs', facing=f, half='bottom', shape=shape, waterlogged='false')
     for i, (x, z) in enumerate(sorted(beds.values())):           # the beds fill up: a second flower in each
         put_id(s, x, 1, z, FLOWERS[(i + 1) % len(FLOWERS)])
     # the stalls' backs face the roads: a wall banner on each back post's outer face, red on the red stalls, white on
@@ -181,17 +226,20 @@ def market():
 
 STRUCTURES = [dict(path='market', name='Market square', tier=4, zone='inner', role='market', group='market',
                    terrain='flexible', door=None, make=market, ground_layer=0,
-                   changes='The stall copies follow the market stall\'s quality-check round 2 (a flower pot and grain '
+                   changes='Carlton: L2 and L3 now differ clearly. L2 adds two covered sitting areas (striped red '
+                           'and white / yellow and white wool canopies on spruce posts over the benches and the west '
+                           'and east entrances, with hanging lanterns) instead of the small lantern posts; L3 turns '
+                           'the market cross into a covered cross (stone posts and a pyramid spruce roof). Also: the stall copies follow the market stall\'s quality-check round 2 (a flower pot and grain '
                            'on the front barrels at level 1, produce at the front edge). The flower beds round the '
                            'cross are now flush with the paving (coarse dirt in the ground layer, poppies from level 1, '
                            'a second flower at level 3) instead of raised dirt with trapdoor borders. The stall\'s '
                            'shop sign is no longer copied without its post (it floated).',
-                   description='Over budget: 620 blocks vs 221 (15 x 15 instead of 11 x 11, so four full stalls fit). Flush piece '
+                   description='Over budget: 702 blocks vs 221 (15 x 15 instead of 11 x 11, so four full stalls fit). Flush piece '
                                '(ground_layer 0: the paving replaces the grass; the mod\'s builders can\'t do that '
                                'yet). A paved square (stone brick border, cobblestone, gravel aisles in from all four '
                                'sides) with four market stalls (the market stall design, red-white and brown-white '
                                'awnings) round a stepped stone market cross with flush flower beds; benches face the '
                                'cross. L2: the cross head with lanterns, stalls open for trade, a weighing scale '
-                               '(lectern), a strongbox, banner poles and lantern posts at the entrances. L3: more '
-                               'flowers, banners on the stall backs, stall stools and banners, goods stacked at the '
+                               '(lectern), a strongbox, banner poles, striped canopies over the benches. L3: a covered '
+                               'market cross with a pyramid roof, more flowers, banners on the stall backs, stall stools and banners, goods stacked at the '
                                'sides.')]

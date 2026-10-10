@@ -24,14 +24,33 @@ from batch3.ws_kit import P, A, STAIR, TOP, SLAB, OPEN, HANG, STAND, LEAVES, con
 
 PANE = dict(waterlogged='false')
 W, H, D = 17, 20, 24
-NX0, NX1, NZ0, NZ1, NTOP = 2, 10, 5, 17, 5          # nave
-TX0, TX1, TZ0, TZ1, TTOP = 4, 8, 1, 5, 12           # tower (walls y 1..12)
-CX0, CX1, CZ1, CTOP = 4, 8, 22, 4                   # chancel (z 17..22, walls y 1..4)
+NX0, NX1, NZ0, NZ1, NTOP = 2, 10, 5, 17, 4          # nave (walls y 1..4, ridge 9)
+TX0, TX1, TZ0, TZ1, TTOP = 4, 8, 1, 5, 14           # tower (walls y 1..14)
+CX0, CX1, CZ1, CTOP = 4, 8, 22, 3                   # chancel (z 17..22, walls y 1..3)
 MID = 6
 BUTT_Z = (5, 9, 13, 17)
 LEFT_WIN, RIGHT_WIN = (7, 11, 15), (7, 15)
 SIDE_DOOR_Z = 11
 CH_WIN_Z = 19                                       # chancel side windows
+
+
+def pyramid_ring(s, x0, x1, z0, z1, y, block='dark_oak_stairs'):
+    """A ring of stairs rising towards the middle, the corners turned (outer corner shapes)."""
+    for x in range(x0, x1 + 1):
+        for z in range(z0, z1 + 1):
+            if not (x in (x0, x1) or z in (z0, z1)):
+                continue
+            if x == x0 and z == z0:
+                P(s, x, y, z, block, facing='east', half='bottom', shape='outer_right', waterlogged='false')
+            elif x == x1 and z == z0:
+                P(s, x, y, z, block, facing='west', half='bottom', shape='outer_left', waterlogged='false')
+            elif x == x0 and z == z1:
+                P(s, x, y, z, block, facing='east', half='bottom', shape='outer_left', waterlogged='false')
+            elif x == x1 and z == z1:
+                P(s, x, y, z, block, facing='west', half='bottom', shape='outer_right', waterlogged='false')
+            else:
+                f = 'east' if x == x0 else 'west' if x == x1 else 'south' if z == z0 else 'north'
+                P(s, x, y, z, block, facing=f, **STAIR)
 
 
 def rubble(x, y, z):
@@ -62,16 +81,16 @@ def church():
     for x in (TX0, TX1):
         s.remove(x, 5, 3)
     # belfry: paired openings on every face at y 9..10, the floor at y 8
-    for y in (9, 10):
+    for y in (11, 12):
         for a in (TX0 + 1, TX1 - 1):
             s.remove(a, y, TZ0); s.remove(a, y, TZ1)
         for c in (TZ0 + 1, TZ1 - 1):
             s.remove(TX0, y, c); s.remove(TX1, y, c)
     for x in range(TX0 + 1, TX1):
         for z in range(TZ0 + 1, TZ1):
-            P(s, x, 8, z, 'spruce_planks')
+            P(s, x, 10, z, 'spruce_planks')
     # string course under the belfry and the cornice at the top (upside-down stairs all round)
-    for y in (8, TTOP):
+    for y in (10, TTOP):
         for x in range(TX0, TX1 + 1):
             A(s, x, y, TZ0 - 1, 'stone_brick_stairs', facing='south', **TOP)
             if y == TTOP:
@@ -82,33 +101,20 @@ def church():
                 A(s, TX1 + 1, y, z, 'stone_brick_stairs', facing='west', **TOP)
     for x, z in ((TX0 - 1, TZ0 - 1), (TX1 + 1, TZ0 - 1), (TX0 - 1, TZ1 + 1), (TX1 + 1, TZ1 + 1)):
         P(s, x, TTOP, z, 'stone_bricks')             # cornice corners
-    # spire: a 5 x 5 eave, a 3 x 3 drum, a needle, the finial (dark oak shingles)
-    y = TTOP + 1                                     # 13
-    for x in range(TX0, TX1 + 1):
-        for z in range(TZ0, TZ1 + 1):
-            edge = x in (TX0, TX1) or z in (TZ0, TZ1)
-            corner = x in (TX0, TX1) and z in (TZ0, TZ1)
-            if corner:
-                P(s, x, y, z, 'cobblestone_wall')    # corner pinnacles
-            elif edge:
-                f = 'east' if x == TX0 else 'west' if x == TX1 else 'south' if z == TZ0 else 'north'
-                P(s, x, y, z, 'dark_oak_stairs', facing=f, **STAIR)
-            else:
-                P(s, x, y, z, 'dark_oak_planks')
+    # spire: a broach spire of dark oak shingles, 5 wide at the eave, 3 wide, then a needle (y 15..18)
+    y = TTOP + 1                                     # 15
+    pyramid_ring(s, TX0, TX1, TZ0, TZ1, y)
     for x in range(TX0 + 1, TX1):
         for z in range(TZ0 + 1, TZ1):
-            P(s, x, y + 1, z, 'dark_oak_planks')
-            edge = x != MID or z != 3
-            if edge:
-                f = 'east' if x == TX0 + 1 else 'west' if x == TX1 - 1 else 'south' if z == TZ0 + 1 else 'north'
-                if x != MID and z != 3:
-                    P(s, x, y + 2, z, 'spruce_slab', **SLAB)
-                else:
-                    P(s, x, y + 2, z, 'dark_oak_stairs', facing=f, **STAIR)
-            else:
-                P(s, x, y + 2, z, 'dark_oak_planks')
-    P(s, MID, y + 3, 3, 'dark_oak_planks'); P(s, MID, y + 4, 3, 'dark_oak_planks')
-    P(s, MID, y + 5, 3, 'spruce_fence')              # finial (y 18; L3 adds the weathervane above)
+            P(s, x, y, z, 'dark_oak_planks')
+    for x in (TX0, TX1):                             # stone pinnacles on the tower corners
+        for z in (TZ0, TZ1):
+            del s.blocks[(x, y, z)]; del s.layer_of[(x, y, z)]
+            P(s, x, y, z, 'cobblestone_wall')
+    pyramid_ring(s, TX0 + 1, TX1 - 1, TZ0 + 1, TZ1 - 1, y + 1)
+    for yy in (y + 1, y + 2):
+        P(s, MID, yy, 3, 'dark_oak_planks')
+    P(s, MID, y + 3, 3, 'spruce_fence')              # the spike (L2 adds the weathervane on it)
     # front buttresses of the tower and the door hood
     for x in (TX0, TX1):
         P(s, x, 0, TZ0 - 1, 'cobblestone')
@@ -147,10 +153,10 @@ def church():
                     b = rubble(x, y, z)
                 A(s, x, y, z, b)
     for z in LEFT_WIN:
-        for y in (2, 3, 4):
+        for y in (2, 3):
             s.remove(NX0, y, z)
     for z in RIGHT_WIN:
-        for y in (2, 3, 4):
+        for y in (2, 3):
             s.remove(NX1, y, z)
     s.remove(NX1, 1, SIDE_DOOR_Z); s.remove(NX1, 2, SIDE_DOOR_Z)
     for x in range(CX0 + 1, CX1):                    # chancel arch, 3 wide and 3 high
@@ -166,7 +172,7 @@ def church():
         P(s, x, 0, NZ1 + 1, 'cobblestone'); P(s, x, 1, NZ1 + 1, 'stone_bricks')
         P(s, x, 2, NZ1 + 1, 'stone_brick_stairs', facing='north', **STAIR)
     gable_roof(s, NX0, NX1, NZ0, NZ1, NTOP, front=1, back=1, gable='stone_bricks', plates='spruce_log')
-    s.remove(MID, 7, NZ1); s.remove(MID, 8, NZ1)    # a small window in the back gable over the chancel roof
+    s.remove(MID, 8, NZ1)    # a small window in the back gable over the chancel roof
 
     # ---------------------------------------------------------------- chancel
     for x in range(CX0, CX1 + 1):
@@ -183,7 +189,7 @@ def church():
     for x in (CX0, CX1):
         for y in (2, 3):
             s.remove(x, y, CH_WIN_Z)
-    for y in (2, 3, 4):
+    for y in (2, 3):
         s.remove(MID, y, CZ1)                         # east window
     for x, f in ((CX0 - 1, 'east'), (CX1 + 1, 'west')):
         P(s, x, 0, CZ1, 'cobblestone'); P(s, x, 1, CZ1, 'stone_bricks')
@@ -220,21 +226,21 @@ def church():
     # ---------------------------------------------------------------- fittings
     s.at(1, 'fittings')
     for z in LEFT_WIN:
-        for y in (2, 3, 4):
+        for y in (2, 3):
             P(s, NX0, y, z, 'glass_pane', north='true', south='true', east='false', west='false', **PANE)
     for z in RIGHT_WIN:
-        for y in (2, 3, 4):
+        for y in (2, 3):
             P(s, NX1, y, z, 'glass_pane', north='true', south='true', east='false', west='false', **PANE)
     for y in (5, 6):
         P(s, MID, y, TZ0, 'glass_pane', east='true', west='true', north='false', south='false', **PANE)
     for x in (TX0, TX1):
         P(s, x, 5, 3, 'glass_pane', north='true', south='true', east='false', west='false', **PANE)
-    for y in (7, 8):
+    for y in (8,):
         P(s, MID, y, NZ1, 'glass_pane', east='true', west='true', north='false', south='false', **PANE)
     # chancel windows: shutters inside until the stained glass comes (level 2)
     P(s, CX0 + 1, 2, CH_WIN_Z, 'spruce_trapdoor', facing='east', **OPEN); P(s, CX0 + 1, 3, CH_WIN_Z, 'spruce_trapdoor', facing='east', **OPEN)
     P(s, CX1 - 1, 2, CH_WIN_Z, 'spruce_trapdoor', facing='west', **OPEN); P(s, CX1 - 1, 3, CH_WIN_Z, 'spruce_trapdoor', facing='west', **OPEN)
-    for y in (2, 3, 4):
+    for y in (2, 3):
         P(s, MID, y, CZ1 - 1, 'spruce_trapdoor', facing='north', **OPEN)
     # pews: two blocks of two rows, a cross aisle at the side door
     for z in (7, 8, 13, 14):
@@ -251,11 +257,11 @@ def church():
     P(s, CX0 + 1, 1, CZ1 - 1, 'barrel', facing='up', open='false')
     # the bell's headstock beam in the belfry
     for x in range(TX0 + 1, TX1):
-        P(s, x, 11, 3, 'dark_oak_log', axis='x')
+        P(s, x, 13, 3, 'dark_oak_log', axis='x')
     # torches
     for z in (9, 13):
-        P(s, NX0 + 1, 4, z, 'wall_torch', facing='east')
-    P(s, NX1 - 1, 4, 9, 'wall_torch', facing='west'); P(s, NX1 - 1, 4, 13, 'wall_torch', facing='west')
+        P(s, NX0 + 1, 3, z, 'wall_torch', facing='east')
+    P(s, NX1 - 1, 3, 9, 'wall_torch', facing='west'); P(s, NX1 - 1, 3, 13, 'wall_torch', facing='west')
     P(s, TX0 + 1, 3, 3, 'wall_torch', facing='east')
     P(s, TX1 - 1, 3, 3, 'wall_torch', facing='west')
     P(s, CX0 + 1, 3, CZ1 - 1, "wall_torch", facing="east")
@@ -263,14 +269,15 @@ def church():
 
     # ---------------------------------------------------------------- level 2: the church in use
     s.at(2, 'flourish2')
-    P(s, MID, 10, 3, 'bell', attachment='ceiling', facing='north', powered='false')    # the signature
-    for y in (4, 5, 6, 7):                                                               # the bell rope
+    P(s, MID, TTOP + 5, 3, 'lightning_rod', facing='up', powered='false', waterlogged='false')   # weathervane
+    P(s, MID, 12, 3, 'bell', attachment='ceiling', facing='north', powered='false')    # the signature
+    for y in (6, 7, 8, 9):                                                               # the bell rope
         P(s, MID, y, 3, 'chain', axis='y')
     for z in (CH_WIN_Z,):                                                                # stained glass, chancel
         for x in (CX0, CX1):
             for y, c in ((2, 'blue'), (3, 'red')):
                 P(s, x, y, z, f'{c}_stained_glass_pane', north='true', south='true', east='false', west='false', **PANE)
-    for y, c in ((2, 'blue'), (3, 'red'), (4, 'blue')):
+    for y, c in ((2, 'blue'), (3, 'red')):
         P(s, MID, y, CZ1, f'{c}_stained_glass_pane', east='true', west='true', north='false', south='false', **PANE)
     for z in range(NZ0 + 1, NZ1):                                                        # red runner
         P(s, MID, 1, z, 'red_carpet')
@@ -284,7 +291,7 @@ def church():
     for x, n in ((MID - 1, '3'), (MID + 1, '3')):
         P(s, x, 2, CZ1 - 2, 'candle', candles=n, lit='true', waterlogged='false')
     for z in (9, 13):                                                                    # lanterns from the ridge
-        for y in (9, 8):
+        for y in (8,):
             P(s, MID, y, z, 'chain', axis='y')
         P(s, MID, 7, z, 'lantern', **HANG)
     P(s, MID, CTOP + 2, NZ1 + 2, 'lantern', **HANG)                                       # chancel (ridge y 7)
@@ -325,7 +332,6 @@ def church():
     for x, z in ((TX0 - 1, TZ0 - 1), (TX1 + 1, TZ0 - 1), (TX0 - 1, TZ1 + 1), (TX1 + 1, TZ1 + 1)):
         P(s, x, TTOP + 1, z, 'chiseled_stone_bricks')                                    # carved corner pinnacles
         P(s, x, TTOP + 2, z, 'stone_brick_wall')
-    P(s, MID, TTOP + 7, 3, 'lightning_rod', facing='up', powered='false', waterlogged='false')   # weathervane
     P(s, MID, 4, TZ0 - 1, 'chiseled_stone_bricks')                                       # carving over the door hood
     for x in (TX0, TX1):                                                                 # carved caps on the front buttresses
         P(s, x, 6, TZ0 - 1, 'stone_brick_wall')
@@ -339,11 +345,17 @@ def church():
     P(s, NX1 - 1, 1, NZ1 - 1, 'candle', **CANDLES)
     P(s, CX0 + 1, 2, CZ1 - 1, 'candle', **CANDLES)                                      # on the vestry barrel
     # the churchyard: a yew, flowers on the graves
-    for yy in (0, 1):
+    for yy in (0, 1, 2):                                                                 # the yew: dark, dense, pointed
         P(s, 14, yy, 20, 'spruce_log', axis='y')
-    for x, yy, z in ((13, 2, 20), (14, 2, 20), (15, 2, 20), (14, 2, 19), (14, 2, 21), (14, 3, 20),
-                     (13, 1, 20), (15, 1, 20), (14, 1, 19), (14, 1, 21)):
-        A(s, x, yy, z, 'spruce_leaves', **LEAVES)
+    for yy, r in ((1, 1), (2, 1), (3, 0), (4, 0)):
+        for dx in (-1, 0, 1):
+            for dz in (-1, 0, 1):
+                if r == 0 and dx and dz:
+                    continue
+                if r == 1 and dx and dz and yy == 1:
+                    continue
+                A(s, 14 + dx, yy, 20 + dz, 'spruce_leaves', **LEAVES)
+    A(s, 14, 5, 20, 'spruce_leaves', **LEAVES)
     for (x, z), f in zip(((13, 14), (15, 17), (13, 17), (15, 20), (13, 20), (12, 22)),
                          ('poppy', 'cornflower', 'cornflower', 'azure_bluet', 'oxeye_daisy', 'azure_bluet')):
         A(s, x, 0, z, f)

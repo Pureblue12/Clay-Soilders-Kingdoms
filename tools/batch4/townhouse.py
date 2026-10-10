@@ -6,10 +6,10 @@ from batch3.ws_kit import (P, A, STAIR, TOP, SLAB, SLAB_TOP, OPEN, SHELF, HANG, 
 
 
 def townhouse(width=5, depth=6):
-    """Townhouse in a 9 x 9 x 11 box (9 tall: within builders' reach, no scaffolding).
+    """Townhouse in a 9 x 9 x 12 box (9 tall: within builders' reach, no scaffolding).
 
-    Walls x 2..6, ground floor z 2..7 (5 x 6). The upper storey sits on a dark oak floor beam at y 4 and juts one
-    block out over the front (z 1), carried on upside-down dark oak stair brackets. The upper storey is a half storey
+    Walls x 2..6, ground floor z 3..8 (5 x 6). The upper storey sits on a dark oak floor beam at y 4 and juts one
+    block out over the front (z 2), carried on upside-down dark oak stair brackets. The upper storey is a half storey
     under the roof: a knee wall at y 5, gables at y 6..7, a spruce roof with dark oak eaves and a dark oak ridge at
     y 8, one block of overhang all round. Rooms are soldier-sized: 3 high on the ground floor, 3 high under the ridge.
 
@@ -21,14 +21,14 @@ def townhouse(width=5, depth=6):
     rugs, shelves and a pot upstairs, brick shoulders on the chimney, a log pile and barrels on the right side.
     L3 (the town look): flower boxes (soil in trapdoor boxes) under the front and back gable windows, smoke from the chimney, a fenced back garden (composter, flowers, a bench, a bush), a lantern post and banner at the front,
     vines on the stone walls."""
-    W, D, H = width + 4, depth + 5, 9
+    W, D, H = width + 4, depth + 6, 9
     s = Structure('townhouse', (W, H, D), palette='oak_a2')
-    x0, x1, z0, z1 = 2, 1 + width, 2, 1 + depth          # 2..6, 2..7
+    x0, x1, z0, z1 = 2, 1 + width, 3, 2 + depth          # 2..6, 3..8
     mid = (x0 + x1) // 2                                   # 4
     jz = z0 - 1                                            # 1: the jettied front of the upper storey
     fl = 4                                                 # upper floor layer
     knee = 5                                               # upper knee wall (roof top plate at 6)
-    cz = 5                                                 # hearth and chimney row
+    cz = z0 + 3                                            # 6: hearth and chimney row
     chim_x = x0 - 1                                        # 1
 
     # ------------------------------------------------------------------ L1 shell
@@ -158,6 +158,9 @@ def townhouse(width=5, depth=6):
             P(s, x, 5, bz, f)
         P(s, mid - 2, 4, bz, 'spruce_trapdoor', facing='west', **OPEN)
         P(s, mid + 2, 4, bz, 'spruce_trapdoor', facing='east', **OPEN)
+        out = bz - 1 if bz < z0 else bz + 1                              # the box's outer face
+        for x in (mid - 1, mid, mid + 1):
+            P(s, x, 4, out, 'spruce_trapdoor', facing='north' if bz < z0 else 'south', **OPEN)
     P(s, chim_x, 8, cz, 'campfire', facing='north', lit='true', signal_fire='false', waterlogged='false')
     # back garden behind the house: a fenced plot of two rows (a gate on the right, decoration only: the garden
     # needs no visits)
@@ -177,8 +180,8 @@ def townhouse(width=5, depth=6):
     P(s, x0 + 1, 0, gz0, 'fern')
     # lantern post and banner at the front
     for y in (0, 1):
-        P(s, x0 - 1, y, 0, 'spruce_fence')
-    P(s, x0 - 1, 2, 0, 'lantern', **STAND)
+        P(s, x0 - 1, y, 1, 'spruce_fence')
+    P(s, x0 - 1, 2, 1, 'lantern', **STAND)
     P(s, x1 + 1, 3, z0 + 2, 'red_wall_banner', facing='east')
     s.decorate(x1 + 1, 3, z0 + 2, 'banner_pattern', banner='red_wall_banner', note='the family crest')
     for z in (z1 - 1, z1):                                           # vines on the left stone wall

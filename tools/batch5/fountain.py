@@ -66,8 +66,6 @@ def fountain():
     P(s, C, 4, C, 'stone_bricks')                                       # the column through the upper bowl
     for x, z in sorted(water):
         s.decorate(x, 1, z, 'water')
-    for dx, dz in OUT:
-        s.decorate(C + dx, 4, C + dz, 'water', note='the upper bowl; spills over its lip into the basin')
 
     s.at(2, 'flourish2')
     for x, z in diag:                                                   # lantern posts at the diagonals

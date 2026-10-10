@@ -206,7 +206,7 @@ def chapel():
     for z in range(0, z0 - 1):
         for x in (mid - 1, mid, mid + 1):
             P(s, x, 0, z, 'mossy_cobblestone_slab' if noise(x, 0, z, 8) < 0.3 else 'cobblestone_slab', **SLAB)
-    for x in (1, W - 2):
+    for x in (2, W - 3):
         for y in (0, 1):
             P(s, x, y, 3, 'spruce_fence')
         P(s, x, 2, 3, 'lantern', **STAND)
@@ -231,7 +231,7 @@ STRUCTURES = [dict(path='chapel', name='Chapel', tier=4, zone='inner', role='rel
                            'shutters hiding the L3 stained glass); the back barge board hole is closed; L3 adds a '
                            'walled churchyard front: a low wall with a lych gate and banners, side walls with lantern piers, old headstones, a stone path to the door and lantern posts '
                            '(the box grew 4 rows at the front).',
-                   description='Needs scaffolding: 13 tall (the bell cote; the nave roof is 9). Over budget: 440 blocks vs 210 (first build 370 vs 170; 7 wide instead of 5, for two pews a side). Stone chapel (stone '
+                   description='Needs scaffolding: 13 tall (the bell cote; the nave roof is 9). Over budget: 510 blocks vs 210 (first build 371 vs 170; the L3 churchyard front is 94; 7 wide instead of 5, for two pews a side). Stone chapel (stone '
                                'bricks on a cobblestone plinth, buttresses, spruce gable roof) whose front gable rises '
                                'into a bell cote; door under a stone hood, lancet windows, shuttered gable windows, pews, an altar; L2 adds the '
                                'bell, runner, lectern, candles, lanterns, flower boxes; L3 the churchyard front (a low '
