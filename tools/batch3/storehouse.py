@@ -19,12 +19,12 @@ def storehouse():
     """Storehouse. The Structure can't go below layer 0 and builders never dig, so the cellar is a raised UNDERCROFT:
     layer 0 stands on the ground as usual, the stone undercroft (floor y 0, room y 1..2) carries the hall floor at
     y 3. The hall (x 2..10, z 2..14, 9 by 13) juts out one block over the undercroft (x 3..9) on both long sides, on
-    stone corbels: Carlton's jetty. Hall walls y 4..5 (plaster in a dark oak frame), plates at y 6, a 45-degree spruce
-    roof (ridge along z, cap at y 11: 12 tall, so it is marked "needs scaffolding").
+    stone corbels: Carlton's jetty. Hall walls y 4..6 (plaster in a dark oak frame), plates at y 7, a 45-degree spruce
+    roof with a wall dormer on each side (ridge along z, cap at y 12: 13 tall, so it is marked "needs scaffolding").
 
     Ways in, all on foot: an outside stone stair along the front wall up to a landing and the hall door (x 6); a
     straight stair down inside the hall to the cellar (x 4..5, z 10..11, railed); a back cellar door at ground level
-    for carts (x 6, z 14). L3 adds the loft over the hall (floor at the plate level y 6) and its stair (x 8).
+    for carts (x 6, z 14). L3 adds the loft over the hall (floor at the plate level y 7) and its stair (x 8).
 
     Level 1: hall and cellar, with some storage: a row of chests and barrels on each floor, the storekeeper's desk.
     Level 2: much more storage: free-standing racks of barrels on their sides in the hall, chests stacked two high,
@@ -308,12 +308,12 @@ STRUCTURES = [dict(path='storehouse', name='Storehouse', tier=3, zone='inner', r
                            'mod cannot build below the ground (no layers under 0, builders never dig), so it is a '
                            'raised stone undercroft: the hall stands on it one storey up (reached by an outside stone '
                            'stair), and a railed stair inside goes down to it; carts also get in through a back door '
-                           'at ground level. No ladders. Storage grows per level: L1 about 12 chests and 14 barrels; '
-                           'L2 about 32 chests and 50 barrels (racks of barrels on their sides, everything two high, '
-                           'the cellar lined); L3 adds the loft under the roof full of chests (its own stair) and fills '
-                           'the cellar, over 70 chests. 12 tall: needs scaffolding (or a builder on the hall floor).',
-                   description='Needs scaffolding: 12 tall (over the 9 rule; the roof is within reach from the hall '
-                               'floor, so the planner may need none). Over budget on purpose (Carlton: bigger, more '
+                           'at ground level. No ladders. Storage grows per level: L1 12 chests and 16 barrels; '
+                           'L2 28 chests and 61 barrels (racks of barrels on their sides, everything two high, '
+                           'the cellar lined); L3 adds the loft under the roof full of chests (its own stair), fills '
+                           'the cellar and adds a goods lean-to and a wood yard outside: 76 chests and 71 barrels. 13 tall: marked as needing scaffolding.',
+                   description='Needs scaffolding: 13 tall (over the 9 rule; the roof is within reach from the hall '
+                               'floor at y 3, so the planner may need little or none). Over budget on purpose (Carlton: bigger, more '
                                'storage). Jettied timber hall (plaster in a dark oak frame, spruce roof) on a stone '
                                'undercroft cellar; outside stone stair to the door, inside stair to the cellar, back '
                                'cart door. L1 some chests and barrels; L2 barrel racks, chests two high, hoist, loading '

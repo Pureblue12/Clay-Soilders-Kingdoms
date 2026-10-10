@@ -1,0 +1,231 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "well_l2",
+  "version": 7,
+  "size": [9,6,7],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T05:38:13.412Z",
+    "description": "Well, level 2 of 3: L1 plus flourish 2. Round stone well sunk into the ground: a one-course circular cobblestone rim round a round pool, dark oak posts and windlass with a chain, a bench and a barrel on the grass; L2 adds the spruce gable roof, crank, pulley and a lantern, L3 a water tub, a flower pot, moss, lanterns and flowers. 9 x 7 x 6 (one layer in the ground), water by the decoration step. Not yet builder-tested: dark_oak_slab, lever. Decoration step adds: water.",
+    "changes": "For your note (\"still not circular\", \"rim only 1 block tall\"): the rim is one block tall (the well is sunk, the water level with the grass) and is now a real circle, 7 across with two steps at every corner, round a round pool. The barrel, a new bench and the tub stand on the grass apart from the ring, so nothing squares it off. The roof overhangs its posts by one block all round; level 1 gets a bench and poppies, level 3 more flowers.",
+    "parent": 6,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier1",
+      "core",
+      "water"
+    ],
+    "groundLayer": 0,
+    "decorationBlocks": [
+      [
+        3,
+        0,
+        1,
+        "water"
+      ],
+      [
+        4,
+        0,
+        1,
+        "water"
+      ],
+      [
+        5,
+        0,
+        1,
+        "water"
+      ],
+      [
+        2,
+        0,
+        2,
+        "water"
+      ],
+      [
+        3,
+        0,
+        2,
+        "water"
+      ],
+      [
+        4,
+        0,
+        2,
+        "water"
+      ],
+      [
+        5,
+        0,
+        2,
+        "water"
+      ],
+      [
+        6,
+        0,
+        2,
+        "water"
+      ],
+      [
+        2,
+        0,
+        3,
+        "water"
+      ],
+      [
+        3,
+        0,
+        3,
+        "water"
+      ],
+      [
+        4,
+        0,
+        3,
+        "water"
+      ],
+      [
+        5,
+        0,
+        3,
+        "water"
+      ],
+      [
+        6,
+        0,
+        3,
+        "water"
+      ],
+      [
+        2,
+        0,
+        4,
+        "water"
+      ],
+      [
+        3,
+        0,
+        4,
+        "water"
+      ],
+      [
+        4,
+        0,
+        4,
+        "water"
+      ],
+      [
+        5,
+        0,
+        4,
+        "water"
+      ],
+      [
+        6,
+        0,
+        4,
+        "water"
+      ],
+      [
+        3,
+        0,
+        5,
+        "water"
+      ],
+      [
+        4,
+        0,
+        5,
+        "water"
+      ],
+      [
+        5,
+        0,
+        5,
+        "water"
+      ]
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:chain[axis=y]",
+    "B": "minecraft:cobblestone",
+    "C": "minecraft:dark_oak_log[axis=x]",
+    "D": "minecraft:dark_oak_log[axis=y]",
+    "E": "minecraft:dark_oak_slab[type=bottom,waterlogged=false]",
+    "F": "minecraft:dark_oak_stairs[facing=east,half=top,shape=straight,waterlogged=false]",
+    "G": "minecraft:dark_oak_stairs[facing=north,half=top,shape=straight,waterlogged=false]",
+    "H": "minecraft:dark_oak_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "I": "minecraft:dark_oak_stairs[facing=west,half=top,shape=straight,waterlogged=false]",
+    "J": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "K": "minecraft:lever[face=wall,facing=north,powered=false]",
+    "L": "minecraft:mossy_cobblestone",
+    "M": "minecraft:oak_pressure_plate",
+    "N": "minecraft:poppy",
+    "O": "minecraft:spruce_fence[east=true,north=false,south=false,waterlogged=false,west=false]",
+    "P": "minecraft:spruce_slab[type=top,waterlogged=false]",
+    "Q": "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "R": "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "S": "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "T": "minecraft:water[level=0]"
+  },
+  "layers": [
+    [
+      "...LBB...",
+      "..BTTTB..",
+      ".BTTTTTL.",
+      ".BTTTTTB.",
+      ".LTTTTTB.",
+      "..LTTTB..",
+      "...BBL..."
+    ],
+    [
+      "S.NBBB.NN",
+      "S.L...B..",
+      "OB.....B.",
+      ".D..A..D.",
+      ".B.....B.",
+      "..B...L.#",
+      "NN.BLB..N"
+    ],
+    [
+      ".........",
+      ".........",
+      "MK.....J.",
+      ".DI.A.FD.",
+      ".........",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".G.....G.",
+      ".DCCCCCD.",
+      ".H.....H.",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      "RRRRRRRRR",
+      "ID..P..DF",
+      "QQQQQQQQQ",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      "EEEEEEEEE",
+      ".........",
+      ".........",
+      "........."
+    ]
+  ]
+}

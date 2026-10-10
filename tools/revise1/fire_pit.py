@@ -157,4 +157,4 @@ STRUCTURES = [dict(path='fire_pit', name='Fire pit', tier=1, zone='inner', role=
                            'has grown: the trunk bends forward, one branch reaches over the left bench and one over '
                            'the back bench, and the crown is three ragged clumps (not one ball) that overhang and '
                            'shade both benches, with a lantern hanging from each branch. The fire ring stays open to '
-                           'the sky (no leaves over the campfire, which stays unlit). Level 1 is unchanged.')]
+                           'the sky (no leaves over the campfire, which stays unlit). Every trunk and branch block joins the next by a face. Level 1 is unchanged.')]

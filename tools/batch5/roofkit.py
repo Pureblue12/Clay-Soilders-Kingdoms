@@ -112,3 +112,29 @@ def dormer(s, x, y, z, out, cheek='dark_oak_log', gable='dark_oak_planks', roof=
             P(s, cx + lx * v, y + 1, cz + lz * v, roof, facing=f, **STAIR)
         P(s, cx, y + 1, cz, gable)
         P(s, cx, y + 2, cz, ridge, **SLAB)
+
+
+SWAP = {'east': 'west', 'west': 'east', 'left': 'right', 'right': 'left',
+        'inner_left': 'inner_right', 'inner_right': 'inner_left', 'outer_left': 'outer_right', 'outer_right': 'outer_left'}
+
+
+def mirror_x(s):
+    """Mirrors a finished structure left to right (x -> width - 1 - x): facings, hinges, stair shapes, east/west
+    connections and banner rotations follow. Run it before connect()."""
+    w = s.size[0]
+    blocks, layers = {}, {}
+    for (x, y, z), (name, props, level) in s.blocks.items():
+        p = {}
+        for k, v in props.items():
+            if k in ('facing', 'hinge', 'shape'):
+                v = SWAP.get(v, v)
+            if k == 'rotation':
+                v = str((16 - int(v)) % 16)
+            p[SWAP.get(k, k) if k in ('east', 'west') else k] = v
+        blocks[(w - 1 - x, y, z)] = (name, p, level)
+        layers[(w - 1 - x, y, z)] = s.layer_of[(x, y, z)]
+    s.blocks, s.layer_of = blocks, layers
+    for lv in s.decorations.values():
+        for d in lv:
+            d['pos'][0] = w - 1 - d['pos'][0]
+    return s
