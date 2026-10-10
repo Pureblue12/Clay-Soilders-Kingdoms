@@ -1,0 +1,99 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "garden_l1",
+  "version": 2,
+  "size": [9,5,9],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T03:33:59.059Z",
+    "description": "Garden (level 1), level 1 of 3: shell and fittings (what soldiers build first). A 9 x 9 ornamental garden on a low stepped floor: gravel cross, log-framed poppy beds, a bench and a tool chest; later levels add hedges, a bird bath, a leafy pergola and an urn.",
+    "changes": "Now sits on the grass instead of sinking into it: the same garden on one flat floor (gravel paths, soil beds framed by logs, a spruce deck) with a step of cobblestone stairs all round; small additions: a bird bath, a lantern under the pergola.",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "inner",
+      "civic"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:chest[facing=west,type=single,waterlogged=false]",
+    "A": "minecraft:coarse_dirt",
+    "B": "minecraft:cobblestone",
+    "C": "minecraft:cobblestone_stairs[facing=east,half=bottom,shape=straight,waterlogged=false]",
+    "D": "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=outer_left,waterlogged=false]",
+    "E": "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=outer_right,waterlogged=false]",
+    "F": "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "G": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=outer_left,waterlogged=false]",
+    "H": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=outer_right,waterlogged=false]",
+    "I": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "J": "minecraft:cobblestone_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "K": "minecraft:gravel",
+    "L": "minecraft:oak_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "M": "minecraft:poppy",
+    "N": "minecraft:spruce_planks",
+    "O": "minecraft:stripped_spruce_log[axis=x]",
+    "P": "minecraft:stripped_spruce_log[axis=z]"
+  },
+  "layers": [
+    [
+      "GIIIIIIIH",
+      "COOOKOOOJ",
+      "CPAAKAAPJ",
+      "CPAAKAAPJ",
+      "CKKKBKKKJ",
+      "CAAAKNNNJ",
+      "CAAAKNNNJ",
+      "CBBBKNNNJ",
+      "EFFFFFFFD"
+    ],
+    [
+      ".........",
+      ".........",
+      "..MM.MM..",
+      "..MM.MM..",
+      ".........",
+      ".M.M.....",
+      ".MM....#.",
+      "..LL..L..",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "........."
+    ]
+  ]
+}
