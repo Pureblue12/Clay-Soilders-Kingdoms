@@ -110,9 +110,17 @@ def join_connections(blocks):
     return out
 
 
+# Decorations the Studio shows as real blocks, so the reviewer sees them (only in the Studio file: builders never place
+# them, the decoration step does; a promote step to the mod must leave them out of the NBT).
+STUDIO_DECORATION_BLOCKS = {'water': ('water', {'level': '0'}), 'lily_pad': ('lily_pad', {})}
+
+
 def studio_file(entry, s, level):
     """The Studio JSON of one level (layers[y][z] strings, x along the string)."""
     blocks = join_connections(s.level_blocks(level))
+    for d in (d for lv in range(1, level + 1) for d in s.decorations[lv]):
+        if d['kind'] in STUDIO_DECORATION_BLOCKS:
+            blocks.setdefault(tuple(d['pos']), STUDIO_DECORATION_BLOCKS[d['kind']])
     palette, keys = {'.': 'minecraft:air'}, {}
     for name, props in sorted(set((b[0], tuple(sorted(b[1].items()))) for b in blocks.values())):
         state = 'minecraft:' + name + ('[' + ','.join(f'{k}={v}' for k, v in props) + ']' if props else '')
@@ -132,7 +140,7 @@ def studio_file(entry, s, level):
         layers.append(rows)
     levels = s.levels()
     what = 'shell and fittings (what soldiers build first)' if level == 1 else f'L{level - 1} plus flourish {level}'
-    unknown = sorted({b[0] for b in blocks.values() if b[0] not in KNOWN_OK})
+    unknown = sorted({b[0] for b in s.level_blocks(level).values() if b[0] not in KNOWN_OK})
     desc = f"{entry['name']}, level {level} of {len(levels)}: {what}. {entry['description']}"
     if unknown:
         desc += f" Not yet builder-tested: {', '.join(unknown)}."
