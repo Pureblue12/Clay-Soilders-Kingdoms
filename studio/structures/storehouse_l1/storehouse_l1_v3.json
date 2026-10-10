@@ -4,14 +4,14 @@
   "version": 3,
   "size": [15,13,18],
   "meta": {
-    "status": "pending",
-    "notes": "Perfect but ",
+    "status": "rejected",
+    "notes": "Perfect but 2 things some of the chest doesnt seem accessable and all the chests arent combined into double chests",
     "author": "claude",
     "created": "2026-10-10T08:52:20.380Z",
     "description": "Storehouse, level 1 of 3: shell and fittings (what soldiers build first). Needs scaffolding: 13 tall (over the 9 rule; the roof is within reach from the hall floor at y 3, so the planner may need little or none). Over budget on purpose (Carlton: bigger, more storage). Jettied timber hall (plaster in a dark oak frame, spruce roof) on a stone undercroft cellar; outside stone stair to the door, inside stair to the cellar, back cart door. L1 some chests and barrels; L2 barrel racks, chests two high, hoist, loading awning; L3 loft full of chests, cellar full, yard, flowers.",
     "changes": "Fix: the plaster infill was saved as white terracotta with an axis, which terracotta does not have (the mod would reject the block). Now plain white terracotta at every level. Nothing else changed from v2.",
     "parent": 2,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T09:00:48.642Z",
     "tags": [
       "batch3",
       "tier3",
