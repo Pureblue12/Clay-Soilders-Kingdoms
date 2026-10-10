@@ -122,6 +122,72 @@
           "sheet"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T04:12:37.300Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 92,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: stonecutter, oak_sapling, oak_sign, moss_carpet."
+          },
+          {
+            "level": "fail",
+            "check": "floating",
+            "message": "2 block(s) touch nothing that leads down to layer 0 (in game, layer 0 sits on top of the ground, so these hang in the air): (5, 3, 4), (9, 3, 4)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 346,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3959537572254335,
+          "types": 28,
+          "dominant": {
+            "name": "oak_log",
+            "share": 0.12138728323699421
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "notes": {
+          "artefacts": "the crane at the front right and the drying rack and planter at the back left stand apart from the rest, which reads slightly scattered (Carlton's 'all over the place')"
+        },
+        "summary": "Level 3 adds a log crane with a hanging load, a drying rack, a sign and planters. The most complete version, though the new pieces sit out at opposite corners.",
+        "problems": [
+          "The two hanging lanterns inside the shed at (5, 3, 4) and (9, 3, 4) have nothing above them (air up to the roof): in game they drop off. Hang them on a chain from the roof beam or put them on the posts",
+          "Pull the crane and the drying rack in against the shed or the log yard so the camp reads as one group",
+          "A path of coarse dirt or gravel from the front to the saw would tie the pieces together"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

@@ -4,14 +4,14 @@
   "version": 4,
   "size": [15,9,15],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:09:04.629Z",
     "description": "Commons (level 1), level 3 of 3: L2 plus flourish 3. A round paved plaza 13 across, level with the grass, at a road junction: a statue of the king on a stepped plinth in the middle, ringed paving, gravel spokes, planters; later levels add the statue, benches, lanterns, a notice board, banners and a market stall. Not yet builder-tested: allium, azure_bluet, chiseled_stone_bricks, cornflower, dandelion, grass_block, light_weighted_pressure_plate, oxeye_daisy, polished_andesite, pumpkin, red_banner, red_wool, stone_brick_wall, white_banner, white_wool. Decoration step adds: sign_text.",
     "changes": "Level 1 is no longer bare: the benches facing the plinth, the lantern posts, poppies in the planters and the plaque come at level 1 now (the statue still arrives at level 2). The lone bushes on the lawn at level 3 are gone.",
     "parent": 3,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T04:14:27.523Z",
     "tags": [
       "batch2",
       "tier2",

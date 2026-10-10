@@ -4,14 +4,14 @@
   "version": 5,
   "size": [5,6,5],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "still not cirucular and have the rim only be 1 block tall",
     "author": "claude",
     "created": "2026-10-10T03:55:47.172Z",
     "description": "Well, level 3 of 3: L2 plus flourish 3. Round stone well: octagon cobblestone basin with stair-rounded corners, dark oak posts and windlass with a chain; L2 adds the spruce gable roof and crank, L3 flowers, a water tub, moss and lanterns. 5 x 5 x 6, water by the decoration step. Not yet builder-tested: cauldron, dark_oak_slab, flowering_azalea_leaves, lever, moss_carpet. Decoration step adds: item, potted_plant, water, water_cauldron.",
     "changes": "Turned the roof so it slopes to the front: the posts stand left and right of the basin, so the well is no longer hidden behind a post from the front. The roof is narrower and higher (over the axle only), so the rim is open. L1 adds a barrel, L2 a lantern under a gable bracket, L3 two more lanterns.",
     "parent": 4,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T04:13:17.161Z",
     "tags": [
       "batch2",
       "tier1",

@@ -110,6 +110,56 @@
           "sheet"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T04:11:53.573Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 78,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 1171,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.28351836037574724,
+          "types": 22,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.44918872758326217
+          },
+          "height": 19,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "stepped flared turret caps, pagoda-like"
+        },
+        "summary": "A compact, symmetric stone keep with four corner turrets under dark caps, battlements and a central door. Tidy and coherent, clearly the seed the bigger levels grow from.",
+        "problems": [
+          "The turret caps are stepped tiers with a wide flared skirt, which reads more like a pagoda than a medieval tower: make them steep cones (a stair ring with one block of overhang, then 3 or 4 rings narrowing by one each step, finished with a slab and the flagpole), so they are taller than they are wide",
+          "Nothing alive yet: a banner over the door or two lanterns either side would help L1",
+          "Our QC renders of a structure this big are washed out by fog (renderer, not the build); judged from the near parts"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

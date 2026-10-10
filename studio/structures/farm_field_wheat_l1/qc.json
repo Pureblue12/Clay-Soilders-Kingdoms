@@ -91,6 +91,54 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T04:12:56.776Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 158,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4810126582278481,
+          "types": 15,
+          "dominant": {
+            "name": "dirt",
+            "share": 0.2974683544303797
+          },
+          "height": 5,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 2,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "roof": "no roof, not needed"
+        },
+        "summary": "Two farmland beds either side of a water channel inside a plank fence, with a plank path down one side, hay bales, a tool rack, lantern posts, poppies and a bush. Simple and tidy, as Carlton asked.",
+        "problems": [
+          "The crops and the channel water come from planting and the decoration step, so the viewer shows bare farmland (fine)"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

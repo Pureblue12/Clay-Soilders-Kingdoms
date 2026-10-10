@@ -117,6 +117,62 @@
           "sheet"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T04:14:45.743Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 100,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: grass_block, dandelion, cornflower, allium, azure_bluet, oxeye_daisy, pumpkin, red_banner, white_banner, polished_andesite, red_wool, white_wool, stone_brick_wall, chiseled_stone_bricks, light_weighted_pressure_plate."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "380 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 380,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4394736842105263,
+          "types": 33,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.25
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "summary": "The full square: the king's statue, two market stalls, banners, lanterns and flowers. The lone lawn bushes are gone; a few single flowers remain dotted on the grass, which is fine.",
+        "problems": [
+          "The single flowers dotted on the lawn could be gathered along the paving edge so it looks even tidier"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

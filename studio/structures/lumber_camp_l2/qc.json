@@ -122,6 +122,69 @@
           "sheet"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T04:12:36.782Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 89,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: stonecutter."
+          },
+          {
+            "level": "fail",
+            "check": "floating",
+            "message": "2 block(s) touch nothing that leads down to layer 0 (in game, layer 0 sits on top of the ground, so these hang in the air): (5, 3, 4), (9, 3, 4)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 294,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.37755102040816324,
+          "types": 23,
+          "dominant": {
+            "name": "spruce_planks",
+            "share": 0.1292517006802721
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "summary": "Level 2 adds a waterwheel in a stone race on the left and a log yard of stacked crates and logs on the right. Clearly a working mill and clearly more than L1.",
+        "problems": [
+          "The two hanging lanterns inside the shed at (5, 3, 4) and (9, 3, 4) have nothing above them (air up to the roof): in game they drop off. Hang them on a chain from the roof beam or put them on the posts",
+          "The waterwheel reads as a dark block from most angles: open spokes (fences or trapdoors) between the paddles would make it read as a wheel",
+          "Water in the race comes from the decoration step (fine)"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }
