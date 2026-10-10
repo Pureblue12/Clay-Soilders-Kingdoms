@@ -131,6 +131,71 @@
           "iso"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T08:59:19.182Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 3,
+      "score": 85,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "door",
+            "message": "No door on the front half (z = 0 is the front, toward the easel)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 268,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.43283582089552236,
+          "types": 20,
+          "dominant": {
+            "name": "spruce_planks",
+            "share": 0.19776119402985073
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 1,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Shell level: shed with chest, grindstone and barrel, log pile, chopping block, composter, slab paths. Few small blocks yet (no lanterns, shutters or flowers), which L2/L3 add.",
+          "artefacts": "Carlton's note is met: inside the fence (x2..10, z2..12) there is only the three raised dirt rows (x3, x6, x9) and the entry path slab (6,0,2); no fake log+leaf trees, no props. Nothing floating.",
+          "purpose": "With empty rows the plot reads as a fenced garden; the tree-farm job only shows once the saplings come at L2. The yard (log pile, chopping block) carries the woodcutter reading.",
+          "roof": "The automatic 'no overhang' warning is a false alarm: the shed roof overhangs one block on all sides (stairs at x12/x18 and z8/z13 around walls x13..17, z9..12).",
+          "life": "Path and fence only; no plants or lanterns yet."
+        },
+        "summary": "L1 is the fenced planting plot with three bare raised dirt rows and a timber gateway, plus the woodcutter's gabled shed, log pile, chopping block and composter outside the fence.",
+        "problems": [
+          "Reachability: fine. The shed, yard, path and every dirt row are reached; unreached are only the shed roof slopes, the gateway lintel top and the corner pier tops."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "right"
+        ]
+      }
     }
   }
 }

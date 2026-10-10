@@ -1113,25 +1113,25 @@
     "checkedAt": "2026-10-10T08:43:51.763Z"
   },
   "tree_farm_l1": {
-    "version": 2,
-    "verdict": "revise",
-    "score": 70,
-    "round": 2,
-    "checkedAt": "2026-10-10T08:54:22.229Z"
+    "version": 3,
+    "verdict": "pass",
+    "score": 85,
+    "round": 3,
+    "checkedAt": "2026-10-10T08:59:19.182Z"
   },
   "tree_farm_l2": {
-    "version": 2,
-    "verdict": "revise",
-    "score": 80,
-    "round": 1,
-    "checkedAt": "2026-10-10T08:54:22.823Z"
+    "version": 3,
+    "verdict": "pass",
+    "score": 100,
+    "round": 2,
+    "checkedAt": "2026-10-10T08:59:19.727Z"
   },
   "tree_farm_l3": {
-    "version": 2,
-    "verdict": "revise",
-    "score": 80,
-    "round": 1,
-    "checkedAt": "2026-10-10T08:54:23.350Z"
+    "version": 3,
+    "verdict": "pass",
+    "score": 95,
+    "round": 2,
+    "checkedAt": "2026-10-10T08:59:20.282Z"
   },
   "visitors_camp_l1": {
     "version": 3,

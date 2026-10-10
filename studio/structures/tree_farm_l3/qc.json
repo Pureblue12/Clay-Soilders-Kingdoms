@@ -138,6 +138,79 @@
           "back"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T08:59:20.282Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 95,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: azure_bluet, cauldron, dandelion, cornflower, oxeye_daisy, oak_hanging_sign, oak_sapling, birch_sapling, spruce_sapling, moss_carpet, green_wall_banner."
+          },
+          {
+            "level": "warn",
+            "check": "door",
+            "message": "No door on the front half (z = 0 is the front, toward the easel)."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 344,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5203488372093024,
+          "types": 38,
+          "dominant": {
+            "name": "spruce_planks",
+            "share": 0.15406976744186046
+          },
+          "height": 8,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "artefacts": "Carlton's note is met (plot holds only dirt rows and saplings; the new flowers are outside the fence at x0, x12..13 and z0). But the drying lean-to's high back edge still floats, now in its new place: see problems.",
+          "detail": "Lean-to, banners by the door, hanging sign at the gate, flower pots on a shelf, moss, flowers along the fence.",
+          "levels": "New visible feature: the lean-to drying shed over the log pile, plus flowers round the fence, banners and the gate sign.",
+          "roof": "Shed roof fine; the automatic overhang warning is a false alarm. The lean-to's support problem is counted under artefacts."
+        },
+        "summary": "L3 adds a lean-to drying shed over the log pile, green banners by the shed door, a hanging sign under the lychgate, a shelf of flower pots, moss and a ring of flowers outside the fence.",
+        "problems": [
+          "Lean-to back edge floats (last round's issue, moved, not fixed): the old post at (8,0..1,10) is gone because the lean-to moved to x16..18, z3..6, but it only has posts at the low front (spruce fences (16,0..2,3) and (18,0..2,3)). The high back slabs (16..18,4,5) and (16..18,4,6) have air under them at y3, and the log pile below reaches only y1 (y2 only at (17,2,6)), so from the side the back of the roof hangs in the air, touching the stairs (16..18,3,4) only at an edge. Add back posts, e.g. spruce fences at (16,2..3,6) and (18,2..3,6) standing on the logs (and (17,3,6) on the log at (17,2,6)), or stack logs up to y3 under the back row.",
+          "Minor: the shelf pots (14,3,11) and (16,3,11) are empty flower_pot blocks; the description promises potted saplings (potted_oak_sapling / potted_spruce_sapling) if the mod can place them.",
+          "Reachability: fine. Shed, yard, path, all rows reached; unreached are only roof slopes, the lean-to roof and the pier and gateway tops."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "right",
+          "front",
+          "iso_back"
+        ]
+      }
     }
   }
 }
