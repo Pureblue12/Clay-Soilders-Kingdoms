@@ -161,25 +161,25 @@
     "checkedAt": "2026-10-10T03:25:56.552Z"
   },
   "lumber_camp_l1": {
-    "version": 2,
-    "verdict": "revise",
-    "score": 47,
-    "round": 1,
-    "checkedAt": "2026-10-10T03:22:58.831Z"
+    "version": 3,
+    "verdict": "pass",
+    "score": 78,
+    "round": 2,
+    "checkedAt": "2026-10-10T03:35:51.502Z"
   },
   "lumber_camp_l2": {
-    "version": 2,
-    "verdict": "revise",
-    "score": 56,
-    "round": 1,
-    "checkedAt": "2026-10-10T03:22:59.435Z"
+    "version": 3,
+    "verdict": "pass",
+    "score": 89,
+    "round": 2,
+    "checkedAt": "2026-10-10T03:35:52.055Z"
   },
   "lumber_camp_l3": {
-    "version": 2,
-    "verdict": "revise",
-    "score": 64,
-    "round": 1,
-    "checkedAt": "2026-10-10T03:22:59.988Z"
+    "version": 3,
+    "verdict": "pass",
+    "score": 92,
+    "round": 2,
+    "checkedAt": "2026-10-10T03:35:52.583Z"
   },
   "notice_board_l1": {
     "version": 3,

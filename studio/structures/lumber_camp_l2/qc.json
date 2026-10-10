@@ -60,6 +60,68 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:35:52.055Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 89,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: stonecutter."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "415 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 415,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.37349397590361444,
+          "types": 24,
+          "dominant": {
+            "name": "dark_oak_log",
+            "share": 0.1686746987951807
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 1,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "summary": "Lumber camp level 2: adds a waterwheel on a stone race, benches and more stock; a proper water-powered saw mill.",
+        "problems": [
+          "Almost everything is brown wood; a cobblestone base under the posts all round would ground it.",
+          "Level 3 adds only more stacks and saplings over level 2; a covered log store or a log cart would make it its own."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }
