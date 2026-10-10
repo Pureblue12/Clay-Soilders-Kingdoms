@@ -45,6 +45,7 @@ Minecraft structure files
   export-nbt <name> [-v N] [-o out.nbt] vanilla structure NBT (gzip), what the mod loads
   import-nbt <file.nbt> --name <name> [--author A]
                                         new structure, or the next version if <name> exists
+  import-nbt <folder> [--prefix mod_]   every .nbt in a folder, named after the files
   assets                                where the Minecraft textures come from
 
 Reviews (approve / reject) are made only in the studio UI (npm run dev).
@@ -335,7 +336,21 @@ async function main() {
     }
 
     case 'import-nbt': {
-      const file = rest[0] ?? fail('import-nbt <file.nbt> --name <name>');
+      const target = rest[0] ?? fail('import-nbt <file.nbt|folder> --name <name>');
+      if (fs.statSync(target).isDirectory()) {
+        // a whole folder: one structure per file, named after the file (prefix with --prefix)
+        for (const f of fs.readdirSync(target).filter((n) => n.endsWith('.nbt')).sort()) {
+          const name = (str(args, 'prefix') ?? '') + path.basename(f, '.nbt').replace(/[^a-z0-9_]/g, '_');
+          const r = nbtToStructure(new Uint8Array(fs.readFileSync(path.join(target, f))), name, {
+            status: 'pending', notes: '', author: str(args, 'author') ?? 'import', created: new Date().toISOString(),
+            description: `Imported from ${f}`,
+          });
+          const v = store.saveNewVersion(r.structure, { author: str(args, 'author') ?? 'import' });
+          console.log(`imported ${f} as ${name} v${v}`);
+        }
+        return;
+      }
+      const file = target;
       const name = str(args, 'name') ?? path.basename(file, '.nbt').replace(/[^a-z0-9_]/g, '_');
       const author = str(args, 'author') ?? 'import';
       const r = nbtToStructure(new Uint8Array(fs.readFileSync(file)), name, {

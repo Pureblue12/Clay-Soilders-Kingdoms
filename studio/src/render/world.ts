@@ -206,7 +206,7 @@ export class World {
     const t = this.terrain!;
     const log = this.idOf('minecraft:oak_log[axis=y]');
     const leaves = this.idOf('minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]');
-    const keepOut = this.placements.map((p) => [p.min[0] - 4, p.min[2] - 4, p.max[0] + 4, p.max[2] + 4]);
+    const keepOut = this.placements.map((p) => [p.min[0] - 7, p.min[2] - 7, p.max[0] + 7, p.max[2] + 7]);
     for (let z = t.z0 + 3; z < t.z0 + t.size - 3; z += 7)
       for (let x = t.x0 + 3; x < t.x0 + t.size - 3; x += 7) {
         const r = hash2(x, z, seed + 99);

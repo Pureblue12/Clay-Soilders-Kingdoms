@@ -2,8 +2,10 @@
 import fs from 'node:fs';
 import { stringifyStructure } from '../src/format/structure.ts';
 import { house } from './house.ts';
+import { keep } from './keep.ts';
+import { wall } from './wall.ts';
 
-const makers: Record<string, () => ReturnType<typeof house>> = { house };
+const makers: Record<string, () => ReturnType<typeof house>> = { house, keep, wall };
 const [which, out] = process.argv.slice(2);
 const make = makers[which];
 if (!make || !out) {

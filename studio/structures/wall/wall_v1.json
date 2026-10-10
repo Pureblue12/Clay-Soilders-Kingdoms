@@ -1,0 +1,94 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "wall",
+  "version": 1,
+  "size": [13,8,5],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T00:33:24.457Z",
+    "description": "Town wall module, 13 long: battered base, walkway at 5, crenellated parapet on corbels, buttresses on the town side. Ends are open to join modules.",
+    "tags": [
+      "sample",
+      "wall",
+      "module"
+    ],
+    "reviewedAt": null,
+    "parent": null
+  },
+  "palette": {
+    "#": "minecraft:mossy_cobblestone",
+    "=": "minecraft:cobblestone",
+    "+": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=straight]",
+    "-": "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=straight]",
+    "*": "minecraft:stone_bricks",
+    ".": "minecraft:air",
+    "@": "minecraft:cracked_stone_bricks",
+    "%": "minecraft:mossy_stone_bricks",
+    "&": "minecraft:iron_bars[east=false,north=true,south=true,west=false]",
+    "$": "minecraft:stone_brick_stairs[facing=north,half=bottom,shape=straight]",
+    "!": "minecraft:red_wall_banner[facing=north]",
+    "?": "minecraft:stone_brick_stairs[facing=south,half=top,shape=straight]",
+    "~": "minecraft:stone_brick_wall[east=none,north=none,south=none,up=true,west=none]",
+    "^": "minecraft:lantern[hanging=false]"
+  },
+  "layers": [
+    [
+      "#=##====#===#",
+      "===#=#==##===",
+      "====#========",
+      "###===#=#===#",
+      "====#=#=##==#"
+    ],
+    [
+      "+++++++++++++",
+      "=#=====#==##=",
+      "==#=====#=#==",
+      "---*-----*---",
+      "...@.....*..."
+    ],
+    [
+      ".............",
+      "*@*********%*",
+      "**%*%@*%*@@**",
+      "...*.....*...",
+      "...*.....@..."
+    ],
+    [
+      ".............",
+      "%&*%*&*&**%&%",
+      "*&@*@&*&***&%",
+      "...%.....*...",
+      "...$.....$..."
+    ],
+    [
+      "......!......",
+      "@*****@*@****",
+      "*****%**%****",
+      "...*.....*...",
+      "............."
+    ],
+    [
+      "?????????????",
+      "**@***%**%***",
+      "***@*%**%****",
+      "...$.....$...",
+      "............."
+    ],
+    [
+      "*****%***@***",
+      ".............",
+      "~.....~.....~",
+      ".............",
+      "............."
+    ],
+    [
+      ".*.*.%.*.%.*.",
+      ".............",
+      "^.....^.....^",
+      ".............",
+      "............."
+    ]
+  ]
+}

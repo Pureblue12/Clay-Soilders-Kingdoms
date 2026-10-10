@@ -200,12 +200,12 @@ export function fallbackModel(state: BlockState): SpecialModel | null {
   if (/(^|_)air$/.test(short) || short === 'structure_void' || short === 'barrier' || short === 'light') return { textures, elements: [], y: 0 };
 
   if (short.endsWith('_stairs')) {
-    // vanilla stairs model faces east at y = 0; our facing table is north-based, so add 90
+    // this stairs shape faces east at y = 0 (like vanilla's model); our facing table is north-based
     const top = p.half === 'top';
     return {
       textures,
       elements: [box([0, 0, 0], [16, 8, 16], full), box([8, 8, 0], [16, 16, 16], full)],
-      y: (facingY + 90) % 360,
+      y: (facingY + 270) % 360,
       x: top ? 180 : 0,
     };
   }

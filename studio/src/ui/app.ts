@@ -258,7 +258,7 @@ function renderReview() {
         e.stopPropagation();
         state.compare = true;
         state.compareVersion = x.version;
-        void showScene(false).then(renderReview);
+        void showScene(true).then(renderReview);
       };
       actions.appendChild(cmp);
     }
@@ -409,7 +409,7 @@ function setupControls() {
       const sel = $<HTMLSelectElement>('#compare-with');
       state.compareVersion = Number(sel.value) || s.versions.find((x) => x.version !== state.version)!.version;
     }
-    void showScene(false).then(renderReview);
+    void showScene(true).then(renderReview); // re-frame: the view just changed width
   };
   $<HTMLSelectElement>('#compare-with').onchange = (e) => {
     state.compareVersion = Number((e.target as HTMLSelectElement).value);
