@@ -207,6 +207,59 @@
           "iso"
         ]
       }
+    },
+    "6": {
+      "version": 6,
+      "checkedAt": "2026-10-10T08:48:34.301Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 98,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 1229,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.3140764849471115,
+          "types": 28,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.42799023596419855
+          },
+          "height": 20,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "v6 polish is visible: belt course of upside-down stairs as sills, spruce shutters, lantern on a bracket over the door, torches on the door posts, watch fire, barrels and chest on the roof deck, furnished king's chamber.",
+          "life": "Last round's note is fixed (lantern and torches at the door), but life is still only poppies and bushes at the apron corners; a few more plants would lift it.",
+          "roof": "Flat battlemented deck is right for a keep; the four steep dark oak turret cones with finials give the roof its colour and height."
+        },
+        "summary": "Level 1 is the keep alone: an 11 x 11 stone tower on a cobblestone apron with corbelled battlements, four turret cones, a guard hall, the king's chamber and stairs to the roof. It is the base the other levels grow from.",
+        "problems": [
+          "Minor: life is thin on the outside (flowers only at the four apron corners); a flower box under a ground-floor window or vines on a corner would help.",
+          "Reachability: 1187 of 1317 standing places reached; the unreached ones are the turret cone slopes (y13, y15) and the upside-down belt-course stairs at y6 outside the walls, which is right. Every floor, room and the roof deck are reached."
+        ],
+        "views": [
+          "sheet",
+          "front",
+          "iso"
+        ]
+      }
     }
   }
 }

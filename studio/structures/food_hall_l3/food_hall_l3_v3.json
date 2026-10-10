@@ -4,14 +4,14 @@
   "version": 3,
   "size": [13,9,15],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T05:36:34.275Z",
     "description": "Tavern / food hall, level 3 of 3: L2 plus flourish 3. Over budget: 568 blocks vs 345 (first build 418 vs 280). Long timber food hall: one long table with benches under a dormer, a big brick hearth and chimney at the far end, a kitchen corner (smoker) by a side door and a bar of kegs. L2 adds function: an outdoor kitchen under a lean-to (second smoker, prep table, supplies), a serving hatch and a table for two, plus sign, lanterns, chandeliers and banners. L3 adds a bread oven, a storeroom shed and a beer-garden terrace (extra dining), plus candles and flower boxes. Not yet builder-tested: allium, azure_bluet, brick_slab, brick_wall, candle, cornflower, dandelion, fern, oak_hanging_sign, oxeye_daisy, red_wall_banner. Decoration step adds: banner_pattern, item, sign_text.",
     "changes": "Quality check: the storeroom shed behind the terrace gets a small gable roof of spruce stairs with a slab ridge instead of a flat slab roof. Nothing else changed.",
     "parent": 2,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T08:47:29.121Z",
     "tags": [
       "batch4",
       "tier4",

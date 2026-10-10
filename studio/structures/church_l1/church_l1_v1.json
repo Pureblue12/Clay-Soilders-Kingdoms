@@ -4,14 +4,14 @@
   "version": 1,
   "size": [17,20,24],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T05:43:25.636Z",
     "description": "Church, level 1 of 3: shell and fittings (what soldiers build first). Needs scaffolding: 20 tall (tower and spire; the nave roof is 11). Over budget: 1246 blocks vs 700 (first build 1094 vs 580). Stone parish church: a front bell tower with belfry openings and a dark oak spire, a rubble-stone nave with buttresses and lancets, a lower chancel with altar and choir stalls, a timber side porch; L2 the bell and its rope, a weathervane, stained glass, runner, font, pulpit, lanterns, banners and a churchyard; L3 carved pinnacles, a yew, flowers, vines, banners inside. The bell (L2) is not drawn by the Studio, only its chain.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T08:46:56.904Z",
     "tags": [
       "batch5",
       "tier5",

@@ -4,14 +4,14 @@
   "version": 6,
   "size": [9,8,9],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T05:38:14.510Z",
     "description": "Fire pit, level 1 of 3: shell and fittings (what soldiers build first). An unlit campfire (it never burns) in a stone ring with a cooking spit, three spruce log benches, a woodpile, a chopping stump, supplies, poppies and a lantern post; level 2 a pot, a second lantern, cushions, plants and a young oak; level 3 the oak grown into a shade tree over the benches (lanterns hang from its branches) and a dark oak firewood shelter.",
     "changes": "For your note (custom shade tree): a hand-built oak now grows between the left and the back bench. Level 2 has it as a young tree (a trunk with a tuft of leaves); on level 3 it has grown: the trunk bends forward, one branch reaches over the left bench and one over the back bench, and the crown is three ragged clumps (not one ball) that overhang and shade both benches, with a lantern hanging from each branch. The fire ring stays open to the sky (no leaves over the campfire, which stays unlit). Every trunk and branch block joins the next by a face. Level 1 is unchanged.",
     "parent": 5,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T08:47:10.975Z",
     "tags": [
       "revise1",
       "tier1",

@@ -188,6 +188,73 @@
           "sheet"
         ]
       }
+    },
+    "6": {
+      "version": 6,
+      "checkedAt": "2026-10-10T08:48:36.232Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 100,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cornflower, dark_oak_fence, dark_oak_slab, cracked_stone_bricks, mossy_stone_bricks, candle, red_wall_banner, gold_block, red_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "2116 blocks, over the landmark budget of 1800 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 2116,
+          "category": "landmark",
+          "budget": 1800,
+          "detailRatio": 0.32608695652173914,
+          "types": 39,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.3534971644612476
+          },
+          "height": 20,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "roof": "The automatic 'no overhang' warning is a false alarm: the great hall roof overhangs the long side walls by one block in the renders (the buttresses and flower beds along the walls confuse the check); the gable ends have a dormer and trim.",
+          "levels": "Clearly new at a glance: the 9 x 13 great hall with throne dais behind the keep and the walled forecourt with gate in front.",
+          "life": "Flower beds under the hall windows and between the buttresses, lantern posts by the side doors, banners on the turret finials and the keep door."
+        },
+        "summary": "Level 2 is the royal court: the keep plus a buttressed great hall behind it (two hearths, long tables, red carpet, throne on a dais) and a low walled forecourt with a gate, side gateways and posterns.",
+        "problems": [
+          "Reachability: 1239 of 1432 places reached; unreached are the turret cones, the belt-course stairs, the tie beams under the hall roof (y8) and single tops of the low forecourt wall and props, which is right. Every room, the hall and the roof deck are reached."
+        ],
+        "views": [
+          "sheet",
+          "iso_back"
+        ]
+      }
     }
   }
 }
