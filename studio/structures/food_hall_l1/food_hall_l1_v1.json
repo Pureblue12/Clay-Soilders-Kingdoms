@@ -4,14 +4,14 @@
   "version": 1,
   "size": [13,9,15],
   "meta": {
-    "status": "pending",
-    "notes": "Decorations changing ",
+    "status": "rejected",
+    "notes": "Decorations changing l2 and l3 are good but it needs to also have a functionality aspect to it that changes",
     "author": "claude",
     "created": "2026-10-10T05:02:45.023Z",
     "description": "Tavern / food hall, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 504 blocks vs 345 (first build 417 vs 280). Long timber food hall: one long table with benches under a dormer, a big brick hearth and chimney at the far end, a kitchen corner (smoker) by a side door and a bar of kegs; L2 a projecting sign, lanterns, chandeliers, banners and smoke; L3 a beer-garden terrace, candles, flower boxes and kegs by the kitchen.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:08:34.233Z",
     "tags": [
       "batch4",
       "tier4",
