@@ -6,9 +6,9 @@ from batch3.ws_kit import (P, A, STAIR, TOP, SLAB, SLAB_TOP, OPEN, SHELF, HANG, 
 
 
 def food_hall(width=7, depth=11):
-    """Food hall in an 11 x 9 x 15 box (9 tall: within builders' reach, no scaffolding).
+    """Food hall in a 13 x 9 x 15 box (x 0..2: the terrace) (9 tall: within builders' reach, no scaffolding).
 
-    Walls x 2..8, z 2..12 (7 x 11), 3 high; spruce gable roof with dark oak eaves and ridge along the hall, one block
+    Walls x 4..10, z 2..12 (7 x 11), 3 high; spruce gable roof with dark oak eaves and ridge along the hall, one block
     of overhang all round, open rafters inside. The far (back) gable carries the signature: a brick hearth in the wall
     with its chimney breast outside, rising through the roof overhang.
 
@@ -77,8 +77,20 @@ def food_hall(width=7, depth=11):
         P(s, mid, y, z0, 'dark_oak_log', axis='y')
     for x in (mid - 1, mid + 1):
         P(s, x, top + 2, z0, 'glass_pane')
+    # a dormer on the right slope over the long table: its window lights the hall, it breaks up the long roof
+    dz = (z0 + 3, z0 + 4, z0 + 5)                                       # 5, 6, 7
+    dormer = {(x1, top + 2, z) for z in dz} | {(x1 - 1, top + 3, z) for z in dz}
     gable_roof(s, x0, x1, z0, z1, top, front=1, back=1, gable='white_terracotta',
-               skip={(mid, 7, z1 + 1), (mid, 8, z1 + 1)})
+               skip={(mid, 7, z1 + 1), (mid, 8, z1 + 1)} | dormer)
+    P(s, x1, top + 2, dz[0], 'dark_oak_log', axis='y'); P(s, x1, top + 2, dz[2], 'dark_oak_log', axis='y')
+    P(s, x1, top + 2, dz[1], 'glass_pane')
+    for x in (x1 - 1, x1, x1 + 1):
+        P(s, x, top + 3, dz[0], 'spruce_stairs', facing='south', **STAIR)
+        P(s, x, top + 3, dz[2], 'spruce_stairs', facing='north', **STAIR)
+        P(s, x, top + 3, dz[1], 'dark_oak_planks')
+        P(s, x, top + 4, dz[1], 'spruce_slab', **SLAB)
+    P(s, x1 + 1, top + 2, dz[0], 'spruce_stairs', facing='north', **TOP)    # corbels under the dormer's overhang
+    P(s, x1 + 1, top + 2, dz[2], 'spruce_stairs', facing='south', **TOP)
     P(s, mid, 0, z0 - 1, 'cobblestone_stairs', facing='south', **STAIR)     # step at the front door
 
     s.at(1, 'fittings')
@@ -182,7 +194,7 @@ def food_hall(width=7, depth=11):
 
 STRUCTURES = [dict(path='food_hall', name='Tavern / food hall', tier=4, zone='inner', role='food', group='food_hall',
                    terrain='skirt', door='front', make=food_hall, changes='First version.',
-                   description='Long timber food hall: one long table with benches, a big brick hearth and chimney at '
+                   description='Over budget: 504 blocks vs 345 (first build 417 vs 280). Long timber food hall: one long table with benches under a dormer, a big brick hearth and chimney at '
                                'the far end, a kitchen corner (smoker) by a side door and a bar of kegs; L2 a '
                                'projecting sign, lanterns, chandeliers, banners and smoke; L3 a beer-garden terrace, '
                                'candles, flower boxes and kegs by the kitchen.')]

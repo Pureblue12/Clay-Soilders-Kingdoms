@@ -182,7 +182,7 @@ def townhouse(width=5, depth=6):
 
 STRUCTURES = [dict(path='townhouse', name='Townhouse', tier=4, zone='inner', role='house', group='townhouse',
                    terrain='ground_level', door='front', make=townhouse, changes='First version.',
-                   description='Narrow two-storey town house: stone ground floor (kitchen-living room with hearth, '
+                   description='Over budget: 339 blocks vs 265 (first build 267 vs 205). Narrow two-storey town house: stone ground floor (kitchen-living room with hearth, '
                                'table, stores under the stairs), plaster and dark oak upper storey jettied over the '
                                'street on brackets, 3 beds upstairs by a staircase; L2 shutters, planters, lanterns '
                                'and a log pile, L3 a back garden, jetty flower boxes, chimney smoke and a lantern post.')]

@@ -191,7 +191,7 @@ def inn(width=7, depth=9):
 
 STRUCTURES = [dict(path='inn', name='Inn (inn stage of the visitors\' camp)', tier=4, zone='inner', role='house',
                    group='visitors_camp', terrain='skirt', door='front', make=inn, changes='First version.',
-                   description='Two-storey inn: stone common room (hearth, two tables, a bar of kegs), six beds in the '
+                   description='Over budget: 509 blocks vs 315 (first build 419 vs 255). Two-storey inn: stone common room (hearth, two tables, a bar of kegs), six beds in the '
                                'timber upper storey up a staircase; L2 the stable lean-to, a projecting sign, '
                                'lanterns and shutters; L3 a porch over the door, a Welcome signpost, flower boxes, '
                                'banner and chimney smoke.')]
