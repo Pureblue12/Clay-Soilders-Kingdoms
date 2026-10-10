@@ -4,14 +4,14 @@
   "version": 3,
   "size": [15,4,13],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "id like it to get wider and more detail please :)",
     "author": "claude",
     "created": "2026-10-10T03:25:51.743Z",
     "description": "Visitors' camp, level 2 of 3: L1 plus flourish 2. A traveller's camp: two striped green A-frame tents with open fronts and bedrolls, a canopy tent with a bed, an unlit fire in a stone ring with log seats, a cart, crates, a workbench, a camp table, a hitching rail, a woodpile and lantern posts; level 2 a cooking spit and pot, pennants and more lanterns; level 3 a red and white market awning, a welcome sign, cushions and flowers. Not yet builder-tested: cauldron, red_banner.",
     "changes": "Tents in green canvas with white or brown stripes and open fronts (you see the bedrolls), no more bright blue; level 1 has a workbench, a camp table, a woodpile and poppies; level 2 a cooking spit over the fire; level 3 a striped market awning over the crates.",
     "parent": 2,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T03:39:14.809Z",
     "tags": [
       "revise1",
       "tier1",
