@@ -187,7 +187,8 @@ def garden(size=17):
         else:
             put_id(s, x, 1, z, _drift(x, z, quad(x, z), d(x, z), c, shift=1))
     # wild flowers in the lawn along the hedge and round the tree roots
-    lawn = [(x, z) for x in range(1, e) for z in range(1, e) if (x, 0, z) not in s.blocks and (x, 1, z) not in s.blocks]
+    lawn = [(x, z) for x in range(1, e) for z in range(1, e) if (x, 0, z) not in s.blocks and (x, 1, z) not in s.blocks
+            and (x, z) not in pond]
     for x, z in lawn:
         if noise(x, 1, z, 5) < 0.6:
             put_id(s, x, 1, z, WILD[(x + 2 * z) % len(WILD)])
@@ -208,13 +209,13 @@ def tree(s, x, z, log, wood, leaves, seed=0):
     put_id(s, x, 1, z, wood, axis='y')                             # bark all round at the foot
     branches = ((1, 1), (-1, 1), (1, -1), (-1, -1))
     for bx, bz in branches:                                        # diagonal branches: one out at y 4, two out at y 5
-        put_id(s, x + bx, 4, z + bz, log, axis='x' if (bx + bz) % 2 else 'z')
-        put_id(s, x + 2 * bx, 5, z + 2 * bz, log, axis='x' if bx > 0 else 'z')
+        put_id(s, x + bx, 4, z + bz, wood, axis='y')               # bark on every side: no sawn log ends showing
+        put_id(s, x + 2 * bx, 5, z + 2 * bz, wood, axis='y')
     out = 1 if x < s.size[0] // 2 else -1                          # towards the middle of the garden
     for i in (1, 2, 3):                                            # long branches reaching over the walk and bench
-        put_id(s, x, 5, z - i, log, axis='z')
+        put_id(s, x, 5, z - i, wood, axis='y')
         if i < 3:
-            s.add(x + out * i, 5, z, log, axis='x')
+            s.add(x + out * i, 5, z, wood, axis='y')
     for y, r in ((4, 4.3), (5, 3.6), (6, 4.6), (7, 4.0), (8, 2.9)):
         for dx in range(-5, 6):
             for dz in range(-5, 6):
@@ -259,7 +260,7 @@ STRUCTURES = [dict(path='garden', name='Garden (level 1)', tier=2, zone='inner',
                            'of the round walk and the arbor. Two blocks wider (17 x 17). More flowers: blue orchids '
                            'added, the borders reach further, and level 3 fills the lawn along the hedge with wild '
                            'flowers and petals. New lily pond in the front left corner: 3 x 2 of water with lily '
-                           'pads, a stone edge and stair kerb, ferns. Water and lily pads are added by the '
+                           'pads, a mossy stone edge, ferns and orchids. Water and lily pads are added by the '
                            'decoration step (builders cannot place them).',
                    description='A 17 x 17 cottage garden set into the lawn: a low hedge, gravel paths and a round walk '
                                'round a sundial bed, curved flower borders and a small lily pond; later levels add two '
