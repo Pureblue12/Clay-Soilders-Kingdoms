@@ -1,0 +1,276 @@
+"""Stone wall modules, tier 3: straight, stepped, corner, gate and wall-walk stairs (docs/STRUCTURES.md, wall modules).
+
+The look follows the approved "wall" and "keep" samples (studio/structures/wall, keep), at soldier scale:
+a cobblestone footing with a battered (stair) plinth, a stone brick body with cobblestone patches, a crenellated
+parapet carried out on upside-down stair corbels, and a 2-wide walk on top.
+
+Every module shares one profile, so the pieces join seamlessly:
+  - z = 0 is the OUTSIDE (the parapet on its corbels), z = 1..2 the wall body; the town side is z = 3 and up.
+  - The body is 5 high (y 0..4): the walk is its top, soldiers stand on it at y = 5 (WALK). The parapet is 1 high
+    (y 5) with merlons at even x (y 6), so two modules side by side meet merlon to merlon.
+  - The stepped module ends 1 higher (stand at y 6) and the stairs module climbs from the ground to the walk.
+"""
+from make_batch1_structures import Structure
+from revise1.blockconn import connect, noise, put_id
+
+WALK = 5                                   # soldiers stand on the walk at this y (the body's top block is y 4)
+STAIR = dict(half='bottom', shape='straight', waterlogged='false')
+TOP = dict(half='top', shape='straight', waterlogged='false')
+SLAB = dict(type='bottom', waterlogged='false')
+LANTERN = dict(hanging='false', waterlogged='false')
+HANGING = dict(hanging='true', waterlogged='false')
+NO_VINE = dict(north='false', south='false', east='false', west='false', up='false')
+
+
+def masonry(x, y, z, seed=3):
+    """The wall's stone, mixed with a fixed pattern: a mossy cobblestone and cobblestone footing, then stone bricks
+    with a few cobblestone patches (old repairs). All KNOWN-OK, so level 1 can use it."""
+    n = noise(x, y, z, seed)
+    if y == 0:
+        return 'mossy_cobblestone' if n < 0.4 else 'cobblestone'
+    if y == 1:
+        return 'cobblestone' if n < 0.45 else 'stone_bricks'
+    return 'cobblestone' if n < 0.14 else 'stone_bricks'
+
+
+def body(s, x, z, top, y0=0):
+    for y in range(y0, top + 1):
+        put_id(s, x, y, z, masonry(x, y, z))
+
+
+def parapet(s, x, z, base, face, merlon, corbel=None):
+    """Outside column of the wall at (x, z): a battered plinth stair at the foot, a corbel at y = base - 1, the parapet
+    at base and (if merlon) a merlon above it. face is the direction the outside faces ('north' or 'west')."""
+    into = {'north': 'south', 'west': 'east'}[face]
+    put_id(s, x, 0, z, 'cobblestone_stairs', facing=into, **STAIR)
+    corbel = base - 1 if corbel is None else corbel
+    put_id(s, x, corbel, z, 'stone_brick_stairs', facing=into, **TOP)
+    for y in range(corbel + 1, base + 1):
+        put_id(s, x, y, z, 'stone_bricks')
+    if merlon:
+        put_id(s, x, base + 1, z, 'stone_bricks')
+
+
+def vine(s, x, y, z, side):
+    put_id(s, x, y, z, 'vine', **{**NO_VINE, side: 'true'})
+
+
+def stone_wall_straight(length=5):
+    s = Structure('stone_wall_straight', (length, 7, 3), palette='oak_a2')
+    s.at(1, 'shell')
+    for x in range(length):
+        for z in (1, 2):
+            body(s, x, z, WALK - 1)
+        parapet(s, x, 0, WALK, 'north', x % 2 == 0)
+    for x in (1, 3):                                                 # arrow-slit niches in the outer face
+        s.remove(x, 2, 1)
+    s.at(2, 'flourish2')
+    for x in (1, 3):
+        put_id(s, x, 2, 1, 'iron_bars')
+    # a plain red banner on the outer face under the corbels (pattern by the decoration step), torches on the walk
+    put_id(s, 2, 3, 0, 'red_wall_banner', facing='north')
+    s.decorate(2, 3, 0, 'banner_pattern', banner='red_wall_banner', note='kingdom colours')
+    for x in (0, 4):
+        put_id(s, x, WALK + 1, 1, 'wall_torch', facing='south')       # on the merlons' inner face
+    put_id(s, 2, WALK, 2, 'stone_brick_wall')                        # a lamp post on the inner edge of the walk
+    put_id(s, 2, WALK + 1, 2, 'lantern', **LANTERN)
+    s.at(3, 'flourish3')
+    # weather: ivy up the outer face, moss on the walk and the parapet, cracked and mossy caps on the merlons
+    for y in (1, 2):
+        vine(s, 0, y, 0, 'south'); vine(s, 4, y, 0, 'south')
+    vine(s, 1, 1, 0, 'south')
+    for x in (1, 3):
+        put_id(s, x, WALK, 1, 'moss_carpet')
+    put_id(s, 3, WALK + 1, 0, 'stone_brick_slab', **SLAB)            # a half merlon (weathered)
+    put_id(s, 1, WALK + 1, 0, 'mossy_cobblestone_wall')
+    put_id(s, 3, WALK, 2, 'barrel', facing='up', open='false')       # a store of arrows on the walk
+    s.decorate(3, WALK + 1, 2, 'item', item='minecraft:arrow', note='arrows in the barrel')
+    return connect(s)
+
+
+def stone_wall_stepped(length=5):
+    """The walk rises 1 block in the middle (a stair on the walk); the parapet and corbels step with it."""
+    s = Structure('stone_wall_stepped', (length, 8, 3), palette='oak_a2')
+    mid = length // 2
+    s.at(1, 'shell')
+    for x in range(length):
+        high = x >= mid
+        top = WALK if x > mid else WALK - 1                          # body top 4 (low end) or 5 (high end)
+        for z in (1, 2):
+            body(s, x, z, top)
+            if x == mid:
+                put_id(s, x, WALK, z, 'stone_brick_stairs', facing='east', **STAIR)   # the step up the walk
+        parapet(s, x, 0, WALK + 1 if high else WALK, 'north', x % 2 == 0, corbel=WALK - 1)
+    for x in (1, 3):                                                 # arrow-slit niches
+        s.remove(x, 2, 1)
+    s.at(2, 'flourish2')
+    for x in (1, 3):
+        put_id(s, x, 2, 1, 'iron_bars')
+    put_id(s, 2, 3, 0, 'red_wall_banner', facing='north')
+    s.decorate(2, 3, 0, 'banner_pattern', banner='red_wall_banner', note='kingdom colours')
+    put_id(s, 0, WALK + 1, 1, 'wall_torch', facing='south')
+    put_id(s, 4, WALK + 2, 1, 'wall_torch', facing='south')
+    put_id(s, 4, WALK + 1, 2, 'stone_brick_wall')
+    put_id(s, 4, WALK + 2, 2, 'lantern', **LANTERN)
+    s.at(3, 'flourish3')
+    for y in (1, 2, 3):
+        vine(s, 1, y, 0, 'south')
+    vine(s, 4, 1, 0, 'south')
+    put_id(s, 1, WALK, 1, 'moss_carpet'); put_id(s, 3, WALK + 1, 1, 'moss_carpet')
+    put_id(s, 3, WALK + 2, 0, 'stone_brick_slab', **SLAB)
+    put_id(s, 1, WALK + 1, 0, 'mossy_cobblestone_wall')
+    return connect(s)
+
+
+def stone_wall_corner():
+    """Outside corner: parapets on the front (z = 0) and the left (x = 0), a solid corner pier rising one higher."""
+    s = Structure('stone_wall_corner', (3, 8, 3), palette='oak_a2')
+    s.at(1, 'shell')
+    for x in (1, 2):
+        for z in (1, 2):
+            body(s, x, z, WALK - 1)
+    for x in (1, 2):
+        parapet(s, x, 0, WALK, 'north', x == 2)
+    for z in (1, 2):
+        parapet(s, 0, z, WALK, 'west', z == 2)
+    for y in range(0, WALK + 2):                                     # corner pier, footing to merlon
+        put_id(s, 0, y, 0, masonry(0, y, 0) if y < 2 else 'stone_bricks')
+    put_id(s, 0, WALK + 2, 0, 'stone_brick_stairs', facing='south', **STAIR)   # it rises 1 higher, a sloped cap
+    s.at(2, 'flourish2')
+    put_id(s, 1, WALK + 1, 1, 'wall_torch', facing='south')
+    put_id(s, 2, WALK, 2, 'stone_brick_wall'); put_id(s, 2, WALK + 1, 2, 'lantern', **LANTERN)
+    put_id(s, 1, WALK + 1, 0, 'red_banner', rotation='10')            # a flag on the corner between the merlons
+    s.decorate(1, WALK + 1, 0, 'banner_pattern', banner='red_banner', note='kingdom colours')
+    s.at(3, 'flourish3')
+    for y in (1, 2, 3):
+        vine(s, 1, y, 0, 'south')
+    for y in (1, 2):
+        vine(s, 0, y, 1, 'east')
+    put_id(s, 1, WALK, 2, 'moss_carpet')
+    return connect(s)
+
+
+def stone_wall_gate(width=7):
+    """Gate: two towers (2 x 4) flank an arched opening 3 wide and 3 high (no fence gate: soldiers can't open them).
+    The walk crosses over the arch and through both towers at the wall's height (stand at y 5), roofed over inside
+    the towers. The towers stand out beyond the wall face on the outside (z = 0, flush with the parapet) and on the
+    town side (z = 3); z = 4 is the town-side apron (banners, lights)."""
+    s = Structure('stone_wall_gate', (width, 9, 5), palette='oak_a2')
+    towers = ((0, 1), (width - 2, width - 1))
+    gx0, gx1 = 2, width - 3                                          # the passage
+    mid = width // 2
+    s.at(1, 'shell')
+    for tx in towers:
+        for x in tx:
+            for z in range(4):
+                body(s, x, z, WALK - 1)                              # solid up to the walk
+            for z in (0, 3):                                         # front and back walls beside the walk
+                for y in (WALK, WALK + 1):
+                    put_id(s, x, y, z, 'stone_bricks')
+            for z in range(4):
+                put_id(s, x, WALK + 2, z, 'stone_bricks')            # the roof over the walk
+        outer = tx[0] if tx[0] == 0 else tx[1]
+        for z in range(4):                                           # a small gable roof on each tower, ridge front-back
+            put_id(s, tx[0], WALK + 3, z, 'spruce_stairs', facing='east', **STAIR)
+            put_id(s, tx[1], WALK + 3, z, 'spruce_stairs', facing='west', **STAIR)
+        s.remove(outer, 2, 0); s.remove(outer, WALK + 1, 0)          # arrow slits: ground floor and walk level
+    for x in range(gx0, gx1 + 1):
+        for z in (1, 2):
+            body(s, x, z, WALK - 1, y0=3)                            # the lintel over the passage
+        parapet(s, x, 0, WALK, 'north', x == mid)
+        s.remove(x, 0, 0)                                            # no plinth in the gateway
+    for z in (1, 2):                                                 # the arch: upside-down stairs in the top corners
+        put_id(s, gx0, 2, z, 'stone_brick_stairs', facing='west', **TOP)
+        put_id(s, gx1, 2, z, 'stone_brick_stairs', facing='east', **TOP)
+    s.at(1, 'fittings')
+    put_id(s, gx0, 1, 0, 'wall_torch', facing='east')                # torches in the gateway on the tower sides
+    put_id(s, gx1, 1, 0, 'wall_torch', facing='west')
+    for x in (1, width - 2):                                         # torches in the walk passages
+        put_id(s, x, WALK + 1, 2, 'wall_torch', facing='north')
+    s.at(2, 'flourish2')
+    put_id(s, mid, 3, 0, 'red_wall_banner', facing='north')          # banner over the arch (pattern: decoration step)
+    s.decorate(mid, 3, 0, 'banner_pattern', banner='red_wall_banner', note='kingdom colours')
+    for tx in towers:
+        outer = tx[0] if tx[0] == 0 else tx[1]
+        for y in (2, WALK + 1):                                      # bars in the arrow slits
+            put_id(s, outer, y, 0, 'iron_bars')
+        inner = tx[1] if tx[0] == 0 else tx[0]
+        put_id(s, inner, 3, 4, 'red_wall_banner', facing='south')    # banners on the town side
+        s.decorate(inner, 3, 4, 'banner_pattern', banner='red_wall_banner', note='kingdom colours')
+    put_id(s, mid, 2, 1, 'lantern', **HANGING)                       # lanterns hanging in the arch
+    put_id(s, mid, 2, 2, 'lantern', **HANGING)
+    for x in (gx0 - 1, gx1 + 1):                                     # lamp posts on the town side of the gate
+        put_id(s, x + (-1 if x < mid else 1), 0, 4, 'stone_brick_wall')
+        put_id(s, x + (-1 if x < mid else 1), 1, 4, 'lantern', **LANTERN)
+    s.at(3, 'flourish3')
+    # a raised portcullis on the town side of the arch: two rows of iron bars between the towers, clear of the passage
+    for x in range(gx0, gx1 + 1):
+        for y in (3, 4):
+            put_id(s, x, y, 3, 'iron_bars')
+    for tx in towers:                                                # ivy on the tower fronts and town sides
+        outer = tx[0] if tx[0] == 0 else tx[1]
+        inner = tx[1] if tx[0] == 0 else tx[0]
+        for y in (1, 2, 3):
+            vine(s, inner, y, 4, 'north') if y < 3 else None
+    put_id(s, mid, WALK + 2, 0, 'red_banner', rotation='8')          # a flag on the merlon over the gate
+    s.decorate(mid, WALK + 2, 0, 'banner_pattern', banner='red_banner', note='kingdom colours')
+    for x in (gx0, gx1):                                             # moss on the walk over the arch
+        put_id(s, x, WALK, 1, 'moss_carpet')
+    for x, b in ((1, 'hay_block'), (width - 2, 'barrel')):           # supplies by the lamp posts
+        put_id(s, x, 0, 4, b, **({'axis': 'y'} if b == 'hay_block' else {'facing': 'up', 'open': 'false'}))
+    return connect(s)
+
+
+def stone_wall_stairs(length=5):
+    """A straight module with a flight of stone brick stairs on the town side (z = 3), from the ground at the west
+    end up to the walk at the east end; z = 4 is the apron in front of the flight."""
+    s = Structure('stone_wall_stairs', (length, 7, 5), palette='oak_a2')
+    s.at(1, 'shell')
+    for x in range(length):
+        for z in (1, 2):
+            body(s, x, z, WALK - 1)
+        parapet(s, x, 0, WALK, 'north', x % 2 == 0)
+    for x in (1, 3):
+        s.remove(x, 2, 1)
+    s.at(1, 'fittings')
+    for x in range(length):                                          # the flight climbs east, step y = x
+        for y in range(0, x):
+            put_id(s, x, y, 3, masonry(x, y, 3))
+        put_id(s, x, x, 3, 'stone_brick_stairs', facing='east', **STAIR)
+    s.at(2, 'flourish2')
+    for x in (1, 3):
+        put_id(s, x, 2, 1, 'iron_bars')
+    put_id(s, 2, 3, 0, 'red_wall_banner', facing='north')
+    s.decorate(2, 3, 0, 'banner_pattern', banner='red_wall_banner', note='kingdom colours')
+    put_id(s, 0, 0, 4, 'stone_brick_wall'); put_id(s, 0, 1, 4, 'lantern', **LANTERN)   # lamp post at the foot
+    put_id(s, 4, 3, 4, 'red_wall_banner', facing='south')            # banner on the side of the flight
+    s.decorate(4, 3, 4, 'banner_pattern', banner='red_wall_banner', note='kingdom colours')
+    put_id(s, 0, WALK + 1, 1, 'wall_torch', facing='south')
+    s.at(3, 'flourish3')
+    for x in (3, 4):                                                 # supplies stacked against the flight
+        put_id(s, x, 0, 4, 'barrel', facing='up', open='false')
+    put_id(s, 2, 0, 4, 'hay_block', axis='y')
+    put_id(s, 4, 1, 4, 'barrel', facing='up', open='false')
+    put_id(s, 1, 0, 4, 'flower_pot'); s.decorate(1, 0, 4, 'potted_plant', plant='cornflower')
+    for y in (1, 2):
+        vine(s, 0, y, 0, 'south'); vine(s, 4, y, 0, 'south')
+    put_id(s, 2, WALK, 2, 'moss_carpet'); put_id(s, 3, WALK, 1, 'moss_carpet')
+    put_id(s, 3, WALK + 1, 0, 'stone_brick_slab', **SLAB)
+    return connect(s)
+
+
+_COMMON = dict(tier=3, zone='wall', role='defense', group='stone_wall', terrain='stepped', door=None)
+STRUCTURES = [
+    dict(path='stone_wall_straight', name='Stone wall, straight', make=stone_wall_straight, **_COMMON,
+         description='5 long stone wall on a battered cobblestone footing, crenellated parapet on corbels, 2-wide walk '
+                     '(stand at 5). Outside is the front (z 0).'),
+    dict(path='stone_wall_stepped', name='Stone wall, stepped', make=stone_wall_stepped, **_COMMON,
+         description='Like the straight module, but the walk rises 1 block (stand at 5, then 6) up a stair in the middle.'),
+    dict(path='stone_wall_corner', name='Stone wall, corner', make=stone_wall_corner, **_COMMON,
+         description='Outside corner joining two straight modules, with a corner pier.'),
+    dict(path='stone_wall_gate', name='Stone wall gate', make=stone_wall_gate,
+         **{**_COMMON, 'role': 'gate', 'group': 'gate'},
+         description='Two small towers and an arched opening 3 wide (no fence gate); the walk crosses over it.'),
+    dict(path='stone_wall_stairs', name='Stone wall, walk stairs', make=stone_wall_stairs, **_COMMON,
+         description='A straight module with a stone stair flight on the town side up to the walk.'),
+]

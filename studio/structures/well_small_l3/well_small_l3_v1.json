@@ -1,0 +1,97 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "well_small_l3",
+  "version": 1,
+  "size": [5,6,4],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T04:41:13.382Z",
+    "description": "Well variant (small), level 3 of 3: L2 plus flourish 3. Over budget: 45 blocks vs 10. Tiny stone well (3 x 3 rim): eight cobblestone blocks round one block of water (decoration step), fence posts and axle, a chain and a little spruce gable roof; L2 a water barrel with a lantern, a seat and an open barrel; L3 a water tub, flowers, a bush and moss. Not yet builder-tested: azure_bluet, cauldron, fern, moss_carpet, oxeye_daisy. Decoration step adds: item, potted_plant, water, water_cauldron.",
+    "changes": "",
+    "parent": null,
+    "reviewedAt": null,
+    "tags": [
+      "batch3",
+      "tier1",
+      "inner",
+      "water"
+    ],
+    "decorationBlocks": [
+      [
+        2,
+        0,
+        1,
+        "water"
+      ]
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:azure_bluet",
+    "A": "minecraft:barrel[facing=up,open=false]",
+    "B": "minecraft:barrel[facing=up,open=true]",
+    "C": "minecraft:cauldron",
+    "D": "minecraft:chain[axis=y]",
+    "E": "minecraft:cobblestone",
+    "F": "minecraft:fern",
+    "G": "minecraft:flower_pot",
+    "H": "minecraft:lantern[hanging=false,waterlogged=false]",
+    "I": "minecraft:moss_carpet",
+    "J": "minecraft:mossy_cobblestone",
+    "K": "minecraft:oak_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "L": "minecraft:oak_fence[east=false,north=false,south=false,waterlogged=false,west=true]",
+    "M": "minecraft:oak_fence[east=true,north=false,south=false,waterlogged=false,west=false]",
+    "N": "minecraft:oak_fence[east=true,north=false,south=false,waterlogged=false,west=true]",
+    "O": "minecraft:oak_leaves[distance=1,persistent=true,waterlogged=false]",
+    "P": "minecraft:oak_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "Q": "minecraft:oxeye_daisy",
+    "R": "minecraft:poppy",
+    "S": "minecraft:spruce_planks",
+    "T": "minecraft:spruce_slab[type=bottom,waterlogged=false]",
+    "U": "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "V": "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]",
+    "W": "minecraft:spruce_trapdoor[facing=north,half=top,open=false,powered=false,waterlogged=false]",
+    "X": "minecraft:spruce_trapdoor[facing=south,half=top,open=false,powered=false,waterlogged=false]",
+    "Y": "minecraft:water[level=0]"
+  },
+  "layers": [
+    [
+      "RJEE#",
+      "PEYEA",
+      "BEEJQ",
+      "FOGC."
+    ],
+    [
+      ".....",
+      ".KDKH",
+      ".I...",
+      "....."
+    ],
+    [
+      ".....",
+      ".KDK.",
+      ".....",
+      "....."
+    ],
+    [
+      ".W.W.",
+      ".MNL.",
+      ".X.X.",
+      "....."
+    ],
+    [
+      ".VVV.",
+      ".SSS.",
+      ".UUU.",
+      "....."
+    ],
+    [
+      ".....",
+      ".TTT.",
+      ".....",
+      "....."
+    ]
+  ]
+}
