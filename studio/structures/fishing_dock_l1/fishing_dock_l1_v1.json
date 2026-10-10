@@ -4,14 +4,14 @@
   "version": 1,
   "size": [7,5,9],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T01:57:40.685Z",
     "description": "Fishing dock, level 1 of 3: shell and fittings (what soldiers build first). Oak jetty on log pilings with a spruce net hut at the shore end and a fishing seat at the far end; meant to run out over water (shown on flat ground, pilings at y 0).",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T03:05:25.394Z",
     "tags": [
       "batch2",
       "tier2",
