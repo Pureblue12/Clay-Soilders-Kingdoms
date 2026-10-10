@@ -1,11 +1,13 @@
 """Wall tower, tier 3 (docs/STRUCTURES.md, wall modules): a square stone tower that the stone wall runs through.
 
-It shares the stone wall's profile (tools/batch3/stone_wall.py): its front (z = 0) is flush with the wall's parapet,
-and the wall walk (stand at y 5) enters through doorways in its sides at z = 1 (both sides) and z = 2 (east side).
+It shares the stone wall's profile (tools/batch3/stone_wall.py): its front (tower z = 0) is flush with the wall's
+parapet, and the 2-wide wall walk (stand at y 5) enters through doorways in both sides at z = 1 and 2.
+The box is 1 wider than the tower on every side (OX, OZ) so the level 3 roof overhangs: the tower's front wall is at
+box z = 1, its sides at box x = 1 and 5 (place it 1 block forward and 1 to the left of the wall line).
 A wooden door on the town side (z = 4) opens on a stair that climbs to the walk room and on to the archer platform
 on the roof, so soldiers reach the whole wall walk from the ground through it. Every step has 2 free blocks above.
 
-Plan (inside x 1..3, z 1..3), steps as (x, z) at y:
+Plan in tower coordinates (inside x 1..3, z 1..3), steps as (x, z) at y:
   ground floor (stand y 1): door (2, 4) -> (2, 3); steps (1, 3) y1 west, (1, 2) y2 north, (2, 2) y3 east,
   (3, 2) y4 east = the walk room (stand y 5); then (2, 3) y5 west, (1, 3) y6 west, (1, 2) y7 north = the roof.
 """
@@ -118,7 +120,11 @@ def wall_tower():
 
 
 STRUCTURES = [dict(path='wall_tower', name='Wall tower', tier=3, zone='wall', role='defense', group='wall_tower',
-                   terrain='ground_level', door='back', changes='First version.', make=wall_tower, max_height=13,
-                   description='Needs scaffolding: 13 tall (level 3 cone roof; levels 1 and 2 are 9 tall). Over budget: 205 blocks vs 160. Square stone '
+                   terrain='ground_level', door='back', make=wall_tower, max_height=13,
+                   changes='Quality check round 1: the wall walk enters the tower 2 wide from both sides (it was 1 wide from '
+                           'the west); the level 3 cone roof overhangs 1 block all round (the box is 1 wider on every '
+                           'side for it, so the tower front is at z 1).',
+                   description='Needs scaffolding: 13 tall (level 3 cone roof; levels 1 and 2 are 9 tall). Over budget: 227 blocks vs 160. Box 7 x 7 '
+                               'for the roof overhang: the tower stands at x 1..5, z 1..5. Square stone '
                                'tower the wall walk runs through (stand at 5); a door on the town side and a stone stair '
                                'up to the walk room and the archer platform on the roof.')]

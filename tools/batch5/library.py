@@ -77,11 +77,9 @@ def library():
     for x in (X0, X1):
         P(s, x, 0, Z0 - 1, 'cobblestone'); P(s, x, 1, Z0 - 1, 'stone_bricks')
         P(s, x, 2, Z0 - 1, 'stone_brick_stairs', facing='south', **STAIR)
-    # the door: stone jambs carrying a hood, a step
-    for x, f in ((MID - 1, 'west'), (MID + 1, 'east')):
-        P(s, x, 0, Z0 - 1, 'cobblestone'); P(s, x, 1, Z0 - 1, 'stone_bricks')
-        P(s, x, 2, Z0 - 1, 'stone_brick_stairs', facing=f, **TOP)
-    P(s, MID, 2, Z0 - 1, 'stone_brick_stairs', facing='south', **TOP)
+    # the door: stone jambs either side, a step
+    for x in (MID - 1, MID + 1):
+        P(s, x, 0, Z0 - 1, 'cobblestone'); P(s, x, 1, Z0 - 1, 'stone_bricks'); P(s, x, 2, Z0 - 1, 'stone_bricks')
     P(s, MID, 0, Z0 - 1, 'cobblestone_stairs', facing='south', **STAIR)
 
     # ---------------------------------------------------------------- fittings
@@ -128,7 +126,8 @@ def library():
     for x in (X0 + 1, X1 - 1):                                         # banners either side of the door
         P(s, x, 3, Z0 - 1, 'red_wall_banner', facing='north')
         s.decorate(x, 3, Z0 - 1, 'banner_pattern', banner='red_wall_banner', note='an open book')
-    P(s, MID, 3, Z0 - 1, 'lantern', **STAND)                           # on the door hood
+    for x in (MID - 1, MID + 1):                                       # lanterns on the door jambs
+        P(s, x, 3, Z0 - 1, 'lantern', **STAND)
     for x, side in ((X0, 'west'), (X1, 'east')):                      # shutters and flower boxes, side windows
         for z in (3, 7):
             shutters(s, x, 2, z, side); shutters(s, x, 3, z, side)

@@ -12,7 +12,8 @@ finial (the signature), 13 tall, so it needs scaffolding.
 - Sides: three lancet windows each (glass panes, 2 high).
 - Inside: an aisle from the door to the altar, two rows of pews (spruce stairs) on each side, the altar (a stone table
   at the back, a white cloth on it), the priest's chest, torches on the walls.
-Level 2 (the chapel in use): the bell in the cote, a red runner down the aisle, the lectern (pulpit) by the altar,
+Level 2 (the chapel in use): the sacristy, a small stone wing at the back right with its own spruce gable roof and
+door (vestments chest, barrel, candles), the bell in the cote, a red runner down the aisle, the lectern (pulpit) by the altar,
 candles on the altar, lanterns on chains from the roof beams and at the door, flower boxes under the side windows,
 flowers by the door, a bench outside.
 Level 3 (the feast-day chapel): the churchyard front, seen from afar: a low cobblestone wall along the front with a
@@ -28,7 +29,7 @@ GABLE_WINDOW = (4, 5, 6)
 
 
 def chapel():
-    W, D = 11, 16
+    W, D = 11, 20
     s = Structure('chapel', (W, 13, D), palette='oak_a2')
     x0, x1, z0, z1 = 2, 8, 5, 13                  # z 0..3: the churchyard path and lych gate (L3)
     mid = 5
@@ -131,6 +132,39 @@ def chapel():
     s.at(2, 'flourish2')
     P(s, mid, cy + 1, z0, 'bell', attachment='ceiling', facing='north', powered='false')   # the signature
     P(s, mid, cy + 2, z0, 'chain', axis='y')                                 # its hanger, under the cote roof
+    # the sacristy (the priest's vestry): a small stone wing at the back right with its own gable roof (ridge front
+    # to back, tucked under the nave's back eave), a door in its back wall, a window on the side
+    sx0, sx1, sz0, sz1 = 6, 10, z1 + 1, z1 + 4                                # walls x 6..10, z 14..17
+    sm = (sx0 + sx1) // 2
+    for x in range(sx0, sx1 + 1):
+        for z in range(sz0, sz1 + 1):
+            P(s, x, 0, z, 'cobblestone' if x in (sx0, sx1) or z == sz1 else 'stone_bricks')
+    for y in range(1, top + 1):
+        for x in range(sx0, sx1 + 1):
+            for z in range(sz0, sz1 + 1):
+                if x in (sx0, sx1) or z == sz1:
+                    P(s, x, y, z, 'cobblestone' if y == 1 else 'stone_bricks')
+    s.remove(sm, 1, sz1); s.remove(sm, 2, sz1)
+    s.door(sm, 1, sz1, 'south', block='spruce_door')
+    P(s, sm, 0, sz1 + 1, 'cobblestone_stairs', facing='north', **STAIR)      # its step
+    s.remove(sx1, 2, sz0 + 1)
+    P(s, sx1, 2, sz0 + 1, 'glass_pane', north='true', south='true', east='false', west='false', **PANE)
+    for z in range(sz0 + 1, sz1 + 2):                                         # its roof
+        for i, (xa, xb) in enumerate(((sx0, sx1), (sx0 + 1, sx1 - 1))):
+            A(s, xa, top + 1 + i, z, 'spruce_stairs', facing='east', **STAIR)
+            A(s, xb, top + 1 + i, z, 'spruce_stairs', facing='west', **STAIR)
+        A(s, sm, top + 2, z, 'dark_oak_planks')
+        A(s, sm, top + 3, z, 'spruce_slab', **SLAB)
+    for x in range(sx0 + 1, sx1):                                             # its back gable
+        A(s, x, top + 1, sz1, 'stone_bricks')
+    for x in range(sx0, sx1 + 1):                                             # closes the joint under the nave eave
+        A(s, x, top + 1, sz0, 'stone_bricks')
+    P(s, sx0 + 1, 1, sz0, 'chest', facing='east', type='single', waterlogged='false')   # vestments
+    P(s, sx1 - 1, 1, sz0, 'barrel', facing='up', open='false')
+    P(s, sx1 - 1, 2, sz0, 'candle', candles='2', lit='true', waterlogged='false')
+    P(s, sx0 + 1, 1, sz0 + 1, 'white_carpet')
+    for x in (sm - 1, sm + 1):                                                # torches beside its door
+        P(s, x, 2, sz1 + 1, 'wall_torch', facing='south')
     for z in range(z0 + 1, z1 - 1):                                          # the red runner down the aisle
         P(s, mid, 1, z, 'red_carpet')
     P(s, x0 + 1, 1, z1 - 2, 'lectern', facing='east', has_book='false', powered='false')   # the pulpit
@@ -226,14 +260,13 @@ def chapel():
 
 
 STRUCTURES = [dict(path='chapel', name='Chapel', tier=4, zone='inner', role='religious', group='chapel',
-                   terrain='ground_level', door='front', make=chapel, max_height=13, changes='Quality check round 1: lanterns on the door hood now stand on flat (upside-down) '
-                           'stair tops; the gable windows are unglazed with open shutters beside them (no inner '
-                           'shutters hiding the L3 stained glass); the back barge board hole is closed; L3 adds a '
-                           'walled churchyard front: a low wall with a lych gate and banners, side walls with lantern piers, old headstones, a stone path to the door and lantern posts '
-                           '(the box grew 4 rows at the front).',
-                   description='Needs scaffolding: 13 tall (the bell cote; the nave roof is 9). Over budget: 510 blocks vs 210 (first build 371 vs 170; the L3 churchyard front is 94; 7 wide instead of 5, for two pews a side). Stone chapel (stone '
+                   terrain='ground_level', door='front', make=chapel, max_height=13, changes='L2 now adds a feature seen from afar: the sacristy, a small stone wing at the back right with its '
+                           'own spruce gable roof, door, window and vestments chest (Carlton: not much differentiating '
+                           'L2 and L3). L3 keeps the walled churchyard front with the lych gate. The box grew 4 rows '
+                           'at the back.',
+                   description='Needs scaffolding: 13 tall (the bell cote; the nave roof is 9). Over budget: 600 blocks vs 210 (first build 371 vs 170; the L2 sacristy is about 90 and the L3 churchyard front 94; 7 wide instead of 5, for two pews a side). Stone chapel (stone '
                                'bricks on a cobblestone plinth, buttresses, spruce gable roof) whose front gable rises '
                                'into a bell cote; door under a stone hood, lancet windows, shuttered gable windows, pews, an altar; L2 adds the '
-                               'bell, runner, lectern, candles, lanterns, flower boxes; L3 the churchyard front (a low '
+                               'sacristy wing at the back, the bell, runner, lectern, candles, lanterns, flower boxes; L3 the churchyard front (a low '
                                'churchyard wall with a lych gate, old headstones, a stone path, lantern posts), stained glass in the gable windows, '
                                'banners, candles and flowers.')]

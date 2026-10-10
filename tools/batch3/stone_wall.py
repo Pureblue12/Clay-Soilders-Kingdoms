@@ -281,17 +281,40 @@ def stone_wall_stairs(length=5):
 
 
 _COMMON = dict(tier=3, zone='wall', role='defense', group='stone_wall', terrain='stepped', door=None)
+TILING = ('Quality check round 1: the merlon pattern changed across the whole set so modules tile end to end '
+          '(a cobblestone-slab half merlon at x 0, merlons at x 2 and 4: neighbours now alternate high / low instead '
+          'of two merlons side by side). ')
 STRUCTURES = [
-    dict(path='stone_wall_straight', name='Stone wall, straight', changes='First version.', make=stone_wall_straight, **_COMMON,
-         description='Over budget: 83 blocks vs 60. 5 long stone wall on a battered cobblestone footing, crenellated parapet on corbels, 2-wide walk '
-                     '(stand at 5). Outside is the front (z 0).'),
-    dict(path='stone_wall_stepped', name='Stone wall, stepped', changes='First version.', make=stone_wall_stepped, **_COMMON,
-         description='Over budget: 91 blocks vs 60. Like the straight module, but the walk rises 1 block (stand at 5, then 6) up a stair in the middle.'),
-    dict(path='stone_wall_corner', name='Stone wall, corner', changes='First version.', make=stone_wall_corner, **_COMMON,
-         description='Outside corner joining two straight modules, with a corner pier.'),
-    dict(path='stone_wall_gate', name='Stone wall gate', changes='First version.', make=stone_wall_gate,
+    dict(path='stone_wall_straight', name='Stone wall, straight', make=stone_wall_straight, **_COMMON,
+         changes=TILING + 'Torches moved onto the merlons at x 2 and 4, the lamp post to x 3; the crenel fillers '
+                          '(slab, mossy wall) removed from L3, which gets more ivy and moss and an arrow barrel.',
+         description='Over budget: 66 blocks vs 60. 5 long stone wall on a battered cobblestone footing, crenellated '
+                     'parapet on corbels, 2-wide walk (stand at 5). Outside is the front (z 0). Merlons tile across joints: half merlon, crenel, merlon, crenel, merlon (the next module starts with its half merlon).'),
+    dict(path='stone_wall_stepped', name='Stone wall, stepped', make=stone_wall_stepped, **_COMMON,
+         changes=TILING + 'The corbels of the high half (x 2..4) now step up with the parapet (upside-down stairs at '
+                          'y 5, air at y 4). Torches on the merlons at x 2 and 4, the lamp post on the low walk; the '
+                          'crenel fillers removed from L3 (an arrow barrel and more ivy instead).',
+         description='Over budget: 72 blocks vs 60. Like the straight module, but the walk rises 1 block (stand at 5, '
+                     'then 6) up a stair in the middle; the parapet and its corbels step up with it. Merlons tile across joints: half merlon, crenel, merlon, crenel, merlon (the next module starts with its half merlon).'),
+    dict(path='stone_wall_corner', name='Stone wall, corner', make=stone_wall_corner, **_COMMON,
+         changes=TILING + 'Corner merlons follow it (front arm: pier, crenel, merlon; side arm: pier, merlon, crenel). '
+                          'The L2 torch moved from the banner onto the merlon at (2, 6, 1); the lamp post that narrowed '
+                          'the corner turn to 1 block is gone. Arrow-slit niches on both faces (bars from L2).',
+         description='Outside corner joining two straight modules, with a corner pier. Going clockwise round a town '
+                     'its side arm (x 0) follows a module and its front arm (z 0) leads into the next.'),
+    dict(path='stone_wall_gate', name='Stone wall gate', make=stone_wall_gate,
          **{**_COMMON, 'role': 'gate', 'group': 'gate'},
-         description='Over budget: 179 blocks vs 60. Its wall line is z 0..2 like the others, the towers also reach z 3. Two small towers and an arched opening 3 wide (no fence gate); the walk crosses over it.'),
-    dict(path='stone_wall_stairs', name='Stone wall, walk stairs', changes='First version.', make=stone_wall_stairs, **_COMMON,
-         description='Over budget: 100 blocks vs 60. A straight module with a stone stair flight on the town side up to the walk.'),
+         changes=TILING + 'The open notches at the front corners (arrow slits) are filled. The towers end in '
+                          'chequered stone merlons 2 above the wall merlons instead of flat spruce stair caps. A stone '
+                          'lintel at y 5 over the L3 portcullis bars. More detail from L1: a battered foot and a '
+                          'corbel course on the towers in line with the parapet corbels, the arch\'s front ring, '
+                          'lanterns in the arch; a watch lantern on each tower top from L2.',
+         description='Over budget: 151 blocks vs 60. Its wall line is z 0..2 like the others, the towers also reach '
+                     'z 3. Two small crenellated towers and an arched opening 3 wide (no fence gate); the walk crosses '
+                     'over it and through the towers.'),
+    dict(path='stone_wall_stairs', name='Stone wall, walk stairs', make=stone_wall_stairs, **_COMMON,
+         changes=TILING + 'The L2 torch moved onto the merlon at x 2; the slab that half-filled a crenel in L3 is '
+                          'removed.',
+         description='Over budget: 81 blocks vs 60. A straight module with a stone stair flight on the town side up '
+                     'to the walk. Merlons tile across joints: half merlon, crenel, merlon, crenel, merlon (the next module starts with its half merlon).'),
 ]
