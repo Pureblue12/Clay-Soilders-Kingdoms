@@ -399,25 +399,25 @@
     "checkedAt": "2026-10-10T05:25:46.007Z"
   },
   "inn_l1": {
-    "version": 1,
-    "verdict": "revise",
-    "score": 67,
-    "round": 1,
-    "checkedAt": "2026-10-10T05:07:49.751Z"
+    "version": 2,
+    "verdict": "pass",
+    "score": 83,
+    "round": 2,
+    "checkedAt": "2026-10-10T05:26:59.802Z"
   },
   "inn_l2": {
-    "version": 1,
+    "version": 2,
     "verdict": "pass",
-    "score": 89,
+    "score": 93,
     "round": 1,
-    "checkedAt": "2026-10-10T05:07:50.974Z"
+    "checkedAt": "2026-10-10T05:27:00.322Z"
   },
   "inn_l3": {
-    "version": 1,
+    "version": 2,
     "verdict": "pass",
-    "score": 92,
+    "score": 95,
     "round": 1,
-    "checkedAt": "2026-10-10T05:07:52.818Z"
+    "checkedAt": "2026-10-10T05:27:00.851Z"
   },
   "keep_l1": {
     "version": 5,

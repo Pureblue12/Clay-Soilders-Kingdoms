@@ -65,6 +65,67 @@
           "iso"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T05:26:59.802Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 83,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "433 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 433,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.3810623556581986,
+          "types": 27,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.20092378752886836
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 1,
+          "depth": 2,
+          "roof": 2,
+          "materials": 1,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "detail": "Fixed: the outside now has its own L1 detail: stair sills under the side and back windows (1,1,5), (9,1,6), (1,1,11), (5,1,13), trapdoor-fronted planter boxes under the front windows (3,0,2-3) and (7,0,2-3), a cobblestone-slab path from the step out to the road (5,0,0-2), two kegs (1,0,3-4) and a bench (8,0,3) by the door. Inside stays well furnished.",
+          "purpose": "The kegs and bench by the door hint at a tavern, but with no sign until L2 it still reads mostly as a big house from outside. Acceptable for the shell level.",
+          "materials": "Same busy mix as v1 (cobble, stone bricks, oak logs, dark oak, spruce roof, oak floors, white terracotta, brick chimney); nothing new clashes.",
+          "shape": "Still a rectangle with a chimney; the lean-to and porch come at L2/L3.",
+          "life": "A path and mossy cobble/vines now; planters are bare coarse dirt until L3 fills them; no lanterns yet.",
+          "roof": "Steep spruce roof, dark oak eaves and ridge, 1-block overhang all round."
+        },
+        "summary": "L1 is the shell: stone common room with hearth, tables and a keg bar, six beds upstairs, and now its own outside detail (sills, empty planter boxes, a slab path, kegs and a bench by the door).",
+        "problems": [
+          "Reachability: common room, staircase and upper floor are reached (184 of 255 places); unreached are roof slopes, the chimney shoulders/top and the tops of the outside window sills, which is fine."
+        ],
+        "views": [
+          "sheet",
+          "front",
+          "iso"
+        ]
+      }
     }
   }
 }
