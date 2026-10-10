@@ -4,14 +4,14 @@
   "version": 4,
   "size": [9,7,9],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T03:33:57.064Z",
     "description": "Carpenter or fletcher, level 3 of 3: L2 plus flourish 3. Timber workshop entered by an open front bay (crafting table, fletching table from L2), back door to the yard; log stack and sawhorse under the side eaves; a yard with a lumber rack and goods on display from L3. Not yet builder-tested: dandelion, fletching_table, moss_carpet, oak_fence_gate. Decoration step adds: item, item_frame, sign_text.",
     "changes": "Level 1 is unchanged; level 2 now dresses the workshop (fletching table, grindstone and chopping block in the bay, sawdust, shelves, a hanging lantern, a plank on the sawhorse, steps), and level 3 dresses the outside (shop sign, corner lanterns, a lumber rack, flower boxes and an awning at the back, a chair, table, arrow crate and gate on display out front).",
     "parent": 3,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T03:45:41.675Z",
     "tags": [
       "batch2",
       "tier2",
