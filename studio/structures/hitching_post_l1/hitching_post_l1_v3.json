@@ -4,14 +4,14 @@
   "version": 3,
   "size": [5,3,3],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude-qc",
     "created": "2026-10-10T03:31:53.139Z",
     "description": "Hitching post, level 1 of 2: shell and fittings (what soldiers build first). Two dark oak posts and a fence rail with a lantern and stacked hay; level 2 adds a trough, barrel, bush and flowers.",
     "changes": "Quality check round 3: level 1 gets a tether chain hanging from the rail and a bush",
     "parent": 2,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T03:40:50.954Z",
     "tags": [
       "batch2",
       "tier2",
