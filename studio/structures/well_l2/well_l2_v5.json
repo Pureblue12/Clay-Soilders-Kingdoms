@@ -1,0 +1,89 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "well_l2",
+  "version": 5,
+  "size": [5,6,5],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T03:55:46.722Z",
+    "description": "Well, level 2 of 3: L1 plus flourish 2. Round stone well: octagon cobblestone basin with stair-rounded corners, dark oak posts and windlass with a chain; L2 adds the spruce gable roof and crank, L3 flowers, a water tub, moss and lanterns. 5 x 5 x 6, water by the decoration step. Not yet builder-tested: dark_oak_slab, lever. Decoration step adds: water.",
+    "changes": "Turned the roof so it slopes to the front: the posts stand left and right of the basin, so the well is no longer hidden behind a post from the front. The roof is narrower and higher (over the axle only), so the rim is open. L1 adds a barrel, L2 a lantern under a gable bracket, L3 two more lanterns.",
+    "parent": 4,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier1",
+      "core",
+      "water"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:chain[axis=y]",
+    "B": "minecraft:cobblestone",
+    "C": "minecraft:cobblestone_stairs[facing=east,half=bottom,shape=outer_left,waterlogged=false]",
+    "D": "minecraft:cobblestone_stairs[facing=north,half=bottom,shape=outer_left,waterlogged=false]",
+    "E": "minecraft:cobblestone_stairs[facing=south,half=bottom,shape=outer_left,waterlogged=false]",
+    "F": "minecraft:cobblestone_stairs[facing=west,half=bottom,shape=outer_left,waterlogged=false]",
+    "G": "minecraft:dark_oak_log[axis=x]",
+    "H": "minecraft:dark_oak_log[axis=y]",
+    "I": "minecraft:dark_oak_slab[type=bottom,waterlogged=false]",
+    "J": "minecraft:dark_oak_stairs[facing=east,half=top,shape=straight,waterlogged=false]",
+    "K": "minecraft:dark_oak_stairs[facing=north,half=top,shape=straight,waterlogged=false]",
+    "L": "minecraft:dark_oak_stairs[facing=south,half=top,shape=straight,waterlogged=false]",
+    "M": "minecraft:dark_oak_stairs[facing=west,half=top,shape=straight,waterlogged=false]",
+    "N": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "O": "minecraft:lever[face=wall,facing=north,powered=false]",
+    "P": "minecraft:mossy_cobblestone",
+    "Q": "minecraft:spruce_slab[type=top,waterlogged=false]",
+    "R": "minecraft:spruce_stairs[facing=north,half=bottom,shape=straight,waterlogged=false]",
+    "S": "minecraft:spruce_stairs[facing=south,half=bottom,shape=straight,waterlogged=false]"
+  },
+  "layers": [
+    [
+      "EBBPF",
+      "BB.BB",
+      "B...P",
+      "PB.BB",
+      "CPBBD"
+    ],
+    [
+      ".BBB#",
+      "P...B",
+      "H.A.H",
+      "B...P",
+      ".BBB."
+    ],
+    [
+      ".....",
+      "O...N",
+      "HMAJH",
+      ".....",
+      "....."
+    ],
+    [
+      ".....",
+      "K...K",
+      "HGGGH",
+      "L...L",
+      "....."
+    ],
+    [
+      ".....",
+      "SSSSS",
+      "H.Q.H",
+      "RRRRR",
+      "....."
+    ],
+    [
+      ".....",
+      ".....",
+      "IIIII",
+      ".....",
+      "....."
+    ]
+  ]
+}

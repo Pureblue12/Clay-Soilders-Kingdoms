@@ -7,7 +7,9 @@
   STRUCTURE_PKG=revise1 python3 tools/make_batch2_structures.py ...   # another package of modules (revisions of
                                                                       # batch 1 from Carlton's notes: tools/revise1/)
 An entry may also carry changes='what changed and why' (the Studio's "Changes" line for a new version) and
-max_height (default 9; landmarks such as the keep may go higher, they need scaffold in game).
+max_height (default 9; landmarks such as the keep may go higher, they need scaffold in game) and ground_layer=0
+for flush ground-level pieces (gardens, plazas, flower beds): layer 0 replaces the top ground block (meta.groundLayer;
+the mod's builders don't do that yet, so such structures need that support before they ship).
 
 Unlike batch 1, this never writes into the mod: a structure reaches the mod only after Carlton approves it in the
 Studio (the promote step). The building helpers, palettes and buildability rules are batch 1's
@@ -137,11 +139,12 @@ def studio_file(entry, s, level):
     deco = [d for lv in range(1, level + 1) for d in s.decorations[lv]]
     if deco:
         desc += f" Decoration step adds: {', '.join(sorted({d['kind'] for d in deco}))}."
+    meta_extra = {'groundLayer': entry['ground_layer']} if 'ground_layer' in entry else {}
     return {
         'format': 'csr-studio-structure/1', 'name': f"{entry['path']}_l{level}", 'version': 1, 'size': list(s.size),
         'meta': {'status': 'pending', 'notes': '', 'author': 'claude', 'created': datetime.now(timezone.utc).isoformat(),
                  'description': desc, 'changes': '', 'parent': None, 'reviewedAt': None,
-                 'tags': [PKG, f"tier{entry['tier']}", entry['zone'], entry['role']]},
+                 'tags': [PKG, f"tier{entry['tier']}", entry['zone'], entry['role']], **meta_extra},
         'palette': palette, 'layers': layers,
     }
 
