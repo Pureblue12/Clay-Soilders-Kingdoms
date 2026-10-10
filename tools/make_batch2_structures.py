@@ -6,7 +6,8 @@
 
   STRUCTURE_PKG=revise1 python3 tools/make_batch2_structures.py ...   # another package of modules (revisions of
                                                                       # batch 1 from Carlton's notes: tools/revise1/)
-An entry may also carry changes='what changed and why' (the Studio's "Changes" line for a new version).
+An entry may also carry changes='what changed and why' (the Studio's "Changes" line for a new version) and
+max_height (default 9; landmarks such as the keep may go higher, they need scaffold in game).
 
 Unlike batch 1, this never writes into the mod: a structure reaches the mod only after Carlton approves it in the
 Studio (the promote step). The building helpers, palettes and buildability rules are batch 1's
@@ -59,7 +60,8 @@ def build(entry):
     s = entry['make']()
     levels = s.levels()
     assert levels == list(range(1, len(levels) + 1)), f"{entry['path']}: levels {levels}"
-    assert s.size[1] <= 9, f"{entry['path']}: {s.size[1]} tall, more than 9 (needs scaffold, not confirmed in game)"
+    limit = entry.get('max_height', 9)   # landmarks may go higher (STYLE.md: up to 28); they need scaffold in game
+    assert s.size[1] <= limit, f"{entry['path']}: {s.size[1]} tall, more than {limit} (needs scaffold, not confirmed in game)"
     return s
 
 
