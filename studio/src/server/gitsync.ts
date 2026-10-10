@@ -2,6 +2,7 @@
 //   pull()          on every page load: brings in new structures agents pushed (git pull --rebase --autostash)
 //   commitVersion() after approve / reject / notes / rollback: commits that one version file and pushes it
 //   commitFile()    the same for any one file under studio/structures/ (the CLI's work.json)
+//   commitVersions() several version files in one commit (a review applied to all levels)
 // Only files under studio/structures/ are ever committed here. Set STUDIO_GIT=off to turn it all off.
 // Git runs one command at a time (a queue), so a review made during a pull waits for it.
 import { execFile } from 'node:child_process';
@@ -65,15 +66,27 @@ export function commitVersion(name: string, version: number, message: string): P
   return commitFile(path.join(STRUCTURES_DIR, name, `${name}_v${version}.json`), message);
 }
 
+/** Commits several version files in one commit (a review applied to all levels) and pushes them. */
+export function commitVersions(items: { name: string; version: number }[], message: string): Promise<GitResult> {
+  return commitFiles(items.map((i) => path.join(STRUCTURES_DIR, i.name, `${i.name}_v${i.version}.json`)), message);
+}
+
 /** Commits one file under studio/structures/ (a version, or a work.json) and pushes it. Also for a deleted file. */
 export function commitFile(absFile: string, message: string): Promise<GitResult> {
+  return commitFiles([absFile], message);
+}
+
+/** Commits these files under studio/structures/ in one commit and pushes them. Also for deleted files. */
+export function commitFiles(absFiles: string[], message: string): Promise<GitResult> {
   if (!gitEnabled()) return Promise.resolve({ ok: true, message: '' });
   return serial(async () => {
-    const file = path.relative(REPO, absFile);
-    if (!file.startsWith(path.join('studio', 'structures') + path.sep)) return { ok: false, message: 'Not a structure file' };
-    const add = await git('add', '-A', '--', file);
+    const files = absFiles.map((f) => path.relative(REPO, f));
+    if (files.some((f) => !f.startsWith(path.join('studio', 'structures') + path.sep))) {
+      return { ok: false, message: 'Not a structure file' };
+    }
+    const add = await git('add', '-A', '--', ...files);
     if (add.code) return { ok: false, message: `Couldn't save to git: ${add.out.split('\n')[0]}` };
-    const commit = await git('commit', '--quiet', '-m', message, '--', file);
+    const commit = await git('commit', '--quiet', '-m', message, '--', ...files);
     if (commit.code && !/nothing to commit|no changes added|did not match any file/.test(commit.out)) {
       return { ok: false, message: `Couldn't commit: ${commit.out.split('\n')[0]}` };
     }

@@ -27,6 +27,9 @@ The owner never types git commands for reviews (`src/server/gitsync.ts`):
 - Every page load runs `git pull --rebase --autostash` in the repo (at most once per 10 s), so structures agents pushed
   to the branch the owner has checked out show up on refresh.
 - Approve, reject, notes and rollback commit only that one version file (`Studio review: <name> vN <status>`) and push.
+- Notes save to disk as Carlton types and are committed and pushed when the notes box loses focus (or the page closes).
+- **Apply to all levels** (a remembered toggle, shown for `<base>_l<N>` structures): approve, reject, pending and notes
+  go to the newest version of every level in one commit (`Studio review: cottage_l1 v1, cottage_l2 v1, ... rejected`).
 - The toast says what happened; failures (offline, conflict) stay local and show in red. `STUDIO_GIT=off` turns it off.
 - The open page also pulls and redraws the list every 30 s, so new versions and stage changes show up without a reload.
 
@@ -70,7 +73,8 @@ One JSON file per version: `structures/<name>/<name>_v<N>.json`.
 - Palette keys are single characters. `minecraft:air` clears, `minecraft:structure_void` leaves the ground as it is
   (it is not written to NBT). Air does not dig into the test terrain in the viewer (the mod's builders never clear
   terrain either).
-- `meta.groundLayer` (optional, default 0): the layer that is level with the top block of the ground.
+- `meta.groundLayer` (optional, default -1): the layer that is level with the top block of the ground. -1 means layer 0
+  stands on the ground, the way the mod builds it (`BuildSitePlanner`: ground y = easel y - 1).
 - `meta.notes` are Carlton's review notes; `meta.changes` is the author's summary of the version.
 - Versions are never overwritten (`Store.saveNewVersion` writes with the `wx` flag). The only edit to an existing
   version is its review metadata, from the UI. Rollback = a new version copying an old one.

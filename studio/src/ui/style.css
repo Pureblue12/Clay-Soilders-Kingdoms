@@ -96,6 +96,7 @@ select, input[type=search], textarea {
 .decide .reject { background: #3d1d1f; border-color: var(--rejected); color: #ffc9c6; }
 .decide .reject:hover { background: #55262a; }
 .decide button.current { box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25) inset; }
+.all-levels { display: flex; align-items: center; gap: 6px; margin-top: 12px; font-size: 13px; cursor: pointer; }
 .notes-label { display: block; margin: 14px 0 6px; color: var(--muted); font-size: 13px; }
 textarea { width: 100%; resize: vertical; }
 .row { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }

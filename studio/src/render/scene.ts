@@ -22,10 +22,11 @@ export const DEFAULT_SCENE: SceneOptions = {
   markers: false,
 };
 
-/** The structure's layer that is level with the terrain's top block (meta.groundLayer, default 0). */
+/** The structure's layer that is level with the terrain's top block (meta.groundLayer). The default, -1, puts layer 0
+ *  on top of the ground, the way the mod builds it (BuildSitePlanner: the building starts one above the ground). */
 export function groundLayer(s: StructureFile): number {
   const g = (s.meta as { groundLayer?: number }).groundLayer;
-  return Number.isInteger(g) ? (g as number) : 0;
+  return Number.isInteger(g) ? (g as number) : -1;
 }
 
 export function buildWorld(s: StructureFile, opts: SceneOptions): World {

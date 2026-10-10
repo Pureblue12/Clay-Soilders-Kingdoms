@@ -198,6 +198,14 @@ export class Store {
     return s;
   }
 
+  /** Notes only (typing autosaves them): the status and review time stay as they are. */
+  setNotes(name: string, version: number, notes: string): StructureFile {
+    const s = this.load(name, version);
+    s.meta.notes = notes;
+    fs.writeFileSync(this.file(name, version), stringifyStructure(s));
+    return s;
+  }
+
   /** Rollback = a new version that copies an old one. Nothing is deleted. */
   rollback(name: string, fromVersion: number, author: string): number {
     const old = this.load(name, fromVersion);
