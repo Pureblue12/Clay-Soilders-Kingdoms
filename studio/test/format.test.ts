@@ -123,3 +123,12 @@ test('a rejected structure that an unmerged branch is changing shows as revising
   store.setReview('tiny', 1, 'approved', '');
   assert.equal(store.summary('tiny').stage, 'approved'); // a branch never changes a decided structure
 });
+
+test('apply to all levels uses the same version number, never a newer one that just arrived', () => {
+  const store = new Store(fs.mkdtempSync(path.join(os.tmpdir(), 'studio-')));
+  for (const n of ['keep_l1', 'keep_l2', 'keep_l3']) store.saveNewVersion({ ...sample(), name: n });
+  for (const n of ['keep_l1', 'keep_l2', 'keep_l3']) store.saveNewVersion({ ...sample(), name: n });
+  store.saveNewVersion({ ...sample(), name: 'keep_l2' }); // keep_l2 v3 arrives while Carlton looks at v2
+  assert.deepEqual(store.levelTargets('keep_l1', 2), [['keep_l1', 2], ['keep_l2', 2], ['keep_l3', 2]]);
+  assert.deepEqual(store.levelTargets('keep_l2', 3), [['keep_l2', 3]]);
+});

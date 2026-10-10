@@ -57,15 +57,12 @@ export function createApi(store = new Store()) {
           // The approval button lives in the UI; the header keeps casual scripts from approving by accident.
           if (req.headers['x-studio-ui'] !== 'review') return send(res, 403, { error: 'reviews are made in the studio UI' });
           const body = await readBody(req);
-          // status null = notes only. allLevels: the same review for the latest version of every level
+          // status null = notes only. allLevels: the same review for the same version number of every level
           // (bench_l1, bench_l2, ...). autosave: notes typed in the box, committed a little later.
           const status = body.status === null || body.status === undefined ? null : (String(body.status) as Status);
           if (status !== null && !STATUSES.includes(status)) return send(res, 400, { error: 'bad status' });
           const version = Number(parts[3]);
-          const targets: [string, number][] = [[name, version]];
-          if (body.allLevels) {
-            for (const n of store.levels(name)) if (n !== name) targets.push([n, store.summary(n).latest]);
-          }
+          const targets: [string, number][] = body.allLevels ? store.levelTargets(name, version) : [[name, version]];
           for (const [n, v] of targets) store.setReview(n, v, status, String(body.notes ?? ''));
           const files = targets.map(([n, v]) => store.versionFile(n, v));
           const what = targets.map(([n, v]) => `${n} v${v}`).join(', ');
