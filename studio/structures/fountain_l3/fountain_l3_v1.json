@@ -4,14 +4,14 @@
   "version": 1,
   "size": [9,8,9],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T08:50:24.341Z",
     "description": "Fountain, level 3 of 3: L2 plus flourish 3. Over budget: 160 blocks vs 51 (9 x 9 with its paving instead of 5 x 5). Flush plaza piece (ground_layer 0: the paving and basin floor replace the grass, level with the lawn; the mod's builders can't do that yet). A round two-tier stone fountain: a basin 7 across with a rim one block tall, a stem and corbelled upper bowl, on a paved round 9 across with a cobble path in from each side; the basin water by the decoration step. L2 lantern posts with flowering bushes, flower beds in the grass corners, lily pads; L3 a statue top with a gold-look finial, flower pots on the rim, banners. Not yet builder-tested: allium, chiseled_stone_bricks, cornflower, dandelion, flowering_azalea_leaves, grass_block, light_weighted_pressure_plate, oxeye_daisy, red_wall_banner, stone_brick_wall, white_wall_banner. Decoration step adds: banner_pattern, lily_pad, potted_plant, water.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T08:53:49.896Z",
     "tags": [
       "batch5",
       "tier5",
