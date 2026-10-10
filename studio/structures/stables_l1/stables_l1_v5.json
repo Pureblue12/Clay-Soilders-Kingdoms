@@ -4,14 +4,14 @@
   "version": 5,
   "size": [9,9,11],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:14:45.775Z",
     "description": "Pens and stables, level 1 of 3: shell and fittings (what soldiers build first). Fenced paddock with a gateway (open gap; fence gates are decoration) before an open-sided log stable with two stalls and a feed trough; L2 adds the hay loft, tack corner and water trough, L3 a farrier corner, weathervane, banners and flower boxes. Wants level ground.",
     "changes": "Flowers round the stable: poppies, dandelions, daisies and bluets along its sides and back at level 2, rose bushes at its back corners at level 3.",
     "parent": 4,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T04:15:20.280Z",
     "tags": [
       "batch2",
       "tier2",
