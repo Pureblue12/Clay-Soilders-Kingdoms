@@ -1,0 +1,221 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "well_l1",
+  "version": 7,
+  "size": [9,6,7],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude",
+    "created": "2026-10-10T05:38:12.866Z",
+    "description": "Well, level 1 of 3: shell and fittings (what soldiers build first). Round stone well sunk into the ground: a one-course circular cobblestone rim round a round pool, dark oak posts and windlass with a chain, a bench and a barrel on the grass; L2 adds the spruce gable roof, crank, pulley and a lantern, L3 a water tub, a flower pot, moss, lanterns and flowers. 9 x 7 x 6 (one layer in the ground), water by the decoration step. Decoration step adds: water.",
+    "changes": "For your note (\"still not circular\", \"rim only 1 block tall\"): the rim is one block tall (the well is sunk, the water level with the grass) and is now a real circle, 7 across with two steps at every corner, round a round pool. The barrel, a new bench and the tub stand on the grass apart from the ring, so nothing squares it off. The roof overhangs its posts by one block all round; level 1 gets a bench and poppies, level 3 more flowers.",
+    "parent": 6,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier1",
+      "core",
+      "water"
+    ],
+    "groundLayer": 0,
+    "decorationBlocks": [
+      [
+        3,
+        0,
+        1,
+        "water"
+      ],
+      [
+        4,
+        0,
+        1,
+        "water"
+      ],
+      [
+        5,
+        0,
+        1,
+        "water"
+      ],
+      [
+        2,
+        0,
+        2,
+        "water"
+      ],
+      [
+        3,
+        0,
+        2,
+        "water"
+      ],
+      [
+        4,
+        0,
+        2,
+        "water"
+      ],
+      [
+        5,
+        0,
+        2,
+        "water"
+      ],
+      [
+        6,
+        0,
+        2,
+        "water"
+      ],
+      [
+        2,
+        0,
+        3,
+        "water"
+      ],
+      [
+        3,
+        0,
+        3,
+        "water"
+      ],
+      [
+        4,
+        0,
+        3,
+        "water"
+      ],
+      [
+        5,
+        0,
+        3,
+        "water"
+      ],
+      [
+        6,
+        0,
+        3,
+        "water"
+      ],
+      [
+        2,
+        0,
+        4,
+        "water"
+      ],
+      [
+        3,
+        0,
+        4,
+        "water"
+      ],
+      [
+        4,
+        0,
+        4,
+        "water"
+      ],
+      [
+        5,
+        0,
+        4,
+        "water"
+      ],
+      [
+        6,
+        0,
+        4,
+        "water"
+      ],
+      [
+        3,
+        0,
+        5,
+        "water"
+      ],
+      [
+        4,
+        0,
+        5,
+        "water"
+      ],
+      [
+        5,
+        0,
+        5,
+        "water"
+      ]
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:chain[axis=y]",
+    "B": "minecraft:cobblestone",
+    "C": "minecraft:dark_oak_log[axis=x]",
+    "D": "minecraft:dark_oak_log[axis=y]",
+    "E": "minecraft:mossy_cobblestone",
+    "F": "minecraft:oak_pressure_plate",
+    "G": "minecraft:poppy",
+    "H": "minecraft:spruce_fence[east=true,north=false,south=false,waterlogged=false,west=false]",
+    "I": "minecraft:spruce_stairs[facing=west,half=bottom,shape=straight,waterlogged=false]",
+    "J": "minecraft:water[level=0]"
+  },
+  "layers": [
+    [
+      "...EBB...",
+      "..BJJJB..",
+      ".BJJJJJE.",
+      ".BJJJJJB.",
+      ".EJJJJJB.",
+      "..EJJJB..",
+      "...BBE..."
+    ],
+    [
+      "I.GBBB.GG",
+      "I.E...B..",
+      "HB.....B.",
+      ".D..A..D.",
+      ".B.....B.",
+      "..B...E.#",
+      "GG.BEB..G"
+    ],
+    [
+      ".........",
+      ".........",
+      "F........",
+      ".D..A..D.",
+      ".........",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".DCCCCCD.",
+      ".........",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "........."
+    ],
+    [
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      ".........",
+      "........."
+    ]
+  ]
+}

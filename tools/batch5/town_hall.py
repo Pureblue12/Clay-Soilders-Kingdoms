@@ -89,10 +89,8 @@ def town_hall():
                     P(s, x, y, z, 'dark_oak_log', axis='x' if z in (TZ0, TZ1) else 'z')
                 elif (x, z) in hubs and y == 13:
                     P(s, x, y, z, 'dark_oak_log', axis='z' if z in (TZ0, TZ1) else 'x')     # the hub
-                elif y == 13 or (x, z) in hubs:
-                    P(s, x, y, z, 'white_terracotta')                                     # the round face
                 else:
-                    P(s, x, y, z, 'dark_oak_planks')                                      # the face's corners
+                    P(s, x, y, z, 'white_terracotta')                                     # the face
     for y in (1, 2, 3):                              # porch arches: front and back 3 high, sides 2 high
         s.remove(MID, y, TZ0); s.remove(MID, y, TZ1)
     for y in (1, 2):
@@ -124,7 +122,7 @@ def town_hall():
         for z in range(TZ0 + 1, TZ1):
             P(s, x, y + 1, z, 'spruce_planks')
     pyramid_ring(s, TX0 + 1, TX1 - 1, TZ0 + 1, TZ1 - 1, y + 2)
-    P(s, MID, y + 2, TMZ, 'dark_oak_planks')
+    P(s, MID, y + 2, TMZ, 'spruce_planks')
 
     # ---------------------------------------------------------------- hall: arcade
     for z in range(HZ0, HZ1 + 1):
