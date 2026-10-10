@@ -4,14 +4,14 @@
   "version": 1,
   "size": [7,9,5],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:42:37.758Z",
     "description": "Stone wall gate, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 179 blocks vs 60. Its wall line is z 0..2 like the others, the towers also reach z 3. Two small towers and an arched opening 3 wide (no fence gate); the walk crosses over it.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:15:59.517Z",
     "tags": [
       "batch3",
       "tier3",
