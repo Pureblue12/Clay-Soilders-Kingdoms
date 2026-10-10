@@ -140,25 +140,25 @@
     "checkedAt": "2026-10-10T03:41:21.304Z"
   },
   "chapel_l1": {
-    "version": 1,
+    "version": 2,
     "verdict": "pass",
-    "score": 86,
+    "score": 88,
     "round": 1,
-    "checkedAt": "2026-10-10T05:10:09.878Z"
+    "checkedAt": "2026-10-10T05:25:24.264Z"
   },
   "chapel_l2": {
-    "version": 1,
-    "verdict": "revise",
-    "score": 86,
-    "round": 1,
-    "checkedAt": "2026-10-10T05:10:10.398Z"
+    "version": 2,
+    "verdict": "pass",
+    "score": 88,
+    "round": 2,
+    "checkedAt": "2026-10-10T05:25:24.843Z"
   },
   "chapel_l3": {
-    "version": 1,
-    "verdict": "revise",
-    "score": 89,
-    "round": 1,
-    "checkedAt": "2026-10-10T05:10:10.938Z"
+    "version": 2,
+    "verdict": "pass",
+    "score": 100,
+    "round": 2,
+    "checkedAt": "2026-10-10T05:25:25.412Z"
   },
   "commons_l1": {
     "version": 4,
@@ -378,25 +378,25 @@
     "checkedAt": "2026-10-10T04:07:53.444Z"
   },
   "infirmary_l1": {
-    "version": 1,
-    "verdict": "pass",
-    "score": 72,
+    "version": 2,
+    "verdict": "revise",
+    "score": 73,
     "round": 1,
-    "checkedAt": "2026-10-10T05:10:27.907Z"
+    "checkedAt": "2026-10-10T05:25:44.778Z"
   },
   "infirmary_l2": {
-    "version": 1,
-    "verdict": "pass",
-    "score": 89,
+    "version": 2,
+    "verdict": "revise",
+    "score": 78,
     "round": 1,
-    "checkedAt": "2026-10-10T05:10:28.441Z"
+    "checkedAt": "2026-10-10T05:25:45.430Z"
   },
   "infirmary_l3": {
-    "version": 1,
-    "verdict": "pass",
-    "score": 86,
+    "version": 2,
+    "verdict": "revise",
+    "score": 80,
     "round": 1,
-    "checkedAt": "2026-10-10T05:10:29.033Z"
+    "checkedAt": "2026-10-10T05:25:46.007Z"
   },
   "inn_l1": {
     "version": 1,

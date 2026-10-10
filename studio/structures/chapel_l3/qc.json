@@ -77,6 +77,75 @@
           "front"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T05:25:25.412Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 2,
+      "score": 100,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: fern, mossy_cobblestone_slab, dandelion, mossy_stone_brick_stairs, oxeye_daisy, cornflower, azure_bluet, red_wall_banner, lily_of_the_valley, candle, lectern, white_wall_banner, red_stained_glass_pane, yellow_stained_glass_pane, blue_stained_glass_pane, bell."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "510 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "height",
+            "message": "13 layers tall: builders reach 9 without scaffolding, which isn't verified in game yet."
+          }
+        ],
+        "stats": {
+          "blocks": 510,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5196078431372549,
+          "types": 43,
+          "dominant": {
+            "name": "stone_bricks",
+            "share": 0.2627450980392157
+          },
+          "height": 13,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "levels": "Clearly visible new feature over L2: a walled churchyard front with a roofed spruce lych gate, mossy cobblestone path to the door, lantern piers and lantern posts, old headstones, plus red/yellow/blue stained glass in both gables and banners. L3 now reads differently at a glance, answering Carlton's note.",
+          "artefacts": "v1 problems fixed: lanterns on the door hood stand on top-half stairs; the stained glass at (5,4..6,5) and (5,4..6,13) is not hidden by shutters (shutters sit beside the opening on the outside). Lych gate lantern (5,2,1) hangs from a log; post lanterns stand on fences and stone piers.",
+          "roof": "Nave roof and the small lych-gate gable roof both finished; no overhang warning at this level."
+        },
+        "summary": "L3 adds a walled churchyard in front: a roofed lych gate with banners, a mossy stone path, lantern piers and posts, old headstones and flowers, plus stained glass in the gables and banners on the facade.",
+        "problems": [
+          "Reachability: interior floor and churchyard are reached; unreached places are roofs (nave and lych gate), buttress caps, window boxes, the bell top and the gable slots. Fine."
+        ],
+        "views": [
+          "sheet",
+          "iso",
+          "front",
+          "floor_top"
+        ]
+      }
     }
   }
 }

@@ -71,6 +71,78 @@
           "sheet"
         ]
       }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T05:25:45.430Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cauldron, cornflower, brewing_stand, allium, candle, brick_stairs, white_wall_banner."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "416 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 416,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.46634615384615385,
+          "types": 36,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.1971153846153846
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 0,
+          "purpose": 1,
+          "depth": 1,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "levels": 2
+        },
+        "notes": {
+          "purpose": "Brewing stand, cauldron and six red beds make the job clear inside, but Carlton's red cross is not visible: the banner at (5,4,1) renders as a plain white banner. Its red cross exists only as a decoration-step note (banner_pattern) that the structure file and the renders do not show, and that is not builder-tested.",
+          "artefacts": "Carlton's note on v1 ('Add a red cross or something to show that its a hospital') is not met: the cross is only a decoration-step note in the generator, banners render plain white (the Studio file can't carry banner patterns). RUBRIC: a version that ignores one of his notes can't pass 'No mistakes'. Build the cross from blocks on the front gable",
+          "detail": "Window boxes, door canopy with lanterns, candles, flower pots, carpet aisle and hanging lanterns.",
+          "depth": "Side (x=2, x=8) and back walls are still flat apart from the east window box.",
+          "roof": "One-block overhang and barge boards; the automatic 'no overhang' warning is a false alarm.",
+          "levels": "Adds a clear new job (brewing corner) and a dressed front (canopy, boxes, banner) over L1."
+        },
+        "summary": "L1 plus a brewing corner, candles, lanterns, flower boxes, a door canopy and a front banner. The barge-board hole is fixed, but the red cross Carlton asked for does not show: the banner is plain white.",
+        "problems": [
+          "Red cross not visible: the white_wall_banner at (5,4,1) shows plain white; the cross is only a decoration-step note. Build the cross in blocks so it shows in renders and in game without the decoration step, e.g. red_wool/red_concrete plus on the front gable face at (5,4..6,2),(4,5,2),(6,5,2) with white blocks at (4,4,2),(6,4,2); move or drop the banner at (5,4,1) so it does not cover it.",
+          "Side and back walls still flat; optional.",
+          "Reachability: ward, aisle and lean-to reached; unreached are only roof slopes, window-box tops (3,2,1),(7,2,1),(9,2,4), the canopy top at (4..6,4,1) and shelf tops. Fine."
+        ],
+        "views": [
+          "sheet",
+          "front"
+        ]
+      }
     }
   }
 }
