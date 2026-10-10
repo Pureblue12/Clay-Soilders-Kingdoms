@@ -4,14 +4,14 @@
   "version": 1,
   "size": [5,7,5],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T04:42:39.942Z",
     "description": "Stone wall, walk stairs, level 3 of 3: L2 plus flourish 3. Over budget: 100 blocks vs 60. A straight module with a stone stair flight on the town side up to the walk. Not yet builder-tested: iron_bars, moss_carpet, red_wall_banner, stone_brick_slab, stone_brick_wall, vine. Decoration step adds: banner_pattern, potted_plant.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:26:24.051Z",
     "tags": [
       "batch3",
       "tier3",
