@@ -4,11 +4,13 @@
 //   GET  /api/structures/:name/:version           one version's file
 //   POST /api/structures/:name/:version/review    { status, notes }   (the review UI only)
 //   POST /api/structures/:name/rollback           { from }            new version copying an old one
+//   POST /api/sync                                pull new structures from GitHub (gitsync.ts)
 //   GET  /mc/<path>                               files from the user's assets (blockstates, models, textures)
 import fs from 'node:fs';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { STATUSES, type Status } from '../format/structure.ts';
 import { assetFile, assetSource } from './assets.ts';
+import { commitVersion, pull } from './gitsync.ts';
 import { Store } from './store.ts';
 
 type Next = () => void;
@@ -44,6 +46,7 @@ export function createApi(store = new Store()) {
         const s = assetSource(url.searchParams.has('refresh'));
         return send(res, 200, { kind: s.kind, detail: s.detail });
       }
+      if (parts[1] === 'sync' && req.method === 'POST') return send(res, 200, await pull());
       if (parts[1] === 'structures') {
         if (req.method === 'GET' && parts.length === 2) return send(res, 200, store.list());
         const name = parts[2];
@@ -56,12 +59,14 @@ export function createApi(store = new Store()) {
           const status = String(body.status) as Status;
           if (!STATUSES.includes(status)) return send(res, 400, { error: 'bad status' });
           store.setReview(name, Number(parts[3]), status, String(body.notes ?? ''));
-          return send(res, 200, store.summary(name));
+          const git = await commitVersion(name, Number(parts[3]), `Studio review: ${name} v${parts[3]} ${status}`);
+          return send(res, 200, { summary: store.summary(name), git });
         }
         if (req.method === 'POST' && parts[3] === 'rollback') {
           const body = await readBody(req);
           const v = store.rollback(name, Number(body.from), 'studio-ui (rollback)');
-          return send(res, 200, { version: v, summary: store.summary(name) });
+          const git = await commitVersion(name, v, `Studio: ${name} v${v} (rollback to v${Number(body.from)})`);
+          return send(res, 200, { version: v, summary: store.summary(name), git });
         }
       }
       return send(res, 404, { error: 'unknown endpoint' });

@@ -103,6 +103,7 @@ textarea { width: 100%; resize: vertical; }
 
 #toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: #2d4a78; padding: 9px 16px;
   border-radius: 8px; border: 1px solid var(--accent); z-index: 10; }
+#toast.error { background: #6b2a2a; border-color: #c55; }
 
 @media (max-width: 1100px) {
   #app { grid-template-columns: 220px 1fr 280px; }

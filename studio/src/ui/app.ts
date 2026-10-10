@@ -66,12 +66,13 @@ function summary(): StructureSummary | undefined {
   return state.list.find((s) => s.name === state.name);
 }
 
-function toast(text: string) {
+function toast(text: string, error = false) {
   const t = $('#toast');
   t.textContent = text;
+  t.classList.toggle('error', error);
   t.hidden = false;
   clearTimeout((t as unknown as { _h: number })._h);
-  (t as unknown as { _h: number })._h = window.setTimeout(() => (t.hidden = true), 2600);
+  (t as unknown as { _h: number })._h = window.setTimeout(() => (t.hidden = true), error ? 8000 : 2600);
 }
 
 // ---------------------------------------------------------------- library
@@ -314,7 +315,7 @@ async function review(status: Status | null) {
   if (!s) return;
   const v = s.versions.find((x) => x.version === state.version)!;
   const notes = $<HTMLTextAreaElement>('#notes').value;
-  await api(`/api/structures/${s.name}/${state.version}/review`, {
+  const r = await api<{ git: { ok: boolean; message: string } }>(`/api/structures/${s.name}/${state.version}/review`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'X-Studio-UI': 'review' },
     body: JSON.stringify({ status: status ?? v.status, notes }),
@@ -322,7 +323,8 @@ async function review(status: Status | null) {
   files.delete(`${s.name}@${state.version}`);
   await refreshList();
   renderReview();
-  toast(status ? `${s.name} v${state.version}: ${status}` : 'Notes saved');
+  const what = status ? `${s.name} v${state.version}: ${status}` : 'Notes saved';
+  toast(r.git.message ? `${what}. ${r.git.message}` : what, !r.git.ok);
 }
 
 // ---------------------------------------------------------------- wiring
@@ -442,6 +444,10 @@ async function main() {
   viewerA.start();
   setupControls();
   updateBanner();
+  // bring in structures agents pushed since the last visit (and the owner's reviews from another machine)
+  const sync = await api<{ ok: boolean; message: string }>('/api/sync', { method: 'POST' }).catch(
+    (e: Error) => ({ ok: false, message: e.message }));
+  if (sync.message) toast(sync.message, !sync.ok);
   await refreshList();
   const hash = new URLSearchParams(location.hash.slice(1));
   const first = hash.get('s') ?? state.list[0]?.name;

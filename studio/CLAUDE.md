@@ -21,6 +21,14 @@ npm run typecheck
 Headless renders need Playwright's Chromium (`npx playwright install chromium` once; or set `STUDIO_CHROMIUM` to a
 Chromium binary).
 
+## Git sync (automatic)
+
+The owner never types git commands for reviews (`src/server/gitsync.ts`):
+- Every page load runs `git pull --rebase --autostash` in the repo (at most once per 10 s), so structures agents pushed
+  to the branch the owner has checked out show up on refresh.
+- Approve, reject, notes and rollback commit only that one version file (`Studio review: <name> vN <status>`) and push.
+- The toast says what happened; failures (offline, conflict) stay local and show in red. `STUDIO_GIT=off` turns it off.
+
 ## Minecraft assets
 
 Real textures come from the user's own game: a client jar (e.g. `1.21.1.jar`) or an extracted `assets/minecraft`
@@ -68,7 +76,8 @@ One JSON file per version: `structures/<name>/<name>_v<N>.json`.
 5. Critique in writing: what looks flat, wrong, too big, unbuildable.
 6. Fix, re-render, repeat until it looks good.
 7. Save: `create draft.json` (new) or `save draft.json --changes "..."` (next version). It is `pending`.
-8. `diff <name> 1 2` lists what changed. Tell Carlton which versions to look at; he approves in the UI.
+8. `diff <name> 1 2` lists what changed. Tell Carlton which versions to look at; he approves in the UI. His
+   reviews come back as commits ("Studio review: ..."): pull before revising.
 
 ## Architecture
 
