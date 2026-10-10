@@ -251,6 +251,27 @@
     "round": 1,
     "checkedAt": "2026-10-10T04:07:53.929Z"
   },
+  "food_hall_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:07:39.169Z"
+  },
+  "food_hall_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 94,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:07:40.421Z"
+  },
+  "food_hall_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 97,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:07:41.789Z"
+  },
   "garden_l1": {
     "version": 4,
     "verdict": "pass",
@@ -313,6 +334,27 @@
     "score": 56,
     "round": 1,
     "checkedAt": "2026-10-10T04:07:53.444Z"
+  },
+  "inn_l1": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 67,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:07:49.751Z"
+  },
+  "inn_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 89,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:07:50.974Z"
+  },
+  "inn_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 92,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:07:52.818Z"
   },
   "keep_l1": {
     "version": 5,
@@ -775,6 +817,27 @@
     "score": 94,
     "round": 1,
     "checkedAt": "2026-10-10T04:50:57.037Z"
+  },
+  "townhouse_l1": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:07:43.726Z"
+  },
+  "townhouse_l2": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 89,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:07:45.690Z"
+  },
+  "townhouse_l3": {
+    "version": 1,
+    "verdict": "revise",
+    "score": 81,
+    "round": 1,
+    "checkedAt": "2026-10-10T05:07:48.190Z"
   },
   "training_yard_l1": {
     "version": 1,

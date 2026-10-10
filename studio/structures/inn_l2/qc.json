@@ -1,0 +1,72 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "inn_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T05:07:50.974Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 89,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: cauldron, oak_hanging_sign."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "473 blocks, over the common budget of 350 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 473,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.42917547568710357,
+          "types": 31,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.1945031712473573
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 1,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "detail": "Shutters on every window, three hanging lanterns and a chain under the front gable, a projecting hanging sign, red carpet runners, lanterns upstairs.",
+          "purpose": "The projecting sign and the stable lean-to with hay and a water trough make it read as an inn.",
+          "materials": "Same busy mix as L1 (three woods plus white terracotta and bricks); nothing new clashes.",
+          "shape": "The stable lean-to on the east side and the sign arm break the box.",
+          "life": "Lanterns, hay and fencing; still no plants."
+        },
+        "summary": "L2 adds a stable lean-to on the east side (hay, cauldron trough, fence posts), a projecting hanging sign, shutters, front-gable lanterns and red carpets inside.",
+        "problems": [
+          "The 3-fence rail at (11,0,2)-(11,0,4) stands loose in the grass and reads like a stray piece: join it to the stable post at (10,0,5) (e.g. a fence at (11,0,5)) or end it on a post so it clearly reads as a hitching rail.",
+          "Reachability: common room, upper floor and the stable floor are reached; unreached places are the roof slopes, the stable roof (x10 y4 z5-9) and the hay top, which is fine."
+        ],
+        "views": [
+          "sheet",
+          "front",
+          "iso"
+        ]
+      }
+    }
+  }
+}
