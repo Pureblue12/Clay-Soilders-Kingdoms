@@ -4,14 +4,14 @@
   "version": 3,
   "size": [9,9,11],
   "meta": {
-    "status": "pending",
-    "notes": "",
+    "status": "rejected",
+    "notes": "Great in terms of everything but id like the dirt thats serves as the base of the stable to jsut be in the ground other than that its perfect",
     "author": "claude",
     "created": "2026-10-10T03:42:49.345Z",
     "description": "Pens and stables, level 3 of 3: L2 plus flourish 3. Fenced paddock with a gateway (open gap; fence gates are decoration) before an open-sided log stable with two stalls and a feed trough; L2 adds the hay loft, tack corner and water trough, L3 a farrier corner, weathervane, banners and flower boxes. Wants level ground. Not yet builder-tested: anvil, cauldron, dandelion, lightning_rod, moss_carpet, red_wall_banner, spruce_fence_gate. Decoration step adds: armor_stand, potted_plant, water_cauldron.",
     "changes": "Added a paddock gateway (log gateposts and lintel over an open gap soldiers can walk through, with two fence gates standing open from L2) and gave each level its own job: L1 stalls and a feed trough, L2 a hay loft with a hoist, a saddle rack and tack barrels and a water trough, L3 a farrier corner with an anvil, a weathervane, banners, lanterns and flower boxes.",
     "parent": 2,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T03:56:56.056Z",
     "tags": [
       "batch2",
       "tier2",

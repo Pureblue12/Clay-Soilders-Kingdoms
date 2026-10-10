@@ -1,0 +1,120 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "palisade_gate_l2",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T03:47:48.503Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 81,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: white_banner."
+          },
+          {
+            "level": "warn",
+            "check": "connections",
+            "message": "3 fence/pane/wall block(s) have no north/east/south/west set although a neighbour would connect, so they show as lone posts: (1, 4, 0), (2, 4, 0), (3, 4, 0)."
+          },
+          {
+            "level": "warn",
+            "check": "variety",
+            "message": "spruce_log is 62 % of the build: break it up with a second material."
+          }
+        ],
+        "stats": {
+          "blocks": 45,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.37777777777777777,
+          "types": 6,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.6222222222222222
+          },
+          "height": 7,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "summary": "Two log towers, a beam over a 3-wide opening, torches, banners and lanterns on the upper levels. The best of the four.",
+        "problems": [
+          "The fence points on the beam over the opening stand as lone posts: join them into a railing",
+          "Almost all spruce log (58 %): a cobblestone footing under the stakes would tie it to the stone base of the other buildings"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    },
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:49:53.835Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 92,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: white_banner."
+          }
+        ],
+        "stats": {
+          "blocks": 45,
+          "category": "module",
+          "budget": 60,
+          "detailRatio": 0.37777777777777777,
+          "types": 8,
+          "dominant": {
+            "name": "spruce_log",
+            "share": 0.4888888888888889
+          },
+          "height": 7,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "summary": "Two log towers on cobblestone footings with a beam and a railed walk over a 3-wide opening, torches inside. Level 2 adds a lantern under the beam and two banners on the towers.",
+        "problems": [
+          "The banners are plain white until the decoration step adds the kingdom colours"
+        ],
+        "views": [
+          "iso",
+          "front"
+        ]
+      }
+    }
+  }
+}

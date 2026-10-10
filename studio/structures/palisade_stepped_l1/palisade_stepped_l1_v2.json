@@ -1,0 +1,61 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "palisade_stepped_l1",
+  "version": 2,
+  "size": [5,6,2],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude-qc",
+    "created": "2026-10-10T03:48:59.366Z",
+    "description": "Palisade, stepped, level 1 of 3: shell and fittings (what soldiers build first). Like the straight module, but the walk rises 1 block (2.5 to 3.5) in two half steps.",
+    "changes": "Quality check round 2: cobblestone footing under the stakes (mossy every third), walk posts every other block braced to the stakes, fence points and the gate's beam railing joined the way the game joins them; level 2 adds stores under the walk (barrel, hay) and level 3 hanging lanterns and a second barrel; the corner gets a flag",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:cobblestone",
+    "A": "minecraft:mossy_cobblestone",
+    "B": "minecraft:oak_fence[east=false,north=true,south=false,waterlogged=false,west=false]",
+    "C": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "D": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=true]",
+    "E": "minecraft:spruce_fence[east=true,north=false,south=false,waterlogged=false,west=false]",
+    "F": "minecraft:spruce_fence[east=true,north=false,south=false,waterlogged=false,west=true]",
+    "G": "minecraft:spruce_log[axis=y]",
+    "H": "minecraft:spruce_slab[type=bottom,waterlogged=false]",
+    "I": "minecraft:spruce_slab[type=top,waterlogged=false]"
+  },
+  "layers": [
+    [
+      "#A##A",
+      "B.B.B"
+    ],
+    [
+      "GGGGG",
+      "B.B.B"
+    ],
+    [
+      "GGGGG",
+      "HHI.B"
+    ],
+    [
+      "EGFGG",
+      "...HH"
+    ],
+    [
+      ".C.GD",
+      "....."
+    ],
+    [
+      "...C.",
+      "....."
+    ]
+  ]
+}

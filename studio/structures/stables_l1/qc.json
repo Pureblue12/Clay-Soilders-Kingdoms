@@ -104,6 +104,52 @@
           "sheet"
         ]
       }
+    },
+    "3": {
+      "version": 3,
+      "checkedAt": "2026-10-10T03:52:11.604Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 83,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 197,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4263959390862944,
+          "types": 15,
+          "dominant": {
+            "name": "spruce_stairs",
+            "share": 0.18274111675126903
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "The stable with its steep dark roof, stalls and a feed trough, and now the paddock gateway Carlton asked for: two dark log gateposts and a lintel over an open gap soldiers can walk through.",
+        "problems": [
+          "No plants yet at this level; a bush by the corner would help",
+          "The gateway lintel is heavy for its size: a slab or stair top would look lighter"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

@@ -1,0 +1,69 @@
+{
+  "format": "csr-studio-structure/1",
+  "name": "palisade_stepped_l3",
+  "version": 2,
+  "size": [5,6,2],
+  "meta": {
+    "status": "pending",
+    "notes": "",
+    "author": "claude-qc",
+    "created": "2026-10-10T03:49:00.457Z",
+    "description": "Palisade, stepped, level 3 of 3: L2 plus flourish 3. Like the straight module, but the walk rises 1 block (2.5 to 3.5) in two half steps. Not yet builder-tested: moss_carpet.",
+    "changes": "Quality check round 2: cobblestone footing under the stakes (mossy every third), walk posts every other block braced to the stakes, fence points and the gate's beam railing joined the way the game joins them; level 2 adds stores under the walk (barrel, hay) and level 3 hanging lanterns and a second barrel; the corner gets a flag",
+    "parent": 1,
+    "reviewedAt": null,
+    "tags": [
+      "batch2",
+      "tier2",
+      "wall",
+      "defense"
+    ]
+  },
+  "palette": {
+    ".": "minecraft:air",
+    "#": "minecraft:barrel[facing=up,open=false]",
+    "A": "minecraft:cobblestone",
+    "B": "minecraft:hay_block[axis=x]",
+    "C": "minecraft:lantern[hanging=true,waterlogged=false]",
+    "D": "minecraft:moss_carpet",
+    "E": "minecraft:mossy_cobblestone",
+    "F": "minecraft:oak_fence[east=false,north=true,south=false,waterlogged=false,west=false]",
+    "G": "minecraft:oak_fence[east=false,north=true,south=false,waterlogged=false,west=true]",
+    "H": "minecraft:oak_fence[east=true,north=true,south=false,waterlogged=false,west=false]",
+    "I": "minecraft:oak_fence[east=true,north=true,south=false,waterlogged=false,west=true]",
+    "J": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=false]",
+    "K": "minecraft:spruce_fence[east=false,north=false,south=false,waterlogged=false,west=true]",
+    "L": "minecraft:spruce_fence[east=true,north=false,south=false,waterlogged=false,west=false]",
+    "M": "minecraft:spruce_fence[east=true,north=false,south=false,waterlogged=false,west=true]",
+    "N": "minecraft:spruce_log[axis=y]",
+    "O": "minecraft:spruce_slab[type=bottom,waterlogged=false]",
+    "P": "minecraft:spruce_slab[type=top,waterlogged=false]",
+    "Q": "minecraft:wall_torch[facing=south]"
+  },
+  "layers": [
+    [
+      "AEAAE",
+      "HBI#G"
+    ],
+    [
+      "NNNNN",
+      "FCH#G"
+    ],
+    [
+      "NNNNN",
+      "OOPCF"
+    ],
+    [
+      "LNMNN",
+      "DQ.OO"
+    ],
+    [
+      ".J.NK",
+      "...QD"
+    ],
+    [
+      "...J.",
+      "....."
+    ]
+  ]
+}

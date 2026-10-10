@@ -165,6 +165,62 @@
           "sheet"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T03:52:30.591Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 94,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: moss_carpet, lightning_rod, vine, blue_wall_banner, bell, red_wall_banner, white_wall_banner, red_banner."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 148,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5945945945945946,
+          "types": 28,
+          "dominant": {
+            "name": "oak_log",
+            "share": 0.16216216216216217
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 1,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 2
+        },
+        "summary": "Level 3 adds a pointed roof cap with a red flag, lanterns at the roof corners, ivy on the legs, blue shields by the door and a weapon rack. The most finished and clearly a lookout.",
+        "problems": [
+          "Red banners and blue shields together look mixed; one kingdom colour would read better"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

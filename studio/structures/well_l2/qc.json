@@ -165,6 +165,67 @@
           "sheet"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T03:53:21.512Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 72,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: lever."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 76,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.4473684210526316,
+          "types": 10,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.2631578947368421
+          },
+          "height": 6,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "artefacts": "Carlton's note asked for more detail; L2 adds only the roof and crank"
+        },
+        "summary": "Level 2 adds a steep spruce gable roof with dark oak eaves and the windlass crank. The roof is heavy for so small a well and there is still no detail around the basin.",
+        "problems": [
+          "From the front a dark oak post stands right in the middle of the basin and rises above the ridge, hiding the well: put the two posts on the left and right of the basin with the windlass axle between them, or turn the roof so the posts are at the sides",
+          "Add detail at this level too (Carlton's note): a hanging lantern under the eave, a flower pot or a bucket on the rim",
+          "The roof is a big block over a small well; a slab ridge and one row less of eave would lighten it"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

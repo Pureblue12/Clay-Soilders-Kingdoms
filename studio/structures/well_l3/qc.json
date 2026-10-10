@@ -169,6 +169,63 @@
           "sheet"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T03:53:22.041Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 92,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: flowering_azalea_leaves, cauldron, moss_carpet, lever."
+          },
+          {
+            "level": "warn",
+            "check": "roof",
+            "message": "The roof does not reach past the walls on any two opposite sides: give it one block of overhang."
+          }
+        ],
+        "stats": {
+          "blocks": 87,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.5172413793103449,
+          "types": 15,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.22988505747126436
+          },
+          "height": 6,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 2,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Level 3 dresses it: lanterns on the front corners, flowering azalea, a cauldron water tub, flower pots and moss. A charming village well; the front post still hides the basin.",
+        "problems": [
+          "From the front a dark oak post stands right in the middle of the basin and rises above the ridge, hiding the well: put the two posts on the left and right of the basin with the windlass axle between them, or turn the roof so the posts are at the sides",
+          "The water is a decoration step (known, the viewer shows grass in the pool); fine"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

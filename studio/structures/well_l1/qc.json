@@ -153,6 +153,67 @@
           "sheet"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T03:53:21.003Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 72,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "too-small",
+            "message": "Only 41 blocks: too bare for a common (at least 50). Carlton wants more detail, not less."
+          },
+          {
+            "level": "warn",
+            "check": "detail",
+            "message": "15 % detail blocks: on the bare side, aim for 20 %+."
+          }
+        ],
+        "stats": {
+          "blocks": 41,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.14634146341463414,
+          "types": 5,
+          "dominant": {
+            "name": "cobblestone",
+            "share": 0.4878048780487805
+          },
+          "height": 6,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 1,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 1,
+          "materials": 2,
+          "shape": 2,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "notes": {
+          "artefacts": "Carlton's note asked for more detail on every level; L1 is a bare ring with two posts (automatic check: 41 blocks, 15 % detail)",
+          "roof": "no roof at this level, by design"
+        },
+        "summary": "Smaller and round now, as Carlton asked: a 5 x 5 octagon basin with stair-rounded corners, two dark oak posts and a beam with a chain. Still very bare at this level.",
+        "problems": [
+          "Carlton asked for more detail on all levels: give L1 a bucket (cauldron) or barrel beside the basin, a lantern on a post, a stone step in front",
+          "From the front a dark oak post stands right in the middle of the basin and rises above the ridge, hiding the well: put the two posts on the left and right of the basin with the windlass axle between them, or turn the roof so the posts are at the sides"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }

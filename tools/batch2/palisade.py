@@ -8,20 +8,23 @@ from make_batch1_structures import Structure
 LOG = dict(axis='y')
 SLAB = dict(type='bottom', waterlogged='false')
 TOP_SLAB = dict(type='top', waterlogged='false')
-FENCE = {}
 
 
 def _stake(s, x, z, top):
-    """A spruce log stake from the ground up to y = top - 1, sharpened with a fence point at y = top."""
-    for y in range(0, top):
+    """A spruce log stake on a cobblestone footing (mossy every third), up to y = top - 1, sharpened with a fence
+    point at y = top. In game a point joins the taller stake beside it (a short arm, like a lashing); the Studio file
+    shows the same because the driver fills in fence connections."""
+    s.put(x, 0, z, 'mossy_cobblestone' if (x + z) % 3 == 1 else 'cobblestone')
+    for y in range(1, top):
         s.put(x, y, z, 'stake', **LOG)
     s.put(x, top, z, 'stake_top')
 
 
-def _walk(s, x, z, surface2):
-    """A walkway block whose surface is surface2 / 2 blocks up (5 = 2.5, 6 = 3.0, 7 = 3.5), on fence posts."""
+def _walk(s, x, z, surface2, posts=True):
+    """A walkway block whose surface is surface2 / 2 blocks up (5 = 2.5, 6 = 3.0, 7 = 3.5), on fence posts (braced
+    against the stakes in front of them) when posts is true; without posts the slab spans to its neighbours."""
     y, half = divmod(surface2 - 1, 2)                 # 5 -> bottom slab at y 2; 6 -> top slab at y 2; 7 -> bottom at 3
-    for py in range(0, y):
+    for py in range(0, y if posts else 0):
         s.put(x, py, z, 'post')
     s.put(x, y, z, 'walk', **(TOP_SLAB if half else SLAB))
     return y
@@ -35,13 +38,17 @@ def palisade_straight(length=5):
         _stake(s, x, 0, 4 if x % 2 else 3)
     s.at(1, 'fittings')
     for x in range(length):
-        _walk(s, x, 1, 5)
+        _walk(s, x, 1, 5, posts=x % 2 == 0)           # posts under every other walk block
     s.at(2, 'flourish2')
     for x in range(1, length, 2):                     # torches on the tall stakes, above the walk
         s.put(x, 3, 1, 'wall_torch', facing='south')
+    s.put(1, 0, 1, 'barrel', facing='up', open='false')   # stores under the walk, between the posts
+    s.put(3, 0, 1, 'hay_block', axis='x')
     s.at(3, 'flourish3')
     for x in range(0, length, 2):
         s.put(x, 3, 1, 'moss_carpet')
+    s.put(1, 1, 1, 'lantern', hanging='true', waterlogged='false')   # under the walk
+    s.put(3, 1, 1, 'barrel', facing='up', open='false')
     return s
 
 
@@ -54,12 +61,17 @@ def palisade_stepped(length=5):
         _stake(s, x, 0, (3 if x <= mid else 4) + x % 2)
     s.at(1, 'fittings')
     for x in range(length):
-        _walk(s, x, 1, 5 if x < mid else 6 if x == mid else 7)
+        _walk(s, x, 1, 5 if x < mid else 6 if x == mid else 7, posts=x % 2 == 0)
     s.at(2, 'flourish2')
     s.put(1, 3, 1, 'wall_torch', facing='south')
     s.put(length - 2, 4, 1, 'wall_torch', facing='south')
+    s.put(1, 0, 1, 'hay_block', axis='x')
+    s.put(length - 2, 0, 1, 'barrel', facing='up', open='false')
     s.at(3, 'flourish3')
     s.put(0, 3, 1, 'moss_carpet'); s.put(length - 1, 4, 1, 'moss_carpet')
+    s.put(1, 1, 1, 'lantern', hanging='true', waterlogged='false')
+    s.put(length - 2, 1, 1, 'barrel', facing='up', open='false')
+    s.put(length - 2, 2, 1, 'lantern', hanging='true', waterlogged='false')
     return s
 
 
@@ -74,6 +86,8 @@ def palisade_corner():
     _walk(s, 1, 1, 5)
     s.at(2, 'flourish2')
     s.put(1, 3, 1, 'lantern', hanging='false', waterlogged='false')
+    s.put(1, 4, 0, 'white_banner', rotation='10')            # a flag on the corner, between the points
+    s.decorate(1, 4, 0, 'banner_pattern', banner='white_banner', note='kingdom colours')
     return s
 
 
@@ -87,8 +101,8 @@ def palisade_gate(width=3):
     for x in (left, right):
         _stake(s, x, 0, 5)                             # front corner posts, tallest
         _stake(s, x, 2, 4)                             # back posts
-        for y in range(0, 2):                          # middle: logs up to the step
-            s.put(x, y, 1, 'stake', **LOG)
+        s.put(x, 0, 1, 'cobblestone')                  # middle: footing and a log up to the step
+        s.put(x, 1, 1, 'stake', **LOG)
     for x in range(left + 1, right):                   # beams over the opening, outside and inside
         s.put(x, 3, 0, 'stake', axis='x')
         s.put(x, 4, 0, 'stake_top')

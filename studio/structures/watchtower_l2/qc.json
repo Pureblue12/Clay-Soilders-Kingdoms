@@ -165,6 +165,57 @@
           "sheet"
         ]
       }
+    },
+    "4": {
+      "version": 4,
+      "checkedAt": "2026-10-10T03:52:30.065Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 94,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: bell, red_wall_banner, white_wall_banner."
+          }
+        ],
+        "stats": {
+          "blocks": 124,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.532258064516129,
+          "types": 22,
+          "dominant": {
+            "name": "oak_log",
+            "share": 0.1935483870967742
+          },
+          "height": 9,
+          "isBuilding": true
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 2,
+          "roof": 2,
+          "materials": 2,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Level 2 boards the base into a guardhouse with an awning over the door, a red banner, supply crates, barrels and a chest. Clearly more than L1, which was Carlton's note.",
+        "problems": [
+          "The alarm bell under the awning is hard to see in the pictures; a bell on the platform edge would read better from a distance"
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
     }
   }
 }
