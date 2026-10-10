@@ -1,0 +1,63 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "road_l1",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:24:41.278Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 28,
+      "auto": {
+        "issues": [
+          {
+            "level": "warn",
+            "check": "too-small",
+            "message": "Only 30 blocks: too bare for a common (at least 50). Carlton wants more detail, not less."
+          },
+          {
+            "level": "fail",
+            "check": "detail",
+            "message": "Only 0 % of the blocks are detail blocks (stairs, slabs, trapdoors, fences, lanterns, flowers...). Aim for 20 %+."
+          }
+        ],
+        "stats": {
+          "blocks": 30,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0,
+          "types": 5,
+          "dominant": {
+            "name": "coarse_dirt",
+            "share": 0.3
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 0,
+          "artefacts": 0,
+          "purpose": 1,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 0,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 0
+        },
+        "summary": "Road level 1: a varied gravel, dirt and cobblestone patch, but it stands a full block above the grass like a platform.",
+        "problems": [
+          "Still raised a whole block above the grass, which is exactly Carlton's note (\"road is above ground now\"). A road has to replace the ground: set meta.groundLayer 0 so layer 0 is level with the grass (the mod side then needs to dig the path in), or make it one layer of slabs/carpet-height blocks.",
+          "Level 1 has no detail blocks at all (the automatic check fails it): add the kerb slabs and a lamp from level 1."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

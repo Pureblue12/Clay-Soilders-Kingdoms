@@ -1,0 +1,52 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "fire_pit_l1",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:24:43.008Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 61,
+      "auto": {
+        "issues": [],
+        "stats": {
+          "blocks": 27,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.5925925925925926,
+          "types": 9,
+          "dominant": {
+            "name": "stripped_oak_log",
+            "share": 0.3333333333333333
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 0,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Fire pit level 1: a stone hearth with a cooking spit, three log benches and a lamp post; no longer sunk, and the fire stays unlit.",
+        "problems": [
+          "Level 1 is bare round the edges (no plants); the log benches are pale stripped birch that doesn't match the dark timber of the other buildings: spruce or oak logs.",
+          "Level 3 only adds red carpets on the benches and a few plants over level 2: give it its own feature (a cooking pot on a tripod, a woodpile shelter)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

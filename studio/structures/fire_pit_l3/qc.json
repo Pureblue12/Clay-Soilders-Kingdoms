@@ -1,0 +1,63 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "fire_pit_l3",
+  "reports": {
+    "1": {
+      "version": 1,
+      "checkedAt": "2026-10-10T03:24:44.133Z",
+      "by": "claude-qc",
+      "verdict": "pass",
+      "round": 1,
+      "score": 78,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: stone_slab, short_grass, cauldron, dandelion, fern, candle."
+          },
+          {
+            "level": "warn",
+            "check": "budget",
+            "message": "54 blocks, over the prop budget of 30 (docs/STRUCTURES.md). A warning only."
+          }
+        ],
+        "stats": {
+          "blocks": 54,
+          "category": "prop",
+          "budget": 30,
+          "detailRatio": 0.7037037037037037,
+          "types": 21,
+          "dominant": {
+            "name": "stripped_oak_log",
+            "share": 0.16666666666666666
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 2,
+          "artefacts": 2,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 2,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Fire pit level 3: level 2 plus red cushions on the benches, candles and a few plants.",
+        "problems": [
+          "Level 1 is bare round the edges (no plants); the log benches are pale stripped birch that doesn't match the dark timber of the other buildings: spruce or oak logs.",
+          "Level 3 only adds red carpets on the benches and a few plants over level 2: give it its own feature (a cooking pot on a tripod, a woodpile shelter)."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

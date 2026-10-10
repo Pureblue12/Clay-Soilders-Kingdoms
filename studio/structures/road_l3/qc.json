@@ -1,0 +1,58 @@
+{
+  "format": "csr-studio-qc/1",
+  "name": "road_l3",
+  "reports": {
+    "2": {
+      "version": 2,
+      "checkedAt": "2026-10-10T03:24:42.396Z",
+      "by": "claude-qc",
+      "verdict": "revise",
+      "round": 1,
+      "score": 53,
+      "auto": {
+        "issues": [
+          {
+            "level": "info",
+            "check": "buildability",
+            "message": "Not yet placed by a builder GameTest: short_grass, andesite, packed_mud, cornflower, stone_slab, dandelion."
+          }
+        ],
+        "stats": {
+          "blocks": 55,
+          "category": "common",
+          "budget": 350,
+          "detailRatio": 0.23636363636363636,
+          "types": 14,
+          "dominant": {
+            "name": "coarse_dirt",
+            "share": 0.16363636363636364
+          },
+          "height": 3,
+          "isBuilding": false
+        }
+      },
+      "visual": {
+        "scores": {
+          "detail": 1,
+          "artefacts": 0,
+          "purpose": 2,
+          "depth": 1,
+          "roof": 1,
+          "materials": 1,
+          "shape": 1,
+          "life": 1,
+          "scale": 2,
+          "grandeur": 1
+        },
+        "summary": "Road level 3: stepping stones, flowers and a lamp post, but the road still stands a block above the ground.",
+        "problems": [
+          "Still raised a whole block above the grass, which is exactly Carlton's note (\"road is above ground now\"). A road has to replace the ground: set meta.groundLayer 0 so layer 0 is level with the grass (the mod side then needs to dig the path in), or make it one layer of slabs/carpet-height blocks.",
+          "Level 1 has no detail blocks at all (the automatic check fails it): add the kerb slabs and a lamp from level 1."
+        ],
+        "views": [
+          "sheet"
+        ]
+      }
+    }
+  }
+}

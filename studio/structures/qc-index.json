@@ -97,6 +97,27 @@
     "round": 1,
     "checkedAt": "2026-10-10T03:21:06.901Z"
   },
+  "fire_pit_l1": {
+    "version": 2,
+    "verdict": "revise",
+    "score": 61,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:24:43.008Z"
+  },
+  "fire_pit_l2": {
+    "version": 2,
+    "verdict": "pass",
+    "score": 75,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:24:43.597Z"
+  },
+  "fire_pit_l3": {
+    "version": 1,
+    "verdict": "pass",
+    "score": 78,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:24:44.133Z"
+  },
   "house": {
     "version": 3,
     "verdict": "pass",
@@ -124,6 +145,27 @@
     "score": 64,
     "round": 1,
     "checkedAt": "2026-10-10T03:22:59.988Z"
+  },
+  "road_l1": {
+    "version": 2,
+    "verdict": "revise",
+    "score": 28,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:24:41.278Z"
+  },
+  "road_l2": {
+    "version": 2,
+    "verdict": "revise",
+    "score": 42,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:24:41.834Z"
+  },
+  "road_l3": {
+    "version": 2,
+    "verdict": "revise",
+    "score": 53,
+    "round": 1,
+    "checkedAt": "2026-10-10T03:24:42.396Z"
   },
   "signpost_l1": {
     "version": 2,
