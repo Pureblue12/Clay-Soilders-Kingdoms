@@ -1,0 +1,32 @@
+/* The quality check's corner of the page (qc-panel.ts). Small and quiet by default. */
+.qc-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-left: 6px; vertical-align: 1px; }
+.qc-dot.pass { background: var(--approved); }
+.qc-dot.revise { background: var(--pending); }
+.qc-dot.handed_over { background: var(--rejected); }
+.qc-dot.stale { background: transparent; box-shadow: inset 0 0 0 1.5px var(--muted); }
+
+#qc-panel { margin: 10px 0 4px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel-2); font-size: 13px; }
+#qc-panel .qc-head {
+  width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  background: none; border: 0; padding: 6px 10px; color: var(--muted);
+}
+#qc-panel .qc-head::after { content: '▸'; font-size: 10px; transition: transform 0.15s; }
+#qc-panel.open .qc-head::after { transform: rotate(90deg); }
+#qc-panel .qc-badge { margin-left: auto; font-weight: 600; color: var(--muted); }
+#qc-panel.pass .qc-badge { color: var(--approved); }
+#qc-panel.revise .qc-badge { color: var(--pending); }
+#qc-panel.handed_over .qc-badge { color: var(--rejected); }
+#qc-panel .qc-body { display: none; padding: 0 10px 10px; }
+#qc-panel.open .qc-body { display: block; }
+#qc-panel p { margin: 0 0 8px; }
+#qc-panel ul { margin: 0 0 8px; padding-left: 18px; }
+#qc-panel li { margin: 2px 0; }
+#qc-panel .qc-sub { color: var(--muted); font-size: 12px; margin: 6px 0 2px; }
+#qc-panel .qc-auto li.fail { color: var(--rejected); }
+#qc-panel .qc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 12px; margin: 6px 0 8px; }
+#qc-panel .qc-crit { display: flex; justify-content: space-between; align-items: center; gap: 6px; font-size: 12px; }
+#qc-panel .qc-crit i { flex: 0 0 28px; height: 5px; border-radius: 3px; background: var(--line); position: relative; overflow: hidden; }
+#qc-panel .qc-crit i::after { content: ''; position: absolute; inset: 0 auto 0 0; border-radius: 3px; }
+#qc-panel .qc-crit i.s1::after { width: 50%; background: var(--pending); }
+#qc-panel .qc-crit i.s2::after { width: 100%; background: var(--approved); }
+#qc-panel .small { font-size: 11px; }

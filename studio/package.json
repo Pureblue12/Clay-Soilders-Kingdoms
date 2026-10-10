@@ -8,7 +8,8 @@
     "dev": "vite",
     "studio": "tsx cli/studio.ts",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test test/*.test.ts"
+    "test": "tsx --test test/*.test.ts",
+    "qc": "tsx cli/qc.ts"
   },
   "engines": {
     "node": ">=20"

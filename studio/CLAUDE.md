@@ -113,3 +113,11 @@ One JSON file per version: `structures/<name>/<name>_v<N>.json`.
   sinks, which is the point (shows where grading is needed).
 - **Not built yet:** structure rotation in a `Placement` (needed for phase 3), the kingdom generator, a diff
   highlight in compare mode.
+
+## Quality check
+
+Every pending version is checked automatically before Carlton looks at it (automatic block checks plus a visual review
+against a rubric built from his notes): `qc/README.md`, `qc/RUBRIC.md`, CLI `npm run qc`. Run
+`npm run qc -- check draft.json` before saving a structure. Reports live in `structures/<name>/qc.json` and
+`structures/qc-index.json`; the page shows them in its own small section (`src/ui/qc-panel.ts`). The reviewer never
+changes a status.
