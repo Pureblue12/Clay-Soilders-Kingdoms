@@ -132,7 +132,7 @@ def guard_quarters():
     s.at(3, 'flourish3')
     # the drill corner beside the house (x 9..10): a straw dummy, an archery target, a bench
     P(s, 9, 0, 4, 'spruce_fence'); P(s, 9, 1, 4, 'hay_block', axis='y'); P(s, 9, 2, 4, 'carved_pumpkin', facing='west')
-    P(s, 10, 0, 8, 'hay_block', axis='y'); P(s, 10, 1, 8, 'target', power='0')
+    P(s, 10, 0, 8, 'target', power='0'); P(s, 10, 0, 9, 'hay_block', axis='y'); P(s, 10, 1, 9, 'hay_block', axis='y')
     for z in (5, 6):
         P(s, 10, 0, z, 'spruce_stairs', facing='east', **STAIR)
     P(s, 10, 0, 3, 'barrel', facing='up', open='false')
