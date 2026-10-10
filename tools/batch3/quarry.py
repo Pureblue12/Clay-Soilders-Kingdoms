@@ -248,6 +248,8 @@ def quarry():
                        (11, 2, 16, 'leaves'), (6, 2, 16, 'azure_bluet')):
         if z >= 14:                                  # on the hill: on top of its grass
             y = max(yy for (xx, yy, zz) in s.blocks if (xx, zz) == (x, z)) + 1
+        elif (x, 0, z) not in s.blocks:              # a tuft of grass under loose plants (flush: it is the ground)
+            P(s, x, 0, z, 'grass_block', snowy='false')
         P(s, x, y, z, 'oak_leaves', **LEAVES) if b == 'leaves' else P(s, x, y, z, b)
     connect(s)
     return s
