@@ -4,14 +4,14 @@
   "version": 3,
   "size": [24,15,10],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T03:27:19.364Z",
     "description": "Farm (farmhouse), level 1 of 3: shell and fittings (what soldiers build first). The farmer's house: a big two-storey farmhouse, a cobblestone ground floor with stone brick quoins under a dark oak timber frame jettied over the front, spruce roof with dark eaves, brick chimney, a stair inside; flower boxes, lanterns, composter, hay and barrel at the door from L1. L2 adds a lean-to woodshed, gable trim, potted flowers and a bench; L3 a 15-tall tower windmill with lattice sails and beehives. The fields are separate modules (farm_field_*).",
     "changes": "The house is now a big two-storey farmhouse from L1 (stone ground floor, jettied timber upper floor, stairs inside, flower boxes and farm props at the door); L2 adds a woodshed, L3 the windmill with lattice sails (fence frame and wool panels) and beehives, so each level adds something visible.",
     "parent": 2,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T03:42:08.778Z",
     "tags": [
       "revise1",
       "tier1",
