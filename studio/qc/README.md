@@ -16,7 +16,15 @@ automatic and to judge by his taste. It never approves or rejects anything: only
   hollow = a newer version isn't checked yet) and a collapsed "Quality check" section in the review panel
   (`src/ui/qc-panel.ts`, `qc-panel.css`).
 
-## The loop (what the hourly routine does)
+## When it runs
+
+Right after new versions land, not on a timer. Any agent that saves and pushes structure versions (batch threads,
+the "Revise rejected structures" routine) then starts the check at once, naming what it saved: with the routine tool
+`fire_trigger`, trigger `trig_019cSHKLt96sxzKPmGP7Gz7T`, text `check: <name> v<N>, <name> v<N>`, or with a
+`send_message` to the quality-check session `session_01CM8GkfrQUtfGW23h7DTXSp`. The routine also runs once an hour
+(the shortest schedule allowed) to catch anything that was missed.
+
+## The loop (what the routine does)
 
 ```bash
 cd studio

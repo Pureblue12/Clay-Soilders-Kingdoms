@@ -118,6 +118,7 @@ One JSON file per version: `structures/<name>/<name>_v<N>.json`.
 
 Every pending version is checked automatically before Carlton looks at it (automatic block checks plus a visual review
 against a rubric built from his notes): `qc/README.md`, `qc/RUBRIC.md`, CLI `npm run qc`. Run
-`npm run qc -- check draft.json` before saving a structure. Reports live in `structures/<name>/qc.json` and
+`npm run qc -- check draft.json` before saving a structure. **After pushing new versions, start the check at once**:
+`fire_trigger` on `trig_019cSHKLt96sxzKPmGP7Gz7T` with the text `check: <name> v<N>, ...` (details in `qc/README.md`). Reports live in `structures/<name>/qc.json` and
 `structures/qc-index.json`; the page shows them in its own small section (`src/ui/qc-panel.ts`). The reviewer never
 changes a status.
