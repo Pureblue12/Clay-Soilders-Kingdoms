@@ -287,11 +287,11 @@
     "checkedAt": "2026-10-10T05:26:46.836Z"
   },
   "food_hall_l3": {
-    "version": 2,
+    "version": 3,
     "verdict": "pass",
-    "score": 95,
+    "score": 100,
     "round": 1,
-    "checkedAt": "2026-10-10T05:26:47.411Z"
+    "checkedAt": "2026-10-10T08:43:15.472Z"
   },
   "garden_l1": {
     "version": 4,
@@ -910,18 +910,18 @@
     "checkedAt": "2026-10-10T05:27:24.280Z"
   },
   "townhouse_l2": {
-    "version": 2,
+    "version": 3,
+    "verdict": "pass",
+    "score": 88,
+    "round": 1,
+    "checkedAt": "2026-10-10T08:43:14.204Z"
+  },
+  "townhouse_l3": {
+    "version": 3,
     "verdict": "pass",
     "score": 95,
     "round": 1,
-    "checkedAt": "2026-10-10T05:27:24.799Z"
-  },
-  "townhouse_l3": {
-    "version": 2,
-    "verdict": "pass",
-    "score": 95,
-    "round": 2,
-    "checkedAt": "2026-10-10T05:27:25.307Z"
+    "checkedAt": "2026-10-10T08:43:14.854Z"
   },
   "training_yard_l1": {
     "version": 1,
