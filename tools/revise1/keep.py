@@ -121,7 +121,10 @@ def keep():
     s.at(1, 'shell')
     for x in range(K0 - 1, K1 + 2):                                  # apron and ground floor
         for z in range(KZ0 - 1, KZ1 + 2):
-            s.put(x, 0, z, sb if in_body(x, z) and not (x in (K0, K1) or z in (KZ0, KZ1)) else base_mix(x, 0, z))
+            if x in (K0 - 1, K1 + 1) and z in (KZ0 - 1, KZ1 + 1):
+                s.put(x, 0, z, 'coarse_dirt')                        # planting holes at the apron's corners
+            else:
+                s.put(x, 0, z, sb if in_body(x, z) and not (x in (K0, K1) or z in (KZ0, KZ1)) else base_mix(x, 0, z))
 
     def quoin(x, z):
         return x in (K0, K1) and z in (KZ0, KZ1)
@@ -233,6 +236,58 @@ def keep():
     s.put(12, UPPER + 1, 10, 'crafting_table')
     for x, z in ((CX, 12), (CX, 16)):
         s.put(x, DECK - 1, z, 'lantern', hanging='true', waterlogged='false')
+
+    # ---------------------------------------------------------------- level 1 polish (v6, KNOWN-OK blocks only)
+    # a belt course of upside-down stairs at the upper floor line all round (the upper windows' sills); on the back only
+    # beside the great hall of level 2
+    for z in range(KZ0, KZ1 + 1):
+        s.put(K0 - 1, UPPER, z, 'stone_brick_stairs', facing='east', **TOP)
+        s.put(K1 + 1, UPPER, z, 'stone_brick_stairs', facing='west', **TOP)
+    for x in range(K0, K1 + 1):
+        s.put(x, UPPER, KZ0 - 1, 'stone_brick_stairs', facing='south', **TOP)
+        if not HX0 <= x <= HX1:
+            s.put(x, UPPER, KZ1 + 1, 'stone_brick_stairs', facing='north', **TOP)
+
+    def shutters(x, z, along, facing, ys):
+        """Open spruce trapdoors flat against the wall either side of a window (facing away from the wall)."""
+        for d in (-1, 1):
+            for y in ys:
+                xx, zz = (x + d, z) if along == 'x' else (x, z + d)
+                s.put(xx, y, zz, 'spruce_trapdoor', facing=facing, half='bottom', open='true', powered='false',
+                      waterlogged='false')
+    for c in (12, 18):                                               # front windows of the guard hall
+        shutters(c, KZ0 - 1, 'x', 'north', (2, 3))
+    shutters(K0 - 1, 15, 'z', 'west', (2, 3, 6, 7))                  # the middle side windows, both floors
+    shutters(K1 + 1, 15, 'z', 'east', (2, 3, 6, 7))
+    # the doors: a lantern on a stone bracket over each, torches on the door posts (front)
+    for z, f in ((KZ0 - 1, 'south'), (KZ1 + 1, 'north')):
+        s.put(CX, 4, z, 'stone_brick_stairs', facing=f, **TOP)
+        s.put(CX, 3, z, 'lantern', hanging='true', waterlogged='false')
+    for x in (CX - 1, CX + 1):
+        s.put(x, 2, KZ0 - 1, 'wall_torch', facing='north')
+    # poppies and bushes in the apron's corners
+    for x in (K0 - 1, K1 + 1):
+        s.put(x, 1, KZ0 - 1, 'poppy')
+        s.put(x, 1, KZ1 + 1, 'oak_leaves', persistent='true', distance='1', waterlogged='false')
+    # roof deck: a watch fire, the watch's stores against the west parapet, a railing round the stair head
+    s.put(CX, DECK + 1, 15, 'campfire', facing='south', lit='true', signal_fire='false', waterlogged='false')
+    for z in (14, 16):
+        s.put(K0, DECK + 1, z, 'barrel', facing='up', open='false')
+    s.put(K0, DECK + 1, 15, 'chest', facing='east', type='single', waterlogged='false')
+    for x in (K1 - 2, K1):
+        for z in (11, 12, 13):
+            s.put(x, DECK + 1, z, 'spruce_fence')
+    s.put(K1 - 2, DECK + 2, 13, 'lantern', hanging='false', waterlogged='false')
+    # king's chamber: a wardrobe of barrels, a night stand with a lantern
+    for z in (10, 11):
+        s.put(K0 + 1, UPPER + 1, z, 'barrel', facing='up', open='false')
+    s.put(14, UPPER + 1, 18, 'spruce_slab', type='top', waterlogged='false')
+    s.put(14, UPPER + 2, 18, 'lantern', hanging='false', waterlogged='false')
+    # guard hall: a spear rack (fence posts under a trapdoor shelf) by the front door
+    for x in (12, 18):
+        s.put(x, 1, KZ0 + 1, 'spruce_fence')
+        s.put(x, 2, KZ0 + 1, 'spruce_trapdoor', facing='south', half='top', open='false', powered='false',
+              waterlogged='false')
 
     # ================================================================ level 2: the royal court
     s.at(2, 'shell2')
@@ -373,14 +428,33 @@ def keep():
             s.put(x, 5, z, 'lantern', hanging='true', waterlogged='false')
     # the keep dressed for the court: banners at the door, flags on the turrets
     for x in (CX - 2, CX + 2):
-        s.put(x, 6, KZ0 - 1, 'red_wall_banner', facing='north')
-    for x in (CX - 1, CX + 1):
-        s.put(x, 2, KZ0 - 1, 'wall_torch', facing='north')
+        s.put(x, 7, KZ0 - 1, 'red_wall_banner', facing='north')     # above the belt course
     for tx, tz in turrets:
         s.put(tx, TURRET_FLAG + 1, tz, 'red_banner', rotation='8')
     for x in (13, 17):                                               # lantern posts beside the path
         s.put(x, 0, 7, 'cobblestone'); s.put(x, 1, 7, 'dark_oak_fence'); s.put(x, 2, 7, 'dark_oak_fence')
         s.put(x, 3, 7, 'lantern', hanging='false', waterlogged='false')
+
+    # ---- level 2 polish (v6)
+    flowers = ['poppy', 'cornflower', 'oxeye_daisy', 'allium', 'azure_bluet']
+    for x in (CX - 3, CX + 3):                                       # flowers at the foot of the lantern posts
+        for z in (6, 7):
+            s.put(x, 0, z, 'coarse_dirt')
+            s.put(x, 1, z, flowers[(x + z) % len(flowers)])
+    for z in (SIDE_DOOR, 27):                                        # red carpet across the hall: the side-door aisle
+        for x in range(HX0 + 1, HX1):                                # and in front of the dais
+            if (x, 1, z) not in s.blocks:
+                s.put(x, 1, z, 'red_carpet')
+    for x, f in ((HX0 - 1, 'east'), (HX1 + 1, 'west')):
+        s.put(x, 4, SIDE_DOOR, 'stone_brick_stairs', facing=f, **TOP)   # a lantern on a bracket over each side door
+        s.put(x, 3, SIDE_DOOR, 'lantern', hanging='true', waterlogged='false')
+        for z in (25, 26, 28, 29, 30):                               # flower beds under the hall windows, between
+            s.put(x, 0, z, 'coarse_dirt')                            # the chimney and the buttresses
+            s.put(x, 1, z, flowers[(z * 3 + (x > CX)) % len(flowers)])
+    for x in (14, 16):                                               # and either side of the back buttresses
+        s.put(x, 0, HZ1 + 1, 'coarse_dirt')
+        s.put(x, 1, HZ1 + 1, 'oak_leaves', persistent='true', distance='1', waterlogged='false')
+    s.put(CX, 0, HZ1 + 1, 'coarse_dirt'); s.put(CX, 1, HZ1 + 1, 'poppy')
 
     # ================================================================ level 3: the castle
     s.at(3, 'shell3')
