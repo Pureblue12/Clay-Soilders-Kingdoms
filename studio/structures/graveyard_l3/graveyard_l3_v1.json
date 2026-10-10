@@ -4,14 +4,14 @@
   "version": 1,
   "size": [9,7,12],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T05:05:14.549Z",
     "description": "Graveyard, level 3 of 3: L2 plus flourish 3. Over budget: 227 blocks vs 105 (first build 115 vs 70). Flush piece (ground_layer 0: the mod does not support it yet). Walled churchyard (cobblestone wall, stone brick piers) with gravel paths, graves on both sides, a stone cross and benches; L2 adds the yew, a lychgate over the entrance, lanterns and a new grave; L3 flowers, candles, moss and vines, a fresh grave. Not yet builder-tested: allium, azure_bluet, candle, cornflower, dandelion, dark_oak_leaves, lily_of_the_valley, moss_carpet, oxeye_daisy, polished_andesite_stairs, spruce_leaves, vine, white_tulip. Decoration step adds: item, potted_plant.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T05:08:44.615Z",
     "tags": [
       "batch4",
       "tier4",
