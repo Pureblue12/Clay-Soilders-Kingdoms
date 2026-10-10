@@ -4,14 +4,14 @@
   "version": 2,
   "size": [13,18,18],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T09:04:54.822Z",
     "description": "Town hall, level 2 of 3: L1 plus flourish 2. Needs scaffolding: 18 tall (the clock tower; the hall roof is 15). Over budget: 1291 blocks vs 740 (first build 1115 vs 620). Half-timbered council hall raised on an open stone market arcade, a stone clock tower at the front with a white clock dial on three sides, a vaulted porch and a clock chamber up a stair; council chamber with a long table, the mayor's seat and records, the clerks' office in the tower, a stair at the back, a notice board, a back chimney; L2 clock hands and bell, records shelves, lanterns, banners and two market stalls with awnings; L3 flower boxes, benches, flowers, a lantern post and carpets. Not yet builder-tested: bell, bookshelf, candle, lectern, pumpkin, red_wall_banner. Decoration step adds: banner_pattern, item, sign_text.",
     "changes": "From the v1 quality notes. L1: the clock faces are bright white dials in the dark frame (the dark log hubs that read as windows are gone); shutters and slab sills on the windows; the back gets corner buttresses, stone sills and a brick chimney up the gable; the clock chamber is reached by a spruce stair from the clerks' office (no ladder) and holds the clockwork. L2: dark chain hands on the dials (and a bell in the chamber); the market stalls are two counters with goods, posts and red/white and blue/white striped awnings, with stock behind; lanterns under the outside brackets. L3: the flower boxes are one long box per side with trapdoor fronts and end boards; the item-frame clocks on the hubs became one clock on the council chamber wall.",
     "parent": 1,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-10T09:13:42.172Z",
     "tags": [
       "batch5",
       "tier6",
