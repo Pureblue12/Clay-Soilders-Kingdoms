@@ -224,6 +224,12 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         if (!level.isUnobstructed(state, pos, CollisionContext.empty())) {
             return true;
         }
+        // A fence, wall or pane only fills the middle of its cell, so a tiny soldier can stand beside the post without
+        // touching it; placed, the post pens it in (cottage L3 on CI: a builder inside a lantern post for 9,200 ticks).
+        if ((state.getBlock() instanceof CrossCollisionBlock || state.getBlock() instanceof WallBlock)
+                && !level.getEntitiesOfClass(LivingEntity.class, new AABB(pos), LivingEntity::isAlive).isEmpty()) {
+            return true;
+        }
         // A fence, wall or pane next to the spot grows an arm toward the new block: a soldier standing beside that post
         // ends up inside the arm, stuck for good (farm and cottage builders, D64). Same answer: wait until it has moved.
         for (Direction side : Direction.Plane.HORIZONTAL) {

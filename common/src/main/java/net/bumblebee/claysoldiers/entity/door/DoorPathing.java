@@ -15,7 +15,11 @@ import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.bumblebee.claysoldiers.debug.DebugCategory;
+import net.bumblebee.claysoldiers.debug.DebugLog;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.pathfinder.AmphibiousNodeEvaluator;
+import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.PathFinder;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.level.pathfinder.PathType;
@@ -78,6 +82,41 @@ public final class DoorPathing {
     private static boolean isOpenTrapdoor(PathfindingContext context, int x, int y, int z) {
         BlockState state = context.level().getBlockState(new BlockPos(x, y, z));
         return state.getBlock() instanceof TrapDoorBlock && state.getValue(TrapDoorBlock.OPEN);
+    }
+
+    /**
+     * A tiny soldier fits beside the post of a fence, wall or pane, inside its cell. Vanilla then starts every path
+     * from a cell it may not enter: the path is one step long and the soldier stands there for good (a cottage builder
+     * returning to the chest, 9,200 ticks). Such a soldier starts its path from the nearest free cell beside it
+     * instead, and walks out (D66). Vanilla's own fallback looks at the corners of the mob's body, which for a tiny
+     * soldier are all in the same cell.
+     */
+    @Nullable
+    static Node startOutsideABlockedCell(Mob mob, Node start, java.util.function.Predicate<BlockPos> canStartAt,
+                                         java.util.function.Function<BlockPos, Node> startNode) {
+        if (start == null || start.costMalus >= 0.0F) {
+            return start;
+        }
+        BlockPos here = start.asBlockPos();
+        BlockPos best = null;
+        double bestDistance = Double.MAX_VALUE;
+        for (Direction side : Direction.Plane.HORIZONTAL) {
+            BlockPos next = here.relative(side);
+            if (canStartAt.test(next)) {
+                double distance = mob.position().distanceToSqr(next.getX() + 0.5, next.getY(), next.getZ() + 0.5);
+                if (distance < bestDistance) {
+                    bestDistance = distance;
+                    best = next;
+                }
+            }
+        }
+        if (best == null) {
+            return start;
+        }
+        if (mob instanceof AbstractClaySoldierEntity soldier) {
+            DebugLog.event(DebugCategory.PATHING, soldier, "inside %s at %s, starting the path from %s", start.type, here, best);
+        }
+        return startNode.apply(best);
     }
 
     /** Both soldier rules on vanilla's answer. */
@@ -156,6 +195,11 @@ public final class DoorPathing {
                 public PathType getPathType(PathfindingContext context, int x, int y, int z) {
                     return soldierRules(mob, context, x, y, z, super.getPathType(context, x, y, z));
                 }
+
+                @Override
+                public Node getStart() {
+                    return startOutsideABlockedCell(mob, super.getStart(), this::canStartAt, this::getStartNode);
+                }
             };
             this.nodeEvaluator.setCanPassDoors(true);
             return new PathFinder(this.nodeEvaluator, maxVisitedNodes);
@@ -176,6 +220,11 @@ public final class DoorPathing {
                 @Override
                 public PathType getPathType(PathfindingContext context, int x, int y, int z) {
                     return soldierRules(mob, context, x, y, z, super.getPathType(context, x, y, z));
+                }
+
+                @Override
+                public Node getStart() {
+                    return startOutsideABlockedCell(mob, super.getStart(), this::canStartAt, this::getStartNode);
                 }
             };
             this.nodeEvaluator.setCanPassDoors(true);

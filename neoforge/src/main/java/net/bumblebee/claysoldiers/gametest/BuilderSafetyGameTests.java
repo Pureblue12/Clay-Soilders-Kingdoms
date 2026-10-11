@@ -177,12 +177,69 @@ public class BuilderSafetyGameTests {
         return new BlockPos(x1, 6, (z0 + z1) / 2);
     }
 
+    /**
+     * BUG TEST (penned in by a post): a soldier stands in the blueprint's only spot, beside where a fence's post would
+     * be, not touching it (a tiny soldier fits). The fence must wait: placed, its post pens the soldier in (a cottage
+     * builder stood inside a lantern post for 9,200 ticks on CI). Once the soldier is gone, it must be placed.
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 1200)
+    public static void fenceIsNotPlacedAroundASoldier(GameTestHelper helper) {
+        BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "fence_around_soldier", 1, 1, 1, Blocks.OAK_FENCE, BlockPos.ZERO);
+        ClaySoldierGameTests.setUpBuilder(helper, blueprint, List.of(new ItemStack(Items.OAK_FENCE)));
+        ClaySoldierEntity bystander = bystander(helper, SPOT, 0.12, 0.5);
+        helper.runAfterDelay(400, () -> {
+            helper.assertBlockPresent(Blocks.AIR, SPOT);
+            helper.assertTrue(bystander.isAlive(), "The bystander died");
+            bystander.discard();
+        });
+        helper.succeedWhen(() -> {
+            helper.assertTrue(helper.getTick() > 400, "Too early");
+            helper.assertBlockPresent(Blocks.OAK_FENCE, SPOT);
+        });
+    }
+
+    /**
+     * BUG TEST (stuck inside a post): a soldier inside a fence's cell, beside the post. Vanilla starts its path in the
+     * fence cell, which it may not enter, so every path is one step long. The soldier must get a real path to a spot
+     * 4 blocks away and walk out of the cell.
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 400)
+    public static void soldierInsideAFenceCellWalksOut(GameTestHelper helper) {
+        BlockPos cell = new BlockPos(4, ClaySoldierGameTests.GROUND_Y, 7);
+        helper.setBlock(cell, Blocks.OAK_FENCE);
+        BlockPos target = cell.east(4);
+        ServerLevel level = helper.getLevel();
+        BlockPos at = helper.absolutePos(cell);
+        ClaySoldierEntity soldier = ModEntityTypes.CLAY_SOLDIER_ENTITY.get().create(level);
+        soldier.moveTo(at.getX() + 0.12, at.getY(), at.getZ() + 0.5, 0, 0);
+        level.addFreshEntity(soldier);
+        soldier.setClayTeamType(DevScenarios.RED_TEAM);
+        BlockPos targetAbsolute = helper.absolutePos(target);
+        helper.runAfterDelay(5, () -> {
+            helper.assertTrue(soldier.blockPosition().equals(at), "The soldier is not inside the fence cell but at " + soldier.blockPosition().toShortString());
+            Path path = soldier.getNavigation().createPath(targetAbsolute, 0);
+            helper.assertTrue(path != null && path.getNodeCount() > 1 && path.canReach(),
+                    "BUG (stuck inside a post): no path out of the fence cell, " + (path == null ? "null" : path.getNodeCount() + " node(s)"));
+        });
+        helper.onEachTick(() -> {
+            if (helper.getTick() % 10 == 0 && soldier.blockPosition().equals(at)) {
+                soldier.getNavigation().moveTo(targetAbsolute.getX() + 0.5, targetAbsolute.getY(), targetAbsolute.getZ() + 0.5, 1.0);
+            }
+        });
+        helper.succeedWhen(() -> helper.assertFalse(soldier.blockPosition().equals(at), "BUG (stuck inside a post): the soldier is still in the fence cell"));
+    }
+
     /** A clay soldier of the builders' team standing still (no AI) at {@code pos}. */
     private static ClaySoldierEntity bystander(GameTestHelper helper, BlockPos pos) {
+        return bystander(helper, pos, 0.5, 0.5);
+    }
+
+    /** The same, standing at ({@code dx}, {@code dz}) within the cell. */
+    private static ClaySoldierEntity bystander(GameTestHelper helper, BlockPos pos, double dx, double dz) {
         ServerLevel level = helper.getLevel();
         BlockPos at = helper.absolutePos(pos);
         ClaySoldierEntity soldier = ModEntityTypes.CLAY_SOLDIER_ENTITY.get().create(level);
-        soldier.moveTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, 0, 0);
+        soldier.moveTo(at.getX() + dx, at.getY(), at.getZ() + dz, 0, 0);
         soldier.setNoAi(true);
         level.addFreshEntity(soldier);
         soldier.setClayTeamType(DevScenarios.RED_TEAM);

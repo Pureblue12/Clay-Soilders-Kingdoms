@@ -137,6 +137,11 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
     above it as floorless (`DoorPathing.withoutOpenTrapdoorFloors`, D65; `soldierDoesNotWalkOntoAnOpenTrapdoor`,
     `soldierWalksOverClosedTrapdoors`). Still open (not confirmed why): keep L2 builders also die at one spot in the
     forecourt, 2.0 per fall, after placing on the upper floor, with no trapdoor placed yet; needs a PATHING recording.
+  - A cottage builder stood inside a fence post (the lantern post) for 9,200 ticks (suite run 38128880972): a tiny
+    soldier fits beside the post, so the fence was placed around it, and vanilla then starts every path in a cell the
+    soldier may not enter (one-node paths). The easel never places a fence, wall or pane in a cell a creature stands
+    in, and a soldier inside such a cell starts its path from the nearest free cell beside it (D66;
+    `fenceIsNotPlacedAroundASoldier`, `soldierInsideAFenceCellWalksOut`).
 - Fixed (door race): doors-last only ordered the list, so a door could be handed out while other blocks were
   still being carried (a glass pane got locked out in the 08:03 recording). Now `ServerBlueprintPlan.getRequest`
   hands out a door only when no other (non-door) block with a free spot remains; doors don't wait for each
