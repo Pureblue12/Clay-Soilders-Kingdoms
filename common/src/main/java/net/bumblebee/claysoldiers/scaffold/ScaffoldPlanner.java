@@ -208,13 +208,72 @@ public final class ScaffoldPlanner {
         Map<Spot, Integer> chosen = new HashMap<>(); // spot -> highest step
         Set<BlockPos> uncovered = new LinkedHashSet<>(toCover);
         Set<BlockPos> stuckMatters = aboveReachOrAll(input, toCover);
+        uncovered = coverRounds(input, spots, chosen, uncovered, stuckMatters, columns);
+        if (columns && !uncovered.isEmpty()) {
+            // Columns outside the footprint can't reach everything (a roof more than 2 blocks inside, the chapel's
+            // steeple cap): add columns standing on the structure's own floors (D69). Only then, so every structure
+            // the outside columns already cover keeps its plan.
+            List<Spot> inner = innerSpots(input);
+            if (!inner.isEmpty()) {
+                List<Spot> all = new ArrayList<>(spots);
+                all.addAll(inner);
+                Set<Spot> before = Set.copyOf(chosen.keySet());
+                coverRounds(input, all, chosen, uncovered, stuckMatters, true);
+                // An inner column the simulated build never puts up (its base can't be walked to) is dropped.
+                Set<BlockPos> used = Set.copyOf(simulate(input, steps(chosen), true).scaffoldPlaced());
+                chosen.keySet().removeIf(spot -> !before.contains(spot) && !used.contains(spot.step(0)));
+            }
+        }
+        return chosen;
+    }
+
+    /** Adds pillars for the blocks still uncovered, checked by simulating; returns the blocks still stuck. */
+    private static Set<BlockPos> coverRounds(ScaffoldInput input, List<Spot> spots, Map<Spot, Integer> chosen, Set<BlockPos> uncovered,
+                                             Set<BlockPos> stuckMatters, boolean columns) {
         for (int round = 0; round < ROUNDS && !uncovered.isEmpty(); round++) {
             cover(spots, chosen, uncovered);
             Set<BlockPos> stuck = new LinkedHashSet<>(simulate(input, steps(chosen), columns).stuck());
             stuck.retainAll(stuckMatters);
             uncovered = stuck;
         }
-        return chosen;
+        return uncovered;
+    }
+
+    /**
+     * Every place inside the structure's footprint a column could stand on one of the structure's own floors (or the
+     * ground inside it): the lowest free cell of the column with a floor below, rising until the first structure block.
+     * Whether builders can walk to its base when they need it is left to the simulation.
+     */
+    private static List<Spot> innerSpots(ScaffoldInput input) {
+        ScaffoldGrid built = emptySite(input);
+        input.structure().forEach(block -> built.set(block, true));
+        Set<Long> structureColumns = new HashSet<>();
+        input.structure().forEach(pos -> structureColumns.add(column(pos.getX(), pos.getZ())));
+        BoundingBox region = input.region();
+        int top = input.structure().stream().mapToInt(BlockPos::getY).max().orElse(region.maxY());
+        List<Spot> spots = new ArrayList<>();
+        for (int x = region.minX() + 1; x < region.maxX() - 1; x++) {
+            for (int z = region.minZ() + 1; z < region.maxZ() - 1; z++) {
+                if (!structureColumns.contains(column(x, z))) {
+                    continue;
+                }
+                for (int base = region.minY() + 1; base <= top; base++) {
+                    if (!built.standable(x, base, z) || input.blocked().contains(new BlockPos(x, base, z))) {
+                        continue;
+                    }
+                    Spot probe = new Spot(x, z, base, 0, true);
+                    int steps = 0;
+                    while (base + steps <= top && free(input, built, probe.step(steps))) {
+                        steps++;
+                    }
+                    if (steps > 1) {
+                        spots.add(new Spot(x, z, base, steps, true));
+                    }
+                    break; // the lowest floor only
+                }
+            }
+        }
+        return spots;
     }
 
     private static Set<BlockPos> aboveReachOrAll(ScaffoldInput input, Set<BlockPos> toCover) {
