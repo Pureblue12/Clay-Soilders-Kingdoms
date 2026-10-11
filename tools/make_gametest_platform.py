@@ -3,6 +3,8 @@ Default size 16x8x16 (gametest/platform.nbt); the terrain tests use 32x16x32 (ga
 
 Usage: python3 tools/make_gametest_platform.py neoforge/src/main/resources/data/csr/structure/gametest/platform.nbt
        python3 tools/make_gametest_platform.py neoforge/src/main/resources/data/csr/structure/gametest/terrain.nbt 32 16 32
+       python3 tools/make_gametest_platform.py neoforge/src/main/resources/data/csr/structure/gametest/structure_build.nbt 48 24 48 grass_block
+An optional fifth argument sets the floor block (default smooth_stone).
 """
 import gzip, struct, sys
 def s(x): b=x.encode(); return struct.pack('>H',len(b))+b
@@ -15,7 +17,8 @@ blocks=[]
 for x in range(SIZE[0]):
     for z in range(SIZE[2]):
         blocks.append(compound([named(9,'pos',lst_int([x,0,z])), named(3,'state',i(0))]))
-palette=[compound([named(8,'Name',s('minecraft:smooth_stone'))])]
+FLOOR=sys.argv[5] if len(sys.argv) >= 6 else 'smooth_stone'
+palette=[compound([named(8,'Name',s('minecraft:'+FLOOR))])]
 root=compound([
   named(3,'DataVersion',i(3955)),
   named(9,'size',lst_int(list(SIZE))),

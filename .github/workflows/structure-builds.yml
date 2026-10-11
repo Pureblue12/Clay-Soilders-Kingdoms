@@ -1,0 +1,107 @@
+# Builds every promoted structure level (about 156 builds) with 3 clay-soldier builders: StructureBuildGameTests, run
+# by tools/structure_builds.sh, split over 4 machines. Separate from ci.yml on purpose: far too slow for every PR, so it
+# only runs when structures or the build test change, or by hand (Actions -> Structure builds -> Run workflow).
+# A red run here means some structure didn't build, not that the mod is broken: the result table is in the run summary.
+name: Structure builds
+
+on:
+  workflow_dispatch:
+    inputs:
+      only:
+        description: "Structure ids, comma-separated (e.g. keep,church); empty = all"
+        required: false
+        default: ""
+        type: string
+  pull_request:
+    paths:
+      - common/src/main/resources/data/csr/structure/kingdom/studio/**
+      - common/src/main/resources/data/csr/csr/structures/**
+      - neoforge/src/main/java/net/bumblebee/claysoldiers/gametest/StructureBuildGameTests.java
+      - common/src/main/java/net/bumblebee/claysoldiers/dev/MaterialSupply.java
+      - tools/structure_builds.sh
+      - tools/structure_results.py
+      - .github/workflows/structure-builds.yml
+  push:
+    branches: [main]
+    paths:
+      - common/src/main/resources/data/csr/structure/kingdom/studio/**
+      - common/src/main/resources/data/csr/csr/structures/**
+      - neoforge/src/main/java/net/bumblebee/claysoldiers/gametest/StructureBuildGameTests.java
+      - common/src/main/java/net/bumblebee/claysoldiers/dev/MaterialSupply.java
+      - tools/structure_builds.sh
+      - tools/structure_results.py
+      - .github/workflows/structure-builds.yml
+
+# A newer push to the same branch cancels the older run.
+concurrency:
+  group: structure-builds-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    env:
+      CSR_STRUCTURE_BUILDS: "${{ matrix.shard }}/4"
+      # Empty unless started by hand with "only" filled in.
+      CSR_STRUCTURE_BUILDS_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.only || '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      # Caches Gradle, Minecraft and NeoForge downloads between runs.
+      - uses: gradle/actions/setup-gradle@v4
+
+      # Generated resources (recipes, models, lang, loot, data maps) are not in the repo; make them first.
+      - name: Generate resources
+        run: ./gradlew :neoforge:runData
+
+      # Fails only if the server didn't start or planned no structure test; failed builds go red in the table job.
+      - name: Structure builds (shard ${{ matrix.shard }} of 4)
+        run: tools/structure_builds.sh
+
+      # Builds that end a few blocks short write "CSR stall report" lines (BuildStallReport): show them here, so they can
+      # be read without downloading the logs.
+      - name: Stall reports
+        if: always()
+        run: grep -E "CSR stall report" build/structure-builds.log | sed -E 's/.*CSR stall report //' | head -800 || echo "no stall reports"
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: structure-results-${{ matrix.shard }}
+          path: |
+            build/structure-results.tsv
+            build/structure-builds.log
+          if-no-files-found: ignore
+
+  # Merges the 4 shards into one table (run summary). Red if any structure level didn't build.
+  table:
+    needs: build
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: structure-results-*
+          merge-multiple: false
+          path: results/
+
+      - name: Result table
+        run: |
+          set +e
+          python3 tools/structure_results.py table results/*/structure-results.tsv | tee table.md
+          status=${PIPESTATUS[0]}
+          cat table.md >> "$GITHUB_STEP_SUMMARY"
+          exit $status

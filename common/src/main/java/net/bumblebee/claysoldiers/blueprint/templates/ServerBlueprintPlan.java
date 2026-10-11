@@ -206,6 +206,14 @@ public class ServerBlueprintPlan extends BlueprintPlan {
     }
 
     /**
+     * The item of every block this plan still has to place, in hand-out order (the order {@link #getRequest} searches).
+     * For the dev material supply and GameTests; changes nothing.
+     */
+    public List<Item> remainingItems() {
+        return blockInfoList.stream().map(info -> info.getState().getBlock().asItem()).toList();
+    }
+
+    /**
      * One line per block this plan still has to place: its world position, block, whether its spot is free, whether it is
      * cooling down after a failed placement, and its last request (for GameTest failure reports; changes nothing).
      */

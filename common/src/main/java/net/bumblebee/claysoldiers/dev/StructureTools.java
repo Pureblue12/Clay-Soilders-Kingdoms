@@ -60,6 +60,18 @@ final class StructureTools {
                                 .toList())
                         .withOptionalExtra("level", IntegerArgumentType.integer(1, 9), null),
                 StructureTools::placeLevel));
+        registry.addTool(new DevTool("structure_build", STRUCTURES, Component.literal("Builders build"),
+                "Builders build the structure (top level; type a level number after it for another): easel 3 ahead, a chest"
+                        + " kept stocked with its materials 2 ahead on your right, 3 red builders. Stand on flat, open ground.",
+                List.of("structure", "build"), false,
+                new DevTool.Argument("structure", ResourceLocationArgument.id(),
+                        (context, builder) -> SharedSuggestionProvider.suggestResource(
+                                StructureRegistry.loaded().stream().filter(StructureTools::isStudio).map(StructureMeta::id), builder),
+                        access -> StructureRegistry.loaded().stream().filter(StructureTools::isStudio)
+                                .map(meta -> new DevTool.Choice(Component.literal(meta.name()), meta.id().toString(), describe(meta)))
+                                .toList())
+                        .withOptionalExtra("level", IntegerArgumentType.integer(1, 9), null),
+                StructureTools::build));
         registry.addTool(new DevTool("structure_showcase", STRUCTURES, Component.literal("Showcase batch 1"),
                 "Pastes every batch-1 structure, each detail level side by side, in rows ahead of you (stand on flat ground"
                         + " with room: about 40 by 70). A legend goes to chat. Undo last paste removes it all.",
@@ -141,6 +153,42 @@ final class StructureTools {
         report(context, "Pasted %s level %d of %d [%s] going %s: blocks %s. Undo: /csr dev structure undo."
                 .formatted(meta.get().name(), level, meta.get().levelCount(), meta.get().levelFile(level), direction.getName(),
                         StructurePaster.describe(pasted.box())));
+        return 1;
+    }
+
+    /** A structure promoted from the Structure Studio (its files are in {@code kingdom/studio/}). */
+    static boolean isStudio(StructureMeta meta) {
+        return meta.isReady() && meta.structure() != null && meta.structure().getPath().startsWith("kingdom/studio/");
+    }
+
+    /** Sets up builders for one level of a structure ({@link DevScenarios#structureBuild}); default: the top level. */
+    private static int build(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        CommandSourceStack source = context.getSource();
+        ResourceLocation id = ResourceLocationArgument.getId(context, "structure");
+        Optional<StructureMeta> meta = StructureRegistry.get(source.getServer()).byId(id).filter(StructureMeta::isReady);
+        if (meta.isEmpty()) {
+            fail(context, "No ready structure " + id + ". /csr dev structure list shows them all.");
+            return 0;
+        }
+        int level;
+        try {
+            level = IntegerArgumentType.getInteger(context, "level");
+        } catch (IllegalArgumentException noLevel) {
+            level = meta.get().levelCount();
+        }
+        if (level > meta.get().levelCount()) {
+            fail(context, "%s has %d level(s).".formatted(meta.get().name(), meta.get().levelCount()));
+            return 0;
+        }
+        var player = source.getPlayerOrException();
+        DevScenarios.StructureBuildResult result = DevScenarios.structureBuild(source.getLevel(), player,
+                BlockPos.containing(source.getPosition()), player.getDirection(), meta.get(), level);
+        MaterialSupply.start(result.supply());
+        int stacks = result.materials().stream().mapToInt(stack -> (stack.getCount() + stack.getMaxStackSize() - 1) / stack.getMaxStackSize()).sum();
+        report(context, "Builders started on %s level %d of %d: easel at %s, chest at %s (%d stacks of materials%s; it is refilled as it empties)."
+                .formatted(meta.get().name(), level, meta.get().levelCount(), result.easel().getBlockPos().toShortString(),
+                        result.chest().getBlockPos().toShortString(), stacks,
+                        result.scaffold() ? ", incl. " + DevScenarios.STRUCTURE_SCAFFOLD_STOCK + " scaffolding: taller than builders reach" : ""));
         return 1;
     }
 
