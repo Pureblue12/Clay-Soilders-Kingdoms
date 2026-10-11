@@ -12,7 +12,7 @@
 </div>
 
 <p align="center">
-  <img src="docs/img/hero-keep.jpg" alt="The keep at level 3: a stone castle with towers, banners and a curtain wall on a wooded hill" width="100%">
+  <img src="docs/img/hero-soldiers.jpg" alt="Clay soldiers of several teams fighting in a sand arena" width="100%">
 </p>
 
 <p align="center">
@@ -34,8 +34,7 @@ Crown a king and the team founds a kingdom with a claim, a stockpile and a chron
 kingdoms that grow on their own: farms, villages, walls and a castle, and rivals that go to war with each other.
 
 <p align="center">
-  <img src="docs/img/battle.jpg" alt="Clay soldiers of several teams fighting in a sand arena" width="49%">
-  <img src="docs/img/equipment.jpg" alt="Clay soldiers wearing different equipment" width="49%">
+  <img src="docs/img/castle.jpg" alt="The keep at level 3: a stone castle with towers, banners and a curtain wall on a wooded hill" width="100%">
 </p>
 
 ## What works today
@@ -53,6 +52,10 @@ kingdoms that grow on their own: farms, villages, walls and a castle, and rivals
   and points to the best spot nearby.
 - **Tested.** More than 160 automated GameTests run on every push, and a separate run has builders put up
   every structure, every level, from scratch.
+
+<p align="center">
+  <img src="docs/img/equipment.jpg" alt="Clay soldiers wearing different equipment" width="70%">
+</p>
 
 ## The buildings
 
