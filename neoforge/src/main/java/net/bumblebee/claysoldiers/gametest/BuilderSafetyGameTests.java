@@ -257,6 +257,47 @@ public class BuilderSafetyGameTests {
         });
     }
 
+    /**
+     * BUG TEST (dropped into a pit): vanilla lets a mob drop up to 3 blocks into any cell, also into a 1x1 pit with
+     * 2-high walls on every side, where no path leads out (three keep builders, 15,000 ticks in a shaft of the keep's
+     * ground floor; D67). A soldier on the pit's rim planning a path to the pit's floor must not get one that ends in
+     * the pit. Its sibling: a pit one block deep is fine (the soldier hops out), so that path must reach.
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 100)
+    public static void soldierDoesNotDropIntoAPit(GameTestHelper helper) {
+        BlockPos pit = new BlockPos(8, ClaySoldierGameTests.GROUND_Y, 8);
+        BlockPos shallow = new BlockPos(3, ClaySoldierGameTests.GROUND_Y, 12);
+        ring(helper, pit, 2);
+        ring(helper, shallow, 1);
+        ServerLevel level = helper.getLevel();
+        ClaySoldierEntity onRim = bystander(helper, pit.west().above(2));
+        ClaySoldierEntity onLowRim = bystander(helper, shallow.west().above(1));
+        BlockPos pitAbsolute = helper.absolutePos(pit);
+        BlockPos shallowAbsolute = helper.absolutePos(shallow);
+        helper.runAfterDelay(5, () -> {
+            Path deep = onRim.getNavigation().createPath(pitAbsolute, 0);
+            helper.assertFalse(deep != null && deep.canReach() && deep.getEndNode() != null && deep.getEndNode().asBlockPos().equals(pitAbsolute),
+                    "BUG (dropped into a pit): the path ends in the 2-deep pit");
+            Path low = onLowRim.getNavigation().createPath(shallowAbsolute, 0);
+            helper.assertTrue(low != null && low.canReach() && low.getEndNode() != null && low.getEndNode().asBlockPos().equals(shallowAbsolute),
+                    "No path into the 1-deep pit, which the soldier can hop out of");
+            helper.succeed();
+        });
+    }
+
+    /** Cobblestone {@code height} high on the 8 cells around {@code center}, so {@code center} becomes a pit. */
+    private static void ring(GameTestHelper helper, BlockPos center, int height) {
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                if (dx != 0 || dz != 0) {
+                    for (int dy = 0; dy < height; dy++) {
+                        helper.setBlock(center.offset(dx, dy, dz), Blocks.COBBLESTONE);
+                    }
+                }
+            }
+        }
+    }
+
     /** A clay soldier of the builders' team standing still (no AI) at {@code pos}. */
     private static ClaySoldierEntity bystander(GameTestHelper helper, BlockPos pos) {
         return bystander(helper, pos, 0.5, 0.5);
