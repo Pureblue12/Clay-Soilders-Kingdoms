@@ -98,6 +98,8 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     private int repathTicks;
     /** The path search multiplier this goal last set (1 = normal). */
     private float pathSearchMultiplier = 1.0F;
+    /** Whether this builder's easel has scaffolding (set by {@link #updatePathSearch}). */
+    private boolean scaffoldBuild;
     /**
      * Tiny soldiers count a path as walked when they are within 0.675 blocks of its last block's center, which is often
      * still the block before it; placing is measured from the block they stand in. So after the path, the builder
@@ -194,6 +196,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
      */
     private void updatePathSearch() {
         boolean scaffold = easelPos != null && soldier.level() instanceof ServerLevel level && Scaffolds.hasJob(level, easelPos.pos());
+        scaffoldBuild = scaffold;
         int nodes = Tuning.BUILD_PATH_NODES_MULTIPLIER.get();
         int bonus = Tuning.BUILD_PATH_RANGE_BONUS.get();
         if (scaffold) {
@@ -407,7 +410,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             return false;
         }
         // With scaffolding, plan the route again every scaffold.repath_ticks: tiny soldiers climb floating steps better with fresh routes.
-        boolean repath = pathSearchMultiplier != 1.0F && ++repathTicks >= Tuning.SCAFFOLD_REPATH_TICKS.get();
+        boolean repath = scaffoldBuild && ++repathTicks >= Tuning.SCAFFOLD_REPATH_TICKS.get();
         if (this.soldier.getNavigation().isDone() || repath) {
             repathTicks = 0;
             if (!repath && pathEnd != null && !soldier.blockPosition().equals(pathEnd) && lastStepTicks++ < MAX_LAST_STEP_TICKS) {
