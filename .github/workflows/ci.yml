@@ -35,6 +35,12 @@ jobs:
       - name: GameTests and build
         run: tools/suite.sh
 
+      # Builder tests that end a few blocks short write "CSR stall report" lines (BuildStallReport): show them here, so
+      # they can be read without downloading the logs.
+      - name: Stall reports
+        if: failure()
+        run: grep -E "CSR stall report" build/suite.log | sed -E 's/.*CSR stall report //' | head -1500 || echo "no stall reports"
+
       - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
