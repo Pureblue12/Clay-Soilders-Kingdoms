@@ -5,6 +5,7 @@ import com.mojang.logging.LogUtils;
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
+import net.bumblebee.claysoldiers.entity.goal.workgoal.FallTrace;
 import net.bumblebee.claysoldiers.tuning.Tuning;
 import net.bumblebee.claysoldiers.capability.AssignablePoiCapability;
 import net.bumblebee.claysoldiers.capability.ThrowableItemCapability;
@@ -201,6 +202,7 @@ public class AbstractClaySoldierEntity extends ClayMobTeamOwnerEntity implements
             if (workSelector.isWorking()) {
                 float multiplier = Tuning.WORK_FALL_DAMAGE_PERCENT.get() / 100f;
                 DebugLog.event(DebugCategory.DAMAGE, this, "fall damage while working: %s%% of vanilla's", Tuning.WORK_FALL_DAMAGE_PERCENT.get());
+                FallTrace.report(this);
                 return multiplier;
             }
             return w ? 75 : 100;

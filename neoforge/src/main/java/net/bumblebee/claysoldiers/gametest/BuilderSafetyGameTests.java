@@ -2,11 +2,14 @@ package net.bumblebee.claysoldiers.gametest;
 
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.blueprint.BlueprintData;
+import net.bumblebee.claysoldiers.debug.DebugCategory;
+import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.dev.DevScenarios;
 import net.bumblebee.claysoldiers.entity.soldier.ClaySoldierEntity;
 import net.bumblebee.claysoldiers.init.ModEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.gametest.framework.AfterBatch;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
@@ -56,6 +59,28 @@ public class BuilderSafetyGameTests {
             helper.assertTrue(soldier.isAlive(), "BUG (fall death): the working builder died from a 6-block fall");
             helper.assertTrue(soldier.onGround(), "The builder has not landed yet");
             helper.assertTrue(soldier.getHealth() < soldier.getMaxHealth(), "The fall did not hurt the builder at all");
+            helper.succeed();
+        });
+    }
+
+    /**
+     * While DAMAGE is recorded, a working builder's fall writes a "fall trace" event: where it was each tick before the
+     * fall and the route it followed (town hall builders fell at one spot until they died, and no event said from
+     * where).
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 200, batch = "fall_trace")
+    public static void fallOfAWorkingBuilderIsTraced(GameTestHelper helper) {
+        DebugLog.reset();
+        DebugLog.setEnabled(DebugCategory.DAMAGE, true, helper.getLevel().getServer());
+        BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "fall_trace", 1, 1, 1, BlockPos.ZERO);
+        ClaySoldierGameTests.Builder builder = ClaySoldierGameTests.setUpBuilder(helper, blueprint, List.of(new ItemStack(Items.COBBLESTONE)));
+        ClaySoldierEntity soldier = builder.soldier();
+        BlockPos top = helper.absolutePos(SOLDIER).above(6);
+        helper.runAfterDelay(20, () -> soldier.teleportTo(top.getX() + 0.5, top.getY(), top.getZ() + 0.5));
+        helper.runAfterDelay(100, () -> {
+            helper.assertTrue(soldier.isAlive(), "The builder died");
+            helper.assertTrue(DebugLog.contains(DebugCategory.DAMAGE, "fall trace (last "), "No 'fall trace' DAMAGE event after the fall");
+            DebugLog.reset();
             helper.succeed();
         });
     }
@@ -296,6 +321,11 @@ public class BuilderSafetyGameTests {
                 }
             }
         }
+    }
+
+    @AfterBatch(batch = "fall_trace")
+    public static void stopRecording(ServerLevel level) {
+        DebugLog.reset();
     }
 
     /** A clay soldier of the builders' team standing still (no AI) at {@code pos}. */

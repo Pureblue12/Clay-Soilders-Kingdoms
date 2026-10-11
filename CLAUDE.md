@@ -339,7 +339,8 @@ add one with `DebugCategory.register` and it gets commands and book buttons auto
 Commands/buttons: `common/.../dev/RecorderTools`; action-bar indicator: `neoforge/.../event/RecorderIndicator`
 (registered only in dev). Ring buffer default 5000 events (`/csr dev log capacity`).
 State lives in memory only: it resets when the game restarts (not when you just re-join a world).
-Instrumented so far: `BuildBlueprintGoal`, `ServerBlueprintPlan.getRequest` (summary),
+Instrumented so far: `BuildBlueprintGoal` (incl. `FallTrace`: while DAMAGE is on, every builder's position each tick and
+its route are kept for 3 s, and a fall writes them as one DAMAGE event "fall trace"), `ServerBlueprintPlan.getRequest` (summary),
 `BlueprintBlockInfo` (stale requests, placement cooldown), `BuilderReach` and `UseDoorGoal`
 (PATHING), `AbstractClaySoldierEntity.hurt` (DAMAGE), `WorkSelectorGoal.setWorkMode` (WORK).
 TEAM has no events yet.
