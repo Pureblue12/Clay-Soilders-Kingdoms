@@ -83,7 +83,7 @@ with a builder, D70). The test area
 (`gametest/structure_build.nbt`, 48x24x48) has a grass floor. The required test `buildListMatchesRegistry` keeps the
 list in `StructureBuildGameTests.STRUCTURES` in step with the registry: add a row when a structure is promoted.
 
-Current status (2026-10-04, after stage 3 Tall construction spike and its in-game fixes D41, D42): all 171 required tests pass (the suite takes a few
+Current status (2026-10-04, after stage 3 Tall construction spike and its in-game fixes D41, D42): all 173 required tests pass (the suite takes a few
 minutes: the scaffold tests build whole towers and the Small House). `SuspectedBugGameTests` covers the easel right-click:
 non-block item, unneeded block, needed block.
 
@@ -139,7 +139,9 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
     `soldierWalksOverClosedTrapdoors`). They also fell through the tops of fences, walls and panes, which vanilla counts
     as floors though a tiny soldier misses the post: those cells have no floor for soldiers (`DoorPathing.withoutThinBlockFloors`,
     D68; `soldierDoesNotStandOnAFenceTop`). Off their paths (a hop that overshoots, a cut corner) they walked off ledges: a working soldier
-    backs off from an edge with no floor within 3.5 below (`EdgeGuard`, D70; `workingBuilderDoesNotStepOffALedge`). Still open (not confirmed why): keep L2 builders also die at one spot in the
+    backs off from an edge with no floor within 3.5 below (`EdgeGuard`, D70; `workingBuilderDoesNotStepOffALedge`). A builder
+    that finds no way to its target for `build.stranded_ticks` is put beside its chest (`Stranded`, D72;
+    `strandedBuilderIsBroughtBack`). Still open (not confirmed why): keep L2 builders also die at one spot in the
     forecourt, 2.0 per fall, after placing on the upper floor, with no trapdoor placed yet; needs a PATHING recording.
   - A cottage builder stood inside a fence post (the lantern post) for 9,200 ticks (suite run 38128880972): a tiny
     soldier fits beside the post, so the fence was placed around it, and vanilla then starts every path in a cell the

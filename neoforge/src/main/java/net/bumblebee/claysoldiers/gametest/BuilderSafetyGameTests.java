@@ -257,6 +257,23 @@ public class BuilderSafetyGameTests {
         });
     }
 
+    /**
+     * BUG TEST (stranded up high): a builder on top of a 4-high pillar has no way down (the drop is deadly, so it may not
+     * take it) and its block to place is on the ground. It must be brought back beside its chest and finish the build
+     * (keep and town hall builders stood on their upper floors with one-node paths for 30,000 ticks; D72).
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 2400)
+    public static void strandedBuilderIsBroughtBack(GameTestHelper helper) {
+        BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "stranded", 1, 1, 1, BlockPos.ZERO);
+        ClaySoldierEntity soldier = ClaySoldierGameTests.setUpBuilder(helper, blueprint, List.of(new ItemStack(Items.COBBLESTONE))).soldier();
+        BlockPos top = helper.absolutePos(pillar(helper, 9, 11, 9, 11));
+        soldier.teleportTo(top.getX() + 0.5, top.getY(), top.getZ() + 0.5);
+        helper.succeedWhen(() -> {
+            helper.assertTrue(soldier.isAlive(), "The builder died");
+            helper.assertBlockPresent(Blocks.COBBLESTONE, SPOT.above());
+        });
+    }
+
     /** A cobblestone pillar from the ground up to y 5 (relative) over x0..x1, z0..z1; returns the standing spot on top (its west end). */
     private static BlockPos pillar(GameTestHelper helper, int x0, int x1, int z0, int z1) {
         for (int x = x0; x <= x1; x++) {

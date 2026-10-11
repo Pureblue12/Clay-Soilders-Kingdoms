@@ -322,7 +322,13 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
      * records where it is and what its route looks like (BUILD), so a trapped or floating builder shows in the log.
      */
     private void notArrived(String doing, @Nullable BlockPos target) {
-        if (++stuckTicks % STUCK_LOG_TICKS != 0) {
+        ++stuckTicks;
+        int strandedTicks = Tuning.BUILD_STRANDED_TICKS.get();
+        if (strandedTicks > 0 && stuckTicks >= strandedTicks && Stranded.noWay(soldier) && Stranded.bringBack(soldier, getPoiPos(), stuckTicks)) {
+            stuckTicks = 0;
+            return;
+        }
+        if (stuckTicks % STUCK_LOG_TICKS != 0) {
             return;
         }
         int ticks = stuckTicks;
