@@ -58,7 +58,7 @@ import java.util.stream.Collectors;
 @GameTestHolder(ClaySoldiersCommon.MOD_ID)
 @PrefixGameTestTemplate(false)
 public class StructureBuildGameTests {
-    /** 48 by 24 by 48: room for the keep (31 by 33) behind the easel, scaffold around it. */
+    /** 48 by 24 by 48 with a grass floor (flowers and plants on the bottom layer need it): room for the keep (31 by 33) behind the easel. */
     static final String TEMPLATE = ClaySoldiersCommon.MOD_ID + ":gametest/structure_build";
     /** A build whose remaining blocks and scaffold don't change for this long fails (the rest would only time out). */
     static final int STALL_TICKS = 6000;

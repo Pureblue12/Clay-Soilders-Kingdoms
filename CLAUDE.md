@@ -78,7 +78,8 @@ them in its "Stall reports" step. GitHub's machines are slower: the one wall-clo
 (writes `build/structure-results.tsv`) or the GitHub workflow "Structure builds" (`.github/workflows/structure-builds.yml`,
 4 shards, a result table per structure in the run summary; runs when structure files or the test change, or by hand).
 A build fails at once after 6000 ticks without progress, with a stall report. The chest is kept stocked by
-`dev/MaterialSupply` (most structures need more than 27 stacks). The required test `buildListMatchesRegistry` keeps the
+`dev/MaterialSupply` (most structures need more than 27 stacks; it stocks the items the easel hands out next). The test area
+(`gametest/structure_build.nbt`, 48x24x48) has a grass floor. The required test `buildListMatchesRegistry` keeps the
 list in `StructureBuildGameTests.STRUCTURES` in step with the registry: add a row when a structure is promoted.
 
 Current status (2026-10-04, after stage 3 Tall construction spike and its in-game fixes D41, D42): all 168 required tests pass (the suite takes a few

@@ -3,6 +3,7 @@ package net.bumblebee.claysoldiers.dev;
 import net.bumblebee.claysoldiers.block.blueprint.EaselBlockEntity;
 import net.bumblebee.claysoldiers.blueprint.BlueprintData;
 import net.bumblebee.claysoldiers.blueprint.site.BuildSitePlanner;
+import net.bumblebee.claysoldiers.blueprint.templates.ServerBlueprintPlan;
 import net.bumblebee.claysoldiers.entity.goal.workgoal.BuildBlueprintGoal;
 import net.bumblebee.claysoldiers.entity.goal.workgoal.BuilderReach;
 import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
@@ -134,7 +135,9 @@ public final class DevScenarios {
         }
         ChestBlockEntity chest = placeChest(level, chestPos, List.of());
         EaselBlockEntity easel = placeEasel(level, easelPos, forward.getOpposite(), blueprint);
-        MaterialSupply supply = new MaterialSupply(level, chestPos, materials, () -> easel.isRemoved() || easel.isFinished());
+        MaterialSupply supply = new MaterialSupply(level, chestPos, materials,
+                () -> easel.getPlan() instanceof ServerBlueprintPlan plan ? plan.remainingItems() : List.of(),
+                () -> easel.isRemoved() || easel.isFinished());
         supply.restock();
         List<ClaySoldierEntity> soldiers = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
