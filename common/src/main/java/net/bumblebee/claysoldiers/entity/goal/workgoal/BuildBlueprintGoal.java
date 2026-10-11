@@ -63,6 +63,14 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     public static final int RETRY_COOLDOWN_RANDOM = 20;
     private int retryCooldown = 0;
     /**
+     * When a soldier is in the way of placing (standing in the spot, beside a fence the block would connect to, or it
+     * would be walled in; D64), the builder keeps the block and tries again after this many ticks instead of carrying
+     * it back to storage and asking again (a round trip of 50 or more ticks per fence of a farm). The give-up timer
+     * ({@link #MAX_CARRY_TICKS}) keeps running, so a soldier that never moves still ends the request.
+     */
+    public static final int SOLDIER_IN_THE_WAY_RETRY_TICKS = 20;
+    private int placeWait = 0;
+    /**
      * The reachability test handed to the easel; it also tells scaffold planning where this builder comes from (its
      * storage), since walking distances are measured from there.
      */
@@ -186,6 +194,8 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             if (carryTicks == MAX_CARRY_TICKS / 2) DebugLog.event(DebugCategory.BUILD, soldier, "still working on %s at %s after %s ticks", request.getItem(), request.getPos(), carryTicks);
             if (++carryTicks > MAX_CARRY_TICKS) {
                 giveUpRequest();
+            } else if (placeWait > 0) {
+                placeWait--;
             } else if (moveToRequest()) {
                 placeBlock();
             }
@@ -254,6 +264,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         request = null;
         bringBack = !soldier.getCarriedStack().isEmpty();
         carryTicks = 0;
+        placeWait = 0;
     }
 
     private boolean returnCarried() {
@@ -376,6 +387,10 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                     bringBack = true;
                 }
                 request.setFinished();
+            } else if (request.takeSoldierInTheWay()) {
+                DebugLog.event(DebugCategory.BUILD, soldier, "soldier in the way of %s at %s, trying again in %s ticks", request.getItem(), request.getPos(), SOLDIER_IN_THE_WAY_RETRY_TICKS);
+                placeWait = SOLDIER_IN_THE_WAY_RETRY_TICKS;
+                return;
             } else {
                 DebugLog.event(DebugCategory.BUILD, soldier, "could not place %s at %s (spot not free?), returning it", request.getItem(), request.getPos());
                 bringBack = true;
@@ -485,6 +500,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             request.cancel();
         }
         stuckTicks = 0;
+        placeWait = 0;
         climber.reset();
         if (pathSearchMultiplier != 1.0F) {
             pathSearchMultiplier = 1.0F;

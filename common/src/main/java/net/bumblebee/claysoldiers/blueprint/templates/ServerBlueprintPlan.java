@@ -149,6 +149,7 @@ public class ServerBlueprintPlan extends BlueprintPlan {
             Placement placement = placeBlock(itemStack, level, pos, updatedBlockInfo.state().mirror(settings.mirror()).rotate(settings.rotation()));
             if (placement == Placement.SOLDIER_IN_THE_WAY) {
                 blockInfo.soldierInTheWay(level.getGameTime(), pos);
+                request.setSoldierInTheWay();
                 return PlaceResult.CANT_PLACE;
             }
             if (placement != Placement.PLACED) {
