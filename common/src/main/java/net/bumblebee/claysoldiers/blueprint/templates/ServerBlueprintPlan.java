@@ -6,7 +6,9 @@ import net.bumblebee.claysoldiers.blueprint.ReachOrigin;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.tuning.Tuning;
+import net.bumblebee.claysoldiers.entity.ClayMobEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.Registries;
@@ -178,9 +180,16 @@ public class ServerBlueprintPlan extends BlueprintPlan {
             return false;
         }
         if (creatureInside(level, pos)) {
-            // A soldier (or another creature) stands in the spot: a full block placed into it would suffocate it, as it
-            // did to builders at the entrance of the keep (D63). Vanilla refuses such placements too.
+            // A soldier (or another creature) stands in the spot: the block would be placed into it (church builders
+            // ended up inside cobblestone walls and window panes, stuck for good, D64). Vanilla refuses this too.
             DebugLog.event(DebugCategory.BUILD, null, "not placed at %s: a creature stands there", pos);
+            return false;
+        }
+        ClayMobEntity trapped = wouldTrap(level, pos, state);
+        if (trapped != null) {
+            // The block would close the last way out of the cell a soldier stands in (keep builders walled themselves
+            // into a 1x1 shaft of the blueprint, D64). The block cools down; the soldier moves on; someone places it later.
+            DebugLog.event(DebugCategory.BUILD, trapped, "not placed at %s: it would trap this soldier", pos);
             return false;
         }
         if (level.setBlock(pos, state, 3)) {
@@ -198,6 +207,47 @@ public class ServerBlueprintPlan extends BlueprintPlan {
     public static boolean creatureInside(Level level, BlockPos pos) {
         return !level.getEntitiesOfClass(LivingEntity.class, new AABB(pos), creature -> creature.isAlive()
                 && (creature.blockPosition().equals(pos) || BlockPos.containing(creature.getEyePosition()).equals(pos))).isEmpty();
+    }
+
+    /**
+     * The clay soldier next to {@code pos} that {@code state} placed there would trap: it stands in a cell it can
+     * leave now (walk or drop out sideways, or hop up one block) and could not leave any more. Null when there is none.
+     */
+    @Nullable
+    public static ClayMobEntity wouldTrap(Level level, BlockPos pos, BlockState state) {
+        if (state.getCollisionShape(level, pos).isEmpty()) {
+            return null;
+        }
+        for (ClayMobEntity soldier : level.getEntitiesOfClass(ClayMobEntity.class, new AABB(pos).inflate(1), LivingEntity::isAlive)) {
+            BlockPos feet = soldier.blockPosition();
+            if (feet.equals(pos) || feet.above().equals(pos)) {
+                continue; // creatureInside
+            }
+            if (hasExit(level, feet, null) && !hasExit(level, feet, pos)) {
+                return soldier;
+            }
+        }
+        return null;
+    }
+
+    /** Whether a soldier standing at {@code feet} can leave its cell sideways, with {@code placed} counted as a block. */
+    private static boolean hasExit(Level level, BlockPos feet, @Nullable BlockPos placed) {
+        for (Direction side : Direction.Plane.HORIZONTAL) {
+            BlockPos next = feet.relative(side);
+            boolean nextFeet = open(level, next, placed);
+            boolean nextHead = open(level, next.above(), placed);
+            if (nextFeet && nextHead) {
+                return true; // walk (or drop)
+            }
+            if (!nextFeet && nextHead && open(level, next.above(2), placed) && open(level, feet.above(2), placed)) {
+                return true; // hop up one block
+            }
+        }
+        return false;
+    }
+
+    private static boolean open(Level level, BlockPos pos, @Nullable BlockPos placed) {
+        return !pos.equals(placed) && level.getBlockState(pos).getCollisionShape(level, pos).isEmpty();
     }
 
     /**

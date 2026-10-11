@@ -37,7 +37,7 @@ Starts a headless test server, runs every test in
 `DoorGameTests`, `TuningGameTests`, `StructureRegistryGameTests`, `StructurePasteGameTests`,
 `LayoutCheckerGameTests`, `KingdomDataGameTests`, `KingdomGameTests`, `KingdomBookGameTests`, `KingdomBookRefreshGameTests`, `TerrainScoreGameTests`, `TerrainScanGameTests`,
 `TerrainGradingGameTests`, `TerrainFoundingGameTests`, `ScaffoldPlannerGameTests`, `ScaffoldBuildGameTests`,
-`ScaffoldCleanupGameTests`, `StructureBuildGameTests`), prints
+`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Templates: `data/csr/structure/gametest/platform.nbt` (16x8x16) and `terrain.nbt` (32x16x32, for test terrains);
@@ -117,6 +117,16 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
     instead of #149 (`jigsawBlocksSortWithTheirGroup`).
   - Door locked builders out: doors are handed out last (`doorDoesNotLockOutBuilders`); while BUILD is
     recorded, builders log why blocks are unreachable, incl. "closed door in the way at (x, y, z)".
+- Fixed (from the structure build run 38120112603 with damage recording, `BuilderSafetyGameTests`, D63, D64):
+  - Builders died walking off the upper floors they had built (keep, town hall): upstream multiplies fall damage by
+    100 like any environmental damage, so a 4-block drop killed. A working soldier now takes vanilla fall damage
+    (`work.fall_damage_percent`), recorded in DAMAGE (`workingBuilderSurvivesAFall`).
+  - Blocks were placed into builders (church: cobblestone walls, window panes), leaving them stuck inside. The easel
+    refuses a spot a living creature stands in, and a builder never places into its own cell
+    (`blockIsNotPlacedIntoASoldier`).
+  - Builders walled themselves into a 1x1 shaft of the keep. The easel refuses a block that would close the last way
+    out of the cell a soldier stands in next to it (`ServerBlueprintPlan.wouldTrap`; `blockDoesNotTrapASoldier`).
+    Refused blocks cool down like any failed placement and get placed once the soldier has moved.
 - Fixed (door race): doors-last only ordered the list, so a door could be handed out while other blocks were
   still being carried (a glass pane got locked out in the 08:03 recording). Now `ServerBlueprintPlan.getRequest`
   hands out a door only when no other (non-door) block with a free spot remains; doors don't wait for each
@@ -234,6 +244,10 @@ Pending (not started):
   `DoorAccess` war-milestone change. Fence gates aren't opened. Doors opened by soldiers are remembered in
   memory only (after a restart a door a soldier left open counts as opened by a player and stays open).
 - Blocks more than 8 above any reachable standing spot stay unbuilt (by design of `MAX_PLACE_HEIGHT`).
+- Scaffold columns only stand outside the structure's footprint, so a roof block more than 2 blocks inside the
+  footprint and above reach from the structure's own floors (the chapel steeple's cap, the cathedral) never gets
+  built: the planner reports it unreachable and the builders wait. Needs columns on the structure's floors (planner
+  and `Scaffolds.plan`), not started.
 - A blueprint block that is already there and replaceable (e.g. short grass where short grass grows) counts
   as free but can never be placed (placing the same block fails), so the blueprint never finishes; the
   cooldown only stops it from starving the rest. Not confirmed in game; not fixed.

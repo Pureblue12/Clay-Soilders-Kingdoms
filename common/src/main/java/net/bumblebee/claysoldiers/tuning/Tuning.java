@@ -113,6 +113,8 @@ public final class Tuning {
             "While a builder works for a build, every path it walks (to a standing spot, back to the easel, to its chest) may be this many blocks longer than its follow range (16) allows (vanilla rejects longer paths and counts the walked length generously: a 20-step walk around a wall measured over 32; the way around a big building, back to the easel, is longer than 16). Combat and paths outside building work keep the normal limit; builds with scaffolding use the larger of this and scaffold.path_range_bonus.", 48, 0, 64));
     public static final TuningKey.IntKey BUILD_PATH_NODES_MULTIPLIER = register(new TuningKey.IntKey("build.path_nodes_multiplier",
             "While a builder works for a build, its path searches may look at this many times more steps (vanilla: 256).", 4, 1, 16));
+    public static final TuningKey.IntKey WORK_FALL_DAMAGE_PERCENT = register(new TuningKey.IntKey("work.fall_damage_percent",
+            "Fall damage to a soldier that is working (building, digging, farming), in percent of vanilla's (a fall of 4 blocks costs half a heart). Upstream multiplies every environmental damage by 100, so a 4-block drop kills; builders working on upper floors fell off and died on every tall build. 10000 restores that.", 100, 0, 10000));
     public static final TuningKey.IntKey SCAFFOLD_COLUMNS_FIRST = register(new TuningKey.IntKey("scaffold.columns_first",
             "1: once builders start putting up a build's scaffolding (nothing else in reach), they put all of it up before working above reach; 0: they raise it a level at a time, whenever nothing else is in reach.", 1, 0, 1));
     public static final TuningKey.BlockKey SCAFFOLD_MATERIAL = register(new TuningKey.BlockKey("scaffold.material",
