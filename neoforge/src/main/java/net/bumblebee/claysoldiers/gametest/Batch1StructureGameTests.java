@@ -47,6 +47,8 @@ public class Batch1StructureGameTests {
     static final String TEMPLATE = ClaySoldiersCommon.MOD_ID + ":gametest/terrain";
     /** Build time may differ from the doc's estimate by this much (fraction of the estimate). */
     static final double TIME_TOLERANCE = 0.5;
+    /** The least deviation from the estimate a build may have (ticks): a builder's break alone takes longer than a tiny build. */
+    static final long MIN_TIME_SLACK = 100;
     /**
      * The doc's build-time model (docs/STRUCTURES.md, rule 4, D63): with 3 builders, a block within reach takes this many
      * ticks per block of the structure's width plus depth (builders walk farther on bigger footprints). For the Small
@@ -271,9 +273,14 @@ public class Batch1StructureGameTests {
                     + (fidelity.checked() - fidelity.matching()) + " positions, first: " + fidelity.firstWrong());
             // The well's 1x1 shaft is a standing spot builders like; since D64 the blocks that would wall a builder in
             // there wait until it leaves (396 ticks for L3 on CI, estimate 235), so the well gets twice the tolerance.
-            double tolerance = entry.path().equals("well") ? 2 * TIME_TOLERANCE : TIME_TOLERANCE;
-            helper.assertTrue(Math.abs(ticks - estimate) <= estimate * tolerance,
-                    "build took " + ticks + " ticks, the doc estimates " + estimate + " (allowed ±" + Math.round(tolerance * 100) + " %)");
+            // The farm is fences: since D64/D66 a fence beside a soldier waits until it has moved, and a builder beside
+            // a post is put out first (farm L3 2,705 ticks on CI, estimate 1,792; L2 2,018 against 1,232). A tiny build
+            // (the bench: 14 ticks) also gets a floor of MIN_TIME_SLACK ticks, since one break (86 ticks on CI) is
+            // longer than the whole build.
+            double tolerance = entry.path().equals("well") || entry.path().equals("farm") ? 2 * TIME_TOLERANCE : TIME_TOLERANCE;
+            long allowed = Math.max(Math.round(estimate * tolerance), MIN_TIME_SLACK);
+            helper.assertTrue(Math.abs(ticks - estimate) <= allowed,
+                    "build took " + ticks + " ticks, the doc estimates " + estimate + " (allowed ±" + allowed + " ticks)");
         });
     }
 

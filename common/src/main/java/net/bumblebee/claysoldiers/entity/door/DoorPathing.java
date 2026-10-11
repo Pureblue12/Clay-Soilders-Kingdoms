@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.navigation.AmphibiousPathNavigation;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
@@ -131,9 +132,51 @@ public final class DoorPathing {
         return mob.level().noCollision(mob, mob.getBoundingBox().expandTowards(dx, 0, dz));
     }
 
-    /** Both soldier rules on vanilla's answer. */
+    /**
+     * Vanilla lets a mob drop up to 3 blocks into any cell, also into a 1x1 pit it can never leave: three keep builders
+     * ended in a shaft of the keep's ground floor, walled 2 high on every side, for 15,000 ticks (structure build run
+     * 38129993219, keep L3; the easel already refuses to wall a soldier in, D64, so they dropped in). A cell with no way
+     * out sideways (no open neighbour, no door, no block to hop onto) is blocked to the pathfinder (D67). The cell a
+     * soldier already stands in is not checked here: it is the path's start, and {@link #startOutsideABlockedCell}
+     * handles that.
+     */
+    static PathType withoutPits(PathfindingContext context, int x, int y, int z, PathType type) {
+        if (type != PathType.WALKABLE) {
+            return type;
+        }
+        return hasExit(context.level(), new BlockPos(x, y, z)) ? type : PathType.BLOCKED;
+    }
+
+    /**
+     * Whether a soldier standing with its feet at {@code feet} can leave the cell sideways: walk or drop into an open
+     * neighbour, go through a door, or hop onto a one-block step. The same rule as the easel's
+     * {@code ServerBlueprintPlan.hasExit}, with doors counted as open.
+     */
+    static boolean hasExit(BlockGetter level, BlockPos feet) {
+        for (Direction side : Direction.Plane.HORIZONTAL) {
+            BlockPos next = feet.relative(side);
+            if (level.getBlockState(next).getBlock() instanceof DoorBlock) {
+                return true;
+            }
+            boolean nextFeet = open(level, next);
+            boolean nextHead = open(level, next.above());
+            if (nextFeet && nextHead) {
+                return true; // walk (or drop)
+            }
+            if (!nextFeet && nextHead && open(level, next.above(2)) && open(level, feet.above(2))) {
+                return true; // hop up one block
+            }
+        }
+        return false;
+    }
+
+    private static boolean open(BlockGetter level, BlockPos pos) {
+        return level.getBlockState(pos).getCollisionShape(level, pos).isEmpty();
+    }
+
+    /** All soldier rules on vanilla's answer. */
     static PathType soldierRules(@Nullable Mob mob, PathfindingContext context, int x, int y, int z, PathType type) {
-        return withDoorAccess(mob, context, x, y, z, withoutOpenTrapdoorFloors(context, x, y, z, type));
+        return withDoorAccess(mob, context, x, y, z, withoutPits(context, x, y, z, withoutOpenTrapdoorFloors(context, x, y, z, type)));
     }
 
     /**

@@ -2,11 +2,14 @@ package net.bumblebee.claysoldiers.gametest;
 
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.blueprint.BlueprintData;
+import net.bumblebee.claysoldiers.debug.DebugCategory;
+import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.dev.DevScenarios;
 import net.bumblebee.claysoldiers.entity.soldier.ClaySoldierEntity;
 import net.bumblebee.claysoldiers.init.ModEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.gametest.framework.AfterBatch;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
@@ -56,6 +59,28 @@ public class BuilderSafetyGameTests {
             helper.assertTrue(soldier.isAlive(), "BUG (fall death): the working builder died from a 6-block fall");
             helper.assertTrue(soldier.onGround(), "The builder has not landed yet");
             helper.assertTrue(soldier.getHealth() < soldier.getMaxHealth(), "The fall did not hurt the builder at all");
+            helper.succeed();
+        });
+    }
+
+    /**
+     * While DAMAGE is recorded, a working builder's fall writes a "fall trace" event: where it was each tick before the
+     * fall and the route it followed (town hall builders fell at one spot until they died, and no event said from
+     * where).
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 200, batch = "fall_trace")
+    public static void fallOfAWorkingBuilderIsTraced(GameTestHelper helper) {
+        DebugLog.reset();
+        DebugLog.setEnabled(DebugCategory.DAMAGE, true, helper.getLevel().getServer());
+        BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "fall_trace", 1, 1, 1, BlockPos.ZERO);
+        ClaySoldierGameTests.Builder builder = ClaySoldierGameTests.setUpBuilder(helper, blueprint, List.of(new ItemStack(Items.COBBLESTONE)));
+        ClaySoldierEntity soldier = builder.soldier();
+        BlockPos top = helper.absolutePos(SOLDIER).above(6);
+        helper.runAfterDelay(20, () -> soldier.teleportTo(top.getX() + 0.5, top.getY(), top.getZ() + 0.5));
+        helper.runAfterDelay(100, () -> {
+            helper.assertTrue(soldier.isAlive(), "The builder died");
+            helper.assertTrue(DebugLog.contains(DebugCategory.DAMAGE, "fall trace (last "), "No 'fall trace' DAMAGE event after the fall");
+            DebugLog.reset();
             helper.succeed();
         });
     }
@@ -255,6 +280,61 @@ public class BuilderSafetyGameTests {
             helper.assertFalse(soldier.blockPosition().equals(at), "BUG (penned in a pocket): the builder is still in the fence cell");
             helper.assertBlockPresent(Blocks.COBBLESTONE, SPOT);
         });
+    }
+
+    /**
+     * BUG TEST (dropped into a pit): vanilla lets a mob drop up to 3 blocks into any cell, also into a 1x1 pit with
+     * 2-high walls on every side, where no path leads out (three keep builders, 15,000 ticks in a shaft of the keep's
+     * ground floor; D67). A soldier on the pit's rim planning a path to the pit's floor must not get one that ends in
+     * the pit. Its sibling: a pit one block deep is fine (the soldier hops out), so that path must reach.
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 100)
+    public static void soldierDoesNotDropIntoAPit(GameTestHelper helper) {
+        BlockPos pit = new BlockPos(8, ClaySoldierGameTests.GROUND_Y, 8);
+        BlockPos shallow = new BlockPos(3, ClaySoldierGameTests.GROUND_Y, 12);
+        ring(helper, pit, 2);
+        ring(helper, shallow, 1);
+        ServerLevel level = helper.getLevel();
+        // with AI: a soldier without AI never lands (no gravity), and vanilla plans no path for a mob in the air
+        ClaySoldierEntity onRim = walker(helper, pit.west().above(2));
+        ClaySoldierEntity onLowRim = walker(helper, shallow.west().above(1));
+        BlockPos pitAbsolute = helper.absolutePos(pit);
+        BlockPos shallowAbsolute = helper.absolutePos(shallow);
+        helper.runAfterDelay(5, () -> {
+            helper.assertTrue(onRim.onGround() && onLowRim.onGround(), "The soldiers have not landed on the rims");
+            Path deep = onRim.getNavigation().createPath(pitAbsolute, 0);
+            helper.assertFalse(deep != null && deep.canReach() && deep.getEndNode() != null && deep.getEndNode().asBlockPos().equals(pitAbsolute),
+                    "BUG (dropped into a pit): the path ends in the 2-deep pit");
+            Path low = onLowRim.getNavigation().createPath(shallowAbsolute, 0);
+            helper.assertTrue(low != null && low.canReach() && low.getEndNode() != null && low.getEndNode().asBlockPos().equals(shallowAbsolute),
+                    "No path into the 1-deep pit, which the soldier can hop out of");
+            helper.succeed();
+        });
+    }
+
+    /** Cobblestone {@code height} high on the 8 cells around {@code center}, so {@code center} becomes a pit. */
+    private static void ring(GameTestHelper helper, BlockPos center, int height) {
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                if (dx != 0 || dz != 0) {
+                    for (int dy = 0; dy < height; dy++) {
+                        helper.setBlock(center.offset(dx, dy, dz), Blocks.COBBLESTONE);
+                    }
+                }
+            }
+        }
+    }
+
+    @AfterBatch(batch = "fall_trace")
+    public static void stopRecording(ServerLevel level) {
+        DebugLog.reset();
+    }
+
+    /** A clay soldier of the builders' team with its AI, standing at {@code pos} (it lands, and can plan paths). */
+    private static ClaySoldierEntity walker(GameTestHelper helper, BlockPos pos) {
+        ClaySoldierEntity soldier = bystander(helper, pos);
+        soldier.setNoAi(false);
+        return soldier;
     }
 
     /** A clay soldier of the builders' team standing still (no AI) at {@code pos}. */

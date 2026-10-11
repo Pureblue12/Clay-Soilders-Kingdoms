@@ -145,6 +145,10 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
     corner pocket between the post and two arms (farm L2/L3 on CI, 4,000 ticks with a path it could never start), a
     builder is put out onto the nearest free spot beside the cell (`OffTheFence`, BUILD event;
     `builderInAFencePocketGetsOut`).
+  - Keep L3 builders stood in a 1x1 shaft of the keep's ground floor, cobblestone 2 high all around, for 15,000 ticks
+    (structure build run 38129993219): vanilla's pathfinder drops a mob up to 3 blocks into any cell, pits included.
+    The soldiers' pathfinder blocks every cell without a way out sideways (`DoorPathing.withoutPits`, D67;
+    `soldierDoesNotDropIntoAPit`).
 - Fixed (door race): doors-last only ordered the list, so a door could be handed out while other blocks were
   still being carried (a glass pane got locked out in the 08:03 recording). Now `ServerBlueprintPlan.getRequest`
   hands out a door only when no other (non-door) block with a free spot remains; doors don't wait for each
@@ -335,7 +339,8 @@ add one with `DebugCategory.register` and it gets commands and book buttons auto
 Commands/buttons: `common/.../dev/RecorderTools`; action-bar indicator: `neoforge/.../event/RecorderIndicator`
 (registered only in dev). Ring buffer default 5000 events (`/csr dev log capacity`).
 State lives in memory only: it resets when the game restarts (not when you just re-join a world).
-Instrumented so far: `BuildBlueprintGoal`, `ServerBlueprintPlan.getRequest` (summary),
+Instrumented so far: `BuildBlueprintGoal` (incl. `FallTrace`: while DAMAGE is on, every builder's position each tick and
+its route are kept for 3 s, and a fall writes them as one DAMAGE event "fall trace"), `ServerBlueprintPlan.getRequest` (summary),
 `BlueprintBlockInfo` (stale requests, placement cooldown), `BuilderReach` and `UseDoorGoal`
 (PATHING), `AbstractClaySoldierEntity.hurt` (DAMAGE), `WorkSelectorGoal.setWorkMode` (WORK).
 TEAM has no events yet.
