@@ -40,7 +40,8 @@ jobs:
       # with the batch-1 build times (every run, to compare a timing failure with the runs before it).
       - name: Stall reports
         if: always()
-        run: grep -E "CSR stall report|CSR batch1 build|required tests|Exception|Caused by" build/suite.log | sed -E 's/.*CSR (stall report|batch1 build): //' | head -1500 || echo "no stall reports"
+        run: |
+          grep -E "CSR stall report|CSR batch1 build|required tests|Exception|Caused by" build/suite.log | sed -E 's/.*CSR (stall report|batch1 build): //' | head -1500 || echo "no stall reports"
 
       - name: Upload logs
         if: always()
