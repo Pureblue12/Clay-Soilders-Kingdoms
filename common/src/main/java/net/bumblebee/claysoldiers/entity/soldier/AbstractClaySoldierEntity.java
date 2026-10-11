@@ -5,6 +5,7 @@ import com.mojang.logging.LogUtils;
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
+import net.bumblebee.claysoldiers.entity.goal.workgoal.EdgeGuard;
 import net.bumblebee.claysoldiers.entity.goal.workgoal.FallTrace;
 import net.bumblebee.claysoldiers.tuning.Tuning;
 import net.bumblebee.claysoldiers.capability.AssignablePoiCapability;
@@ -108,6 +109,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.entity.MoverType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -1375,6 +1377,13 @@ public class AbstractClaySoldierEntity extends ClayMobTeamOwnerEntity implements
         updateSwingTime();
 
         super.aiStep();
+    }
+
+    /** A working soldier doesn't step off an edge into a deadly drop (D70, {@link EdgeGuard}). */
+    @Override
+    protected Vec3 maybeBackOffFromEdge(Vec3 movement, MoverType type) {
+        return workSelector != null && workSelector.isWorking() && !level().isClientSide()
+                ? EdgeGuard.backOff(this, movement, type) : super.maybeBackOffFromEdge(movement, type);
     }
 
     protected void moveCloak(double x, double y, double z) {

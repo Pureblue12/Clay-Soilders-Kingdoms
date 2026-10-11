@@ -13,6 +13,7 @@ import net.minecraft.gametest.framework.AfterBatch;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
@@ -35,7 +37,8 @@ import static net.bumblebee.claysoldiers.gametest.ClaySoldierGameTests.SOLDIER;
  * fell off upper floors and died (fall damage is multiplied by 100 upstream), got cobblestone walls and window panes
  * placed into them, and walled themselves into a 1x1 shaft of the keep. Each test asserts the CORRECT behavior.
  * D65 (run 38124453564): the town hall's builders walked out of an unglazed window onto its open shutters and fell to
- * their deaths, because vanilla's pathfinder treats an open trapdoor as a floor.
+ * their deaths, because vanilla's pathfinder treats an open trapdoor as a floor. D68 (run 38140495889): they also fell
+ * through the tops of fences and panes, which vanilla counts as floors too.
  */
 @GameTestHolder(ClaySoldiersCommon.MOD_ID)
 @PrefixGameTestTemplate(false)
@@ -187,6 +190,121 @@ public class BuilderSafetyGameTests {
             Path path = soldier.getNavigation().createPath(otherAbsolute, 0);
             helper.assertTrue(path != null && path.canReach(), "No path over the closed trapdoors to the other pillar");
             helper.succeed();
+        });
+    }
+
+    /**
+     * BUG TEST (falling through a fence top): a soldier on a 4-high pillar, a row of fences and a glass pane on the
+     * ground beside it. Vanilla counts the cell above a fence or pane as a floor (a 3-block drop) and the soldier, too
+     * tiny to touch the post, falls through to the ground (town hall builders, fall traces in run 38140495889; D68). No
+     * path step may stand on top of the row, and the soldier stays on the pillar (the ground is a 4-block drop).
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 400)
+    public static void soldierDoesNotStandOnAFenceTop(GameTestHelper helper) {
+        BlockPos top = pillar(helper, 2, 4, 6, 8);
+        int rowX = top.getX() + 1;
+        helper.setBlock(new BlockPos(rowX, ClaySoldierGameTests.GROUND_Y, 6), Blocks.OAK_FENCE);
+        helper.setBlock(new BlockPos(rowX, ClaySoldierGameTests.GROUND_Y, 7), Blocks.COBBLESTONE_WALL);
+        helper.setBlock(new BlockPos(rowX, ClaySoldierGameTests.GROUND_Y, 8), Blocks.GLASS_PANE);
+        BlockPos target = new BlockPos(rowX + 3, ClaySoldierGameTests.GROUND_Y, top.getZ());
+        ClaySoldierEntity soldier = DoorGameTests.spawnSoldier(helper, top, DevScenarios.RED_TEAM);
+        int rowAbsoluteX = helper.absolutePos(new BlockPos(rowX, 0, 0)).getX();
+        int rowTopAbsoluteY = helper.absolutePos(new BlockPos(rowX, ClaySoldierGameTests.GROUND_Y + 1, 0)).getY();
+        BlockPos targetAbsolute = helper.absolutePos(target);
+        helper.runAfterDelay(5, () -> {
+            Path path = soldier.getNavigation().createPath(targetAbsolute, 0);
+            for (int i = 0; path != null && i < path.getNodeCount(); i++) {
+                BlockPos node = path.getNode(i).asBlockPos();
+                helper.assertFalse(node.getX() == rowAbsoluteX && node.getY() == rowTopAbsoluteY,
+                        "BUG (fence top): the path stands on top of the fence row at " + node.toShortString());
+            }
+        });
+        helper.onEachTick(() -> {
+            if (helper.getTick() % 10 == 0) {
+                soldier.getNavigation().moveTo(targetAbsolute.getX() + 0.5, targetAbsolute.getY(), targetAbsolute.getZ() + 0.5, 1.0);
+            }
+        });
+        helper.runAfterDelay(300, () -> {
+            helper.assertTrue(soldier.isAlive(), "The soldier died");
+            helper.assertTrue(soldier.getY() >= helper.absolutePos(top).getY() - 0.1,
+                    "BUG (fence top): the soldier left the pillar over the fence row, it is at y " + soldier.getY());
+            helper.succeed();
+        });
+    }
+
+    /**
+     * BUG TEST (slipping off a ledge): a working builder on top of a 4-high pillar is pushed toward its edge, the way a
+     * hop or a cut corner carries a tiny soldier past its path (the gatehouse's builders fell 9 blocks down the
+     * portcullis slot beside their walkway; D70). It must stop at the edge, not fall.
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 200)
+    public static void workingBuilderDoesNotStepOffALedge(GameTestHelper helper) {
+        BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "ledge", 1, 1, 1, BlockPos.ZERO);
+        ClaySoldierEntity soldier = ClaySoldierGameTests.setUpBuilder(helper, blueprint, List.of(new ItemStack(Items.COBBLESTONE))).soldier();
+        BlockPos top = helper.absolutePos(pillar(helper, 9, 11, 9, 11));
+        double edge = top.getX() + 1;
+        soldier.teleportTo(top.getX() + 0.5, top.getY(), top.getZ() + 0.5);
+        helper.onEachTick(() -> {
+            if (helper.getTick() > 20 && helper.getTick() < 100) {
+                soldier.move(MoverType.SELF, new Vec3(0.2, 0, 0));
+            }
+        });
+        helper.runAfterDelay(120, () -> {
+            helper.assertTrue(soldier.isAlive(), "The builder died");
+            helper.assertTrue(soldier.getY() >= top.getY() - 0.1 && soldier.getX() < edge + 0.1,
+                    "BUG (slipping off a ledge): the builder left the pillar, it is at " + soldier.position());
+            helper.succeed();
+        });
+    }
+
+    /**
+     * BUG TEST (stranded up high): a builder on top of a 4-high pillar has no way down (the drop is deadly, so it may not
+     * take it) and its block to place is on the ground. It must be brought back beside its chest and finish the build
+     * (keep and town hall builders stood on their upper floors with one-node paths for 30,000 ticks; D72).
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 2400)
+    public static void strandedBuilderIsBroughtBack(GameTestHelper helper) {
+        BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "stranded", 1, 1, 1, BlockPos.ZERO);
+        ClaySoldierEntity soldier = ClaySoldierGameTests.setUpBuilder(helper, blueprint, List.of(new ItemStack(Items.COBBLESTONE))).soldier();
+        BlockPos top = helper.absolutePos(pillar(helper, 9, 11, 9, 11));
+        boolean[] stranded = {false};
+        // Strand it once it carries the block: it must have found its easel first (it looks for one only 3 blocks down).
+        helper.onEachTick(() -> {
+            if (!stranded[0] && soldier.getCarriedStack().is(Items.COBBLESTONE)) {
+                stranded[0] = true;
+                soldier.teleportTo(top.getX() + 0.5, top.getY(), top.getZ() + 0.5);
+            }
+        });
+        helper.succeedWhen(() -> {
+            helper.assertTrue(soldier.isAlive(), "The builder died");
+            helper.assertTrue(stranded[0], "The builder never carried the block");
+            helper.assertBlockPresent(Blocks.COBBLESTONE, SPOT);
+        });
+    }
+
+    /**
+     * BUG TEST (held at an edge): a builder standing on the edge of a 1x1 pillar, its center over the 4-block drop
+     * beside it. Its path starts with that drop, which the edge guard won't let it take, so it stood still with a
+     * complete path forever (noble house L1, farm L1, hospital L1). It must be brought back and finish the build.
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 2400)
+    public static void builderHeldAtAnEdgeIsBroughtBack(GameTestHelper helper) {
+        BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "held_at_edge", 1, 1, 1, BlockPos.ZERO);
+        ClaySoldierEntity soldier = ClaySoldierGameTests.setUpBuilder(helper, blueprint, List.of(new ItemStack(Items.COBBLESTONE))).soldier();
+        BlockPos top = helper.absolutePos(pillar(helper, 9, 9, 10, 10));
+        double half = soldier.getBbWidth() / 2;
+        boolean[] stranded = {false};
+        helper.onEachTick(() -> {
+            if (!stranded[0] && soldier.getCarriedStack().is(Items.COBBLESTONE)) {
+                stranded[0] = true;
+                // East edge of the pillar: the center over air, a sliver of the box still on the pillar.
+                soldier.teleportTo(top.getX() + 1 + half * 0.5, top.getY(), top.getZ() + 0.5);
+            }
+        });
+        helper.succeedWhen(() -> {
+            helper.assertTrue(soldier.isAlive(), "The builder died");
+            helper.assertTrue(stranded[0], "The builder never carried the block");
+            helper.assertBlockPresent(Blocks.COBBLESTONE, SPOT);
         });
     }
 

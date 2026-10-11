@@ -15,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.entity.JigsawBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
@@ -146,7 +147,10 @@ public class ImmutableTemplate extends BaseImmutableTemplate {
 
         if (updatedBlockInfo.nbt() != null) {
             pBlocksWithNbt.add(updatedBlockInfo);
-        } else if (!updatedBlockInfo.state().getBlock().hasDynamicShape() && updatedBlockInfo.state().isCollisionShapeFullBlock(EmptyBlockGetter.INSTANCE, BlockPos.ZERO)) {
+        } else if (!updatedBlockInfo.state().getBlock().hasDynamicShape() && updatedBlockInfo.state().isCollisionShapeFullBlock(EmptyBlockGetter.INSTANCE, BlockPos.ZERO)
+                || updatedBlockInfo.state().getBlock() instanceof StairBlock) {
+            // Stairs go up with the full blocks, layer by layer: an inside staircase handed out after the whole shell
+            // (roof included) can never be used to reach the upper floors and the roof (the keep, D69).
             pNormalBlocks.add(updatedBlockInfo);
         } else {
             pBlocksWithSpecialShape.add(updatedBlockInfo);

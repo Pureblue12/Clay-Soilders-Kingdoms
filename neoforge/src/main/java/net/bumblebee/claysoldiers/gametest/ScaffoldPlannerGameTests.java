@@ -168,6 +168,33 @@ public class ScaffoldPlannerGameTests {
         });
     }
 
+    /**
+     * A hall 11 by 11 with walls 11 high, a door gap and a flat roof on top: columns outside the footprint reach only 2
+     * blocks into the roof, so its middle needs columns standing on the floor inside (D69, like the keep's roof and the
+     * chapel's steeple cap). Every block must be reachable and the scaffold must come down again.
+     */
+    @GameTest(template = PLATFORM)
+    public static void plannerPutsColumnsInsideAWideRoof(GameTestHelper helper) {
+        List<BlockPos> hall = new ArrayList<>();
+        for (int y = 1; y <= 12; y++) {
+            for (int x = 0; x <= 10; x++) {
+                for (int z = 0; z <= 10; z++) {
+                    boolean wall = x == 0 || x == 10 || z == 0 || z == 10;
+                    boolean door = x == 5 && z == 0 && y <= 2;
+                    if (y == 12 || wall && !door) {
+                        hall.add(new BlockPos(x, y, z));
+                    }
+                }
+            }
+        }
+        ScaffoldPlan plan = ScaffoldPlanner.plan(ScaffoldInput.flat(hall, 0), ScaffoldApproach.CLIMBED_COLUMNS);
+        helper.assertTrue(plan.complete() && plan.unreachable().isEmpty(), "Not every block is reachable: " + plan.describe());
+        helper.assertTrue(plan.teardownComplete(), "The scaffold can't be taken down: " + plan.describe());
+        helper.assertTrue(plan.scaffold().stream().anyMatch(pos -> pos.getX() > 0 && pos.getX() < 10 && pos.getZ() > 0 && pos.getZ() < 10),
+                "No column inside the hall: " + plan.describe());
+        helper.succeed();
+    }
+
     /** The Small House (151 blocks) is within reach everywhere: no scaffold. */
     @GameTest(template = PLATFORM)
     public static void plannerSmallHouseNeedsNoScaffold(GameTestHelper helper) {

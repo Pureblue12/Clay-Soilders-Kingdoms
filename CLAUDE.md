@@ -89,11 +89,12 @@ filled brewing stand won't match the file), SCAFFOLD, BUILDABLE. The workflow pu
 2026-10-11 run (107 of 156 built) it flagged 41 of the 47 failed levels with 3 false alarms; it misses training yard,
 graveyard L2, market stall L3 and gatehouse L1. A model, not the game: keep it in step when the rules it copies change.
 A build fails at once after 6000 ticks without progress, with a stall report. The chest is kept stocked by
-`dev/MaterialSupply` (most structures need more than 27 stacks; it stocks the items the easel hands out next). The test area
+`dev/MaterialSupply` (most structures need more than 27 stacks; it stocks the items the easel hands out next, and brings back an item lost
+with a builder, D70). The test area
 (`gametest/structure_build.nbt`, 48x24x48) has a grass floor. The required test `buildListMatchesRegistry` keeps the
 list in `StructureBuildGameTests.STRUCTURES` in step with the registry: add a row when a structure is promoted.
 
-Current status (2026-10-04, after stage 3 Tall construction spike and its in-game fixes D41, D42): all 168 required tests pass (the suite takes a few
+Current status (2026-10-04, after stage 3 Tall construction spike and its in-game fixes D41, D42): all 174 required tests pass (the suite takes a few
 minutes: the scaffold tests build whole towers and the Small House). `SuspectedBugGameTests` covers the easel right-click:
 non-block item, unneeded block, needed block.
 
@@ -146,7 +147,12 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
     left through an unglazed window onto its open shutters, and vanilla's pathfinder treats an open trapdoor as a
     floor (the vanilla trapdoor trap). The soldiers' pathfinder now counts an open trapdoor's cell as air and the cell
     above it as floorless (`DoorPathing.withoutOpenTrapdoorFloors`, D65; `soldierDoesNotWalkOntoAnOpenTrapdoor`,
-    `soldierWalksOverClosedTrapdoors`). Still open (not confirmed why): keep L2 builders also die at one spot in the
+    `soldierWalksOverClosedTrapdoors`). They also fell through the tops of fences, walls and panes, which vanilla counts
+    as floors though a tiny soldier misses the post: those cells have no floor for soldiers (`DoorPathing.withoutThinBlockFloors`,
+    D68; `soldierDoesNotStandOnAFenceTop`). Off their paths (a hop that overshoots, a cut corner) they walked off ledges: a working soldier
+    backs off from an edge with no floor within 3.5 below (`EdgeGuard`, D70; `workingBuilderDoesNotStepOffALedge`). A builder
+    that finds no way to its target for `build.stranded_ticks` (or keeps being stopped by the edge guard, D73) is put beside its chest (`Stranded`, D72; `builderHeldAtAnEdgeIsBroughtBack`,
+    `strandedBuilderIsBroughtBack`). Still open (not confirmed why): keep L2 builders also die at one spot in the
     forecourt, 2.0 per fall, after placing on the upper floor, with no trapdoor placed yet; needs a PATHING recording.
   - A cottage builder stood inside a fence post (the lantern post) for 9,200 ticks (suite run 38128880972): a tiny
     soldier fits beside the post, so the fence was placed around it, and vanilla then starts every path in a cell the
@@ -244,7 +250,8 @@ Code: `common/.../scaffold/`; comparison, recommendation and height rules: `docs
 `docs/RESEARCH-scaffolding.md`; decisions D34–D40; numbers `scaffold.*`.
 - **Reach:** builders place up to 8 above their feet (`BuilderReach`), so structures up to 9 tall never get scaffold
   and build exactly as before (Small House 151/151).
-- `ScaffoldPlanner` (pure) simulates the build like builders work and plans scaffold. Approaches: (a) outside ramp,
+- `ScaffoldPlanner` (pure) simulates the build like builders work and plans scaffold (columns inside the footprint
+  only when the outside ones fall short, D69). Approaches: (a) outside ramp,
   (b) step pillars, (c) structure tops + pillars, (d) vanilla scaffolding (counted, not usable), (e) climbed
   columns. Reachability is measured from the builders' storage with vanilla's path-length limit.
 - **In game (`scaffold.approach` 4):** 1x1 scaffolding columns.
@@ -277,15 +284,15 @@ Pending (not started):
   `DoorAccess` war-milestone change. Fence gates aren't opened. Doors opened by soldiers are remembered in
   memory only (after a restart a door a soldier left open counts as opened by a player and stays open).
 - Blocks more than 8 above any reachable standing spot stay unbuilt (by design of `MAX_PLACE_HEIGHT`).
-- Scaffold columns only stand outside the structure's footprint, so a roof block more than 2 blocks inside the
-  footprint and above reach from the structure's own floors (the chapel steeple's cap, the cathedral) never gets
-  built: the planner reports it unreachable and the builders wait. Needs columns on the structure's floors (planner
-  and `Scaffolds.plan`), not started.
+- Scaffold columns stand outside the structure's footprint first; only when those can't reach every block (a roof
+  more than 2 blocks inside the footprint, the chapel steeple's cap) does the planner add columns standing on the
+  structure's own floors inside it (D69). An inner column the simulated build can't walk to is dropped. The planner leaves
+  doors out and counts wooden doors as open (D71), so a building's doorway is a way in.
 - A blueprint block that is already there and replaceable (e.g. short grass where short grass grows) counts
   as free but can never be placed (placing the same block fails), so the blueprint never finishes; the
   cooldown only stops it from starving the rest. Not confirmed in game; not fixed.
-- Layer-by-layer ordering: blocks are handed out as all full cubes (bottom to top, roof included), then
-  non-cube blocks, then blocks with data (beds), then doors.
+- Layer-by-layer ordering: blocks are handed out as all full cubes and stairs (bottom to top, roof included; stairs
+  since D69, so inside staircases exist before the floors above them), then other non-cube blocks, then blocks with data (beds), then doors.
 
 Known, unfixed (reported, not confirmed in game): `DigHoleGoal.resetBreakProgress` unregisters
 `currentPos` even when this soldier never registered it; in dev runs `ErrorHandler` throws

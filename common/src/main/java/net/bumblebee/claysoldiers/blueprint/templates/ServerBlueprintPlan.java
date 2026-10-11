@@ -303,6 +303,12 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         return blockInfoList.stream().map(blockInfo -> targetPosition(base, settings, blockInfo)).toList();
     }
 
+    /** Where the doors this plan still has to place go (handed out last; soldiers walk through their doorways). */
+    public java.util.Set<BlockPos> doorPositions(BlockPos base, BlueprintTemplateSettings settings) {
+        return blockInfoList.stream().filter(BlueprintBlockInfo::isDoor)
+                .map(info -> targetPosition(base, settings, info)).collect(Collectors.toSet());
+    }
+
     /**
      * The item of every block this plan still has to place, in hand-out order (the order {@link #getRequest} searches).
      * For the dev material supply and GameTests; changes nothing.

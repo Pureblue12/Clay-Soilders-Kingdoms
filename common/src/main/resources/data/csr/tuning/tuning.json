@@ -35,6 +35,7 @@
   "terrain.grade.clear_trees_budget": 500,
   "build.unreachable_recheck_ticks": 200,
   "build.path_range_bonus": 48,
+  "build.stranded_ticks": 1200,
   "build.path_nodes_multiplier": 4,
   "work.fall_damage_percent": 100,
   "scaffold.columns_first": 1,
