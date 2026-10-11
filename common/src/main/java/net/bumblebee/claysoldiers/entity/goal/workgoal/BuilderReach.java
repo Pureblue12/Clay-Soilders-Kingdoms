@@ -132,8 +132,9 @@ public final class BuilderReach {
         }
         // Counted per reason in request summaries, so the details go to the recorder only.
         Node end = path.getEndNode();
-        DebugLog.event(DebugCategory.PATHING, builder, () -> "path to a standing spot for %s ends at %s after %s steps (follow range %s, %s spots)"
-                .formatted(target, end == null ? "-" : end.asBlockPos(), path.getNodeCount(), builder.getAttributeValue(Attributes.FOLLOW_RANGE), spots.size()));
+        DebugLog.event(DebugCategory.PATHING, builder, () -> "path to a standing spot for %s ends at %s after %s steps (follow range %s, %s spots); %s"
+                .formatted(target, end == null ? "-" : end.asBlockPos(), path.getNodeCount(), builder.getAttributeValue(Attributes.FOLLOW_RANGE), spots.size(),
+                        describe(searchPath(builder, spots, 64.0F, 8192))));
         return new Reach(null, "can't walk to a standing spot within reach");
     }
 
@@ -150,10 +151,25 @@ public final class BuilderReach {
         double baseRange = builder.getAttributeBaseValue(Attributes.FOLLOW_RANGE);
         float range = (float) Math.max(builder.getAttributeValue(Attributes.FOLLOW_RANGE), baseRange + Tuning.BUILD_PATH_RANGE_BONUS.get());
         int nodes = Mth.floor(baseRange * 16.0 * Tuning.BUILD_PATH_NODES_MULTIPLIER.get());
+        return searchPath(builder, targets, range, nodes);
+    }
+
+    /** One path search with the navigation's own rules and the given limits (walked length, steps looked at). */
+    @Nullable
+    private static Path searchPath(PathfinderMob builder, Set<BlockPos> targets, float range, int nodes) {
         BlockPos from = builder.blockPosition();
         int region = (int) range + 8;
         PathNavigationRegion area = new PathNavigationRegion(builder.level(), from.offset(-region, -region, -region), from.offset(region, region, region));
         return new PathFinder(builder.getNavigation().getNodeEvaluator(), nodes).findPath(area, builder, targets, range, 0, 1.0F);
+    }
+
+    /** For the recorder: how a search with very wide limits ends, to tell a limit from a wall. */
+    private static String describe(@Nullable Path path) {
+        if (path == null) {
+            return "a wide search (64, 8192 steps) found nothing";
+        }
+        Node end = path.getEndNode();
+        return "a wide search (64, 8192 steps) %s at %s after %s steps".formatted(path.canReach() ? "reaches a spot" : "ends", end == null ? "-" : end.asBlockPos(), path.getNodeCount());
     }
 
     /**
