@@ -295,11 +295,13 @@ public class BuilderSafetyGameTests {
         ring(helper, pit, 2);
         ring(helper, shallow, 1);
         ServerLevel level = helper.getLevel();
-        ClaySoldierEntity onRim = bystander(helper, pit.west().above(2));
-        ClaySoldierEntity onLowRim = bystander(helper, shallow.west().above(1));
+        // with AI: a soldier without AI never lands (no gravity), and vanilla plans no path for a mob in the air
+        ClaySoldierEntity onRim = walker(helper, pit.west().above(2));
+        ClaySoldierEntity onLowRim = walker(helper, shallow.west().above(1));
         BlockPos pitAbsolute = helper.absolutePos(pit);
         BlockPos shallowAbsolute = helper.absolutePos(shallow);
         helper.runAfterDelay(5, () -> {
+            helper.assertTrue(onRim.onGround() && onLowRim.onGround(), "The soldiers have not landed on the rims");
             Path deep = onRim.getNavigation().createPath(pitAbsolute, 0);
             helper.assertFalse(deep != null && deep.canReach() && deep.getEndNode() != null && deep.getEndNode().asBlockPos().equals(pitAbsolute),
                     "BUG (dropped into a pit): the path ends in the 2-deep pit");
@@ -326,6 +328,13 @@ public class BuilderSafetyGameTests {
     @AfterBatch(batch = "fall_trace")
     public static void stopRecording(ServerLevel level) {
         DebugLog.reset();
+    }
+
+    /** A clay soldier of the builders' team with its AI, standing at {@code pos} (it lands, and can plan paths). */
+    private static ClaySoldierEntity walker(GameTestHelper helper, BlockPos pos) {
+        ClaySoldierEntity soldier = bystander(helper, pos);
+        soldier.setNoAi(false);
+        return soldier;
     }
 
     /** A clay soldier of the builders' team standing still (no AI) at {@code pos}. */
