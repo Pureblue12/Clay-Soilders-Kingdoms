@@ -144,7 +144,12 @@ public class ServerBlueprintPlan extends BlueprintPlan {
                 return PlaceResult.NOT_NEEDED;
             }
             var updatedBlockInfo = processBlockInfos(settings, blockInfo);
-            if (!placeBlock(itemStack, level, pos, updatedBlockInfo.state().mirror(settings.mirror()).rotate(settings.rotation()))) {
+            Placement placement = placeBlock(itemStack, level, pos, updatedBlockInfo.state().mirror(settings.mirror()).rotate(settings.rotation()));
+            if (placement == Placement.SOLDIER_IN_THE_WAY) {
+                blockInfo.soldierInTheWay(level.getGameTime(), pos);
+                return PlaceResult.CANT_PLACE;
+            }
+            if (placement != Placement.PLACED) {
                 blockInfo.placementFailed(level.getGameTime(), pos);
                 return PlaceResult.CANT_PLACE;
             }
@@ -167,7 +172,7 @@ public class ServerBlueprintPlan extends BlueprintPlan {
             }
             var updatedBlockInfo = processBlockInfos(settings, blockInfo);
 
-            if (placeBlock(stack, level, updatedBlockInfo.pos().offset(base), updatedBlockInfo.state().mirror(settings.mirror()).rotate(settings.rotation()))) {
+            if (placeBlock(stack, level, updatedBlockInfo.pos().offset(base), updatedBlockInfo.state().mirror(settings.mirror()).rotate(settings.rotation())) == Placement.PLACED) {
                 iterator.remove();
                 blockInfo.markDone();
                 return PlaceResult.SUCCESS;
@@ -176,28 +181,31 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         return PlaceResult.CANT_PLACE;
     }
 
-    private boolean placeBlock(ItemStack stack, Level level, BlockPos pos, BlockState state) {
+    /** What came of placing one block. */
+    private enum Placement { PLACED, SPOT_TAKEN, SOLDIER_IN_THE_WAY }
+
+    private Placement placeBlock(ItemStack stack, Level level, BlockPos pos, BlockState state) {
         if (!canPlaceBlock(level, pos)) {
-            return false;
+            return Placement.SPOT_TAKEN;
         }
         if (creatureInside(level, pos, state)) {
             // A creature's body is where the block would be (church builders ended up inside cobblestone walls and
             // window panes, farm builders half inside a fence, stuck for good, D64). Vanilla's placement rule.
             DebugLog.event(DebugCategory.BUILD, null, "not placed at %s: a creature stands there", pos);
-            return false;
+            return Placement.SOLDIER_IN_THE_WAY;
         }
         ClayMobEntity trapped = wouldTrap(level, pos, state);
         if (trapped != null) {
             // The block would close the last way out of the cell a soldier stands in (keep builders walled themselves
-            // into a 1x1 shaft of the blueprint, D64). The block cools down; the soldier moves on; someone places it later.
+            // into a 1x1 shaft of the blueprint, D64). The block waits a moment (SOLDIER_IN_THE_WAY_TICKS); the soldier moves on; someone places it later.
             DebugLog.event(DebugCategory.BUILD, trapped, "not placed at %s: it would trap this soldier", pos);
-            return false;
+            return Placement.SOLDIER_IN_THE_WAY;
         }
         if (level.setBlock(pos, state, 3)) {
             state.getBlock().setPlacedBy(level, pos, state, null, stack);
-            return true;
+            return Placement.PLACED;
         }
-        return false;
+        return Placement.SPOT_TAKEN;
     }
 
     private boolean canPlaceBlock(Level level, BlockPos pos) {

@@ -127,7 +127,8 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
     (`blockIsNotPlacedIntoASoldier`).
   - Builders walled themselves into a 1x1 shaft of the keep. The easel refuses a block that would close the last way
     out of the cell a soldier stands in next to it (`ServerBlueprintPlan.wouldTrap`; `blockDoesNotTrapASoldier`).
-    Refused blocks cool down like any failed placement and get placed once the soldier has moved.
+    A refused block waits `SOLDIER_IN_THE_WAY_TICKS` (40) and is handed out again (not a failure: the farm fence
+    showed the doubling failure cooldown doubles a small build's time), so it is placed once the soldier has moved.
 - Fixed (door race): doors-last only ordered the list, so a door could be handed out while other blocks were
   still being carried (a glass pane got locked out in the 08:03 recording). Now `ServerBlueprintPlan.getRequest`
   hands out a door only when no other (non-door) block with a free spot remains; doors don't wait for each
