@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static net.bumblebee.claysoldiers.gametest.ClaySoldierGameTests.EASEL;
+import static net.bumblebee.claysoldiers.gametest.ClaySoldierGameTests.GROUND_Y;
 import static net.bumblebee.claysoldiers.gametest.ClaySoldierGameTests.PLATFORM;
 
 /**
@@ -93,6 +94,28 @@ public class BuilderReachGameTests {
             helper.assertTrue(builder.chest().countItem(Items.COBBLESTONE) == 1, "The block left the chest");
             helper.succeed();
         });
+    }
+
+    /**
+     * BUG TEST (builds ended a few blocks short, D61): a block behind a 3-high wall, reachable only around the wall's
+     * end. The walk there from beside the chest is about 24 blocks, longer than vanilla's path limit (the follow
+     * range, 16), so builders found it unreachable forever (the far side of bigger buildings in the structure build
+     * test). Correct: the builder walks around and places it. Own batch: it records (stall report).
+     */
+    @GameTest(template = PLATFORM, batch = "builder_reach_far", timeoutTicks = 1200)
+    public static void builderWalksAroundAWallLongerThanFollowRange(GameTestHelper helper) {
+        // A wall across the platform at z = 9, x = 0..14, 3 high; the only way past is at x = 15.
+        for (int x = 0; x <= 14; x++) {
+            for (int y = 0; y < 3; y++) {
+                helper.setBlock(new BlockPos(x, GROUND_Y + y, 9), Blocks.STONE);
+            }
+        }
+        BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "behind_wall", 1, 1, 7, new BlockPos(0, 0, 6));
+        ClaySoldierGameTests.Builder builder = ClaySoldierGameTests.setUpBuilder(helper, blueprint,
+                List.of(new ItemStack(Items.COBBLESTONE, 1)));
+        BuildStallReport.watch(helper, "behind_wall", 1200, builder.easel(), builder.chest(), List.of(builder.soldier()));
+        BlockPos target = EASEL.offset(0, 0, 8);
+        helper.succeedWhen(() -> helper.assertBlockPresent(Blocks.COBBLESTONE, target));
     }
 
     /**
