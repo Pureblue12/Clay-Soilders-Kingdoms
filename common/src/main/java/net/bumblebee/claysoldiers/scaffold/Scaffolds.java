@@ -18,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.ScaffoldingBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -250,7 +251,8 @@ public final class Scaffolds {
     private static Optional<ScaffoldJob> plan(ServerLevel level, BlockPos easel, BlockPos home, ServerBlueprintPlan plan, BlockPos base,
                                               BlueprintTemplateSettings settings, @Nullable ScaffoldJob existing) {
         long start = System.nanoTime();
-        ScaffoldInput input = input(level, easel, home, plan.targetPositions(base, settings), existing == null ? Set.of() : existing.placed());
+        ScaffoldInput input = input(level, easel, home, plan.targetPositions(base, settings), plan.doorPositions(base, settings),
+                existing == null ? Set.of() : existing.placed());
         if (input.structure().isEmpty() || ScaffoldPlanner.aboveReach(input).isEmpty()) {
             return Optional.ofNullable(existing);
         }
@@ -296,9 +298,11 @@ public final class Scaffolds {
     /**
      * What the planner needs from the world: the region around the structure, its solid cells, the cells scaffold can't
      * use, and the structure blocks still to place. The build's own placed {@code scaffold} counts as free (a re-plan
-     * simulates it as scaffold again).
+     * simulates it as scaffold again). Doors are left out of the blocks to place and wooden doors already standing
+     * count as open: doors are handed out last and soldiers open wooden doors, so a doorway is a way in (D71; the
+     * planner placed the chapel's door first and found the nave sealed, so no column inside it).
      */
-    static ScaffoldInput input(ServerLevel level, BlockPos easel, BlockPos home, List<BlockPos> targets, Set<BlockPos> scaffold) {
+    static ScaffoldInput input(ServerLevel level, BlockPos easel, BlockPos home, List<BlockPos> targets, Set<BlockPos> doors, Set<BlockPos> scaffold) {
         BoundingBox box = BoundingBox.encapsulatingPositions(targets).orElseThrow();
         // The plan only lists blocks still to place, so the region reaches down to the easel's ground (the site's base),
         // and it includes where the builders come from.
@@ -313,7 +317,8 @@ public final class Scaffolds {
                 return; // the build's own scaffold: the planner puts it in again (climbable), it isn't in the way
             }
             BlockState state = level.getBlockState(pos);
-            if (!state.getCollisionShape(level, pos).isEmpty()) {
+            boolean woodenDoor = state.getBlock() instanceof DoorBlock door && door.type().canOpenByHand();
+            if (!woodenDoor && !state.getCollisionShape(level, pos).isEmpty()) {
                 solid.add(pos.immutable());
             }
             if (!ServerBlueprintPlan.canPlaceAt(level, pos)) {
@@ -323,7 +328,7 @@ public final class Scaffolds {
         blocked.add(easel);
         blocked.add(easel.above());
         blocked.add(easel.above(2));
-        List<BlockPos> remaining = targets.stream().filter(pos -> ServerBlueprintPlan.canPlaceAt(level, pos)).toList();
+        List<BlockPos> remaining = targets.stream().filter(pos -> !doors.contains(pos) && ServerBlueprintPlan.canPlaceAt(level, pos)).toList();
         // Builders come from their storage (home), and vanilla only follows paths shorter than their follow range (16, plus the
         // bonus while scaffolding). The planner keeps a margin (the way from the storage, and vanilla's search, which
         // gives up on long winding routes before the limit).

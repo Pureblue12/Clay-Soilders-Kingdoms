@@ -273,7 +273,8 @@ Pending (not started):
 - Blocks more than 8 above any reachable standing spot stay unbuilt (by design of `MAX_PLACE_HEIGHT`).
 - Scaffold columns stand outside the structure's footprint first; only when those can't reach every block (a roof
   more than 2 blocks inside the footprint, the chapel steeple's cap) does the planner add columns standing on the
-  structure's own floors inside it (D69). An inner column the simulated build can't walk to is dropped.
+  structure's own floors inside it (D69). An inner column the simulated build can't walk to is dropped. The planner leaves
+  doors out and counts wooden doors as open (D71), so a building's doorway is a way in.
 - A blueprint block that is already there and replaceable (e.g. short grass where short grass grows) counts
   as free but can never be placed (placing the same block fails), so the blueprint never finishes; the
   cooldown only stops it from starving the rest. Not confirmed in game; not fixed.
