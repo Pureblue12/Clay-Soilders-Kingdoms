@@ -176,7 +176,8 @@ public class StructureBuildGameTests {
     }
 
     /**
-     * The builds of a shard ({@code k/n}, or {@code all}), optionally only for the given structure ids. Shards are
+     * The builds of a shard ({@code k/n}, or {@code all}), optionally only for the given structure ids ({@code keep}: every
+     * level, {@code keep:2}: only level 2). Shards are
      * balanced by the estimated build time (largest first, each to the least loaded shard).
      */
     static List<Build> selected(String setting, String only) {
@@ -186,8 +187,8 @@ public class StructureBuildGameTests {
                 .collect(Collectors.toSet());
         List<Build> all = new ArrayList<>();
         for (Entry entry : STRUCTURES) {
-            if (ids.isEmpty() || ids.contains(entry.path())) {
-                for (int level = 1; level <= entry.levels(); level++) {
+            for (int level = 1; level <= entry.levels(); level++) {
+                if (ids.isEmpty() || ids.contains(entry.path()) || ids.contains(entry.path() + ":" + level)) {
                     all.add(new Build(entry, level));
                 }
             }

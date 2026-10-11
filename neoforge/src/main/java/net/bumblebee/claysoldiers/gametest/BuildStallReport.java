@@ -97,8 +97,14 @@ final class BuildStallReport {
             }
         }
         lines.add("chest " + chest.getBlockPos().toShortString() + (chest.isRemoved() ? " (removed)" : "") + ": " + stock);
-        ScaffoldSavedData.get(helper.getLevel()).job(easel.getBlockPos()).ifPresent(job -> lines.add("scaffold job: " + job.placed().size() + " of "
-                + job.planned().size() + " planned blocks up, columns " + job.columns()));
+        ScaffoldSavedData.get(helper.getLevel()).job(easel.getBlockPos()).ifPresent(job -> {
+            lines.add("scaffold job: " + job.placed().size() + " of " + job.planned().size() + " planned blocks up, columns " + job.columns());
+            if (job.columns()) {
+                ClaySoldierEntity walker = builders.stream().filter(ClaySoldierEntity::isAlive).findFirst().orElse(null);
+                job.placed().stream().filter(pos -> job.column(pos).getFirst().equals(pos)).limit(12)
+                        .forEach(base -> lines.add("  column from " + base.toShortString() + ", " + job.column(base).size() + " up: " + pathTo(walker, base)));
+            }
+        });
         for (ClaySoldierEntity builder : builders) {
             if (builder.isAlive()) {
                 lines.add("  builder " + DebugLog.snapshot(List.of(builder)).getFirst());
@@ -121,6 +127,19 @@ final class BuildStallReport {
         lines.add("last " + pathing.size() + " PATHING events, oldest first:");
         pathing.forEach(event -> lines.add("  " + event.toLine()));
         return lines;
+    }
+
+    /** Whether {@code builder} finds a path to a scaffold column's base from where it stands (what the climber needs). */
+    private static String pathTo(ClaySoldierEntity builder, BlockPos base) {
+        if (builder == null) {
+            return "no builder alive";
+        }
+        Path path = builder.getNavigation().createPath(base, 1);
+        if (path == null) {
+            return "no path from " + builder.blockPosition().toShortString();
+        }
+        return (path.canReach() ? "path reaches it" : "path ends at " + (path.getEndNode() == null ? "-" : path.getEndNode().asBlockPos().toShortString()))
+                + " from " + builder.blockPosition().toShortString();
     }
 
     private static List<DebugEvent> tail(List<DebugEvent> events, Predicate<DebugEvent> filter, int count) {
