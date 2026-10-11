@@ -7,7 +7,9 @@
 A data-driven Minecraft mod for **1.21.1 / NeoForge**, forked from
 [Clay Soldiers Remake](https://github.com/Bumble-B33/csr) by Bumble B33.
 
-![Small Battle](./assets-raw/small-battle.png)
+![The keep, level 3](./docs/img/hero-keep.jpg)
+
+<sub>Structures rendered in the Structure Studio with real Minecraft block models.</sub>
 
 </div>
 
@@ -18,8 +20,16 @@ warriors, dress them with gear, and watch them skirmish. **Clay Soldiers Kingdom
 aims further: soldiers that **build real buildings on their own**, gather resources, and one day
 found **kingdoms** that grow, defend themselves and go to war with each other.
 
+![Small Battle](./assets-raw/small-battle.png)
+
 <!-- TODO(Carlton): add in-game screenshots here, e.g. soldiers building a keep, scaffolding, a kingdom book.
      Save them small (under ~300 KB, JPEG) in docs/img/ and link them like the Studio ones below. -->
+
+![The cathedral](./docs/img/hero-cathedral.jpg)
+
+| Library | Market | Town hall |
+|---|---|---|
+| ![Library](./docs/img/hero-library.jpg) | ![Market](./docs/img/hero-market.jpg) | ![Town hall](./docs/img/hero-townhall.jpg) |
 
 ## What works today
 
@@ -57,10 +67,6 @@ structures are promoted into the mod.
 ![Many structures in the Studio](./docs/img/studio-overview.jpg)
 
 ![Cathedral, level by level](./docs/img/studio-cathedral-levels.jpg)
-
-| On a slope | Compare versions |
-|---|---|
-| ![Keep on a slope](./docs/img/studio-keep-on-slope.jpg) | ![Version compare](./docs/img/studio-compare.jpg) |
 
 ```bash
 cd studio

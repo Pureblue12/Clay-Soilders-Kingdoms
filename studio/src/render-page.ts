@@ -35,10 +35,14 @@ async function main() {
     markers: q.get('markers') === '1',
   };
   await showStructure(viewer, lib, s, opts);
-  const views = (q.get('views') ?? 'iso,front,right,top').split(',').filter((v) => PRESETS.includes(v as CameraPreset)) as CameraPreset[];
+  // "cam_<azimuth>_<elevation>_<distance multiple>_<target height fraction>" = free camera (hero shots)
+  const views = (q.get('views') ?? 'iso,front,right,top').split(',').filter((v) => PRESETS.includes(v as CameraPreset) || v.startsWith('cam_'));
   const out: Record<string, string> = {};
   for (const v of views) {
-    viewer.preset(v);
+    if (v.startsWith('cam_')) {
+      const [, az, el, dm, tf] = v.split('_');
+      viewer.custom(Number(az), Number(el), Number(dm), Number(tf));
+    } else viewer.preset(v as CameraPreset);
     viewer.render();
     out[v] = canvas.toDataURL('image/png');
   }
