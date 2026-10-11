@@ -23,6 +23,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.CrossCollisionBlock;
+import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -214,10 +216,24 @@ public class ServerBlueprintPlan extends BlueprintPlan {
 
     /**
      * Whether a living creature's body is where {@code state} placed at {@code pos} would be (vanilla's own placement
-     * rule: the block's collision shape against every creature's bounding box, so a soldier half inside the cell counts).
+     * rule: the block's collision shape against every creature's bounding box, so a soldier half inside the cell counts),
+     * or stands in the cell of a fence, wall or pane next to it (which would grow an arm toward the new block).
      */
     public static boolean creatureInside(Level level, BlockPos pos, BlockState state) {
-        return !level.isUnobstructed(state, pos, CollisionContext.empty());
+        if (!level.isUnobstructed(state, pos, CollisionContext.empty())) {
+            return true;
+        }
+        // A fence, wall or pane next to the spot grows an arm toward the new block: a soldier standing beside that post
+        // ends up inside the arm, stuck for good (farm and cottage builders, D64). Same answer: wait until it has moved.
+        for (Direction side : Direction.Plane.HORIZONTAL) {
+            BlockPos next = pos.relative(side);
+            BlockState neighbour = level.getBlockState(next);
+            if ((neighbour.getBlock() instanceof CrossCollisionBlock || neighbour.getBlock() instanceof WallBlock)
+                    && !level.getEntitiesOfClass(LivingEntity.class, new AABB(next), LivingEntity::isAlive).isEmpty()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

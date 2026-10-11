@@ -123,7 +123,8 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
     (`work.fall_damage_percent`), recorded in DAMAGE (`workingBuilderSurvivesAFall`).
   - Blocks were placed into builders (church: cobblestone walls, window panes), leaving them stuck inside. The easel
     refuses a block whose shape would overlap a creature's body (vanilla's placement rule; the farm fence showed a
-    builder half inside the cell counts too), and a builder never places into its own cell
+    builder half inside the cell counts too, and so does one standing in the cell of a neighbouring fence, wall or pane,
+    which grows an arm toward the new block), and a builder never places into its own cell
     (`blockIsNotPlacedIntoASoldier`).
   - Builders walled themselves into a 1x1 shaft of the keep. The easel refuses a block that would close the last way
     out of the cell a soldier stands in next to it (`ServerBlueprintPlan.wouldTrap`; `blockDoesNotTrapASoldier`).
