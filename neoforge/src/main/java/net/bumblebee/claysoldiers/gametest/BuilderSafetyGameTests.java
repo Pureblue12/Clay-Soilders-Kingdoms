@@ -13,6 +13,7 @@ import net.minecraft.gametest.framework.AfterBatch;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
@@ -226,6 +228,31 @@ public class BuilderSafetyGameTests {
             helper.assertTrue(soldier.isAlive(), "The soldier died");
             helper.assertTrue(soldier.getY() >= helper.absolutePos(top).getY() - 0.1,
                     "BUG (fence top): the soldier left the pillar over the fence row, it is at y " + soldier.getY());
+            helper.succeed();
+        });
+    }
+
+    /**
+     * BUG TEST (slipping off a ledge): a working builder on top of a 4-high pillar is pushed toward its edge, the way a
+     * hop or a cut corner carries a tiny soldier past its path (the gatehouse's builders fell 9 blocks down the
+     * portcullis slot beside their walkway; D70). It must stop at the edge, not fall.
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 200)
+    public static void workingBuilderDoesNotStepOffALedge(GameTestHelper helper) {
+        BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "ledge", 1, 1, 1, BlockPos.ZERO);
+        ClaySoldierEntity soldier = ClaySoldierGameTests.setUpBuilder(helper, blueprint, List.of(new ItemStack(Items.COBBLESTONE))).soldier();
+        BlockPos top = helper.absolutePos(pillar(helper, 9, 11, 9, 11));
+        double edge = top.getX() + 1;
+        soldier.teleportTo(top.getX() + 0.5, top.getY(), top.getZ() + 0.5);
+        helper.onEachTick(() -> {
+            if (helper.getTick() > 20 && helper.getTick() < 100) {
+                soldier.move(MoverType.SELF, new Vec3(0.2, 0, 0));
+            }
+        });
+        helper.runAfterDelay(120, () -> {
+            helper.assertTrue(soldier.isAlive(), "The builder died");
+            helper.assertTrue(soldier.getY() >= top.getY() - 0.1 && soldier.getX() < edge + 0.1,
+                    "BUG (slipping off a ledge): the builder left the pillar, it is at " + soldier.position());
             helper.succeed();
         });
     }

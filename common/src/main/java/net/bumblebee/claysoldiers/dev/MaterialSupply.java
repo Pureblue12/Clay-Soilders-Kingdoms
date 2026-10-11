@@ -1,16 +1,21 @@
 package net.bumblebee.claysoldiers.dev;
 
+import net.bumblebee.claysoldiers.debug.DebugCategory;
+import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -69,6 +74,7 @@ public final class MaterialSupply {
             return 0;
         }
         int usable = chest.getContainerSize() - FREE_SLOTS;
+        resupplyLost(chest);
         Set<Item> wanted = wanted(chest, usable);
         // Stacks nobody needs soon go back to the waiting list, to make room.
         for (int slot = 0; slot < chest.getContainerSize(); slot++) {
@@ -127,6 +133,26 @@ public final class MaterialSupply {
         return wanted;
     }
 
+    /**
+     * Items the build still needs that are neither in the chest nor waiting: lost with a builder that died carrying
+     * them, or held by one that can't get back. A player would bring more, so they come back into the waiting list
+     * (as many as the plan still needs, one stack at most); otherwise the build waits for them forever (structure
+     * build run 38149380878: town hall L1, keep L1, gatehouse L2, farm L2).
+     */
+    private void resupplyLost(ChestBlockEntity chest) {
+        Map<Item, Integer> needed = new LinkedHashMap<>();
+        for (Item item : demand.get()) {
+            needed.merge(item, 1, Integer::sum);
+        }
+        needed.forEach((item, count) -> {
+            if (item != Items.AIR && chest.countItem(item) == 0 && !hasWaiting(item)) {
+                ItemStack stack = new ItemStack(item);
+                waiting.add(stack.copyWithCount(Math.min(count, stack.getMaxStackSize())));
+                DebugLog.event(DebugCategory.BUILD, null, "material supply: %s lost, brought %s more", item, Math.min(count, stack.getMaxStackSize()));
+            }
+        });
+    }
+
     private boolean hasWaiting(Item item) {
         return waiting.stream().anyMatch(stack -> stack.is(item));
     }
@@ -174,7 +200,8 @@ public final class MaterialSupply {
     }
 
     public boolean isFinished() {
-        return waiting.isEmpty() || done.getAsBoolean() || !(level.getBlockEntity(chestPos) instanceof ChestBlockEntity);
+        // Not when the waiting list is empty: a lost item still needs bringing back (resupplyLost).
+        return done.getAsBoolean() || !(level.getBlockEntity(chestPos) instanceof ChestBlockEntity);
     }
 
     /** Stacks not in the chest. */
