@@ -269,11 +269,11 @@ public class ClaySoldierGameTests {
     }
 
     /** The same with another block instead of cobblestone. */
-    static BlueprintData tinyBlueprint(GameTestHelper helper, String name, int sizeX, int sizeY, int sizeZ, Block block, BlockPos... cobblestoneAt) {
+    static BlueprintData tinyBlueprint(GameTestHelper helper, String name, int sizeX, int sizeY, int sizeZ, Block material, BlockPos... cobblestoneAt) {
         CompoundTag tag = new CompoundTag();
         tag.put("size", intList(sizeX, sizeY, sizeZ));
         ListTag palette = new ListTag();
-        palette.add(NbtUtils.writeBlockState(block.defaultBlockState()));
+        palette.add(NbtUtils.writeBlockState(material.defaultBlockState()));
         tag.put("palette", palette);
         ListTag blocks = new ListTag();
         for (BlockPos pos : cobblestoneAt) {
