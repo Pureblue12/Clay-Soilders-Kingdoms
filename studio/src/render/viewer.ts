@@ -210,6 +210,28 @@ export class Viewer {
     this.controls.update();
   }
 
+  /** Free camera for hero shots: azimuth (degrees, 0 = front/north side, 90 = east), elevation (degrees above the
+   *  horizon), distance as a multiple of the fit distance, and the look-at height as a fraction of the structure. */
+  custom(az: number, el: number, distMul: number, targetFrac: number) {
+    if (this.fly.active) this.fly.exit();
+    const c = this.focus.getCenter(new THREE.Vector3());
+    const size = this.focus.getSize(new THREE.Vector3());
+    const radius = size.length() / 2;
+    const fov = (this.camera.fov * Math.PI) / 180;
+    const fitH = radius / Math.sin(fov / 2);
+    const fitW = radius / Math.sin(Math.atan(Math.tan(fov / 2) * this.camera.aspect));
+    const dist = (Math.max(fitH, fitW) * 0.92 + 1) * distMul;
+    const a = (az * Math.PI) / 180, e = (el * Math.PI) / 180;
+    const d = new THREE.Vector3(Math.sin(a) * Math.cos(e), Math.sin(e), -Math.cos(a) * Math.cos(e));
+    const target = c.clone();
+    target.y = this.focus.min.y + size.y * targetFrac;
+    this.controls.target.copy(target);
+    this.camera.position.copy(target).addScaledVector(d, dist);
+    this.camera.up.set(0, 1, 0);
+    this.camera.lookAt(target);
+    this.controls.update();
+  }
+
   copyCameraFrom(other: Viewer) {
     this.camera.position.copy(other.camera.position);
     this.camera.quaternion.copy(other.camera.quaternion);
