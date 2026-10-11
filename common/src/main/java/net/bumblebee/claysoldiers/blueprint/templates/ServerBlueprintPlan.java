@@ -17,6 +17,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -179,9 +180,9 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         if (!canPlaceBlock(level, pos)) {
             return false;
         }
-        if (creatureInside(level, pos)) {
-            // A soldier (or another creature) stands in the spot: the block would be placed into it (church builders
-            // ended up inside cobblestone walls and window panes, stuck for good, D64). Vanilla refuses this too.
+        if (creatureInside(level, pos, state)) {
+            // A creature's body is where the block would be (church builders ended up inside cobblestone walls and
+            // window panes, farm builders half inside a fence, stuck for good, D64). Vanilla's placement rule.
             DebugLog.event(DebugCategory.BUILD, null, "not placed at %s: a creature stands there", pos);
             return false;
         }
@@ -203,10 +204,12 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         return canPlaceAt(level, pos);
     }
 
-    /** Whether a living creature has its feet or its eyes in this block (a block placed there would be inside it). */
-    public static boolean creatureInside(Level level, BlockPos pos) {
-        return !level.getEntitiesOfClass(LivingEntity.class, new AABB(pos), creature -> creature.isAlive()
-                && (creature.blockPosition().equals(pos) || BlockPos.containing(creature.getEyePosition()).equals(pos))).isEmpty();
+    /**
+     * Whether a living creature's body is where {@code state} placed at {@code pos} would be (vanilla's own placement
+     * rule: the block's collision shape against every creature's bounding box, so a soldier half inside the cell counts).
+     */
+    public static boolean creatureInside(Level level, BlockPos pos, BlockState state) {
+        return !level.isUnobstructed(state, pos, CollisionContext.empty());
     }
 
     /**

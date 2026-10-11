@@ -122,7 +122,8 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
     100 like any environmental damage, so a 4-block drop killed. A working soldier now takes vanilla fall damage
     (`work.fall_damage_percent`), recorded in DAMAGE (`workingBuilderSurvivesAFall`).
   - Blocks were placed into builders (church: cobblestone walls, window panes), leaving them stuck inside. The easel
-    refuses a spot a living creature stands in, and a builder never places into its own cell
+    refuses a block whose shape would overlap a creature's body (vanilla's placement rule; the farm fence showed a
+    builder half inside the cell counts too), and a builder never places into its own cell
     (`blockIsNotPlacedIntoASoldier`).
   - Builders walled themselves into a 1x1 shaft of the keep. The easel refuses a block that would close the last way
     out of the cell a soldier stands in next to it (`ServerBlueprintPlan.wouldTrap`; `blockDoesNotTrapASoldier`).

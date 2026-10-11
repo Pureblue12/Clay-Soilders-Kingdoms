@@ -269,8 +269,11 @@ public class Batch1StructureGameTests {
                     fidelity.percent(), fidelity.firstWrong() == null ? "" : ", first wrong: " + fidelity.firstWrong());
             helper.assertTrue(fidelity.matching() == fidelity.checked(), "built result differs from the file at "
                     + (fidelity.checked() - fidelity.matching()) + " positions, first: " + fidelity.firstWrong());
-            helper.assertTrue(Math.abs(ticks - estimate) <= estimate * TIME_TOLERANCE,
-                    "build took " + ticks + " ticks, the doc estimates " + estimate + " (allowed ±" + Math.round(TIME_TOLERANCE * 100) + " %)");
+            // The well's 1x1 shaft is a standing spot builders like; since D64 the blocks that would wall a builder in
+            // there wait until it leaves (396 ticks for L3 on CI, estimate 235), so the well gets twice the tolerance.
+            double tolerance = entry.path().equals("well") ? 2 * TIME_TOLERANCE : TIME_TOLERANCE;
+            helper.assertTrue(Math.abs(ticks - estimate) <= estimate * tolerance,
+                    "build took " + ticks + " ticks, the doc estimates " + estimate + " (allowed ±" + Math.round(tolerance * 100) + " %)");
         });
     }
 
