@@ -129,8 +129,8 @@ public final class BuilderReach {
         }
         // Counted per reason in request summaries, so the details go to the recorder only.
         Node end = path.getEndNode();
-        DebugLog.event(DebugCategory.PATHING, builder, "path to a standing spot for %s ends at %s after %s steps (follow range %s, %s spots)",
-                target, end == null ? "-" : end.asBlockPos(), path.getNodeCount(), builder.getAttributeValue(Attributes.FOLLOW_RANGE), spots.size());
+        DebugLog.event(DebugCategory.PATHING, builder, () -> "path to a standing spot for %s ends at %s after %s steps (follow range %s, %s spots)"
+                .formatted(target, end == null ? "-" : end.asBlockPos(), path.getNodeCount(), builder.getAttributeValue(Attributes.FOLLOW_RANGE), spots.size()));
         return new Reach(null, "can't walk to a standing spot within reach");
     }
 
