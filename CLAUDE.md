@@ -67,8 +67,8 @@ them in its "Stall reports" step. GitHub's machines are slower: the one wall-clo
   aren't about terrain found with `Kingdoms.found(..., true)` (force) there (D32).
 - Grading and test-terrain undo share the structure paste's global undo history: tests that undo get their own batch.
 - The framework also puts a barrier roof at the top of a test area (16 high for `terrain`): tests that build higher
-  use `skyAccess = true`. Builders only follow paths up to their follow range (16): keep a test's chest within about
-  14 blocks of every block.
+  use `skyAccess = true`. Builders only follow paths up to their follow range (16, plus `build.path_range_bonus` 16
+  while building, D61): keep a test's chest within about 28 walked blocks of every block.
 
 ### Structure build tests (every Studio structure, separate workflow)
 
@@ -215,8 +215,9 @@ Code: `common/.../scaffold/`; comparison, recommendation and height rules: `docs
   - Removed at once when the easel is broken (`EaselBlock.onRemove`), its blueprint is replaced or taken off, or by
     the sweep (easel gone or no plan, every `scaffold.sweep_ticks`, `Scaffolds.tick`).
   - A position a player changed is never removed: recorded (SCAFFOLD "kept") and nearby players are told.
-- **While a build has scaffold, its builders** get a longer follow range, a bigger path search, a fresh route every
-  20 ticks and precise steps on scaffold blocks (`DoorPathing.Ground.followThePath`); other builds are unchanged.
+- **While a build has scaffold, its builders** get a fresh route every 20 ticks and precise steps on scaffold blocks
+  (`DoorPathing.Ground.followThePath`). Every builder gets a longer follow range and a bigger path search while it works
+  for a build (`build.path_*`, D61; scaffold builds use the larger of `build.path_*` and `scaffold.path_*`).
 - **Recorder SCAFFOLD:** planned, placed, removed, climbing, stuck, cleanup, kept.
 
 ### Known limitations

@@ -65,8 +65,8 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     public static final int RETRY_COOLDOWN_MIN = 20;
     public static final int RETRY_COOLDOWN_RANDOM = 20;
     private int retryCooldown = 0;
-    /** The follow range bonus while working for a build with scaffolding (see {@link #updatePathSearch}). */
-    private static final ResourceLocation SCAFFOLD_PATH_RANGE = ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, "scaffold_path_range");
+    /** The follow range bonus while working for a build (see {@link #updatePathSearch}). */
+    private static final ResourceLocation PATH_RANGE = ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, "build_path_range");
     /**
      * The reachability test handed to the easel; it also tells scaffold planning where this builder comes from (its
      * storage), since walking distances are measured from there.
@@ -185,26 +185,35 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     }
 
     /**
-     * Routes up a scaffold are long and wind around, and vanilla only accepts paths whose walked length is under the
-     * follow range (16; each step up counts about 1.4). So while this builder's easel has scaffolding, its paths may
-     * be {@code scaffold.path_range_bonus} blocks longer and its search may look at
-     * {@code scaffold.path_nodes_multiplier} times more steps. Builds without scaffolding keep the normal search.
+     * Vanilla only accepts paths whose walked length is under the follow range (16; each step up counts about 1.4),
+     * measured from where the builder asks for a block, usually beside its storage. That left the far side of bigger
+     * buildings out of reach (D61), and routes up a scaffold are longer still. So while working for a build, this
+     * builder's paths may be {@code build.path_range_bonus} blocks longer and its search may look at
+     * {@code build.path_nodes_multiplier} times more steps; while its easel has scaffolding, the larger of those and
+     * {@code scaffold.path_range_bonus} / {@code scaffold.path_nodes_multiplier}.
      */
     private void updatePathSearch() {
         boolean scaffold = easelPos != null && soldier.level() instanceof ServerLevel level && Scaffolds.hasJob(level, easelPos.pos());
-        float multiplier = scaffold ? Tuning.SCAFFOLD_PATH_NODES_MULTIPLIER.get() : 1.0F;
+        int nodes = Tuning.BUILD_PATH_NODES_MULTIPLIER.get();
+        int bonus = Tuning.BUILD_PATH_RANGE_BONUS.get();
+        if (scaffold) {
+            nodes = Math.max(nodes, Tuning.SCAFFOLD_PATH_NODES_MULTIPLIER.get());
+            bonus = Math.max(bonus, Tuning.SCAFFOLD_PATH_RANGE_BONUS.get());
+        }
+        float multiplier = nodes;
         if (multiplier != pathSearchMultiplier) {
             pathSearchMultiplier = multiplier;
             soldier.getNavigation().setMaxVisitedNodesMultiplier(multiplier);
         }
         AttributeInstance range = soldier.getAttribute(Attributes.FOLLOW_RANGE);
         if (range != null) {
-            boolean has = range.hasModifier(SCAFFOLD_PATH_RANGE);
-            int bonus = Tuning.SCAFFOLD_PATH_RANGE_BONUS.get();
-            if (scaffold && bonus > 0 && !has) {
-                range.addTransientModifier(new AttributeModifier(SCAFFOLD_PATH_RANGE, bonus, AttributeModifier.Operation.ADD_VALUE));
-            } else if ((!scaffold || bonus == 0) && has) {
-                range.removeModifier(SCAFFOLD_PATH_RANGE);
+            AttributeModifier current = range.getModifier(PATH_RANGE);
+            double now = current == null ? 0 : current.amount();
+            if (now != bonus) {
+                range.removeModifier(PATH_RANGE);
+                if (bonus > 0) {
+                    range.addTransientModifier(new AttributeModifier(PATH_RANGE, bonus, AttributeModifier.Operation.ADD_VALUE));
+                }
             }
         }
     }
@@ -459,7 +468,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         }
         AttributeInstance range = soldier.getAttribute(Attributes.FOLLOW_RANGE);
         if (range != null) {
-            range.removeModifier(SCAFFOLD_PATH_RANGE);
+            range.removeModifier(PATH_RANGE);
         }
     }
 
