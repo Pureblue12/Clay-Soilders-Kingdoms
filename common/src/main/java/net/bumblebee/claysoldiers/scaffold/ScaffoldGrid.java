@@ -95,6 +95,11 @@ final class ScaffoldGrid {
         return inside(x, y, z) && climbable.get(index(x, y, z));
     }
 
+    /** A column cell above the column's base: builders are only ever inside it while climbing. */
+    boolean insideColumn(int x, int y, int z) {
+        return climbable(x, y, z) && climbable(x, y - 1, z);
+    }
+
     /** Whether something (solid or a scaffolding column) is in the cell already. */
     boolean occupied(BlockPos pos) {
         return solid(pos) || climbable(pos.getX(), pos.getY(), pos.getZ());
@@ -168,10 +173,16 @@ final class ScaffoldGrid {
                 if (climbable(x, y - 1, z)) {
                     relax(queue, best, x, y - 1, z, at[3], limit);
                 }
+                if (insideColumn(x, y, z)) {
+                    continue; // builders climb inside a column and come back down; they never step off it (ScaffoldClimber)
+                }
             }
             for (int[] d : DIRECTIONS) {
                 int nx = x + d[0];
                 int nz = z + d[1];
+                if (insideColumn(nx, y + 1, nz) || insideColumn(nx, y, nz)) {
+                    continue; // and never step into one above its base
+                }
                 relax(queue, best, nx, y + 1, nz, at[3] + 1.4142f, limit); // hop up
                 relax(queue, best, nx, y, nz, at[3] + 1, limit);
                 if (!solid(nx, y, nz) && !solid(nx, y + 1, nz)) {

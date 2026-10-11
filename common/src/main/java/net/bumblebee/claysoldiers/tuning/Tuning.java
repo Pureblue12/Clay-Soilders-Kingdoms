@@ -110,9 +110,9 @@ public final class Tuning {
     public static final TuningKey.IntKey BUILD_UNREACHABLE_RECHECK_TICKS = register(new TuningKey.IntKey("build.unreachable_recheck_ticks",
             "A blueprint block builders found out of reach isn't checked again (an expensive path search) for this many ticks, unless a block of the build is placed or removed near it first. 0: always check.", 200, 0, 1200));
     public static final TuningKey.IntKey BUILD_PATH_RANGE_BONUS = register(new TuningKey.IntKey("build.path_range_bonus",
-            "A builder's search for a standing spot within reach of a blueprint block may walk this many blocks further (vanilla limits a path's walked length to the follow range, 16, and counts it generously: a 20-step walk around a wall measured over 32; measured from where the builder asks: usually its chest, so the far side of a building was out of reach). Walking to storage, combat and other paths keep the normal limit; builds with scaffolding keep scaffold.path_range_bonus.", 48, 0, 64));
+            "While a builder works for a build, every path it walks (to a standing spot, back to the easel, to its chest) may be this many blocks longer than its follow range (16) allows (vanilla rejects longer paths and counts the walked length generously: a 20-step walk around a wall measured over 32; the way around a big building, back to the easel, is longer than 16). Combat and paths outside building work keep the normal limit; builds with scaffolding use the larger of this and scaffold.path_range_bonus.", 48, 0, 64));
     public static final TuningKey.IntKey BUILD_PATH_NODES_MULTIPLIER = register(new TuningKey.IntKey("build.path_nodes_multiplier",
-            "A builder's search for a standing spot within reach of a blueprint block may look at this many times more steps (vanilla: 256).", 4, 1, 16));
+            "While a builder works for a build, its path searches may look at this many times more steps (vanilla: 256).", 4, 1, 16));
     public static final TuningKey.IntKey SCAFFOLD_COLUMNS_FIRST = register(new TuningKey.IntKey("scaffold.columns_first",
             "1: once builders start putting up a build's scaffolding (nothing else in reach), they put all of it up before working above reach; 0: they raise it a level at a time, whenever nothing else is in reach.", 1, 0, 1));
     public static final TuningKey.BlockKey SCAFFOLD_MATERIAL = register(new TuningKey.BlockKey("scaffold.material",
@@ -131,9 +131,9 @@ public final class Tuning {
     public static final TuningKey.IntKey SCAFFOLD_STALE_TICKS = register(new TuningKey.IntKey("scaffold.request_stale_ticks",
             "A scaffold request a builder has had this long without finishing it can be handed to another builder, in ticks.", 600, 100, 12_000));
     public static final TuningKey.IntKey SCAFFOLD_PATH_NODES_MULTIPLIER = register(new TuningKey.IntKey("scaffold.path_nodes_multiplier",
-            "While a builder works for a build with scaffolding, its path search may look at this many times more steps (routes up a scaffold wind around).", 4, 1, 16));
+            "While a builder works for a build with scaffolding, its path searches may look at this many times more steps (routes up a scaffold wind around); the larger of this and build.path_nodes_multiplier counts.", 4, 1, 16));
     public static final TuningKey.IntKey SCAFFOLD_PATH_RANGE_BONUS = register(new TuningKey.IntKey("scaffold.path_range_bonus",
-            "While a builder works for a build with scaffolding, its paths may be this many blocks longer (vanilla limits a path's walked length to the follow range, 16; each step up a scaffold counts about 1.4).", 16, 0, 64));
+            "While a builder works for a build with scaffolding, its paths may be this many blocks longer (vanilla limits a path's walked length to the follow range, 16; each step up a scaffold counts about 1.4); the larger of this and build.path_range_bonus counts.", 16, 0, 64));
     public static final TuningKey.IntKey SCAFFOLD_REPATH_TICKS = register(new TuningKey.IntKey("scaffold.repath_ticks",
             "While a builder walks to a block of a build with scaffolding, it plans its route again this often (tiny soldiers climb floating steps better with fresh routes), in ticks.", 20, 5, 200));
     public static final TuningKey.IntKey SCAFFOLD_STEP_PRECISION = register(new TuningKey.IntKey("scaffold.step_precision_hundredths",
