@@ -282,6 +282,32 @@ public class BuilderSafetyGameTests {
         });
     }
 
+    /**
+     * BUG TEST (held at an edge): a builder standing on the edge of a 1x1 pillar, its center over the 4-block drop
+     * beside it. Its path starts with that drop, which the edge guard won't let it take, so it stood still with a
+     * complete path forever (noble house L1, farm L1, hospital L1). It must be brought back and finish the build.
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 2400)
+    public static void builderHeldAtAnEdgeIsBroughtBack(GameTestHelper helper) {
+        BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "held_at_edge", 1, 1, 1, BlockPos.ZERO);
+        ClaySoldierEntity soldier = ClaySoldierGameTests.setUpBuilder(helper, blueprint, List.of(new ItemStack(Items.COBBLESTONE))).soldier();
+        BlockPos top = helper.absolutePos(pillar(helper, 9, 9, 10, 10));
+        double half = soldier.getBbWidth() / 2;
+        boolean[] stranded = {false};
+        helper.onEachTick(() -> {
+            if (!stranded[0] && soldier.getCarriedStack().is(Items.COBBLESTONE)) {
+                stranded[0] = true;
+                // East edge of the pillar: the center over air, a sliver of the box still on the pillar.
+                soldier.teleportTo(top.getX() + 1 + half * 0.5, top.getY(), top.getZ() + 0.5);
+            }
+        });
+        helper.succeedWhen(() -> {
+            helper.assertTrue(soldier.isAlive(), "The builder died");
+            helper.assertTrue(stranded[0], "The builder never carried the block");
+            helper.assertBlockPresent(Blocks.COBBLESTONE, SPOT);
+        });
+    }
+
     /** A cobblestone pillar from the ground up to y 5 (relative) over x0..x1, z0..z1; returns the standing spot on top (its west end). */
     private static BlockPos pillar(GameTestHelper helper, int x0, int x1, int z0, int z1) {
         for (int x = x0; x <= x1; x++) {

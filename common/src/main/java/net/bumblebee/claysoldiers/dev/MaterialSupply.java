@@ -37,6 +37,12 @@ public final class MaterialSupply {
     public static final int INTERVAL_TICKS = 20;
     /** Slots left empty for items builders put back. */
     public static final int FREE_SLOTS = 3;
+    /**
+     * Ticks an item the plan still needs must be missing (not in the chest, not waiting) before it counts as lost: longer
+     * than a builder may carry one ({@code BuildBlueprintGoal.MAX_CARRY_TICKS}, 400) and than a request goes stale (600),
+     * so an item on its way to its spot is not brought twice.
+     */
+    public static final int LOST_AFTER_TICKS = 1200;
 
     /** Supplies started by dev commands, ticked by the server (dev runs only). */
     private static final List<MaterialSupply> ACTIVE = new ArrayList<>();
@@ -46,6 +52,10 @@ public final class MaterialSupply {
     private final List<ItemStack> waiting = new ArrayList<>();
     private final Supplier<List<Item>> demand;
     private final BooleanSupplier done;
+    /** Every item the plan has listed: once it no longer lists one, that item's leftovers aren't kept. */
+    private final Set<Item> planItems;
+    /** Game time each needed item was first seen missing (see {@link #resupplyLost}). */
+    private final Map<Item, Long> missingSince = new LinkedHashMap<>();
     private int ticks;
 
     /**
@@ -58,6 +68,7 @@ public final class MaterialSupply {
         this.chestPos = chestPos.immutable();
         this.demand = demand;
         this.done = done;
+        this.planItems = new LinkedHashSet<>(demand.get());
         for (ItemStack stack : items) {
             int remaining = stack.getCount();
             while (remaining > 0) {
@@ -106,19 +117,24 @@ public final class MaterialSupply {
         return moved;
     }
 
-    /** The items to keep in the chest: materials the plan doesn't list, then the plan's items in hand-out order. */
+    /**
+     * The items to keep in the chest: materials the plan never listed (scaffold material), then the plan's items in
+     * hand-out order. Leftovers of plan items already all placed are not kept: they filled every slot with 1 to 3 of
+     * each kind while the item asked for waited outside (structure build run 38156523957: inn, smithy, stables, ...).
+     */
     private Set<Item> wanted(ChestBlockEntity chest, int slots) {
         List<Item> order = demand.get();
         Set<Item> listed = new LinkedHashSet<>(order);
+        planItems.addAll(listed);
         Set<Item> wanted = new LinkedHashSet<>();
         for (ItemStack stack : waiting) {
-            if (!listed.contains(stack.getItem())) {
+            if (!listed.contains(stack.getItem()) && !planItems.contains(stack.getItem())) {
                 wanted.add(stack.getItem());
             }
         }
         for (int slot = 0; slot < chest.getContainerSize(); slot++) {
             ItemStack stack = chest.getItem(slot);
-            if (!stack.isEmpty() && !listed.contains(stack.getItem())) {
+            if (!stack.isEmpty() && !listed.contains(stack.getItem()) && !planItems.contains(stack.getItem())) {
                 wanted.add(stack.getItem());
             }
         }
@@ -137,15 +153,24 @@ public final class MaterialSupply {
      * Items the build still needs that are neither in the chest nor waiting: lost with a builder that died carrying
      * them, or held by one that can't get back. A player would bring more, so they come back into the waiting list
      * (as many as the plan still needs, one stack at most); otherwise the build waits for them forever (structure
-     * build run 38149380878: town hall L1, keep L1, gatehouse L2, farm L2).
+     * build run 38149380878: town hall L1, keep L1, gatehouse L2, farm L2). Only after {@link #LOST_AFTER_TICKS} missing:
+     * the last of an item is usually in a builder's hands on its way to its spot, and bringing it twice left leftovers.
      */
     private void resupplyLost(ChestBlockEntity chest) {
         Map<Item, Integer> needed = new LinkedHashMap<>();
         for (Item item : demand.get()) {
             needed.merge(item, 1, Integer::sum);
         }
+        long now = level.getGameTime();
+        missingSince.keySet().removeIf(item -> !needed.containsKey(item));
         needed.forEach((item, count) -> {
-            if (item != Items.AIR && chest.countItem(item) == 0 && !hasWaiting(item)) {
+            if (item == Items.AIR || chest.countItem(item) > 0 || hasWaiting(item)) {
+                missingSince.remove(item);
+                return;
+            }
+            long since = missingSince.computeIfAbsent(item, i -> now);
+            if (now - since >= LOST_AFTER_TICKS) {
+                missingSince.remove(item);
                 ItemStack stack = new ItemStack(item);
                 waiting.add(stack.copyWithCount(Math.min(count, stack.getMaxStackSize())));
                 DebugLog.event(DebugCategory.BUILD, null, "material supply: %s lost, brought %s more", item, Math.min(count, stack.getMaxStackSize()));

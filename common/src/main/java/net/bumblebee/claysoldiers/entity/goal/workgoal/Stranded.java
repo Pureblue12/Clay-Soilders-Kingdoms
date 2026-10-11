@@ -2,6 +2,7 @@ package net.bumblebee.claysoldiers.entity.goal.workgoal;
 
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
+import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
@@ -18,10 +19,13 @@ final class Stranded {
     private Stranded() {
     }
 
-    /** Whether the soldier's current route can't get it to its target (no path, or one that ends short). */
-    static boolean noWay(PathfinderMob soldier) {
+    /**
+     * Whether the soldier's current route can't get it to its target: no path, one that ends short, or one that starts
+     * with a drop the edge guard won't let it take ({@link EdgeGuard#heldRecently}).
+     */
+    static boolean noWay(AbstractClaySoldierEntity soldier) {
         Path path = soldier.getNavigation().getPath();
-        return path == null || !path.canReach();
+        return path == null || !path.canReach() || EdgeGuard.heldRecently(soldier);
     }
 
     /**

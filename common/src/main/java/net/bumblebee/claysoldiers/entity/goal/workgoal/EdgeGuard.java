@@ -7,6 +7,9 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Map;
+import java.util.WeakHashMap;
+
 /**
  * Keeps a working soldier from stepping off an edge with no floor within a safe drop below, the way vanilla keeps a
  * sneaking player on a block (D70). Builders walk along narrow ledges of what they build: a tiny soldier hopping up a
@@ -19,6 +22,10 @@ public final class EdgeGuard {
     /** The deepest drop a soldier's path plans (vanilla's 3), plus a little for the floor's top. */
     public static final double SAFE_DROP = 3.5;
     private static final double STEP = 0.05;
+    /** Ticks after a stop during which a soldier counts as held at an edge ({@link #heldRecently}). */
+    private static final int HELD_TICKS = 20;
+    /** Game time each soldier was last stopped at an edge (server side; forgotten with the soldier). */
+    private static final Map<AbstractClaySoldierEntity, Long> LAST_HELD = new WeakHashMap<>();
 
     private EdgeGuard() {
     }
@@ -43,8 +50,21 @@ public final class EdgeGuard {
         if (x == movement.x && z == movement.z) {
             return movement;
         }
+        LAST_HELD.put(soldier, soldier.level().getGameTime());
         DebugLog.event(DebugCategory.PATHING, soldier, "edge guard: stopped at the edge of a drop at %s", soldier.blockPosition());
         return new Vec3(x, movement.y, z);
+    }
+
+    /**
+     * Whether the guard stopped {@code soldier} within the last {@link #HELD_TICKS} ticks. A builder standing on the
+     * edge of a wall top it built, over a cell with a deeper drop below, gets a path that starts with that drop (vanilla
+     * starts the path in the soldier's own cell): the guard stops every step, and the path never ends (structure build
+     * run 38156523957: noble house L1, farm L1, hospital L1, all 3 builders on one cell for up to 13,800 ticks). Such a
+     * builder is stranded ({@link Stranded}).
+     */
+    static boolean heldRecently(AbstractClaySoldierEntity soldier) {
+        Long last = LAST_HELD.get(soldier);
+        return last != null && soldier.level().getGameTime() - last <= HELD_TICKS;
     }
 
     /** Whether the soldier moved by (dx, dz) would have nothing below it within {@link #SAFE_DROP}. */
