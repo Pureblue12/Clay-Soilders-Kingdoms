@@ -152,7 +152,11 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
     D68; `soldierDoesNotStandOnAFenceTop`). Off their paths (a hop that overshoots, a cut corner) they walked off ledges: a working soldier
     backs off from an edge with no floor within 3.5 below (`EdgeGuard`, D70; `workingBuilderDoesNotStepOffALedge`). A builder
     that finds no way to its target for `build.stranded_ticks` (or keeps being stopped by the edge guard, D73) is put beside its chest (`Stranded`, D72; `builderHeldAtAnEdgeIsBroughtBack`,
-    `strandedBuilderIsBroughtBack`). Still open (not confirmed why): keep L2 builders also die at one spot in the
+    `strandedBuilderIsBroughtBack`). Town hall builders still died at the foot of the front steps, 1.0 per fall (run
+    38165377544): they hopped off a stair's low step at the top of a planned 3-block drop (vanilla hops whenever the feet
+    are below the top of their block), and drops onto a half-height block measure 3.5. Soldiers no longer hop where a
+    step does (`ClaySoldierMoveControl`), and a working soldier's fall up to `EdgeGuard.SAFE_DROP` costs nothing (D74;
+    `soldierDoesNotHopOffAStairAtADrop`, `workingBuilderIsNotHurtByAPlannedDrop`). Still open (not confirmed why): keep L2 builders also die at one spot in the
     forecourt, 2.0 per fall, after placing on the upper floor, with no trapdoor placed yet; needs a PATHING recording.
   - A cottage builder stood inside a fence post (the lantern post) for 9,200 ticks (suite run 38128880972): a tiny
     soldier fits beside the post, so the fence was placed around it, and vanilla then starts every path in a cell the

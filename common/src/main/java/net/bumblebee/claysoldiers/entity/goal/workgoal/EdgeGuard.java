@@ -21,6 +21,8 @@ import java.util.WeakHashMap;
 public final class EdgeGuard {
     /** The deepest drop a soldier's path plans (vanilla's 3), plus a little for the floor's top. */
     public static final double SAFE_DROP = 3.5;
+    /** Rounding room for a fall of exactly {@link #SAFE_DROP}, which a working soldier takes without damage (D74). */
+    public static final double FALL_MARGIN = 0.01;
     private static final double STEP = 0.05;
     /** Ticks after a stop during which a soldier counts as held at an edge ({@link #heldRecently}). */
     private static final int HELD_TICKS = 20;
