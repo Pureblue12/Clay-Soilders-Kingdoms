@@ -29,8 +29,8 @@ import java.util.Set;
  * <p>
  * Builders have "long arms" (Fix B): a block can be placed when its center is less than {@link #HORIZONTAL_REACH}
  * blocks sideways from the builder's feet (up to 2 blocks away), from {@link #MAX_PLACE_DEPTH} below up to
- * {@link #MAX_PLACE_HEIGHT} above the feet. This includes everything the old rule (less than 2 blocks
- * straight-line) allowed.
+ * {@link #MAX_PLACE_HEIGHT} above the feet, but never the block it stands in. This includes everything the old rule
+ * (less than 2 blocks straight-line) allowed.
  */
 public final class BuilderReach {
     /** A block's center must be less than this far sideways from the builder's feet (so up to 2 blocks away). */
@@ -59,6 +59,9 @@ public final class BuilderReach {
         double dx = target.getX() + 0.5 - feet.x;
         double dz = target.getZ() + 0.5 - feet.z;
         int dy = target.getY() - Mth.floor(feet.y);
+        if (dy == 0 && Mth.floor(feet.x) == target.getX() && Mth.floor(feet.z) == target.getZ()) {
+            return false; // the block the builder stands in: it would build itself in
+        }
         return dx * dx + dz * dz < HORIZONTAL_REACH * HORIZONTAL_REACH && dy >= -MAX_PLACE_DEPTH && dy <= MAX_PLACE_HEIGHT;
     }
 

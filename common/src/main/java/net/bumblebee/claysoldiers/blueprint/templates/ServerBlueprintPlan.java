@@ -14,12 +14,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jetbrains.annotations.Nullable;
 
@@ -175,6 +177,12 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         if (!canPlaceBlock(level, pos)) {
             return false;
         }
+        if (creatureInside(level, pos)) {
+            // A soldier (or another creature) stands in the spot: a full block placed into it would suffocate it, as it
+            // did to builders at the entrance of the keep (D63). Vanilla refuses such placements too.
+            DebugLog.event(DebugCategory.BUILD, null, "not placed at %s: a creature stands there", pos);
+            return false;
+        }
         if (level.setBlock(pos, state, 3)) {
             state.getBlock().setPlacedBy(level, pos, state, null, stack);
             return true;
@@ -184,6 +192,12 @@ public class ServerBlueprintPlan extends BlueprintPlan {
 
     private boolean canPlaceBlock(Level level, BlockPos pos) {
         return canPlaceAt(level, pos);
+    }
+
+    /** Whether a living creature has its feet or its eyes in this block (a block placed there would be inside it). */
+    public static boolean creatureInside(Level level, BlockPos pos) {
+        return !level.getEntitiesOfClass(LivingEntity.class, new AABB(pos), creature -> creature.isAlive()
+                && (creature.blockPosition().equals(pos) || BlockPos.containing(creature.getEyePosition()).equals(pos))).isEmpty();
     }
 
     /**
