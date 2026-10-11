@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -123,7 +124,14 @@ public final class BuilderReach {
         if (path != null && path.canReach() && endsWithinReach(path, target)) {
             return new Reach(path, "");
         }
-        return new Reach(null, path == null ? "no path at all" : "can't walk to a standing spot within reach");
+        if (path == null) {
+            return new Reach(null, "no path at all");
+        }
+        // Counted per reason in request summaries, so the details go to the recorder only.
+        Node end = path.getEndNode();
+        DebugLog.event(DebugCategory.PATHING, builder, "path to a standing spot for %s ends at %s after %s steps (follow range %s, %s spots)",
+                target, end == null ? "-" : end.asBlockPos(), path.getNodeCount(), builder.getAttributeValue(Attributes.FOLLOW_RANGE), spots.size());
+        return new Reach(null, "can't walk to a standing spot within reach");
     }
 
     /**
