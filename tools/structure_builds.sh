@@ -3,8 +3,9 @@
 # per level to build/structure-results.tsv. Not part of the required suite: these are optional GameTests.
 # Env vars (at least CSR_STRUCTURE_BUILDS must be set, or no structure tests exist):
 #   CSR_STRUCTURE_BUILDS=all        every structure level
-#   CSR_STRUCTURE_BUILDS=2/4        shard 2 of 4 (CI splits the work over 4 machines)
+#   CSR_STRUCTURE_BUILDS=2/20       shard 2 of 20 (CI splits the work over up to 20 machines)
 #   CSR_STRUCTURE_BUILDS_ONLY=keep,church   optional: only these structure ids
+# The test server ticks as fast as it can while these run (StructureBuildSprint); results are in ticks, not affected.
 # Example: CSR_STRUCTURE_BUILDS=all CSR_STRUCTURE_BUILDS_ONLY=keep tools/structure_builds.sh
 # The full log is kept in build/structure-builds.log. The required suite runs in the same server, and its known
 # flaky tests can make Gradle fail, so Gradle's exit code is ignored: the rows say what happened.

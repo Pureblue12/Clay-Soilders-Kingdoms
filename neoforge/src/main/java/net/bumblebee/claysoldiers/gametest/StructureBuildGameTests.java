@@ -340,11 +340,16 @@ public class StructureBuildGameTests {
             helper.assertTrue(height == entry.height(), entry.path() + " is " + height + " tall, the list says " + entry.height());
         }
         int all = selected("all", null).size();
-        int sharded = 0;
-        for (int shard = 1; shard <= 4; shard++) {
-            sharded += selected(shard + "/4", null).size();
+        // The workflow runs up to 20 shards (tools/structure_results.py shards); every shard must hold at least one build.
+        for (int shards : new int[]{4, 20}) {
+            int sharded = 0;
+            for (int shard = 1; shard <= shards; shard++) {
+                int size = selected(shard + "/" + shards, null).size();
+                helper.assertTrue(size > 0, "shard " + shard + "/" + shards + " holds no build");
+                sharded += size;
+            }
+            helper.assertTrue(sharded == all, shards + " shards hold " + sharded + " builds, all = " + all);
         }
-        helper.assertTrue(sharded == all, "4 shards hold " + sharded + " builds, all = " + all);
         helper.assertTrue(selected("all", "csr:keep, hovel").size() == STRUCTURES.stream()
                 .filter(entry -> Set.of("keep", "hovel").contains(entry.path())).mapToInt(Entry::levels).sum(), "the id filter is wrong");
         helper.succeed();
