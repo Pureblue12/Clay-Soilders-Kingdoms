@@ -82,7 +82,7 @@ A build fails at once after 6000 ticks without progress, with a stall report. Th
 (`gametest/structure_build.nbt`, 48x24x48) has a grass floor. The required test `buildListMatchesRegistry` keeps the
 list in `StructureBuildGameTests.STRUCTURES` in step with the registry: add a row when a structure is promoted.
 
-Current status (2026-10-04, after stage 3 Tall construction spike and its in-game fixes D41, D42): all 168 required tests pass (the suite takes a few
+Current status (2026-10-04, after stage 3 Tall construction spike and its in-game fixes D41, D42): all 169 required tests pass (the suite takes a few
 minutes: the scaffold tests build whole towers and the Small House). `SuspectedBugGameTests` covers the easel right-click:
 non-block item, unneeded block, needed block.
 
@@ -135,7 +135,9 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
     left through an unglazed window onto its open shutters, and vanilla's pathfinder treats an open trapdoor as a
     floor (the vanilla trapdoor trap). The soldiers' pathfinder now counts an open trapdoor's cell as air and the cell
     above it as floorless (`DoorPathing.withoutOpenTrapdoorFloors`, D65; `soldierDoesNotWalkOntoAnOpenTrapdoor`,
-    `soldierWalksOverClosedTrapdoors`). Still open (not confirmed why): keep L2 builders also die at one spot in the
+    `soldierWalksOverClosedTrapdoors`). They also fell through the tops of fences, walls and panes, which vanilla counts
+    as floors though a tiny soldier misses the post: those cells have no floor for soldiers (`DoorPathing.withoutThinBlockFloors`,
+    D68; `soldierDoesNotStandOnAFenceTop`). Still open (not confirmed why): keep L2 builders also die at one spot in the
     forecourt, 2.0 per fall, after placing on the upper floor, with no trapdoor placed yet; needs a PATHING recording.
   - A cottage builder stood inside a fence post (the lantern post) for 9,200 ticks (suite run 38128880972): a tiny
     soldier fits beside the post, so the fence was placed around it, and vanilla then starts every path in a cell the

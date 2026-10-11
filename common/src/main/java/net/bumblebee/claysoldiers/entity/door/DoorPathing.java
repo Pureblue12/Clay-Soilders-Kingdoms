@@ -12,7 +12,9 @@ import net.minecraft.world.entity.ai.navigation.AmphibiousPathNavigation;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.CrossCollisionBlock;
 import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
@@ -35,7 +37,8 @@ import java.util.Set;
  * the pathfinder asks {@link DoorAccess} about every closed wooden door: a door the soldier may not open counts as a
  * wall, like an iron door. So soldiers never plan a path through a door they would be refused at. On scaffold blocks
  * the walking navigation also follows its path precisely (stage 3). An open trapdoor is never a floor (D65): vanilla
- * lets mobs walk onto open trapdoors and fall through them.
+ * lets mobs walk onto open trapdoors and fall through them. Nor is the top of a fence, wall or pane (D68): a tiny
+ * soldier falls past the post.
  */
 public final class DoorPathing {
     private DoorPathing() {
@@ -83,6 +86,25 @@ public final class DoorPathing {
     private static boolean isOpenTrapdoor(PathfindingContext context, int x, int y, int z) {
         BlockState state = context.level().getBlockState(new BlockPos(x, y, z));
         return state.getBlock() instanceof TrapDoorBlock && state.getValue(TrapDoorBlock.OPEN);
+    }
+
+    /**
+     * Vanilla counts the cell above a fence, wall, glass pane or iron bars as a floor, because a big mob always touches
+     * the post. A tiny soldier at the cell's edge misses it and falls through: town hall builders planned a 3-block drop
+     * onto a pane or fence top, fell straight through to the ground below, and died after a few such falls (structure
+     * build run 38140495889, fall traces; D68). For soldiers such a cell has no floor.
+     */
+    static PathType withoutThinBlockFloors(PathfindingContext context, int x, int y, int z, PathType type) {
+        if (type != PathType.WALKABLE) {
+            return type;
+        }
+        BlockPos feet = new BlockPos(x, y, z);
+        BlockGetter level = context.level();
+        if (!open(level, feet)) {
+            return type;
+        }
+        BlockState below = level.getBlockState(feet.below());
+        return below.getBlock() instanceof CrossCollisionBlock || below.getBlock() instanceof WallBlock ? PathType.OPEN : type;
     }
 
     /**
@@ -176,7 +198,7 @@ public final class DoorPathing {
 
     /** All soldier rules on vanilla's answer. */
     static PathType soldierRules(@Nullable Mob mob, PathfindingContext context, int x, int y, int z, PathType type) {
-        return withDoorAccess(mob, context, x, y, z, withoutPits(context, x, y, z, withoutOpenTrapdoorFloors(context, x, y, z, type)));
+        return withDoorAccess(mob, context, x, y, z, withoutPits(context, x, y, z, withoutThinBlockFloors(context, x, y, z, withoutOpenTrapdoorFloors(context, x, y, z, type))));
     }
 
     /**

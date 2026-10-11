@@ -35,7 +35,8 @@ import static net.bumblebee.claysoldiers.gametest.ClaySoldierGameTests.SOLDIER;
  * fell off upper floors and died (fall damage is multiplied by 100 upstream), got cobblestone walls and window panes
  * placed into them, and walled themselves into a 1x1 shaft of the keep. Each test asserts the CORRECT behavior.
  * D65 (run 38124453564): the town hall's builders walked out of an unglazed window onto its open shutters and fell to
- * their deaths, because vanilla's pathfinder treats an open trapdoor as a floor.
+ * their deaths, because vanilla's pathfinder treats an open trapdoor as a floor. D68 (run 38140495889): they also fell
+ * through the tops of fences and panes, which vanilla counts as floors too.
  */
 @GameTestHolder(ClaySoldiersCommon.MOD_ID)
 @PrefixGameTestTemplate(false)
@@ -186,6 +187,45 @@ public class BuilderSafetyGameTests {
         helper.runAfterDelay(5, () -> {
             Path path = soldier.getNavigation().createPath(otherAbsolute, 0);
             helper.assertTrue(path != null && path.canReach(), "No path over the closed trapdoors to the other pillar");
+            helper.succeed();
+        });
+    }
+
+    /**
+     * BUG TEST (falling through a fence top): a soldier on a 4-high pillar, a row of fences and a glass pane on the
+     * ground beside it. Vanilla counts the cell above a fence or pane as a floor (a 3-block drop) and the soldier, too
+     * tiny to touch the post, falls through to the ground (town hall builders, fall traces in run 38140495889; D68). No
+     * path step may stand on top of the row, and the soldier stays on the pillar (the ground is a 4-block drop).
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 400)
+    public static void soldierDoesNotStandOnAFenceTop(GameTestHelper helper) {
+        BlockPos top = pillar(helper, 2, 4, 6, 8);
+        int rowX = top.getX() + 1;
+        helper.setBlock(new BlockPos(rowX, ClaySoldierGameTests.GROUND_Y, 6), Blocks.OAK_FENCE);
+        helper.setBlock(new BlockPos(rowX, ClaySoldierGameTests.GROUND_Y, 7), Blocks.COBBLESTONE_WALL);
+        helper.setBlock(new BlockPos(rowX, ClaySoldierGameTests.GROUND_Y, 8), Blocks.GLASS_PANE);
+        BlockPos target = new BlockPos(rowX + 3, ClaySoldierGameTests.GROUND_Y, top.getZ());
+        ClaySoldierEntity soldier = DoorGameTests.spawnSoldier(helper, top, DevScenarios.RED_TEAM);
+        int rowAbsoluteX = helper.absolutePos(new BlockPos(rowX, 0, 0)).getX();
+        int rowTopAbsoluteY = helper.absolutePos(new BlockPos(rowX, ClaySoldierGameTests.GROUND_Y + 1, 0)).getY();
+        BlockPos targetAbsolute = helper.absolutePos(target);
+        helper.runAfterDelay(5, () -> {
+            Path path = soldier.getNavigation().createPath(targetAbsolute, 0);
+            for (int i = 0; path != null && i < path.getNodeCount(); i++) {
+                BlockPos node = path.getNode(i).asBlockPos();
+                helper.assertFalse(node.getX() == rowAbsoluteX && node.getY() == rowTopAbsoluteY,
+                        "BUG (fence top): the path stands on top of the fence row at " + node.toShortString());
+            }
+        });
+        helper.onEachTick(() -> {
+            if (helper.getTick() % 10 == 0) {
+                soldier.getNavigation().moveTo(targetAbsolute.getX() + 0.5, targetAbsolute.getY(), targetAbsolute.getZ() + 0.5, 1.0);
+            }
+        });
+        helper.runAfterDelay(300, () -> {
+            helper.assertTrue(soldier.isAlive(), "The soldier died");
+            helper.assertTrue(soldier.getY() >= helper.absolutePos(top).getY() - 0.1,
+                    "BUG (fence top): the soldier left the pillar over the fence row, it is at y " + soldier.getY());
             helper.succeed();
         });
     }
