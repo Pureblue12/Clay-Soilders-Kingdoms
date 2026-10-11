@@ -34,7 +34,7 @@
   "terrain.grade.pillar_spacing": 4,
   "terrain.grade.clear_trees_budget": 500,
   "build.unreachable_recheck_ticks": 200,
-  "build.path_range_bonus": 16,
+  "build.path_range_bonus": 48,
   "build.path_nodes_multiplier": 4,
   "scaffold.columns_first": 1,
   "scaffold.material": "minecraft:scaffolding",

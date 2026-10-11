@@ -68,7 +68,7 @@ them in its "Stall reports" step. GitHub's machines are slower: the one wall-clo
 - Grading and test-terrain undo share the structure paste's global undo history: tests that undo get their own batch.
 - The framework also puts a barrier roof at the top of a test area (16 high for `terrain`): tests that build higher
   use `skyAccess = true`. Builders only follow paths up to their follow range (16; the search for a standing spot next to a
-  blueprint block gets `build.path_range_bonus` 16 more, D61): keep a test's chest within about 28 walked blocks of every block.
+  blueprint block gets `build.path_range_bonus` 48 more, D61): keep a test's chest within about 28 walked blocks of every block.
 
 ### Structure build tests (every Studio structure, separate workflow)
 
