@@ -229,6 +229,34 @@ public class BuilderSafetyGameTests {
         helper.succeedWhen(() -> helper.assertFalse(soldier.blockPosition().equals(at), "BUG (stuck inside a post): the soldier is still in the fence cell"));
     }
 
+    /**
+     * BUG TEST (penned in a pocket): a builder inside a fence cell's corner pocket, between the post and the arms to the
+     * north, south and east (farm L2/L3 on CI: three builders stood in one for 4,000 ticks, each with a path to the
+     * chest it could never start walking, since the way out crossed the post). It must be standing outside the cell
+     * soon after, and finish its build.
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 1200)
+    public static void builderInAFencePocketGetsOut(GameTestHelper helper) {
+        BlockPos cell = new BlockPos(10, ClaySoldierGameTests.GROUND_Y, 10);
+        helper.setBlock(cell, Blocks.OAK_FENCE);
+        helper.setBlock(cell.north(), Blocks.OAK_FENCE);
+        helper.setBlock(cell.south(), Blocks.OAK_FENCE);
+        helper.setBlock(cell.east(), Blocks.OAK_FENCE);
+        BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "fence_pocket", 1, 1, 1, BlockPos.ZERO);
+        ClaySoldierGameTests.Builder builder = ClaySoldierGameTests.setUpBuilder(helper, blueprint, List.of(new ItemStack(Items.COBBLESTONE, 4)));
+        BlockPos at = helper.absolutePos(cell);
+        ClaySoldierEntity soldier = builder.soldier();
+        soldier.getNavigation().stop();
+        soldier.setPos(at.getX() + 0.8, at.getY(), at.getZ() + 0.2); // the north-east pocket
+        helper.runAfterDelay(2, () -> helper.assertTrue(soldier.blockPosition().equals(at),
+                "The builder is not inside the fence cell but at " + soldier.blockPosition().toShortString()));
+        helper.succeedWhen(() -> {
+            helper.assertTrue(soldier.isAlive(), "The builder died");
+            helper.assertFalse(soldier.blockPosition().equals(at), "BUG (penned in a pocket): the builder is still in the fence cell");
+            helper.assertBlockPresent(Blocks.COBBLESTONE, SPOT);
+        });
+    }
+
     /** A clay soldier of the builders' team standing still (no AI) at {@code pos}. */
     private static ClaySoldierEntity bystander(GameTestHelper helper, BlockPos pos) {
         return bystander(helper, pos, 0.5, 0.5);

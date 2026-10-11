@@ -140,8 +140,11 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
   - A cottage builder stood inside a fence post (the lantern post) for 9,200 ticks (suite run 38128880972): a tiny
     soldier fits beside the post, so the fence was placed around it, and vanilla then starts every path in a cell the
     soldier may not enter (one-node paths). The easel never places a fence, wall or pane in a cell a creature stands
-    in, and a soldier inside such a cell starts its path from the nearest free cell beside it (D66;
-    `fenceIsNotPlacedAroundASoldier`, `soldierInsideAFenceCellWalksOut`).
+    in, and a soldier inside such a cell starts its path from the nearest free cell beside it that it can slide to
+    without hitting the post (D66; `fenceIsNotPlacedAroundASoldier`, `soldierInsideAFenceCellWalksOut`). Penned in a
+    corner pocket between the post and two arms (farm L2/L3 on CI, 4,000 ticks with a path it could never start), a
+    builder is put out onto the nearest free spot beside the cell (`OffTheFence`, BUILD event;
+    `builderInAFencePocketGetsOut`).
 - Fixed (door race): doors-last only ordered the list, so a door could be handed out while other blocks were
   still being carried (a glass pane got locked out in the 08:03 recording). Now `ServerBlueprintPlan.getRequest`
   hands out a door only when no other (non-door) block with a free spot remains; doors don't wait for each
