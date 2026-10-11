@@ -134,7 +134,8 @@ public final class BuilderReach {
         Node end = path.getEndNode();
         DebugLog.event(DebugCategory.PATHING, builder, () -> "path to a standing spot for %s ends at %s after %s steps (follow range %s, %s spots); %s"
                 .formatted(target, end == null ? "-" : end.asBlockPos(), path.getNodeCount(), builder.getAttributeValue(Attributes.FOLLOW_RANGE), spots.size(),
-                        describe(searchPath(builder, spots, 64.0F, 8192))));
+                        describe("64/8192", searchPath(builder, spots, 64.0F, 8192)) + "; " + describe("32/8192", searchPath(builder, spots, 32.0F, 8192))
+                                + "; " + describe("64/1024", searchPath(builder, spots, 64.0F, 1024))));
         return new Reach(null, "can't walk to a standing spot within reach");
     }
 
@@ -164,12 +165,12 @@ public final class BuilderReach {
     }
 
     /** For the recorder: how a search with very wide limits ends, to tell a limit from a wall. */
-    private static String describe(@Nullable Path path) {
+    private static String describe(String limits, @Nullable Path path) {
         if (path == null) {
-            return "a wide search (64, 8192 steps) found nothing";
+            return "search " + limits + " found nothing";
         }
         Node end = path.getEndNode();
-        return "a wide search (64, 8192 steps) %s at %s after %s steps".formatted(path.canReach() ? "reaches a spot" : "ends", end == null ? "-" : end.asBlockPos(), path.getNodeCount());
+        return "search %s %s at %s after %s steps".formatted(limits, path.canReach() ? "reaches a spot" : "ends", end == null ? "-" : end.asBlockPos(), path.getNodeCount());
     }
 
     /**
