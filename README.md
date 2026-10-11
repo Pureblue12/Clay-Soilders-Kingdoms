@@ -18,6 +18,9 @@ warriors, dress them with gear, and watch them skirmish. **Clay Soldiers Kingdom
 aims further: soldiers that **build real buildings on their own**, gather resources, and one day
 found **kingdoms** that grow, defend themselves and go to war with each other.
 
+<!-- TODO(Carlton): add in-game screenshots here, e.g. soldiers building a keep, scaffolding, a kingdom book.
+     Save them small (under ~300 KB, JPEG) in docs/img/ and link them like the Studio ones below. -->
+
 ## What works today
 
 - **Customizable clay soldiers** with teams, gear and effects, all driven by datapacks (inherited from CSR).
@@ -50,6 +53,8 @@ Structures are designed and reviewed outside the game in the **Structure Studio*
 browser tool that shows every structure in 3D with real Minecraft block models, level by level.
 You approve or reject versions with notes, compare them side by side and roll back; approved
 structures are promoted into the mod.
+
+![Many structures in the Studio](./docs/img/studio-overview.jpg)
 
 ![Cathedral, level by level](./docs/img/studio-cathedral-levels.jpg)
 
