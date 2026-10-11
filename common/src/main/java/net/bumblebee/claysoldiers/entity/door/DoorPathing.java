@@ -89,7 +89,8 @@ public final class DoorPathing {
      * from a cell it may not enter: the path is one step long and the soldier stands there for good (a cottage builder
      * returning to the chest, 9,200 ticks). Such a soldier starts its path from the nearest free cell beside it
      * instead, and walks out (D66). Vanilla's own fallback looks at the corners of the mob's body, which for a tiny
-     * soldier are all in the same cell.
+     * soldier are all in the same cell. Only a cell the soldier can slide to counts ({@link #canSlideTo}); when there
+     * is none, vanilla's one-step path stays and {@code OffTheFence} puts the soldier out (BUILD).
      */
     @Nullable
     static Node startOutsideABlockedCell(Mob mob, Node start, java.util.function.Predicate<BlockPos> canStartAt,
@@ -102,7 +103,7 @@ public final class DoorPathing {
         double bestDistance = Double.MAX_VALUE;
         for (Direction side : Direction.Plane.HORIZONTAL) {
             BlockPos next = here.relative(side);
-            if (canStartAt.test(next)) {
+            if (canStartAt.test(next) && canSlideTo(mob, next)) {
                 double distance = mob.position().distanceToSqr(next.getX() + 0.5, next.getY(), next.getZ() + 0.5);
                 if (distance < bestDistance) {
                     bestDistance = distance;
@@ -117,6 +118,17 @@ public final class DoorPathing {
             DebugLog.event(DebugCategory.PATHING, soldier, "inside %s at %s, starting the path from %s", start.type, here, best);
         }
         return startNode.apply(best);
+    }
+
+    /**
+     * Whether {@code mob} can move in a straight line to the middle of {@code cell} without hitting a block: the whole
+     * sweep of its body must be free. A soldier in a fence cell's corner pocket, behind the post and an arm, can't
+     * (farm L2/L3 on CI: three builders stood in such a pocket with an 8-step path they could never start walking).
+     */
+    private static boolean canSlideTo(Mob mob, BlockPos cell) {
+        double dx = cell.getX() + 0.5 - mob.getX();
+        double dz = cell.getZ() + 0.5 - mob.getZ();
+        return mob.level().noCollision(mob, mob.getBoundingBox().expandTowards(dx, 0, dz));
     }
 
     /** Both soldier rules on vanilla's answer. */
