@@ -7,6 +7,10 @@
   python3 tools/structure_results.py table <tsv files...>
       Merges shard TSVs and prints a Markdown report, one row per structure.
       Exits 0 if every structure level passed, 1 otherwise (after printing the table).
+  python3 tools/structure_results.py shards [only] [max]
+      Prints GitHub step outputs "count=N" and "shards=[1, ..., N]": N = the number of builds (every level of every
+      structure in StructureBuildGameTests.STRUCTURES, or only the comma-separated ids in [only]), at most [max]
+      (default 20), so no machine starts without a build.
 
 Standard library only.
 """
@@ -148,7 +152,25 @@ def table(paths):
     return 0 if rows and built == len(rows) else 1
 
 
+ENTRY = re.compile(r'new Entry\("([a-z0-9_]+)", \d+, \d+, ([\d, ]+)\)')
+TESTS = "neoforge/src/main/java/net/bumblebee/claysoldiers/gametest/StructureBuildGameTests.java"
+
+
+def shards(only, most):
+    ids = {i.strip().removeprefix("csr:") for i in only.split(",") if i.strip()}
+    with open(TESTS, encoding="utf-8") as f:
+        entries = ENTRY.findall(f.read())
+    builds = sum(len(blocks.split(",")) for sid, blocks in entries if not ids or sid in ids)
+    count = max(1, min(most, builds))
+    print(f"count={count}")
+    print(f"shards={list(range(1, count + 1))}")
+    print(f"{builds} builds over {count} machines", file=sys.stderr)
+    return 0
+
+
 def main(argv):
+    if len(argv) in (2, 3, 4) and argv[1] == "shards":
+        return shards(argv[2] if len(argv) > 2 else "", int(argv[3]) if len(argv) > 3 else 20)
     if len(argv) == 4 and argv[1] == "parse":
         return parse(argv[2], argv[3])
     if len(argv) >= 3 and argv[1] == "table":

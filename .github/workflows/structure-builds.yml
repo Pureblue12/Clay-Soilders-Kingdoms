@@ -1,5 +1,6 @@
 # Builds every promoted structure level (about 156 builds) with 3 clay-soldier builders: StructureBuildGameTests, run
-# by tools/structure_builds.sh, split over 4 machines. Separate from ci.yml on purpose: far too slow for every PR, so it
+# by tools/structure_builds.sh, split over up to 20 machines (fewer when "only" picks fewer builds), each running its
+# test server as fast as it can (tick sprint, StructureBuildSprint). Separate from ci.yml on purpose: far too slow for every PR, so it
 # only runs when structures or the build test change, or by hand (Actions -> Structure builds -> Run workflow).
 # A red run here means some structure didn't build, not that the mod is broken: the result table is in the run summary.
 name: Structure builds
@@ -37,18 +38,46 @@ concurrency:
   group: structure-builds-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  # Empty unless started by hand with "only" filled in.
+  CSR_STRUCTURE_BUILDS_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.only || '' }}
+
 jobs:
+  # How many machines: one per build, at most 20 (GitHub runs up to 20 jobs at once on a free account).
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      count: ${{ steps.shards.outputs.count }}
+      shards: ${{ steps.shards.outputs.shards }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: shards
+        run: python3 tools/structure_results.py shards "$CSR_STRUCTURE_BUILDS_ONLY" 20 >> "$GITHUB_OUTPUT"
+
+  # The static "can this be built" check (seconds per level, no game): which levels it expects to fail and why, in the
+  # run summary next to the real results. Never fails the run; its verdicts are a model, the builds are the truth.
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Buildability check
+        run: |
+          set +e
+          ids=$(echo "$CSR_STRUCTURE_BUILDS_ONLY" | tr ',' ' ')
+          python3 tools/buildability.py --markdown $ids | tee check.md
+          cat check.md >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+
   build:
+    needs: plan
     runs-on: ubuntu-latest
     timeout-minutes: 150
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4]
+        shard: ${{ fromJSON(needs.plan.outputs.shards) }}
     env:
-      CSR_STRUCTURE_BUILDS: "${{ matrix.shard }}/4"
-      # Empty unless started by hand with "only" filled in.
-      CSR_STRUCTURE_BUILDS_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.only || '' }}
+      CSR_STRUCTURE_BUILDS: "${{ matrix.shard }}/${{ needs.plan.outputs.count }}"
     steps:
       - uses: actions/checkout@v4
 
@@ -65,7 +94,7 @@ jobs:
         run: ./gradlew :neoforge:runData
 
       # Fails only if the server didn't start or planned no structure test; failed builds go red in the table job.
-      - name: Structure builds (shard ${{ matrix.shard }} of 4)
+      - name: Structure builds (shard ${{ matrix.shard }} of ${{ needs.plan.outputs.count }})
         run: tools/structure_builds.sh
 
       # Builds that end a few blocks short write "CSR stall report" lines (BuildStallReport): show them here, so they can
@@ -86,7 +115,7 @@ jobs:
             build/structure-builds.log
           if-no-files-found: ignore
 
-  # Merges the 4 shards into one table (run summary). Red if any structure level didn't build.
+  # Merges the shards into one table (run summary). Red if any structure level didn't build.
   table:
     needs: build
     if: always()

@@ -76,7 +76,18 @@ them in its "Stall reports" step. GitHub's machines are slower: the one wall-clo
 (about 156 builds). Too slow for the suite: the builds only exist when `CSR_STRUCTURE_BUILDS` is set (`all` or a shard
 `k/n`; `CSR_STRUCTURE_BUILDS_ONLY=keep,church` limits them) and are optional. Run `tools/structure_builds.sh`
 (writes `build/structure-results.tsv`) or the GitHub workflow "Structure builds" (`.github/workflows/structure-builds.yml`,
-4 shards, a result table per structure in the run summary; runs when structure files or the test change, or by hand).
+one machine per build up to 20, a result table per structure in the run summary; runs when structure files or the test
+change, or by hand). While they run, the test server ticks as fast as it can (`StructureBuildSprint`, like `/tick sprint`;
+results are in ticks, so only wall-clock time changes).
+
+Before any game test: `python3 tools/buildability.py [ids]` (standard library, no Gradle, about 2 minutes for all 156 levels
+on 4 cores) simulates the builders with the mod's rules (build order, `BuilderReach`, the walking model of `ScaffoldGrid`,
+scaffold columns outside the structure) and gives each level a verdict: STUCK (blocks no standing spot reaches, or gravel
+placed before the block under it), RISKY (blocks placeable only from a spot with no way back, fence/wall/pane tops 4+ high
+the pathfinder walks on), DECOR (finishes, but hanging lanterns under top slabs/stairs, plants on air, a daylight detector or
+filled brewing stand won't match the file), SCAFFOLD, BUILDABLE. The workflow puts its table in the run summary. Against the
+2026-10-11 run (107 of 156 built) it flagged 41 of the 47 failed levels with 3 false alarms; it misses training yard,
+graveyard L2, market stall L3 and gatehouse L1. A model, not the game: keep it in step when the rules it copies change.
 A build fails at once after 6000 ticks without progress, with a stall report. The chest is kept stocked by
 `dev/MaterialSupply` (most structures need more than 27 stacks; it stocks the items the easel hands out next). The test area
 (`gametest/structure_build.nbt`, 48x24x48) has a grass floor. The required test `buildListMatchesRegistry` keeps the
