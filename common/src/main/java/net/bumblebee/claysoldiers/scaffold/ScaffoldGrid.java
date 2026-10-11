@@ -180,11 +180,13 @@ final class ScaffoldGrid {
             for (int[] d : DIRECTIONS) {
                 int nx = x + d[0];
                 int nz = z + d[1];
-                if (insideColumn(nx, y + 1, nz) || insideColumn(nx, y, nz)) {
-                    continue; // and never step into one above its base
+                // and never step into one above its base (its base they enter like any cell)
+                if (!insideColumn(nx, y + 1, nz)) {
+                    relax(queue, best, nx, y + 1, nz, at[3] + 1.4142f, limit); // hop up
                 }
-                relax(queue, best, nx, y + 1, nz, at[3] + 1.4142f, limit); // hop up
-                relax(queue, best, nx, y, nz, at[3] + 1, limit);
+                if (!insideColumn(nx, y, nz)) {
+                    relax(queue, best, nx, y, nz, at[3] + 1, limit);
+                }
                 if (!solid(nx, y, nz) && !solid(nx, y + 1, nz)) {
                     for (int drop = 1; drop <= MAX_DROP; drop++) {
                         if (standable(nx, y - drop, nz)) {
