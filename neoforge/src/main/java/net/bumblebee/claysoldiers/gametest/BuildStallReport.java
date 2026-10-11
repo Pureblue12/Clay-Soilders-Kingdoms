@@ -7,29 +7,39 @@ import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugEvent;
 import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.entity.soldier.ClaySoldierEntity;
+import net.bumblebee.claysoldiers.scaffold.ScaffoldSavedData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Predicate;
 
 /**
  * Explains a builder test that is about to time out: the CI builds sometimes end 1 to 5 blocks short, and the suite log
  * is all there is to go on. Records BUILD, PATHING and SCAFFOLD for the test unless it already records (so it must have its own
  * batch, the recorder is world-wide), and shortly before the timeout, if the easel isn't finished, writes "CSR stall report" lines to the log:
  * every block still listed (spot, cooldown, request), the chest's contents, every builder (alive, where, carrying,
- * goal), items lying on the ground, and the last recorded events. The CI workflow prints these lines when the suite
+ * goal, whether it stands or floats, its route, the blocks around it), items lying on the ground, and the last recorded events. The CI workflow prints these lines when the suite
  * fails. Changes nothing in the test's outcome.
  */
 final class BuildStallReport {
-    /** Recorded events written into a report (the newest ones). */
+    /** Recorded events written into a report (the newest ones that aren't PATHING). */
     static final int EVENTS = 150;
+    /** PATHING events written into a report (the newest ones). */
+    static final int PATHING_EVENTS = 30;
     /** Ticks before the timeout at which the report is written. */
     static final int BEFORE_TIMEOUT = 20;
 
@@ -44,7 +54,7 @@ final class BuildStallReport {
         boolean ownRecorder = !DebugLog.isRecording();
         if (ownRecorder) {
             DebugLog.reset();
-            for (String category : List.of("BUILD", "PATHING", "SCAFFOLD")) {
+            for (String category : List.of("BUILD", "PATHING", "SCAFFOLD", "DAMAGE")) {
                 DebugCategory.byId(category).ifPresent(c -> DebugLog.setEnabled(c, true, helper.getLevel().getServer()));
             }
         }
@@ -87,9 +97,13 @@ final class BuildStallReport {
             }
         }
         lines.add("chest " + chest.getBlockPos().toShortString() + (chest.isRemoved() ? " (removed)" : "") + ": " + stock);
+        ScaffoldSavedData.get(helper.getLevel()).job(easel.getBlockPos()).ifPresent(job -> lines.add("scaffold job: " + job.placed().size() + " of "
+                + job.planned().size() + " planned blocks up, " + job.active().size() + " active request(s), columns " + job.columns()));
         for (ClaySoldierEntity builder : builders) {
             if (builder.isAlive()) {
                 lines.add("  builder " + DebugLog.snapshot(List.of(builder)).getFirst());
+                lines.add("    " + physics(builder));
+                lines.add("    " + surroundings(builder));
             } else {
                 lines.add("  builder " + DebugLog.shortName(builder) + " is gone (" + builder.getRemovalReason() + ") at "
                         + builder.blockPosition().toShortString() + ", last carried " + builder.getCarriedStack());
@@ -98,9 +112,48 @@ final class BuildStallReport {
         List<ItemEntity> items = helper.getLevel().getEntitiesOfClass(ItemEntity.class, new AABB(easel.getBlockPos()).inflate(24));
         lines.add(items.size() + " item(s) on the ground within 24 blocks of the easel");
         items.stream().limit(10).forEach(item -> lines.add("  item " + item.getItem() + " at " + item.blockPosition().toShortString()));
-        List<DebugEvent> events = DebugLog.lastEvents(EVENTS);
-        lines.add("last " + events.size() + " recorded events, oldest first:");
+        // PATHING is recorded every tick a builder searches, so it would fill the whole tail: it gets its own, shorter one.
+        List<DebugEvent> all = DebugLog.events();
+        List<DebugEvent> events = tail(all, event -> event.category() != DebugCategory.PATHING, EVENTS);
+        lines.add("last " + events.size() + " recorded events (PATHING left out), oldest first:");
         events.forEach(event -> lines.add("  " + event.toLine()));
+        List<DebugEvent> pathing = tail(all, event -> event.category() == DebugCategory.PATHING, PATHING_EVENTS);
+        lines.add("last " + pathing.size() + " PATHING events, oldest first:");
+        pathing.forEach(event -> lines.add("  " + event.toLine()));
         return lines;
+    }
+
+    private static List<DebugEvent> tail(List<DebugEvent> events, Predicate<DebugEvent> filter, int count) {
+        List<DebugEvent> matching = events.stream().filter(filter).toList();
+        return matching.subList(Math.max(0, matching.size() - count), matching.size());
+    }
+
+    /** Whether the builder stands, floats or falls, and where its navigation is going. */
+    private static String physics(ClaySoldierEntity builder) {
+        PathNavigation navigation = builder.getNavigation();
+        Path path = navigation.getPath();
+        String route = path == null ? "no path" : "path of " + path.getNodeCount() + " nodes to " + path.getTarget().toShortString()
+                + (path.canReach() ? "" : " (incomplete)") + ", at node " + path.getNextNodeIndex() + (navigation.isDone() ? ", done" : "")
+                + (navigation.isStuck() ? ", stuck" : "");
+        return "onGround %s | noGravity %s | fallDistance %.1f | motion %s | %s".formatted(builder.onGround(), builder.isNoGravity(),
+                builder.fallDistance, builder.getDeltaMovement(), route);
+    }
+
+    /** The blocks around a builder: what it stands on and in, and what is beside it (what boxes it in). */
+    private static String surroundings(ClaySoldierEntity builder) {
+        Level level = builder.level();
+        BlockPos feet = builder.blockPosition();
+        StringBuilder text = new StringBuilder("stands on ").append(name(level, feet.below())).append(", in ").append(name(level, feet))
+                .append(", head ").append(name(level, feet.above())).append(" | beside:");
+        for (Direction side : Direction.Plane.HORIZONTAL) {
+            text.append(' ').append(side.getName().charAt(0)).append('=').append(name(level, feet.relative(side)))
+                    .append('/').append(name(level, feet.relative(side).above()));
+        }
+        return text.toString();
+    }
+
+    private static String name(Level level, BlockPos pos) {
+        BlockState state = level.getBlockState(pos);
+        return state.isAir() ? "air" : BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath();
     }
 }

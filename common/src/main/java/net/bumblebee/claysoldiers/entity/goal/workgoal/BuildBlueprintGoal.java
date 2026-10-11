@@ -92,6 +92,14 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
 
     /** Climbs scaffolding columns (stage 3, approach e); idle otherwise. */
     private final ScaffoldClimber climber;
+    /**
+     * A builder walking somewhere (the easel, its storage) logs nothing while it doesn't arrive, so a trapped builder
+     * looked like a quiet one: every this many ticks of not arriving, a BUILD event says where it is and what its route
+     * looks like.
+     */
+    static final int STUCK_LOG_TICKS = 200;
+    /** Ticks in a row this builder has been walking somewhere without arriving. */
+    private int stuckTicks;
     /** Request searches taking this long or longer are recorded (BUILD). */
     private static final int SLOW_SEARCH_MILLIS = 20;
     /** Ticks since the route to the request was last planned (builds with scaffolding only). */
@@ -153,6 +161,9 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                 setStatus(RETURNING_ID);
                 if (returnCarried()) {
                     bringBack = false;
+                    stuckTicks = 0;
+                } else {
+                    notArrived("returning to storage", getPoiPos());
                 }
             } else if (retryCooldown > 0) {
                 retryCooldown--;
@@ -210,27 +221,30 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     }
 
     private void getRequestFromStorage() {
-        if (moveToPoi()) {
-            assert getCapCache() != null;
-            var storage = getCapCache().getCapability();
-            if (storage != null) {
-                if (!soldier.getCarriedStack().isEmpty()) {
-                    var returned = storage.tryInserting(soldier.getCarriedStack());
-                    soldier.dropItemStack(returned);
-                }
-                soldier.setCarriedStack(storage.tryExtracting(stack -> stack.is(request.getItem()), 1));
-                if (soldier.getCarriedStack().isEmpty()) {
-                    // The storage does not have the item: don't place anything, ask again after a break.
-                    DebugLog.event(DebugCategory.BUILD, soldier, "storage has no %s for %s, request cancelled", request.getItem(), request.getPos());
-                    request.cancel();
-                    takeAShortBreak();
-                } else {
-                    request.setPlacing();
-                }
-            } else {
-                easelPos = null;
-                request = null;
+        if (!moveToPoi()) {
+            notArrived("fetching from storage", getPoiPos());
+            return;
+        }
+        stuckTicks = 0;
+        assert getCapCache() != null;
+        var storage = getCapCache().getCapability();
+        if (storage != null) {
+            if (!soldier.getCarriedStack().isEmpty()) {
+                var returned = storage.tryInserting(soldier.getCarriedStack());
+                soldier.dropItemStack(returned);
             }
+            soldier.setCarriedStack(storage.tryExtracting(stack -> stack.is(request.getItem()), 1));
+            if (soldier.getCarriedStack().isEmpty()) {
+                // The storage does not have the item: don't place anything, ask again after a break.
+                DebugLog.event(DebugCategory.BUILD, soldier, "storage has no %s for %s, request cancelled", request.getItem(), request.getPos());
+                request.cancel();
+                takeAShortBreak();
+            } else {
+                request.setPlacing();
+            }
+        } else {
+            easelPos = null;
+            request = null;
         }
     }
 
@@ -263,13 +277,16 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
 
     private void getRequestJob() {
         if (!moveMobToEasel()) {
+            notArrived("walking to the easel", easelPos == null ? null : easelPos.pos());
             return;
         }
         if (!soldier.onGround()) {
             // Vanilla finds no path at all while a mob is in the air (mid-hop): a search now would find every block
             // out of reach, and remember it so (build.unreachable_recheck_ticks). Search once it has landed.
+            notArrived("in the air at the easel", easelPos.pos());
             return;
         }
+        stuckTicks = 0;
         var requestHandler = easelPos.getCapability();
         if (requestHandler != null) {
             // While BUILD is recorded, collect why blocks are unreachable (one summary line per search).
@@ -290,6 +307,25 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         } else {
             easelPos = null;
         }
+    }
+
+    /**
+     * Called every tick this builder walks somewhere without arriving: every {@link #STUCK_LOG_TICKS} ticks in a row it
+     * records where it is and what its route looks like (BUILD), so a trapped or floating builder shows in the log.
+     */
+    private void notArrived(String doing, @Nullable BlockPos target) {
+        if (++stuckTicks % STUCK_LOG_TICKS != 0) {
+            return;
+        }
+        int ticks = stuckTicks;
+        DebugLog.event(DebugCategory.BUILD, soldier, () -> {
+            Path path = soldier.getNavigation().getPath();
+            String route = path == null ? "no path" : "path of " + path.getNodeCount() + " nodes ending at "
+                    + (path.getEndNode() == null ? "-" : path.getEndNode().asBlockPos().toShortString()) + (path.canReach() ? "" : " (incomplete)")
+                    + (soldier.getNavigation().isDone() ? ", done" : "");
+            return "stuck %s for %d ticks: at %s, target %s, onGround %s, %s".formatted(doing, ticks, soldier.blockPosition().toShortString(),
+                    target == null ? "-" : target.toShortString(), soldier.onGround(), route);
+        });
     }
 
     private boolean canReach(BlockPos pos) {
@@ -452,6 +488,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         if (request != null) {
             request.cancel();
         }
+        stuckTicks = 0;
         climber.reset();
         if (pathSearchMultiplier != 1.0F) {
             pathSearchMultiplier = 1.0F;
