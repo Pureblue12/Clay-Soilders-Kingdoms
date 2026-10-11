@@ -37,7 +37,7 @@ Starts a headless test server, runs every test in
 `DoorGameTests`, `TuningGameTests`, `StructureRegistryGameTests`, `StructurePasteGameTests`,
 `LayoutCheckerGameTests`, `KingdomDataGameTests`, `KingdomGameTests`, `KingdomBookGameTests`, `KingdomBookRefreshGameTests`, `TerrainScoreGameTests`, `TerrainScanGameTests`,
 `TerrainGradingGameTests`, `TerrainFoundingGameTests`, `ScaffoldPlannerGameTests`, `ScaffoldBuildGameTests`,
-`ScaffoldCleanupGameTests`, `StructureBuildGameTests`), prints
+`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Templates: `data/csr/structure/gametest/platform.nbt` (16x8x16) and `terrain.nbt` (32x16x32, for test terrains);
@@ -67,8 +67,8 @@ them in its "Stall reports" step. GitHub's machines are slower: the one wall-clo
   aren't about terrain found with `Kingdoms.found(..., true)` (force) there (D32).
 - Grading and test-terrain undo share the structure paste's global undo history: tests that undo get their own batch.
 - The framework also puts a barrier roof at the top of a test area (16 high for `terrain`): tests that build higher
-  use `skyAccess = true`. Builders only follow paths up to their follow range (16; the search for a standing spot next to a
-  blueprint block gets `build.path_range_bonus` 48 more, D61): keep a test's chest within about 28 walked blocks of every block.
+  use `skyAccess = true`. Builders working for a build follow paths up to their follow range (16) plus `build.path_range_bonus` (48, D61,
+  D62); the planner's reach is measured with a margin (`Scaffolds.PATH_MARGIN`), so keep a test's chest within about 28 walked blocks of every block.
 
 ### Structure build tests (every Studio structure, separate workflow)
 
@@ -117,6 +117,31 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
     instead of #149 (`jigsawBlocksSortWithTheirGroup`).
   - Door locked builders out: doors are handed out last (`doorDoesNotLockOutBuilders`); while BUILD is
     recorded, builders log why blocks are unreachable, incl. "closed door in the way at (x, y, z)".
+- Fixed (from the structure build run 38120112603 with damage recording, `BuilderSafetyGameTests`, D63, D64):
+  - Builders died walking off the upper floors they had built (keep, town hall): upstream multiplies fall damage by
+    100 like any environmental damage, so a 4-block drop killed. A working soldier now takes vanilla fall damage
+    (`work.fall_damage_percent`), recorded in DAMAGE (`workingBuilderSurvivesAFall`).
+  - Blocks were placed into builders (church: cobblestone walls, window panes), leaving them stuck inside. The easel
+    refuses a block whose shape would overlap a creature's body (vanilla's placement rule; the farm fence showed a
+    builder half inside the cell counts too, and so does one standing in the cell of a neighbouring fence, wall or pane,
+    which grows an arm toward the new block), and a builder never places into its own cell
+    (`blockIsNotPlacedIntoASoldier`).
+  - Builders walled themselves into a 1x1 shaft of the keep. The easel refuses a block that would close the last way
+    out of the cell a soldier stands in next to it (`ServerBlueprintPlan.wouldTrap`; `blockDoesNotTrapASoldier`).
+    The builder keeps a refused block and tries again after `SOLDIER_IN_THE_WAY_RETRY_TICKS` (20) until its give-up
+    timer runs out (not a failure: the farm showed that the failure cooldown and the round trip to the chest double a
+    fence-heavy build's time); a released block waits `SOLDIER_IN_THE_WAY_TICKS` (40) before it is handed out again.
+  - Town hall builders kept falling to their deaths after D63 (run 38124453564): the way back from the upper floor
+    left through an unglazed window onto its open shutters, and vanilla's pathfinder treats an open trapdoor as a
+    floor (the vanilla trapdoor trap). The soldiers' pathfinder now counts an open trapdoor's cell as air and the cell
+    above it as floorless (`DoorPathing.withoutOpenTrapdoorFloors`, D65; `soldierDoesNotWalkOntoAnOpenTrapdoor`,
+    `soldierWalksOverClosedTrapdoors`). Still open (not confirmed why): keep L2 builders also die at one spot in the
+    forecourt, 2.0 per fall, after placing on the upper floor, with no trapdoor placed yet; needs a PATHING recording.
+  - A cottage builder stood inside a fence post (the lantern post) for 9,200 ticks (suite run 38128880972): a tiny
+    soldier fits beside the post, so the fence was placed around it, and vanilla then starts every path in a cell the
+    soldier may not enter (one-node paths). The easel never places a fence, wall or pane in a cell a creature stands
+    in, and a soldier inside such a cell starts its path from the nearest free cell beside it (D66;
+    `fenceIsNotPlacedAroundASoldier`, `soldierInsideAFenceCellWalksOut`).
 - Fixed (door race): doors-last only ordered the list, so a door could be handed out while other blocks were
   still being carried (a glass pane got locked out in the 08:03 recording). Now `ServerBlueprintPlan.getRequest`
   hands out a door only when no other (non-door) block with a free spot remains; doors don't wait for each
@@ -217,7 +242,8 @@ Code: `common/.../scaffold/`; comparison, recommendation and height rules: `docs
   - A position a player changed is never removed: recorded (SCAFFOLD "kept") and nearby players are told.
 - **While a build has scaffold, its builders** get a fresh route every 20 ticks and precise steps on scaffold blocks
   (`DoorPathing.Ground.followThePath`). Every builder's search for a standing spot next to a blueprint block has its own longer, bigger
-  path search (`build.path_*`, D61); walking to storage and other paths keep the normal limits.
+  path search (`build.path_*`, D61), and since D62 every path a builder walks while it works for a build (to the easel, to
+  its chest) has the same longer limit (`DoorPathing.Ground.setRangeBonus`); paths outside building work keep vanilla's.
 - **Recorder SCAFFOLD:** planned, placed, removed, climbing, stuck, cleanup, kept.
 
 ### Known limitations
@@ -233,6 +259,10 @@ Pending (not started):
   `DoorAccess` war-milestone change. Fence gates aren't opened. Doors opened by soldiers are remembered in
   memory only (after a restart a door a soldier left open counts as opened by a player and stays open).
 - Blocks more than 8 above any reachable standing spot stay unbuilt (by design of `MAX_PLACE_HEIGHT`).
+- Scaffold columns only stand outside the structure's footprint, so a roof block more than 2 blocks inside the
+  footprint and above reach from the structure's own floors (the chapel steeple's cap, the cathedral) never gets
+  built: the planner reports it unreachable and the builders wait. Needs columns on the structure's floors (planner
+  and `Scaffolds.plan`), not started.
 - A blueprint block that is already there and replaceable (e.g. short grass where short grass grows) counts
   as free but can never be placed (placing the same block fails), so the blueprint never finishes; the
   cooldown only stops it from starving the rest. Not confirmed in game; not fixed.

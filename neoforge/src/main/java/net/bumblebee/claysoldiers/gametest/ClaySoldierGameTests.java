@@ -265,10 +265,15 @@ public class ClaySoldierGameTests {
      * at the given local positions, with the given template size.
      */
     static BlueprintData tinyBlueprint(GameTestHelper helper, String name, int sizeX, int sizeY, int sizeZ, BlockPos... cobblestoneAt) {
+        return tinyBlueprint(helper, name, sizeX, sizeY, sizeZ, Blocks.COBBLESTONE, cobblestoneAt);
+    }
+
+    /** The same with another block instead of cobblestone. */
+    static BlueprintData tinyBlueprint(GameTestHelper helper, String name, int sizeX, int sizeY, int sizeZ, Block material, BlockPos... cobblestoneAt) {
         CompoundTag tag = new CompoundTag();
         tag.put("size", intList(sizeX, sizeY, sizeZ));
         ListTag palette = new ListTag();
-        palette.add(NbtUtils.writeBlockState(Blocks.COBBLESTONE.defaultBlockState()));
+        palette.add(NbtUtils.writeBlockState(material.defaultBlockState()));
         tag.put("palette", palette);
         ListTag blocks = new ListTag();
         for (BlockPos pos : cobblestoneAt) {

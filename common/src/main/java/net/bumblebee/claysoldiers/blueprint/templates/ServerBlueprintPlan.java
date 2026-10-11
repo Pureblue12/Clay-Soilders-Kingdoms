@@ -6,7 +6,9 @@ import net.bumblebee.claysoldiers.blueprint.ReachOrigin;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.tuning.Tuning;
+import net.bumblebee.claysoldiers.entity.ClayMobEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.Registries;
@@ -14,12 +16,17 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.CrossCollisionBlock;
+import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jetbrains.annotations.Nullable;
 
@@ -139,7 +146,13 @@ public class ServerBlueprintPlan extends BlueprintPlan {
                 return PlaceResult.NOT_NEEDED;
             }
             var updatedBlockInfo = processBlockInfos(settings, blockInfo);
-            if (!placeBlock(itemStack, level, pos, updatedBlockInfo.state().mirror(settings.mirror()).rotate(settings.rotation()))) {
+            Placement placement = placeBlock(itemStack, level, pos, updatedBlockInfo.state().mirror(settings.mirror()).rotate(settings.rotation()));
+            if (placement == Placement.SOLDIER_IN_THE_WAY) {
+                blockInfo.soldierInTheWay(level.getGameTime(), pos);
+                request.setSoldierInTheWay();
+                return PlaceResult.CANT_PLACE;
+            }
+            if (placement != Placement.PLACED) {
                 blockInfo.placementFailed(level.getGameTime(), pos);
                 return PlaceResult.CANT_PLACE;
             }
@@ -162,7 +175,7 @@ public class ServerBlueprintPlan extends BlueprintPlan {
             }
             var updatedBlockInfo = processBlockInfos(settings, blockInfo);
 
-            if (placeBlock(stack, level, updatedBlockInfo.pos().offset(base), updatedBlockInfo.state().mirror(settings.mirror()).rotate(settings.rotation()))) {
+            if (placeBlock(stack, level, updatedBlockInfo.pos().offset(base), updatedBlockInfo.state().mirror(settings.mirror()).rotate(settings.rotation())) == Placement.PLACED) {
                 iterator.remove();
                 blockInfo.markDone();
                 return PlaceResult.SUCCESS;
@@ -171,19 +184,104 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         return PlaceResult.CANT_PLACE;
     }
 
-    private boolean placeBlock(ItemStack stack, Level level, BlockPos pos, BlockState state) {
+    /** What came of placing one block. */
+    private enum Placement { PLACED, SPOT_TAKEN, SOLDIER_IN_THE_WAY }
+
+    private Placement placeBlock(ItemStack stack, Level level, BlockPos pos, BlockState state) {
         if (!canPlaceBlock(level, pos)) {
-            return false;
+            return Placement.SPOT_TAKEN;
+        }
+        if (creatureInside(level, pos, state)) {
+            // A creature's body is where the block would be (church builders ended up inside cobblestone walls and
+            // window panes, farm builders half inside a fence, stuck for good, D64). Vanilla's placement rule.
+            DebugLog.event(DebugCategory.BUILD, null, "not placed at %s: a creature stands there", pos);
+            return Placement.SOLDIER_IN_THE_WAY;
+        }
+        ClayMobEntity trapped = wouldTrap(level, pos, state);
+        if (trapped != null) {
+            // The block would close the last way out of the cell a soldier stands in (keep builders walled themselves
+            // into a 1x1 shaft of the blueprint, D64). The block waits a moment (SOLDIER_IN_THE_WAY_TICKS); the soldier moves on; someone places it later.
+            DebugLog.event(DebugCategory.BUILD, trapped, "not placed at %s: it would trap this soldier", pos);
+            return Placement.SOLDIER_IN_THE_WAY;
         }
         if (level.setBlock(pos, state, 3)) {
             state.getBlock().setPlacedBy(level, pos, state, null, stack);
-            return true;
+            return Placement.PLACED;
         }
-        return false;
+        return Placement.SPOT_TAKEN;
     }
 
     private boolean canPlaceBlock(Level level, BlockPos pos) {
         return canPlaceAt(level, pos);
+    }
+
+    /**
+     * Whether a living creature's body is where {@code state} placed at {@code pos} would be (vanilla's own placement
+     * rule: the block's collision shape against every creature's bounding box, so a soldier half inside the cell counts),
+     * or stands in the cell of a fence, wall or pane next to it (which would grow an arm toward the new block).
+     */
+    public static boolean creatureInside(Level level, BlockPos pos, BlockState state) {
+        if (!level.isUnobstructed(state, pos, CollisionContext.empty())) {
+            return true;
+        }
+        // A fence, wall or pane only fills the middle of its cell, so a tiny soldier can stand beside the post without
+        // touching it; placed, the post pens it in (cottage L3 on CI: a builder inside a lantern post for 9,200 ticks).
+        if ((state.getBlock() instanceof CrossCollisionBlock || state.getBlock() instanceof WallBlock)
+                && !level.getEntitiesOfClass(LivingEntity.class, new AABB(pos), LivingEntity::isAlive).isEmpty()) {
+            return true;
+        }
+        // A fence, wall or pane next to the spot grows an arm toward the new block: a soldier standing beside that post
+        // ends up inside the arm, stuck for good (farm and cottage builders, D64). Same answer: wait until it has moved.
+        for (Direction side : Direction.Plane.HORIZONTAL) {
+            BlockPos next = pos.relative(side);
+            BlockState neighbour = level.getBlockState(next);
+            if ((neighbour.getBlock() instanceof CrossCollisionBlock || neighbour.getBlock() instanceof WallBlock)
+                    && !level.getEntitiesOfClass(LivingEntity.class, new AABB(next), LivingEntity::isAlive).isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * The clay soldier next to {@code pos} that {@code state} placed there would trap: it stands in a cell it can
+     * leave now (walk or drop out sideways, or hop up one block) and could not leave any more. Null when there is none.
+     */
+    @Nullable
+    public static ClayMobEntity wouldTrap(Level level, BlockPos pos, BlockState state) {
+        if (state.getCollisionShape(level, pos).isEmpty()) {
+            return null;
+        }
+        for (ClayMobEntity soldier : level.getEntitiesOfClass(ClayMobEntity.class, new AABB(pos).inflate(1), LivingEntity::isAlive)) {
+            BlockPos feet = soldier.blockPosition();
+            if (feet.equals(pos) || feet.above().equals(pos)) {
+                continue; // creatureInside
+            }
+            if (hasExit(level, feet, null) && !hasExit(level, feet, pos)) {
+                return soldier;
+            }
+        }
+        return null;
+    }
+
+    /** Whether a soldier standing at {@code feet} can leave its cell sideways, with {@code placed} counted as a block. */
+    private static boolean hasExit(Level level, BlockPos feet, @Nullable BlockPos placed) {
+        for (Direction side : Direction.Plane.HORIZONTAL) {
+            BlockPos next = feet.relative(side);
+            boolean nextFeet = open(level, next, placed);
+            boolean nextHead = open(level, next.above(), placed);
+            if (nextFeet && nextHead) {
+                return true; // walk (or drop)
+            }
+            if (!nextFeet && nextHead && open(level, next.above(2), placed) && open(level, feet.above(2), placed)) {
+                return true; // hop up one block
+            }
+        }
+        return false;
+    }
+
+    private static boolean open(Level level, BlockPos pos, @Nullable BlockPos placed) {
+        return !pos.equals(placed) && level.getBlockState(pos).getCollisionShape(level, pos).isEmpty();
     }
 
     /**

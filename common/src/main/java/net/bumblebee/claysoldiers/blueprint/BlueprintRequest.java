@@ -8,6 +8,8 @@ public class BlueprintRequest {
     private final BlockPos pos;
     private final long start;
     private Status status = Status.STARTED;
+    /** Set by the plan when a soldier was in the way of placing (D64); the builder reads and clears it, then tries again. */
+    private boolean soldierInTheWay;
 
     public BlueprintRequest(Item item, BlockPos pos, long start) {
         this.item = item;
@@ -48,6 +50,17 @@ public class BlueprintRequest {
     }
     public void cancel() {
         status = Status.CANCELLED;
+    }
+
+    public void setSoldierInTheWay() {
+        soldierInTheWay = true;
+    }
+
+    /** Whether the last placing attempt found a soldier in the way; clears the flag. */
+    public boolean takeSoldierInTheWay() {
+        boolean was = soldierInTheWay;
+        soldierInTheWay = false;
+        return was;
     }
 
     @Override

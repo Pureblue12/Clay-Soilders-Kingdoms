@@ -5,6 +5,7 @@ import com.mojang.logging.LogUtils;
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
+import net.bumblebee.claysoldiers.tuning.Tuning;
 import net.bumblebee.claysoldiers.capability.AssignablePoiCapability;
 import net.bumblebee.claysoldiers.capability.ThrowableItemCapability;
 import net.bumblebee.claysoldiers.clayremovalcondition.RemovalCondition;
@@ -193,6 +194,16 @@ public class AbstractClaySoldierEntity extends ClayMobTeamOwnerEntity implements
                 return 0.2f;
             }
             return w ? 0.5f : 1f;
+        };
+        // A working soldier (builder, digger, farmer) survives falling off its work: upstream multiplies fall damage
+        // by 100 like any other environmental damage, so a 4-block drop killed builders on every tall build (D63).
+        this.fallDamage = (w, e) -> {
+            if (workSelector.isWorking()) {
+                float multiplier = Tuning.WORK_FALL_DAMAGE_PERCENT.get() / 100f;
+                DebugLog.event(DebugCategory.DAMAGE, this, "fall damage while working: %s%% of vanilla's", Tuning.WORK_FALL_DAMAGE_PERCENT.get());
+                return multiplier;
+            }
+            return w ? 75 : 100;
         };
         this.delayedScale = getSoldierSize();
     }

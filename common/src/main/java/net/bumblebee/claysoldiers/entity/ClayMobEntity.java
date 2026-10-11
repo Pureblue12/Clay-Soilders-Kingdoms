@@ -88,6 +88,8 @@ public abstract class ClayMobEntity extends PathfinderMob implements TeamHolder 
     protected DamageCalculator explosionDamage = (w, e) -> w ? 0.4f : 0.5f;
     protected DamageCalculator clayDamage = (w, e) -> (float) getVisibilityPercent(e);
     protected DamageCalculator defaultDamage = (w, e) -> w ? 75 : 100;
+    /** Fall damage (vanilla: the fall distance minus 3); like {@link #defaultDamage} unless a subclass says otherwise. */
+    protected DamageCalculator fallDamage = (w, e) -> w ? 75 : 100;
 
     private final DamageSources clayDamageSources;
     private ItemStack spawnedFrom = ItemStack.EMPTY;
@@ -245,6 +247,8 @@ public abstract class ClayMobEntity extends PathfinderMob implements TeamHolder 
                 newDamage *= isOwnedBy(player) ? ownerDamage.calculate(waxed, player) : otherPlayerDamage.calculate(waxed, player);
             } else if (source.is(DamageTypes.IN_WALL)) {
                 newDamage *= inWallDamage.calculate(waxed, source.getEntity());
+            } else if (source.is(DamageTypeTags.IS_FALL)) {
+                newDamage *= fallDamage.calculate(waxed, source.getEntity());
             } else {
                 newDamage *= defaultDamage.calculate(waxed, source.getEntity());
             }

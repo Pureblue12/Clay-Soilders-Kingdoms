@@ -1,9 +1,5 @@
 package net.bumblebee.claysoldiers.entity.goal.workgoal;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.bumblebee.claysoldiers.tuning.Tuning;
 import net.bumblebee.claysoldiers.scaffold.Scaffolds;
 import net.bumblebee.claysoldiers.scaffold.ScaffoldClimber;
@@ -16,6 +12,7 @@ import net.bumblebee.claysoldiers.capability.IBlockCache;
 import net.bumblebee.claysoldiers.blueprint.ReachOrigin;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
+import net.bumblebee.claysoldiers.entity.door.DoorPathing;
 import net.bumblebee.claysoldiers.entity.door.UseDoorGoal;
 import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
 import net.bumblebee.claysoldiers.init.ModBlocks;
@@ -65,8 +62,14 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     public static final int RETRY_COOLDOWN_MIN = 20;
     public static final int RETRY_COOLDOWN_RANDOM = 20;
     private int retryCooldown = 0;
-    /** The follow range bonus while working for a build with scaffolding (see {@link #updatePathSearch}). */
-    private static final ResourceLocation SCAFFOLD_PATH_RANGE = ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, "scaffold_path_range");
+    /**
+     * When a soldier is in the way of placing (standing in the spot, beside a fence the block would connect to, or it
+     * would be walled in; D64), the builder keeps the block and tries again after this many ticks instead of carrying
+     * it back to storage and asking again (a round trip of 50 or more ticks per fence of a farm). The give-up timer
+     * ({@link #MAX_CARRY_TICKS}) keeps running, so a soldier that never moves still ends the request.
+     */
+    public static final int SOLDIER_IN_THE_WAY_RETRY_TICKS = 20;
+    private int placeWait = 0;
     /**
      * The reachability test handed to the easel; it also tells scaffold planning where this builder comes from (its
      * storage), since walking distances are measured from there.
@@ -92,12 +95,22 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
 
     /** Climbs scaffolding columns (stage 3, approach e); idle otherwise. */
     private final ScaffoldClimber climber;
+    /**
+     * A builder walking somewhere (the easel, its storage) logs nothing while it doesn't arrive, so a trapped builder
+     * looked like a quiet one: every this many ticks of not arriving, a BUILD event says where it is and what its route
+     * looks like.
+     */
+    static final int STUCK_LOG_TICKS = 200;
+    /** Ticks in a row this builder has been walking somewhere without arriving. */
+    private int stuckTicks;
     /** Request searches taking this long or longer are recorded (BUILD). */
     private static final int SLOW_SEARCH_MILLIS = 20;
     /** Ticks since the route to the request was last planned (builds with scaffolding only). */
     private int repathTicks;
     /** The path search multiplier this goal last set (1 = normal). */
     private float pathSearchMultiplier = 1.0F;
+    /** Whether the easel's build has scaffolding (its builders plan their route again every {@code scaffold.repath_ticks}). */
+    private boolean scaffoldBuild;
     /**
      * Tiny soldiers count a path as walked when they are within 0.675 blocks of its last block's center, which is often
      * still the block before it; placing is measured from the block they stand in. So after the path, the builder
@@ -153,6 +166,9 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                 setStatus(RETURNING_ID);
                 if (returnCarried()) {
                     bringBack = false;
+                    stuckTicks = 0;
+                } else {
+                    notArrived("returning to storage", getPoiPos());
                 }
             } else if (retryCooldown > 0) {
                 retryCooldown--;
@@ -178,6 +194,8 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             if (carryTicks == MAX_CARRY_TICKS / 2) DebugLog.event(DebugCategory.BUILD, soldier, "still working on %s at %s after %s ticks", request.getItem(), request.getPos(), carryTicks);
             if (++carryTicks > MAX_CARRY_TICKS) {
                 giveUpRequest();
+            } else if (placeWait > 0) {
+                placeWait--;
             } else if (moveToRequest()) {
                 placeBlock();
             }
@@ -185,52 +203,54 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     }
 
     /**
-     * Routes up a scaffold are long and wind around, and vanilla only accepts paths whose walked length is under the
-     * follow range (16; each step up counts about 1.4). So while this builder's easel has scaffolding, its paths may
-     * be {@code scaffold.path_range_bonus} blocks longer and its search may look at
-     * {@code scaffold.path_nodes_multiplier} times more steps. Builds without scaffolding keep the normal search.
+     * While this builder works for a build, its paths may be longer and its search bigger than vanilla's (D61, D62):
+     * vanilla only accepts paths whose walked length is under the follow range (16; each step up counts about 1.4),
+     * and the way around a big building, to a standing spot, back to the easel or to the chest, is longer than that.
+     * Every path gets {@code build.path_range_bonus} more blocks and {@code build.path_nodes_multiplier} times more
+     * steps; while the easel has scaffolding, the larger of these and the {@code scaffold.path_*} values (routes up a
+     * scaffold wind around). A builder without an easel keeps vanilla's limits.
      */
     private void updatePathSearch() {
-        boolean scaffold = easelPos != null && soldier.level() instanceof ServerLevel level && Scaffolds.hasJob(level, easelPos.pos());
-        float multiplier = scaffold ? Tuning.SCAFFOLD_PATH_NODES_MULTIPLIER.get() : 1.0F;
+        boolean building = easelPos != null;
+        scaffoldBuild = building && soldier.level() instanceof ServerLevel level && Scaffolds.hasJob(level, easelPos.pos());
+        float multiplier = !building ? 1.0F : scaffoldBuild
+                ? Math.max(Tuning.BUILD_PATH_NODES_MULTIPLIER.get(), Tuning.SCAFFOLD_PATH_NODES_MULTIPLIER.get()) : Tuning.BUILD_PATH_NODES_MULTIPLIER.get();
         if (multiplier != pathSearchMultiplier) {
             pathSearchMultiplier = multiplier;
             soldier.getNavigation().setMaxVisitedNodesMultiplier(multiplier);
         }
-        AttributeInstance range = soldier.getAttribute(Attributes.FOLLOW_RANGE);
-        if (range != null) {
-            boolean has = range.hasModifier(SCAFFOLD_PATH_RANGE);
-            int bonus = Tuning.SCAFFOLD_PATH_RANGE_BONUS.get();
-            if (scaffold && bonus > 0 && !has) {
-                range.addTransientModifier(new AttributeModifier(SCAFFOLD_PATH_RANGE, bonus, AttributeModifier.Operation.ADD_VALUE));
-            } else if ((!scaffold || bonus == 0) && has) {
-                range.removeModifier(SCAFFOLD_PATH_RANGE);
-            }
+        int bonus = !building ? 0 : scaffoldBuild
+                ? Math.max(Tuning.BUILD_PATH_RANGE_BONUS.get(), Tuning.SCAFFOLD_PATH_RANGE_BONUS.get()) : Tuning.BUILD_PATH_RANGE_BONUS.get();
+        if (soldier.getNavigation() instanceof DoorPathing.Ground ground && ground.getRangeBonus() != bonus) {
+            ground.setRangeBonus(bonus);
         }
     }
 
     private void getRequestFromStorage() {
-        if (moveToPoi()) {
-            assert getCapCache() != null;
-            var storage = getCapCache().getCapability();
-            if (storage != null) {
-                if (!soldier.getCarriedStack().isEmpty()) {
-                    var returned = storage.tryInserting(soldier.getCarriedStack());
-                    soldier.dropItemStack(returned);
-                }
-                soldier.setCarriedStack(storage.tryExtracting(stack -> stack.is(request.getItem()), 1));
-                if (soldier.getCarriedStack().isEmpty()) {
-                    // The storage does not have the item: don't place anything, ask again after a break.
-                    DebugLog.event(DebugCategory.BUILD, soldier, "storage has no %s for %s, request cancelled", request.getItem(), request.getPos());
-                    request.cancel();
-                    takeAShortBreak();
-                } else {
-                    request.setPlacing();
-                }
-            } else {
-                easelPos = null;
-                request = null;
+        if (!moveToPoi()) {
+            notArrived("fetching from storage", getPoiPos());
+            return;
+        }
+        stuckTicks = 0;
+        assert getCapCache() != null;
+        var storage = getCapCache().getCapability();
+        if (storage != null) {
+            if (!soldier.getCarriedStack().isEmpty()) {
+                var returned = storage.tryInserting(soldier.getCarriedStack());
+                soldier.dropItemStack(returned);
             }
+            soldier.setCarriedStack(storage.tryExtracting(stack -> stack.is(request.getItem()), 1));
+            if (soldier.getCarriedStack().isEmpty()) {
+                // The storage does not have the item: don't place anything, ask again after a break.
+                DebugLog.event(DebugCategory.BUILD, soldier, "storage has no %s for %s, request cancelled", request.getItem(), request.getPos());
+                request.cancel();
+                takeAShortBreak();
+            } else {
+                request.setPlacing();
+            }
+        } else {
+            easelPos = null;
+            request = null;
         }
     }
 
@@ -244,6 +264,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         request = null;
         bringBack = !soldier.getCarriedStack().isEmpty();
         carryTicks = 0;
+        placeWait = 0;
     }
 
     private boolean returnCarried() {
@@ -263,13 +284,16 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
 
     private void getRequestJob() {
         if (!moveMobToEasel()) {
+            notArrived("walking to the easel", easelPos == null ? null : easelPos.pos());
             return;
         }
         if (!soldier.onGround()) {
             // Vanilla finds no path at all while a mob is in the air (mid-hop): a search now would find every block
             // out of reach, and remember it so (build.unreachable_recheck_ticks). Search once it has landed.
+            notArrived("in the air at the easel", easelPos.pos());
             return;
         }
+        stuckTicks = 0;
         var requestHandler = easelPos.getCapability();
         if (requestHandler != null) {
             // While BUILD is recorded, collect why blocks are unreachable (one summary line per search).
@@ -290,6 +314,25 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         } else {
             easelPos = null;
         }
+    }
+
+    /**
+     * Called every tick this builder walks somewhere without arriving: every {@link #STUCK_LOG_TICKS} ticks in a row it
+     * records where it is and what its route looks like (BUILD), so a trapped or floating builder shows in the log.
+     */
+    private void notArrived(String doing, @Nullable BlockPos target) {
+        if (++stuckTicks % STUCK_LOG_TICKS != 0) {
+            return;
+        }
+        int ticks = stuckTicks;
+        DebugLog.event(DebugCategory.BUILD, soldier, () -> {
+            Path path = soldier.getNavigation().getPath();
+            String route = path == null ? "no path" : "path of " + path.getNodeCount() + " nodes ending at "
+                    + (path.getEndNode() == null ? "-" : path.getEndNode().asBlockPos().toShortString()) + (path.canReach() ? "" : " (incomplete)")
+                    + (soldier.getNavigation().isDone() ? ", done" : "");
+            return "stuck %s for %d ticks: at %s, target %s, onGround %s, %s".formatted(doing, ticks, soldier.blockPosition().toShortString(),
+                    target == null ? "-" : target.toShortString(), soldier.onGround(), route);
+        });
     }
 
     private boolean canReach(BlockPos pos) {
@@ -344,6 +387,10 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                     bringBack = true;
                 }
                 request.setFinished();
+            } else if (request.takeSoldierInTheWay()) {
+                DebugLog.event(DebugCategory.BUILD, soldier, "soldier in the way of %s at %s, trying again in %s ticks", request.getItem(), request.getPos(), SOLDIER_IN_THE_WAY_RETRY_TICKS);
+                placeWait = SOLDIER_IN_THE_WAY_RETRY_TICKS;
+                return;
             } else {
                 DebugLog.event(DebugCategory.BUILD, soldier, "could not place %s at %s (spot not free?), returning it", request.getItem(), request.getPos());
                 bringBack = true;
@@ -398,7 +445,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             return false;
         }
         // With scaffolding, plan the route again every scaffold.repath_ticks: tiny soldiers climb floating steps better with fresh routes.
-        boolean repath = pathSearchMultiplier != 1.0F && ++repathTicks >= Tuning.SCAFFOLD_REPATH_TICKS.get();
+        boolean repath = scaffoldBuild && ++repathTicks >= Tuning.SCAFFOLD_REPATH_TICKS.get();
         if (this.soldier.getNavigation().isDone() || repath) {
             repathTicks = 0;
             if (!repath && pathEnd != null && !soldier.blockPosition().equals(pathEnd) && lastStepTicks++ < MAX_LAST_STEP_TICKS) {
@@ -452,15 +499,17 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         if (request != null) {
             request.cancel();
         }
+        stuckTicks = 0;
+        placeWait = 0;
         climber.reset();
         if (pathSearchMultiplier != 1.0F) {
             pathSearchMultiplier = 1.0F;
             soldier.getNavigation().setMaxVisitedNodesMultiplier(1.0F);
         }
-        AttributeInstance range = soldier.getAttribute(Attributes.FOLLOW_RANGE);
-        if (range != null) {
-            range.removeModifier(SCAFFOLD_PATH_RANGE);
+        if (soldier.getNavigation() instanceof DoorPathing.Ground ground) {
+            ground.setRangeBonus(0);
         }
+        scaffoldBuild = false;
     }
 
     @Override

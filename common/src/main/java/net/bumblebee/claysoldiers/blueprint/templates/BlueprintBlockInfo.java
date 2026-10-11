@@ -29,6 +29,11 @@ public class BlueprintBlockInfo {
      */
     public static final int MAX_PLACE_FAIL_COOLDOWN_TICKS = 1200;
     /**
+     * A block whose spot a soldier is in the way of (standing there, or it would be walled in, D64) waits this long
+     * (2 seconds) before it is handed out again: soldiers move on, so this isn't a failure and doesn't back off.
+     */
+    public static final int SOLDIER_IN_THE_WAY_TICKS = 40;
+    /**
      * The Relative position to the Structures Base.
      */
     private final BlockPos pos;
@@ -135,6 +140,13 @@ public class BlueprintBlockInfo {
         DebugLog.event(DebugCategory.BUILD, null, () -> "placement cooldown: %s at (%s) failed to place %d time(s), not handed out for %d ticks"
                 .formatted(state.getBlock().asItem(), worldPos.toShortString(), failures, cooldown));
         return cooldown;
+    }
+
+    /** A soldier was in the way of placing this block (D64): a short wait, not counted as a failure. */
+    public void soldierInTheWay(long gameTime, BlockPos worldPos) {
+        cooldownUntil = Math.max(cooldownUntil, gameTime + SOLDIER_IN_THE_WAY_TICKS);
+        DebugLog.event(DebugCategory.BUILD, null, () -> "soldier in the way: %s at (%s) waits %d ticks"
+                .formatted(state.getBlock().asItem(), worldPos.toShortString(), SOLDIER_IN_THE_WAY_TICKS));
     }
 
     /**
