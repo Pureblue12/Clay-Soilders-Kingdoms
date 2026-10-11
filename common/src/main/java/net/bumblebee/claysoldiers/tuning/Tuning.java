@@ -110,9 +110,9 @@ public final class Tuning {
     public static final TuningKey.IntKey BUILD_UNREACHABLE_RECHECK_TICKS = register(new TuningKey.IntKey("build.unreachable_recheck_ticks",
             "A blueprint block builders found out of reach isn't checked again (an expensive path search) for this many ticks, unless a block of the build is placed or removed near it first. 0: always check.", 200, 0, 1200));
     public static final TuningKey.IntKey BUILD_PATH_RANGE_BONUS = register(new TuningKey.IntKey("build.path_range_bonus",
-            "While a builder works for any build, its paths may be this many blocks longer (vanilla limits a path's walked length to the follow range, 16, measured from where the builder asks: usually its chest, so the far side of a building was out of reach). Builds with scaffolding use the larger of this and scaffold.path_range_bonus.", 16, 0, 64));
+            "A builder's path searches to blueprint blocks may be this many blocks longer (vanilla limits a path's walked length to the follow range, 16, measured from where the builder asks: usually its chest, so the far side of a building was out of reach). Walking to storage, combat and other paths keep the normal limit; builds with scaffolding keep scaffold.path_range_bonus.", 16, 0, 64));
     public static final TuningKey.IntKey BUILD_PATH_NODES_MULTIPLIER = register(new TuningKey.IntKey("build.path_nodes_multiplier",
-            "While a builder works for any build, its path search may look at this many times more steps (longer paths around buildings need more). Builds with scaffolding use the larger of this and scaffold.path_nodes_multiplier.", 4, 1, 16));
+            "A builder's path searches to blueprint blocks may look at this many times more steps (longer paths around buildings need more); the larger of this and scaffold.path_nodes_multiplier while a build has scaffolding.", 4, 1, 16));
     public static final TuningKey.IntKey SCAFFOLD_COLUMNS_FIRST = register(new TuningKey.IntKey("scaffold.columns_first",
             "1: once builders start putting up a build's scaffolding (nothing else in reach), they put all of it up before working above reach; 0: they raise it a level at a time, whenever nothing else is in reach.", 1, 0, 1));
     public static final TuningKey.BlockKey SCAFFOLD_MATERIAL = register(new TuningKey.BlockKey("scaffold.material",
