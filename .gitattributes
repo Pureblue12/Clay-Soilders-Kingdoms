@@ -14,3 +14,7 @@
 *.cfg text eol=lf
 *.jks binary
 *.nbt binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary

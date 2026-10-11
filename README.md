@@ -2,98 +2,129 @@
 
 # Clay Soldiers Kingdoms
 
-**Tiny clay armies that build, farm and fight. Soon, whole kingdoms.**
+### Tiny clay armies that build their own kingdoms.
 
-A data-driven Minecraft mod for **1.21.1 / NeoForge**, forked from
-[Clay Soldiers Remake](https://github.com/Bumble-B33/csr) by Bumble B33.
-
-![The keep, level 3](./docs/img/hero-keep.jpg)
-
-<sub>Structures rendered in the Structure Studio with real Minecraft block models.</sub>
+[![Minecraft 1.21.1](https://img.shields.io/badge/Minecraft-1.21.1-62B47A?style=flat-square)](https://www.minecraft.net/)
+[![NeoForge 21.1](https://img.shields.io/badge/NeoForge-21.1-E6762B?style=flat-square)](https://neoforged.net/)
+[![Java 21](https://img.shields.io/badge/Java-21-5382A1?style=flat-square)](https://adoptium.net/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-8A8A8A?style=flat-square)](LICENSE)
 
 </div>
 
-## What is it?
+<p align="center">
+  <img src="docs/img/hero-keep.jpg" alt="The keep at level 3: a stone castle with towers, banners and a curtain wall on a wooded hill" width="100%">
+</p>
 
-Clay Soldiers Remake brings the classic Clay Soldiers mod to modern Minecraft: you shape little clay
-warriors, dress them with gear, and watch them skirmish. **Clay Soldiers Kingdoms** is our fork that
-aims further: soldiers that **build real buildings on their own**, gather resources, and one day
-found **kingdoms** that grow, defend themselves and go to war with each other.
+<p align="center">
+  <a href="#what-it-is">What it is</a> ·
+  <a href="#what-works-today">What works today</a> ·
+  <a href="#the-buildings">The buildings</a> ·
+  <a href="#where-its-going">Where it's going</a> ·
+  <a href="#build-and-play">Build and play</a>
+</p>
 
-![Small Battle](./assets-raw/small-battle.png)
+## What it is
 
-<!-- TODO(Carlton): add in-game screenshots here, e.g. soldiers building a keep, scaffolding, a kingdom book.
-     Save them small (under ~300 KB, JPEG) in docs/img/ and link them like the Studio ones below. -->
+Shape a lump of clay into a soldier, hand it a stick, and watch it fight. That is
+[Clay Soldiers Remake](https://github.com/Bumble-B33/csr) by Bumble B33, the classic mod brought to modern Minecraft.
 
-![The cathedral](./docs/img/hero-cathedral.jpg)
+**Clay Soldiers Kingdoms** takes it further. Give a team of soldiers a blueprint and a chest of
+blocks and they build the structure themselves, block by block, putting up scaffolding when the walls get tall.
+Crown a king and the team founds a kingdom with a claim, a stockpile and a chronicle. The goal is
+kingdoms that grow on their own: farms, villages, walls and a castle, and rivals that go to war with each other.
 
-| Library | Market | Town hall |
-|---|---|---|
-| ![Library](./docs/img/hero-library.jpg) | ![Market](./docs/img/hero-market.jpg) | ![Town hall](./docs/img/hero-townhall.jpg) |
+<p align="center">
+  <img src="docs/img/battle.jpg" alt="Clay soldiers of several teams fighting in a sand arena" width="100%">
+</p>
 
 ## What works today
 
-- **Customizable clay soldiers** with teams, gear and effects, all driven by datapacks (inherited from CSR).
-  [Wiki](https://bumble-b33.github.io/csr-wiki/)
-  ![Custom Equipment](./assets-raw/customize-preview.png)
-- **Builders that work from blueprints.** Put a blueprint on an easel, stock a chest, and soldiers
-  fetch the blocks, walk to the right spot and place them one by one.
-  They open and close wooden doors, reach up to 8 blocks high, and never place a block twice.
-- **Scaffolding for tall builds.** When a block is out of reach, builders put up scaffolding columns,
-  climb them, and take them down again when the structure is finished.
-- **A library of 70+ kingdom structures**: keep, houses, farms, smithy, library, market, chapel,
-  watchtowers, stone walls, mines and more, many with several upgrade levels that each add something new.
-  Builders can build every one of them from scratch (an automated test checks it).
-- **Kingdoms, first steps.** Sneak + right-click your king (a clay soldier wearing a gold ingot)
-  with a gold block to found a kingdom. It has a claim, a stockpile, a population count and a chronicle,
-  all readable in an in-game observer book. If the king dies, the kingdom falls to ruin.
-- **Terrain awareness.** Before founding, the mod scores the ground for a keep (cliffs, lava, water,
-  slope) and suggests the best nearby spot.
-- **A serious test suite.** 160+ automated GameTests run on every push.
+- **Soldiers built from datapacks.** Teams, gear, mounts and effects, all data-driven (from the original mod,
+  documented on its [wiki](https://bumble-b33.github.io/csr-wiki/)).
+- **Builders.** Put a blueprint on an easel next to a stocked chest. Soldiers fetch each block, walk to its spot
+  and place it. They open and close wooden doors on the way and reach up to 8 blocks above their feet.
+- **Scaffolding.** When a block is too high to reach, builders raise scaffolding columns, climb them,
+  and take them down when the building is finished.
+- **Kingdoms, first steps.** Sneak and right-click your king (a soldier wearing a gold ingot) with a gold block.
+  The kingdom gets a claim, a stockpile, a population count and a chronicle, all shown in an in-game book.
+  If the king dies, the kingdom falls to ruin.
+- **Ground sense.** Before founding, the mod checks the site for cliffs, lava, deep water and steep slopes,
+  and points to the best spot nearby.
+- **Tested.** More than 160 automated GameTests run on every push, and a separate run has builders put up
+  every structure, every level, from scratch.
 
-## Where it is going
+<p align="center">
+  <img src="docs/img/equipment.jpg" alt="Clay soldiers wearing different equipment" width="100%">
+</p>
 
-The [roadmap](docs/ROADMAP.md) leads from today to autonomous kingdoms: soldiers who build their
-own keep (next), an economy loop, villages and walls that grow with layout rules, mining, events and
-defense, rival kingdoms and war, and finally decay and ruins. Design notes live in [`docs/`](docs/).
+## The buildings
 
-## Structure Studio
+More than 60 structures, from cottages and farms to a cathedral. Most come in three levels, and every
+level adds something you can see. The keep grows from a lone tower into a walled castle:
 
-Structures are designed and reviewed outside the game in the **Structure Studio** (`studio/`), a local
-browser tool that shows every structure in 3D with real Minecraft block models, level by level.
-You approve or reject versions with notes, compare them side by side and roll back; approved
-structures are promoted into the mod.
+<p align="center">
+  <img src="docs/img/keep-levels.jpg" alt="The keep at levels 1, 2 and 3" width="100%">
+</p>
 
-![Many structures in the Studio](./docs/img/studio-overview.jpg)
+A kingdom needs more than walls:
 
-![Cathedral, level by level](./docs/img/studio-cathedral-levels.jpg)
+<p align="center">
+  <img src="docs/img/buildings.jpg" alt="Library, market, town hall, gatehouse, smithy and farm" width="100%">
+</p>
+
+And the showpiece, the cathedral, 28 blocks tall:
+
+<p align="center">
+  <img src="docs/img/cathedral.jpg" alt="The cathedral on a hill" width="100%">
+</p>
+
+<sub>All renders come from the Structure Studio with real Minecraft block models.</sub>
+
+### Structure Studio
+
+Every structure is designed and reviewed in the **Structure Studio** ([`studio/`](studio/)), a browser tool that
+shows structures in 3D, level by level. Versions are approved or rejected with notes, compared side by side and
+rolled back. Only approved versions are promoted into the mod.
 
 ```bash
 cd studio
 npm install
-npm run dev        # http://127.0.0.1:5174
+npm run dev        # opens on http://127.0.0.1:5174
 ```
 
-The Studio needs Minecraft's own textures, which are not in this repo. Copy your own
-`1.21.1.jar` into `studio/minecraft/` (git-ignored). See [`studio/README.md`](studio/README.md).
+The Studio needs Minecraft's textures, which are not in this repo: copy your own `1.21.1.jar` into
+`studio/minecraft/`. See [`studio/README.md`](studio/README.md).
+
+## Where it's going
+
+| Stage | | Status |
+|---|---|---|
+| 0–3 | Foundations, kingdom core, terrain, tall builds | ✅ Done |
+| 4 | Soldiers build their own keep | 🔨 Next |
+| 5–8 | Economy, villages and layout, more building tiers | Planned |
+| 9–11 | Mining, daily life, raids and defense | Planned |
+| 12–14 | Rival kingdoms and war, decay and ruins | Planned |
+
+The full plan is in [`docs/ROADMAP.md`](docs/ROADMAP.md); design notes live in [`docs/`](docs/).
 
 ## Build and play
 
 Requires Java 21. From the project root:
 
 ```bash
-./gradlew :neoforge:runData      # generate recipes, models, lang (needed once, and after datagen changes)
-./gradlew :neoforge:runClient    # start Minecraft with the mod
-./gradlew :neoforge:build        # build the jar into neoforge/build/libs/
-./gradlew :neoforge:runGameTestServer   # run the automated tests
+./gradlew :neoforge:runData            # generate recipes, models and lang (once, and after datagen changes)
+./gradlew :neoforge:runClient          # start Minecraft with the mod
+./gradlew :neoforge:build              # build the jar into neoforge/build/libs/
+./gradlew :neoforge:runGameTestServer  # run the automated tests
 ```
 
 In a dev world, `/csr dev book` gives a toolkit book with buttons for test scenarios, and
-`/csr build <blueprint>` places an easel with a blueprint. Details: [`CLAUDE.md`](CLAUDE.md).
+`/csr build <blueprint>` places an easel with a blueprint. Developer notes are in [`CLAUDE.md`](CLAUDE.md).
 Only NeoForge is supported for now; the Fabric module is kept but not maintained.
 
 ## Credits and license
 
-Created by **Bumble B33** ([original repository](https://github.com/Bumble-B33/csr)).
+Clay Soldiers Remake was created by **Bumble B33** ([original repository](https://github.com/Bumble-B33/csr)).
 The kingdoms work is built on top of it. MIT licensed, see [`LICENSE`](LICENSE).
-Minecraft is a trademark of Mojang; this project is not affiliated with Mojang or Microsoft.
+
+Minecraft is a trademark of Mojang. This project is not affiliated with Mojang or Microsoft.
