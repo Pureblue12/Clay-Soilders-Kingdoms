@@ -1,0 +1,29 @@
+{
+  "id": "csr:garden",
+  "name": "Garden",
+  "design": "ready",
+  "tier": 2,
+  "zone": "inner",
+  "role": "civic",
+  "footprint": [
+    17,
+    9,
+    17
+  ],
+  "cost": "auto",
+  "variant_group": "garden",
+  "structure": "csr:kingdom/studio/garden_l1",
+  "levels": [
+    "csr:kingdom/studio/garden_l1",
+    "csr:kingdom/studio/garden_l2",
+    "csr:kingdom/studio/garden_l3"
+  ],
+  "ground_level": 1,
+  "terrain": "flexible",
+  "batch": 2,
+  "studio": {
+    "garden_l1": 4,
+    "garden_l2": 4,
+    "garden_l3": 4
+  }
+}

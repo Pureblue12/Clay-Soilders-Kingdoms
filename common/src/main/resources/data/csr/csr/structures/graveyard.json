@@ -1,0 +1,29 @@
+{
+  "id": "csr:graveyard",
+  "name": "Graveyard",
+  "design": "ready",
+  "tier": 4,
+  "zone": "outer",
+  "role": "civic",
+  "footprint": [
+    9,
+    7,
+    12
+  ],
+  "cost": "auto",
+  "variant_group": "graveyard",
+  "structure": "csr:kingdom/studio/graveyard_l1",
+  "levels": [
+    "csr:kingdom/studio/graveyard_l1",
+    "csr:kingdom/studio/graveyard_l2",
+    "csr:kingdom/studio/graveyard_l3"
+  ],
+  "ground_level": 1,
+  "terrain": "flexible",
+  "batch": 4,
+  "studio": {
+    "graveyard_l1": 1,
+    "graveyard_l2": 1,
+    "graveyard_l3": 1
+  }
+}

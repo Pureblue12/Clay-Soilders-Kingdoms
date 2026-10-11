@@ -1,0 +1,29 @@
+{
+  "id": "csr:market_stall",
+  "name": "Market stall",
+  "design": "ready",
+  "tier": 3,
+  "zone": "inner",
+  "role": "market",
+  "footprint": [
+    7,
+    5,
+    6
+  ],
+  "cost": "auto",
+  "variant_group": "market_stall",
+  "structure": "csr:kingdom/studio/market_stall_l1",
+  "levels": [
+    "csr:kingdom/studio/market_stall_l1",
+    "csr:kingdom/studio/market_stall_l2",
+    "csr:kingdom/studio/market_stall_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "flexible",
+  "batch": 3,
+  "studio": {
+    "market_stall_l1": 3,
+    "market_stall_l2": 3,
+    "market_stall_l3": 3
+  }
+}

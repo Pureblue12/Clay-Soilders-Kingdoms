@@ -1,0 +1,29 @@
+{
+  "id": "csr:banner_pole",
+  "name": "Banner pole",
+  "design": "ready",
+  "tier": 4,
+  "zone": "inner",
+  "role": "decoration",
+  "footprint": [
+    3,
+    9,
+    3
+  ],
+  "cost": "auto",
+  "variant_group": "banner_pole",
+  "structure": "csr:kingdom/studio/banner_pole_l1",
+  "levels": [
+    "csr:kingdom/studio/banner_pole_l1",
+    "csr:kingdom/studio/banner_pole_l2",
+    "csr:kingdom/studio/banner_pole_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "flexible",
+  "batch": 4,
+  "studio": {
+    "banner_pole_l1": 1,
+    "banner_pole_l2": 1,
+    "banner_pole_l3": 1
+  }
+}

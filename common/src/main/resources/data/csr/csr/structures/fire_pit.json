@@ -6,19 +6,24 @@
   "zone": "inner",
   "role": "decoration",
   "footprint": [
-    5,
-    1,
-    5
+    9,
+    8,
+    9
   ],
   "cost": "auto",
   "variant_group": "fire_pit",
-  "palette": "oak_a",
-  "structure": "csr:kingdom/batch1/fire_pit_l1",
+  "structure": "csr:kingdom/studio/fire_pit_l1",
   "levels": [
-    "csr:kingdom/batch1/fire_pit_l1",
-    "csr:kingdom/batch1/fire_pit_l2"
+    "csr:kingdom/studio/fire_pit_l1",
+    "csr:kingdom/studio/fire_pit_l2",
+    "csr:kingdom/studio/fire_pit_l3"
   ],
   "ground_level": 0,
   "terrain": "flexible",
-  "batch": 1
+  "batch": 1,
+  "studio": {
+    "fire_pit_l1": 6,
+    "fire_pit_l2": 6,
+    "fire_pit_l3": 5
+  }
 }

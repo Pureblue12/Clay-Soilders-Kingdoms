@@ -1,0 +1,30 @@
+{
+  "id": "csr:hospital",
+  "name": "Hospital",
+  "design": "ready",
+  "tier": 6,
+  "zone": "inner",
+  "role": "health",
+  "footprint": [
+    17,
+    13,
+    19
+  ],
+  "cost": "auto",
+  "variant_group": "infirmary",
+  "structure": "csr:kingdom/studio/hospital_l1",
+  "levels": [
+    "csr:kingdom/studio/hospital_l1",
+    "csr:kingdom/studio/hospital_l2",
+    "csr:kingdom/studio/hospital_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "ground_level",
+  "batch": 5,
+  "door_side": "front",
+  "studio": {
+    "hospital_l1": 2,
+    "hospital_l2": 2,
+    "hospital_l3": 2
+  }
+}

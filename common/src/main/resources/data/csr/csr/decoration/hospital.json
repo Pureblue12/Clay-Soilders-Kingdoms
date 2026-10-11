@@ -1,0 +1,29 @@
+{
+  "structure": "csr:hospital",
+  "note": "What the decoration step (roadmap 5a) must add after builders finish each level; nothing here is placed by builders. Written by the Studio promote step.",
+  "levels": {
+    "1": [
+      {
+        "pos": [
+          8,
+          0,
+          10
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      }
+    ],
+    "2": [
+      {
+        "pos": [
+          8,
+          1,
+          10
+        ],
+        "kind": "lily_pad",
+        "block": "minecraft:lily_pad"
+      }
+    ],
+    "3": []
+  }
+}

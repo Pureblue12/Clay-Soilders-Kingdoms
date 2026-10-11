@@ -1,0 +1,29 @@
+{
+  "id": "csr:stone_wall_corner",
+  "name": "Stone wall, corner",
+  "design": "ready",
+  "tier": 3,
+  "zone": "wall",
+  "role": "defense",
+  "footprint": [
+    3,
+    8,
+    3
+  ],
+  "cost": "auto",
+  "variant_group": "stone_wall",
+  "structure": "csr:kingdom/studio/stone_wall_corner_l1",
+  "levels": [
+    "csr:kingdom/studio/stone_wall_corner_l1",
+    "csr:kingdom/studio/stone_wall_corner_l2",
+    "csr:kingdom/studio/stone_wall_corner_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "ground_level",
+  "batch": 3,
+  "studio": {
+    "stone_wall_corner_l1": 1,
+    "stone_wall_corner_l2": 1,
+    "stone_wall_corner_l3": 1
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "csr:fishing_dock",
+  "name": "Fishing dock",
+  "design": "ready",
+  "tier": 2,
+  "zone": "outer",
+  "role": "food",
+  "footprint": [
+    7,
+    5,
+    9
+  ],
+  "cost": "auto",
+  "variant_group": "fishing_dock",
+  "structure": "csr:kingdom/studio/fishing_dock_l1",
+  "levels": [
+    "csr:kingdom/studio/fishing_dock_l1",
+    "csr:kingdom/studio/fishing_dock_l2",
+    "csr:kingdom/studio/fishing_dock_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "flexible",
+  "batch": 2,
+  "door_side": "front",
+  "studio": {
+    "fishing_dock_l1": 1,
+    "fishing_dock_l2": 1,
+    "fishing_dock_l3": 1
+  }
+}

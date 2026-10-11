@@ -1,0 +1,29 @@
+{
+  "id": "csr:stonemason",
+  "name": "Stonemason",
+  "design": "ready",
+  "tier": 4,
+  "zone": "inner",
+  "role": "workshop",
+  "footprint": [
+    11,
+    9,
+    10
+  ],
+  "cost": "auto",
+  "variant_group": "stonemason",
+  "structure": "csr:kingdom/studio/stonemason_l1",
+  "levels": [
+    "csr:kingdom/studio/stonemason_l1",
+    "csr:kingdom/studio/stonemason_l2",
+    "csr:kingdom/studio/stonemason_l3"
+  ],
+  "ground_level": 1,
+  "terrain": "ground_level",
+  "batch": 4,
+  "studio": {
+    "stonemason_l1": 3,
+    "stonemason_l2": 3,
+    "stonemason_l3": 3
+  }
+}

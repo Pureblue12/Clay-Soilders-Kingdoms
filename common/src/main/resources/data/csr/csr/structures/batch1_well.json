@@ -1,0 +1,25 @@
+{
+  "id": "csr:batch1_well",
+  "name": "Old well",
+  "design": "ready",
+  "tier": 1,
+  "zone": "inner",
+  "role": "utility",
+  "footprint": [
+    3,
+    4,
+    3
+  ],
+  "cost": "auto",
+  "variant_group": "well_batch1",
+  "palette": "oak_a",
+  "structure": "csr:kingdom/batch1/well_l1",
+  "levels": [
+    "csr:kingdom/batch1/well_l1",
+    "csr:kingdom/batch1/well_l2",
+    "csr:kingdom/batch1/well_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "ground_level",
+  "batch": 1
+}

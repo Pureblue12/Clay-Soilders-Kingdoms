@@ -1,0 +1,30 @@
+{
+  "id": "csr:noble_house",
+  "name": "Noble house",
+  "design": "ready",
+  "tier": 5,
+  "zone": "inner",
+  "role": "house",
+  "footprint": [
+    16,
+    9,
+    13
+  ],
+  "cost": "auto",
+  "variant_group": "noble_house",
+  "structure": "csr:kingdom/studio/noble_house_l1",
+  "levels": [
+    "csr:kingdom/studio/noble_house_l1",
+    "csr:kingdom/studio/noble_house_l2",
+    "csr:kingdom/studio/noble_house_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "ground_level",
+  "batch": 5,
+  "door_side": "front",
+  "studio": {
+    "noble_house_l1": 1,
+    "noble_house_l2": 1,
+    "noble_house_l3": 1
+  }
+}

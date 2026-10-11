@@ -1,0 +1,27 @@
+{
+  "id": "csr:hitching_post",
+  "name": "Hitching post",
+  "design": "ready",
+  "tier": 2,
+  "zone": "inner",
+  "role": "decoration",
+  "footprint": [
+    5,
+    3,
+    3
+  ],
+  "cost": "auto",
+  "variant_group": "hitching_post",
+  "structure": "csr:kingdom/studio/hitching_post_l1",
+  "levels": [
+    "csr:kingdom/studio/hitching_post_l1",
+    "csr:kingdom/studio/hitching_post_l2"
+  ],
+  "ground_level": 0,
+  "terrain": "flexible",
+  "batch": 2,
+  "studio": {
+    "hitching_post_l1": 3,
+    "hitching_post_l2": 3
+  }
+}

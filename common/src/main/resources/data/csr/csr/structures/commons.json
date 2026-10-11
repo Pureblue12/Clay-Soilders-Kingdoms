@@ -1,0 +1,29 @@
+{
+  "id": "csr:commons",
+  "name": "Commons",
+  "design": "ready",
+  "tier": 2,
+  "zone": "inner",
+  "role": "civic",
+  "footprint": [
+    15,
+    9,
+    15
+  ],
+  "cost": "auto",
+  "variant_group": "commons",
+  "structure": "csr:kingdom/studio/commons_l1",
+  "levels": [
+    "csr:kingdom/studio/commons_l1",
+    "csr:kingdom/studio/commons_l2",
+    "csr:kingdom/studio/commons_l3"
+  ],
+  "ground_level": 1,
+  "terrain": "flexible",
+  "batch": 2,
+  "studio": {
+    "commons_l1": 4,
+    "commons_l2": 4,
+    "commons_l3": 4
+  }
+}

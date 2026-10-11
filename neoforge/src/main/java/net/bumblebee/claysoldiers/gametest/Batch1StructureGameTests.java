@@ -60,8 +60,16 @@ public class Batch1StructureGameTests {
      * number of counts is the number of levels.
      */
     record Entry(String path, int sides, int... docBlocks) {
+        /**
+         * Registry id of the batch-1 files. Every batch-1 structure except the road was replaced by its approved Studio
+         * version under its own id, so the batch-1 files stay in the registry as test copies ({@code csr:batch1_<path>}).
+         */
         ResourceLocation id() {
-            return ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, path);
+            return ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, idPath());
+        }
+
+        String idPath() {
+            return path.equals("road") ? path : "batch1_" + path;
         }
 
         int levels() {
@@ -179,7 +187,7 @@ public class Batch1StructureGameTests {
                 }
                 previous = blocks;
             }
-            ResourceLocation sidecar = ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, "csr/decoration/" + entry.path() + ".json");
+            ResourceLocation sidecar = ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, "csr/decoration/" + entry.idPath() + ".json");
             helper.assertTrue(level.getServer().getResourceManager().getResource(sidecar).isPresent(), "no decoration sidecar " + sidecar);
         }
         helper.succeed();

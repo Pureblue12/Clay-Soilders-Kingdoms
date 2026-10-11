@@ -1,0 +1,30 @@
+{
+  "id": "csr:bakery",
+  "name": "Bakery",
+  "design": "ready",
+  "tier": 3,
+  "zone": "inner",
+  "role": "food",
+  "footprint": [
+    10,
+    9,
+    11
+  ],
+  "cost": "auto",
+  "variant_group": "bakery",
+  "structure": "csr:kingdom/studio/bakery_l1",
+  "levels": [
+    "csr:kingdom/studio/bakery_l1",
+    "csr:kingdom/studio/bakery_l2",
+    "csr:kingdom/studio/bakery_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "ground_level",
+  "batch": 3,
+  "door_side": "front",
+  "studio": {
+    "bakery_l1": 1,
+    "bakery_l2": 1,
+    "bakery_l3": 1
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "id": "csr:statue",
+  "name": "Statue",
+  "design": "ready",
+  "tier": 6,
+  "zone": "inner",
+  "role": "decoration",
+  "footprint": [
+    9,
+    9,
+    9
+  ],
+  "cost": "auto",
+  "variant_group": "statue",
+  "structure": "csr:kingdom/studio/statue_l1",
+  "levels": [
+    "csr:kingdom/studio/statue_l1",
+    "csr:kingdom/studio/statue_l2",
+    "csr:kingdom/studio/statue_l3"
+  ],
+  "ground_level": 1,
+  "terrain": "flexible",
+  "batch": 5,
+  "studio": {
+    "statue_l1": 1,
+    "statue_l2": 1,
+    "statue_l3": 1
+  }
+}

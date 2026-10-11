@@ -1,0 +1,912 @@
+{
+  "_about": "Which approved Studio structures go into the mod, and as what. Read by `npm run studio -- promote` (cli/promote.ts). Each entry is one mod structure; `levels` are Studio names, level 1 first; the latest APPROVED version of each is exported. `fixes` are small edits applied on export to approved versions that can't be built as they are.",
+  "structures": [
+    {
+      "id": "csr:keep",
+      "name": "Keep",
+      "tier": 1,
+      "zone": "keep",
+      "role": "keep",
+      "terrain": "ground_level",
+      "batch": 1,
+      "variant_group": "keep",
+      "levels": [
+        "keep_l1",
+        "keep_l2",
+        "keep_l3"
+      ]
+    },
+    {
+      "id": "csr:hovel",
+      "name": "Hovel",
+      "tier": 1,
+      "zone": "inner",
+      "role": "house",
+      "terrain": "flexible",
+      "batch": 1,
+      "variant_group": "hovel",
+      "levels": [
+        "hovel_l1",
+        "hovel_l2",
+        "hovel_l3"
+      ]
+    },
+    {
+      "id": "csr:cottage",
+      "name": "Cottage",
+      "tier": 1,
+      "zone": "inner",
+      "role": "house",
+      "terrain": "ground_level",
+      "batch": 1,
+      "variant_group": "cottage",
+      "levels": [
+        "cottage_l1",
+        "cottage_l2",
+        "cottage_l3"
+      ]
+    },
+    {
+      "id": "csr:visitors_camp",
+      "name": "Visitors' camp",
+      "tier": 1,
+      "zone": "inner",
+      "role": "house",
+      "terrain": "flexible",
+      "batch": 1,
+      "variant_group": "inn",
+      "levels": [
+        "visitors_camp_l1",
+        "visitors_camp_l2",
+        "visitors_camp_l3"
+      ]
+    },
+    {
+      "id": "csr:farm",
+      "name": "Farm",
+      "tier": 1,
+      "zone": "outer",
+      "role": "farm",
+      "terrain": "flexible",
+      "batch": 1,
+      "variant_group": "farm",
+      "levels": [
+        "farm_l1",
+        "farm_l2",
+        "farm_l3"
+      ]
+    },
+    {
+      "id": "csr:farm_field_wheat",
+      "name": "Wheat field",
+      "tier": 1,
+      "zone": "outer",
+      "role": "farm",
+      "terrain": "flexible",
+      "variant_group": "farm",
+      "levels": [
+        "farm_field_wheat_l1"
+      ]
+    },
+    {
+      "id": "csr:farm_field_carrots",
+      "name": "Carrot field",
+      "tier": 1,
+      "zone": "outer",
+      "role": "farm",
+      "terrain": "flexible",
+      "variant_group": "farm",
+      "levels": [
+        "farm_field_carrots_l1"
+      ]
+    },
+    {
+      "id": "csr:farm_field_potatoes",
+      "name": "Potato field",
+      "tier": 1,
+      "zone": "outer",
+      "role": "farm",
+      "terrain": "flexible",
+      "variant_group": "farm",
+      "levels": [
+        "farm_field_potatoes_l1"
+      ]
+    },
+    {
+      "id": "csr:lumber_camp",
+      "name": "Lumber camp",
+      "tier": 1,
+      "zone": "outer",
+      "role": "resource",
+      "terrain": "flexible",
+      "batch": 1,
+      "variant_group": "lumber_camp",
+      "levels": [
+        "lumber_camp_l1",
+        "lumber_camp_l2",
+        "lumber_camp_l3"
+      ]
+    },
+    {
+      "id": "csr:well",
+      "name": "Well",
+      "tier": 1,
+      "zone": "inner",
+      "role": "utility",
+      "terrain": "ground_level",
+      "batch": 1,
+      "variant_group": "well",
+      "levels": [
+        "well_l1",
+        "well_l2",
+        "well_l3"
+      ]
+    },
+    {
+      "id": "csr:bench",
+      "name": "Bench",
+      "tier": 1,
+      "zone": "inner",
+      "role": "decoration",
+      "terrain": "flexible",
+      "batch": 1,
+      "variant_group": "bench",
+      "levels": [
+        "bench_l1",
+        "bench_l2"
+      ]
+    },
+    {
+      "id": "csr:fire_pit",
+      "name": "Fire pit",
+      "tier": 1,
+      "zone": "inner",
+      "role": "decoration",
+      "terrain": "flexible",
+      "batch": 1,
+      "variant_group": "fire_pit",
+      "levels": [
+        "fire_pit_l1",
+        "fire_pit_l2",
+        "fire_pit_l3"
+      ]
+    },
+    {
+      "id": "csr:signpost",
+      "name": "Signpost",
+      "tier": 1,
+      "zone": "inner",
+      "role": "decoration",
+      "terrain": "flexible",
+      "batch": 1,
+      "variant_group": "signpost",
+      "levels": [
+        "signpost_l1",
+        "signpost_l2"
+      ]
+    },
+    {
+      "id": "csr:flower_bed",
+      "name": "Flower bed",
+      "tier": 1,
+      "zone": "inner",
+      "role": "decoration",
+      "terrain": "flexible",
+      "batch": 1,
+      "variant_group": "flower_bed",
+      "levels": [
+        "flower_bed_l1"
+      ]
+    },
+    {
+      "id": "csr:carpenter",
+      "name": "Carpenter",
+      "tier": 2,
+      "zone": "inner",
+      "role": "workshop",
+      "terrain": "ground_level",
+      "batch": 2,
+      "variant_group": "carpenter",
+      "levels": [
+        "carpenter_l1",
+        "carpenter_l2",
+        "carpenter_l3"
+      ]
+    },
+    {
+      "id": "csr:commons",
+      "name": "Commons",
+      "tier": 2,
+      "zone": "inner",
+      "role": "civic",
+      "terrain": "flexible",
+      "batch": 2,
+      "variant_group": "commons",
+      "levels": [
+        "commons_l1",
+        "commons_l2",
+        "commons_l3"
+      ]
+    },
+    {
+      "id": "csr:garden",
+      "name": "Garden",
+      "tier": 2,
+      "zone": "inner",
+      "role": "civic",
+      "terrain": "flexible",
+      "batch": 2,
+      "variant_group": "garden",
+      "levels": [
+        "garden_l1",
+        "garden_l2",
+        "garden_l3"
+      ]
+    },
+    {
+      "id": "csr:fishing_dock",
+      "name": "Fishing dock",
+      "tier": 2,
+      "zone": "outer",
+      "role": "food",
+      "terrain": "flexible",
+      "batch": 2,
+      "variant_group": "fishing_dock",
+      "levels": [
+        "fishing_dock_l1",
+        "fishing_dock_l2",
+        "fishing_dock_l3"
+      ]
+    },
+    {
+      "id": "csr:stables",
+      "name": "Pens and stables",
+      "tier": 2,
+      "zone": "outer",
+      "role": "farm",
+      "terrain": "ground_level",
+      "batch": 2,
+      "variant_group": "stables",
+      "levels": [
+        "stables_l1",
+        "stables_l2",
+        "stables_l3"
+      ]
+    },
+    {
+      "id": "csr:watchtower",
+      "name": "Watchtower",
+      "tier": 2,
+      "zone": "wall",
+      "role": "defense",
+      "terrain": "ground_level",
+      "batch": 2,
+      "variant_group": "watchtower",
+      "levels": [
+        "watchtower_l1",
+        "watchtower_l2",
+        "watchtower_l3"
+      ]
+    },
+    {
+      "id": "csr:notice_board",
+      "name": "Notice board",
+      "tier": 2,
+      "zone": "inner",
+      "role": "decoration",
+      "terrain": "flexible",
+      "batch": 2,
+      "variant_group": "notice_board",
+      "levels": [
+        "notice_board_l1",
+        "notice_board_l2"
+      ]
+    },
+    {
+      "id": "csr:hitching_post",
+      "name": "Hitching post",
+      "tier": 2,
+      "zone": "inner",
+      "role": "decoration",
+      "terrain": "flexible",
+      "batch": 2,
+      "variant_group": "hitching_post",
+      "levels": [
+        "hitching_post_l1",
+        "hitching_post_l2"
+      ]
+    },
+    {
+      "id": "csr:bakery",
+      "name": "Bakery",
+      "tier": 3,
+      "zone": "inner",
+      "role": "food",
+      "terrain": "ground_level",
+      "batch": 3,
+      "variant_group": "bakery",
+      "levels": [
+        "bakery_l1",
+        "bakery_l2",
+        "bakery_l3"
+      ]
+    },
+    {
+      "id": "csr:butcher",
+      "name": "Butcher",
+      "tier": 3,
+      "zone": "inner",
+      "role": "food",
+      "terrain": "ground_level",
+      "batch": 3,
+      "variant_group": "butcher",
+      "levels": [
+        "butcher_l1",
+        "butcher_l2",
+        "butcher_l3"
+      ]
+    },
+    {
+      "id": "csr:market_stall",
+      "name": "Market stall",
+      "tier": 3,
+      "zone": "inner",
+      "role": "market",
+      "terrain": "flexible",
+      "batch": 3,
+      "variant_group": "market_stall",
+      "levels": [
+        "market_stall_l1",
+        "market_stall_l2",
+        "market_stall_l3"
+      ]
+    },
+    {
+      "id": "csr:mine",
+      "name": "Mine",
+      "tier": 3,
+      "zone": "outer",
+      "role": "resource",
+      "terrain": "flexible",
+      "batch": 3,
+      "variant_group": "mine",
+      "levels": [
+        "mine_l1",
+        "mine_l2",
+        "mine_l3"
+      ]
+    },
+    {
+      "id": "csr:quarry",
+      "name": "Quarry",
+      "tier": 3,
+      "zone": "outer",
+      "role": "resource",
+      "terrain": "flexible",
+      "batch": 3,
+      "variant_group": "quarry",
+      "levels": [
+        "quarry_l1",
+        "quarry_l2",
+        "quarry_l3"
+      ]
+    },
+    {
+      "id": "csr:smithy",
+      "name": "Smithy",
+      "tier": 3,
+      "zone": "inner",
+      "role": "workshop",
+      "terrain": "ground_level",
+      "batch": 3,
+      "variant_group": "smithy",
+      "levels": [
+        "smithy_l1",
+        "smithy_l2",
+        "smithy_l3"
+      ]
+    },
+    {
+      "id": "csr:tannery",
+      "name": "Tannery",
+      "tier": 3,
+      "zone": "outer",
+      "role": "workshop",
+      "terrain": "ground_level",
+      "batch": 3,
+      "variant_group": "tannery",
+      "levels": [
+        "tannery_l1",
+        "tannery_l2",
+        "tannery_l3"
+      ]
+    },
+    {
+      "id": "csr:training_yard",
+      "name": "Training yard",
+      "tier": 3,
+      "zone": "inner",
+      "role": "military",
+      "terrain": "flexible",
+      "batch": 3,
+      "variant_group": "training_yard",
+      "levels": [
+        "training_yard_l1",
+        "training_yard_l2",
+        "training_yard_l3"
+      ]
+    },
+    {
+      "id": "csr:stone_wall",
+      "name": "Stone wall, straight",
+      "tier": 3,
+      "zone": "wall",
+      "role": "defense",
+      "terrain": "stepped",
+      "batch": 3,
+      "variant_group": "stone_wall",
+      "levels": [
+        "stone_wall_straight_l1",
+        "stone_wall_straight_l2",
+        "stone_wall_straight_l3"
+      ]
+    },
+    {
+      "id": "csr:stone_wall_stepped",
+      "name": "Stone wall, stepped",
+      "tier": 3,
+      "zone": "wall",
+      "role": "defense",
+      "terrain": "stepped",
+      "batch": 3,
+      "variant_group": "stone_wall",
+      "levels": [
+        "stone_wall_stepped_l1",
+        "stone_wall_stepped_l2",
+        "stone_wall_stepped_l3"
+      ]
+    },
+    {
+      "id": "csr:stone_wall_corner",
+      "name": "Stone wall, corner",
+      "tier": 3,
+      "zone": "wall",
+      "role": "defense",
+      "terrain": "ground_level",
+      "batch": 3,
+      "variant_group": "stone_wall",
+      "levels": [
+        "stone_wall_corner_l1",
+        "stone_wall_corner_l2",
+        "stone_wall_corner_l3"
+      ]
+    },
+    {
+      "id": "csr:stone_wall_stairs",
+      "name": "Stone wall, stairs",
+      "tier": 3,
+      "zone": "wall",
+      "role": "defense",
+      "terrain": "ground_level",
+      "batch": 3,
+      "variant_group": "stone_wall",
+      "levels": [
+        "stone_wall_stairs_l1",
+        "stone_wall_stairs_l2",
+        "stone_wall_stairs_l3"
+      ]
+    },
+    {
+      "id": "csr:stone_wall_gate",
+      "name": "Stone wall, gate",
+      "tier": 3,
+      "zone": "wall",
+      "role": "gate",
+      "terrain": "ground_level",
+      "batch": 3,
+      "variant_group": "stone_wall",
+      "levels": [
+        "stone_wall_gate_l1",
+        "stone_wall_gate_l2",
+        "stone_wall_gate_l3"
+      ]
+    },
+    {
+      "id": "csr:wall_tower",
+      "name": "Wall tower",
+      "tier": 3,
+      "zone": "wall",
+      "role": "defense",
+      "terrain": "ground_level",
+      "batch": 3,
+      "variant_group": "wall_tower",
+      "levels": [
+        "wall_tower_l1",
+        "wall_tower_l2",
+        "wall_tower_l3"
+      ]
+    },
+    {
+      "id": "csr:market",
+      "name": "Market square",
+      "tier": 4,
+      "zone": "inner",
+      "role": "market",
+      "terrain": "flexible",
+      "batch": 4,
+      "variant_group": "market",
+      "levels": [
+        "market_l1",
+        "market_l2",
+        "market_l3"
+      ]
+    },
+    {
+      "id": "csr:townhouse",
+      "name": "Townhouse",
+      "tier": 4,
+      "zone": "inner",
+      "role": "house",
+      "terrain": "ground_level",
+      "batch": 4,
+      "variant_group": "townhouse",
+      "levels": [
+        "townhouse_l1",
+        "townhouse_l2",
+        "townhouse_l3"
+      ]
+    },
+    {
+      "id": "csr:food_hall",
+      "name": "Food hall",
+      "tier": 4,
+      "zone": "inner",
+      "role": "food",
+      "terrain": "ground_level",
+      "batch": 4,
+      "variant_group": "food_hall",
+      "levels": [
+        "food_hall_l1",
+        "food_hall_l2",
+        "food_hall_l3"
+      ]
+    },
+    {
+      "id": "csr:inn",
+      "name": "Inn",
+      "tier": 4,
+      "zone": "inner",
+      "role": "house",
+      "terrain": "ground_level",
+      "batch": 4,
+      "variant_group": "inn",
+      "levels": [
+        "inn_l1",
+        "inn_l2",
+        "inn_l3"
+      ]
+    },
+    {
+      "id": "csr:chapel",
+      "name": "Chapel",
+      "tier": 4,
+      "zone": "inner",
+      "role": "religious",
+      "terrain": "ground_level",
+      "batch": 4,
+      "variant_group": "chapel",
+      "levels": [
+        "chapel_l1",
+        "chapel_l2",
+        "chapel_l3"
+      ]
+    },
+    {
+      "id": "csr:infirmary",
+      "name": "Infirmary",
+      "tier": 4,
+      "zone": "inner",
+      "role": "health",
+      "terrain": "ground_level",
+      "batch": 4,
+      "variant_group": "infirmary",
+      "levels": [
+        "infirmary_l1",
+        "infirmary_l2",
+        "infirmary_l3"
+      ]
+    },
+    {
+      "id": "csr:graveyard",
+      "name": "Graveyard",
+      "tier": 4,
+      "zone": "outer",
+      "role": "civic",
+      "terrain": "flexible",
+      "batch": 4,
+      "variant_group": "graveyard",
+      "levels": [
+        "graveyard_l1",
+        "graveyard_l2",
+        "graveyard_l3"
+      ]
+    },
+    {
+      "id": "csr:stonemason",
+      "name": "Stonemason",
+      "tier": 4,
+      "zone": "inner",
+      "role": "workshop",
+      "terrain": "ground_level",
+      "batch": 4,
+      "variant_group": "stonemason",
+      "levels": [
+        "stonemason_l1",
+        "stonemason_l2",
+        "stonemason_l3"
+      ]
+    },
+    {
+      "id": "csr:lamp_post",
+      "name": "Lamp post",
+      "tier": 4,
+      "zone": "inner",
+      "role": "decoration",
+      "terrain": "flexible",
+      "batch": 4,
+      "variant_group": "lamp_post",
+      "levels": [
+        "lamp_post_l1",
+        "lamp_post_l2",
+        "lamp_post_l3"
+      ]
+    },
+    {
+      "id": "csr:banner_pole",
+      "name": "Banner pole",
+      "tier": 4,
+      "zone": "inner",
+      "role": "decoration",
+      "terrain": "flexible",
+      "batch": 4,
+      "variant_group": "banner_pole",
+      "levels": [
+        "banner_pole_l1",
+        "banner_pole_l2",
+        "banner_pole_l3"
+      ]
+    },
+    {
+      "id": "csr:noble_house",
+      "name": "Noble house",
+      "tier": 5,
+      "zone": "inner",
+      "role": "house",
+      "terrain": "ground_level",
+      "batch": 5,
+      "variant_group": "noble_house",
+      "levels": [
+        "noble_house_l1",
+        "noble_house_l2",
+        "noble_house_l3"
+      ]
+    },
+    {
+      "id": "csr:church",
+      "name": "Church",
+      "tier": 5,
+      "zone": "inner",
+      "role": "religious",
+      "terrain": "ground_level",
+      "batch": 5,
+      "variant_group": "chapel",
+      "levels": [
+        "church_l1",
+        "church_l2",
+        "church_l3"
+      ]
+    },
+    {
+      "id": "csr:library",
+      "name": "Library",
+      "tier": 5,
+      "zone": "inner",
+      "role": "civic",
+      "terrain": "ground_level",
+      "batch": 5,
+      "variant_group": "library",
+      "levels": [
+        "library_l1",
+        "library_l2",
+        "library_l3"
+      ]
+    },
+    {
+      "id": "csr:gatehouse",
+      "name": "Gatehouse",
+      "tier": 5,
+      "zone": "wall",
+      "role": "gate",
+      "terrain": "ground_level",
+      "batch": 5,
+      "variant_group": "gatehouse",
+      "levels": [
+        "gatehouse_l1",
+        "gatehouse_l2",
+        "gatehouse_l3"
+      ]
+    },
+    {
+      "id": "csr:fountain",
+      "name": "Fountain",
+      "tier": 5,
+      "zone": "inner",
+      "role": "decoration",
+      "terrain": "flexible",
+      "batch": 5,
+      "variant_group": "fountain",
+      "levels": [
+        "fountain_l1",
+        "fountain_l2",
+        "fountain_l3"
+      ]
+    },
+    {
+      "id": "csr:town_hall",
+      "name": "Town hall",
+      "tier": 6,
+      "zone": "inner",
+      "role": "civic",
+      "terrain": "ground_level",
+      "batch": 5,
+      "variant_group": "town_hall",
+      "levels": [
+        "town_hall_l1",
+        "town_hall_l2",
+        "town_hall_l3"
+      ]
+    },
+    {
+      "id": "csr:hospital",
+      "name": "Hospital",
+      "tier": 6,
+      "zone": "inner",
+      "role": "health",
+      "terrain": "ground_level",
+      "batch": 5,
+      "variant_group": "infirmary",
+      "levels": [
+        "hospital_l1",
+        "hospital_l2",
+        "hospital_l3"
+      ]
+    },
+    {
+      "id": "csr:armory",
+      "name": "Armory",
+      "tier": 6,
+      "zone": "inner",
+      "role": "military",
+      "terrain": "ground_level",
+      "batch": 5,
+      "variant_group": "armory",
+      "levels": [
+        "armory_l1",
+        "armory_l2",
+        "armory_l3"
+      ]
+    },
+    {
+      "id": "csr:tree_farm",
+      "name": "Tree farm",
+      "tier": 6,
+      "zone": "outer",
+      "role": "resource",
+      "terrain": "flexible",
+      "batch": 5,
+      "variant_group": "lumber_camp",
+      "levels": [
+        "tree_farm_l1",
+        "tree_farm_l2",
+        "tree_farm_l3"
+      ]
+    },
+    {
+      "id": "csr:statue",
+      "name": "Statue",
+      "tier": 6,
+      "zone": "inner",
+      "role": "decoration",
+      "terrain": "flexible",
+      "batch": 5,
+      "variant_group": "statue",
+      "levels": [
+        "statue_l1",
+        "statue_l2",
+        "statue_l3"
+      ]
+    }
+  ],
+  "fixes": [
+    {
+      "level": "church_l2",
+      "pos": [
+        12,
+        3,
+        11
+      ],
+      "block": "minecraft:chain[axis=y,waterlogged=false]",
+      "why": "the hanging lantern at (12,2,11) had nothing above it"
+    },
+    {
+      "level": "church_l2",
+      "pos": [
+        12,
+        4,
+        11
+      ],
+      "block": "minecraft:chain[axis=y,waterlogged=false]",
+      "why": "the hanging lantern at (12,2,11) had nothing above it"
+    },
+    {
+      "level": "church_l3",
+      "pos": [
+        12,
+        3,
+        11
+      ],
+      "block": "minecraft:chain[axis=y,waterlogged=false]",
+      "why": "the hanging lantern at (12,2,11) had nothing above it"
+    },
+    {
+      "level": "church_l3",
+      "pos": [
+        12,
+        4,
+        11
+      ],
+      "block": "minecraft:chain[axis=y,waterlogged=false]",
+      "why": "the hanging lantern at (12,2,11) had nothing above it"
+    },
+    {
+      "level": "mine_l3",
+      "pos": [
+        1,
+        2,
+        8
+      ],
+      "block": "minecraft:air",
+      "why": "a flower on cobblestone can't be placed"
+    },
+    {
+      "level": "mine_l3",
+      "pos": [
+        3,
+        3,
+        9
+      ],
+      "block": "minecraft:air",
+      "why": "a flower on cobblestone can't be placed"
+    },
+    {
+      "level": "mine_l3",
+      "pos": [
+        4,
+        4,
+        5
+      ],
+      "block": "minecraft:air",
+      "why": "a flower on cobblestone can't be placed"
+    },
+    {
+      "level": "mine_l3",
+      "pos": [
+        6,
+        4,
+        9
+      ],
+      "block": "minecraft:air",
+      "why": "a flower on cobblestone can't be placed"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "csr:library",
+  "name": "Library",
+  "design": "ready",
+  "tier": 5,
+  "zone": "inner",
+  "role": "civic",
+  "footprint": [
+    11,
+    9,
+    11
+  ],
+  "cost": "auto",
+  "variant_group": "library",
+  "structure": "csr:kingdom/studio/library_l1",
+  "levels": [
+    "csr:kingdom/studio/library_l1",
+    "csr:kingdom/studio/library_l2",
+    "csr:kingdom/studio/library_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "ground_level",
+  "batch": 5,
+  "door_side": "front",
+  "studio": {
+    "library_l1": 1,
+    "library_l2": 1,
+    "library_l3": 1
+  }
+}

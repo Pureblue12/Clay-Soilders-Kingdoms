@@ -1,8 +1,30 @@
 {
   "id": "csr:chapel",
   "name": "Chapel",
-  "design": "TBD",
+  "design": "ready",
   "tier": 4,
   "zone": "inner",
-  "role": "religious"
+  "role": "religious",
+  "footprint": [
+    11,
+    13,
+    20
+  ],
+  "cost": "auto",
+  "variant_group": "chapel",
+  "structure": "csr:kingdom/studio/chapel_l1",
+  "levels": [
+    "csr:kingdom/studio/chapel_l1",
+    "csr:kingdom/studio/chapel_l2",
+    "csr:kingdom/studio/chapel_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "ground_level",
+  "batch": 4,
+  "door_side": "front",
+  "studio": {
+    "chapel_l1": 3,
+    "chapel_l2": 3,
+    "chapel_l3": 3
+  }
 }

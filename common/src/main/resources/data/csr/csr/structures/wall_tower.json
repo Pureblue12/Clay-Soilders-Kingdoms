@@ -1,8 +1,30 @@
 {
   "id": "csr:wall_tower",
   "name": "Wall tower",
-  "design": "TBD",
+  "design": "ready",
   "tier": 3,
   "zone": "wall",
-  "role": "defense"
+  "role": "defense",
+  "footprint": [
+    7,
+    13,
+    7
+  ],
+  "cost": "auto",
+  "variant_group": "wall_tower",
+  "structure": "csr:kingdom/studio/wall_tower_l1",
+  "levels": [
+    "csr:kingdom/studio/wall_tower_l1",
+    "csr:kingdom/studio/wall_tower_l2",
+    "csr:kingdom/studio/wall_tower_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "ground_level",
+  "batch": 3,
+  "door_side": "back",
+  "studio": {
+    "wall_tower_l1": 3,
+    "wall_tower_l2": 3,
+    "wall_tower_l3": 3
+  }
 }

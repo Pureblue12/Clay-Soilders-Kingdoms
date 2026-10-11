@@ -1,0 +1,26 @@
+{
+  "id": "csr:batch1_cottage",
+  "name": "Old cottage",
+  "design": "ready",
+  "tier": 1,
+  "zone": "inner",
+  "role": "house",
+  "footprint": [
+    7,
+    8,
+    9
+  ],
+  "cost": "auto",
+  "variant_group": "cottage_batch1",
+  "palette": "oak_a",
+  "structure": "csr:kingdom/batch1/cottage_l1",
+  "levels": [
+    "csr:kingdom/batch1/cottage_l1",
+    "csr:kingdom/batch1/cottage_l2",
+    "csr:kingdom/batch1/cottage_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "ground_level",
+  "batch": 1,
+  "door_side": "front"
+}

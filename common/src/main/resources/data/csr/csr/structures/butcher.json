@@ -1,0 +1,30 @@
+{
+  "id": "csr:butcher",
+  "name": "Butcher",
+  "design": "ready",
+  "tier": 3,
+  "zone": "inner",
+  "role": "food",
+  "footprint": [
+    10,
+    8,
+    10
+  ],
+  "cost": "auto",
+  "variant_group": "butcher",
+  "structure": "csr:kingdom/studio/butcher_l1",
+  "levels": [
+    "csr:kingdom/studio/butcher_l1",
+    "csr:kingdom/studio/butcher_l2",
+    "csr:kingdom/studio/butcher_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "ground_level",
+  "batch": 3,
+  "door_side": "front",
+  "studio": {
+    "butcher_l1": 1,
+    "butcher_l2": 1,
+    "butcher_l3": 1
+  }
+}

@@ -1441,13 +1441,19 @@ All briefs, full build (every layer). ⚠ = over a proposed limit (see [Scale an
   | `design` | yes | `ready` (has geometry) or `TBD` (placeholder, no geometry yet). |
   | `tier` | yes | 1–10. |
   | `zone` | yes | `keep`, `inner`, `wall` or `outer` (the soft rings, [D3](DECISIONS.md)). |
-  | `role` | yes | keep, house, farm, resource, storage, defense, gate, military, workshop, market, religious, health, food, utility, decoration. |
+  | `role` | yes | keep, house, farm, resource, storage, defense, gate, military, workshop, market, religious, health, food, utility, decoration, civic. |
   | `footprint` | ready only | Size `[x, y, z]`; must match the structure file. |
   | `cost` | no | `"auto"` (default: counted from the blocks, the way builders count them) or `{"minecraft:cobblestone": 30, ...}`. |
   | `variant_group` | no | Structures that are variants of each other share this. |
   | `palette` | no | Material palette name, e.g. `oak`. |
   | `ruin` | no | Structure file of the ruined version, e.g. `csr:kingdom/test_hut_ruin`. |
   | `structure` | ready only | Structure file location, e.g. `csr:kingdom/test_hut`. |
+  | `levels` | no | Structure files of the detail levels, level 1 first (level 1 = `structure`). |
+  | `ground_level` | no | The layer that rests on the ground (0 = the bottom layer stands on the ground). |
+  | `terrain` | no | `ground_level`, `skirt`, `stepped` or `flexible` (rule 9). |
+  | `door_side` | no | `front`, `back`, `left` or `right` (as seen from the front). |
+  | `batch` | no | The generation batch it was made in. |
+  | `studio` | no | Written by the promote step: the Studio structure and approved version each level came from. Not read by the mod. |
 
 - **Code:** `common/.../structure/` (`StructureMeta`, `StructureRegistry`). Structure files are read through vanilla's
   structure manager, which looks in the world's `generated` folder first (structure-block saves), then data packs
@@ -1458,6 +1464,30 @@ All briefs, full build (every layer). ⚠ = over a proposed limit (see [Scale an
   `StructureRegistryGameTests.shippedRegistryIsValid` fails if the shipped registry has any problem.
 - **Facing:** a structure's local z = 0 side is its front, the side towards the easel (builders) or towards you
   (paste tool).
+
+### Promote step (Studio to mod)
+
+Approved structures reach the mod only through the promote step: `cd studio && npm run studio -- promote` (code
+`studio/cli/promote.ts`, table `studio/promote.json`). For every entry in `promote.json` it exports the latest
+**approved** version of each level (pending and rejected versions never) and writes:
+- `data/csr/structure/kingdom/studio/<studio name>.nbt` for each level;
+- `data/csr/csr/structures/<id>.json` (tier, zone, role, terrain, batch and variant group from `promote.json`; footprint,
+  levels, `ground_level`, `door_side` and `studio` from the files);
+- `data/csr/csr/decoration/<id>.json` when the structure has decoration-step blocks (water, lily pads, `meta.decorationBlocks`):
+  they are left out of the NBT, because builders can't place them (D54).
+
+Rules it applies:
+- A Studio structure with `meta.groundLayer` 0 (floors level with the grass) gets `ground_level` 1, and the air in its
+  layer 0 becomes structure void ("leave the ground"). **Placement doesn't use `ground_level` yet**, so in game these
+  still sit one block higher than the Studio shows.
+- `fixes` in `promote.json` are small edits to approved versions that can't be built as they are (a hanging lantern with
+  nothing above it, flowers on cobblestone). Each says why.
+- To promote a newly approved structure: add (or extend) its entry in `promote.json`, run the command, commit the
+  files it wrote. Re-running it is safe; it only rewrites what changed.
+
+The batch-1 files (`kingdom/batch1/`) stay in the registry as test copies, `csr:batch1_<name>` ("Old ..."), for
+`Batch1StructureGameTests`; the real ids (`csr:keep`, `csr:cottage`, ...) are the approved Studio versions. The dirt road
+was never in the Studio and keeps its batch-1 file as `csr:road`.
 
 ### Test structures (ready)
 
@@ -1471,27 +1501,14 @@ Made by `tools/make_test_structures.py`.
 
 ### Placeholders (design: TBD, no geometry)
 
-> The briefs above supersede these names, tiers and zones once structure files are made; only the storehouse's tier changes (1 → 3, D47), and many NEW ids are added. Metadata files are updated when each structure is generated.
-
+The stage-0 placeholders that have no approved Studio version yet. All the others were replaced by the promote step.
 
 | id | Name | Tier | Zone | Role |
 |---|---|---|---|---|
-| `csr:keep` | Keep | 1 | keep | keep |
-| `csr:cottage` | Cottage | 1 | inner | house |
-| `csr:farm` | Farm | 1 | outer | farm |
-| `csr:lumber_camp` | Lumber camp | 1 | outer | resource |
-| `csr:storehouse` | Storehouse | 1 | inner | storage |
+| `csr:storehouse` | Storehouse | 3 (D47) | inner | storage |
+| `csr:barracks` | Barracks | 3 | inner | military |
 | `csr:palisade` | Palisade segment | 2 | wall | defense |
 | `csr:gate` | Gate | 2 | wall | gate |
-| `csr:stone_wall` | Stone wall segment | 3 | wall | defense |
-| `csr:wall_tower` | Wall tower | 3 | wall | defense |
-| `csr:barracks` | Barracks | 3 | inner | military |
-| `csr:smithy` | Smithy | 3 | inner | workshop |
-| `csr:quarry` | Quarry | 3 | outer | resource |
-| `csr:market` | Market | 4 | inner | market |
-| `csr:chapel` | Chapel | 4 | inner | religious |
-| `csr:infirmary` | Infirmary | 4 | inner | health |
-| `csr:food_hall` | Food hall | 4 | inner | food |
 
 ### Paste tool (development runs only)
 

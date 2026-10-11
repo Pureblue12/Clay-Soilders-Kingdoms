@@ -1,0 +1,30 @@
+{
+  "id": "csr:gatehouse",
+  "name": "Gatehouse",
+  "design": "ready",
+  "tier": 5,
+  "zone": "wall",
+  "role": "gate",
+  "footprint": [
+    15,
+    20,
+    10
+  ],
+  "cost": "auto",
+  "variant_group": "gatehouse",
+  "structure": "csr:kingdom/studio/gatehouse_l1",
+  "levels": [
+    "csr:kingdom/studio/gatehouse_l1",
+    "csr:kingdom/studio/gatehouse_l2",
+    "csr:kingdom/studio/gatehouse_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "ground_level",
+  "batch": 5,
+  "door_side": "front",
+  "studio": {
+    "gatehouse_l1": 1,
+    "gatehouse_l2": 1,
+    "gatehouse_l3": 1
+  }
+}

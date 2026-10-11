@@ -1,0 +1,29 @@
+{
+  "id": "csr:stables",
+  "name": "Pens and stables",
+  "design": "ready",
+  "tier": 2,
+  "zone": "outer",
+  "role": "farm",
+  "footprint": [
+    9,
+    9,
+    11
+  ],
+  "cost": "auto",
+  "variant_group": "stables",
+  "structure": "csr:kingdom/studio/stables_l1",
+  "levels": [
+    "csr:kingdom/studio/stables_l1",
+    "csr:kingdom/studio/stables_l2",
+    "csr:kingdom/studio/stables_l3"
+  ],
+  "ground_level": 1,
+  "terrain": "ground_level",
+  "batch": 2,
+  "studio": {
+    "stables_l1": 5,
+    "stables_l2": 5,
+    "stables_l3": 5
+  }
+}

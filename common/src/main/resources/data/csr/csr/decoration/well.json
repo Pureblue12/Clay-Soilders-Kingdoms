@@ -1,41 +1,199 @@
 {
   "structure": "csr:well",
-  "note": "What the decoration step (roadmap 5a) must add after builders finish each level; nothing here is placed by builders.",
-  "unknown_blocks_in_flourish": [
-    "moss_carpet"
-  ],
+  "note": "What the decoration step (roadmap 5a) must add after builders finish each level; nothing here is placed by builders. Written by the Studio promote step.",
   "levels": {
     "1": [
       {
         "pos": [
-          1,
+          3,
           0,
           1
         ],
         "kind": "water",
-        "note": "well water"
-      }
-    ],
-    "2": [
-      {
-        "pos": [
-          2,
-          1,
-          0
-        ],
-        "kind": "potted_plant",
-        "plant": "poppy"
+        "block": "minecraft:water[level=0]"
       },
       {
         "pos": [
+          4,
           0,
-          1,
+          1
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          5,
+          0,
+          1
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          2,
+          0,
           2
         ],
-        "kind": "potted_plant",
-        "plant": "dandelion"
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          3,
+          0,
+          2
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          4,
+          0,
+          2
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          5,
+          0,
+          2
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          6,
+          0,
+          2
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          2,
+          0,
+          3
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          3,
+          0,
+          3
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          4,
+          0,
+          3
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          5,
+          0,
+          3
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          6,
+          0,
+          3
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          2,
+          0,
+          4
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          3,
+          0,
+          4
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          4,
+          0,
+          4
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          5,
+          0,
+          4
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          6,
+          0,
+          4
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          3,
+          0,
+          5
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          4,
+          0,
+          5
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
+      },
+      {
+        "pos": [
+          5,
+          0,
+          5
+        ],
+        "kind": "water",
+        "block": "minecraft:water[level=0]"
       }
     ],
+    "2": [],
     "3": []
   }
 }

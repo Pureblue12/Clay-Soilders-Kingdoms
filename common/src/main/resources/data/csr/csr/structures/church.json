@@ -1,0 +1,30 @@
+{
+  "id": "csr:church",
+  "name": "Church",
+  "design": "ready",
+  "tier": 5,
+  "zone": "inner",
+  "role": "religious",
+  "footprint": [
+    17,
+    20,
+    24
+  ],
+  "cost": "auto",
+  "variant_group": "chapel",
+  "structure": "csr:kingdom/studio/church_l1",
+  "levels": [
+    "csr:kingdom/studio/church_l1",
+    "csr:kingdom/studio/church_l2",
+    "csr:kingdom/studio/church_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "ground_level",
+  "batch": 5,
+  "door_side": "front",
+  "studio": {
+    "church_l1": 1,
+    "church_l2": 1,
+    "church_l3": 1
+  }
+}

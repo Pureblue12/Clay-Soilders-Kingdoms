@@ -1,8 +1,30 @@
 {
   "id": "csr:quarry",
   "name": "Quarry",
-  "design": "TBD",
+  "design": "ready",
   "tier": 3,
   "zone": "outer",
-  "role": "resource"
+  "role": "resource",
+  "footprint": [
+    18,
+    9,
+    17
+  ],
+  "cost": "auto",
+  "variant_group": "quarry",
+  "structure": "csr:kingdom/studio/quarry_l1",
+  "levels": [
+    "csr:kingdom/studio/quarry_l1",
+    "csr:kingdom/studio/quarry_l2",
+    "csr:kingdom/studio/quarry_l3"
+  ],
+  "ground_level": 1,
+  "terrain": "flexible",
+  "batch": 3,
+  "door_side": "front",
+  "studio": {
+    "quarry_l1": 2,
+    "quarry_l2": 2,
+    "quarry_l3": 2
+  }
 }

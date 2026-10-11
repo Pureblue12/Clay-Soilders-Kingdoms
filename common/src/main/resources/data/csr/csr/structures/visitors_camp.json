@@ -6,21 +6,24 @@
   "zone": "inner",
   "role": "house",
   "footprint": [
-    9,
-    4,
-    9
+    21,
+    5,
+    14
   ],
   "cost": "auto",
   "variant_group": "inn",
-  "palette": "oak_a",
-  "structure": "csr:kingdom/batch1/visitors_camp_l1",
+  "structure": "csr:kingdom/studio/visitors_camp_l1",
   "levels": [
-    "csr:kingdom/batch1/visitors_camp_l1",
-    "csr:kingdom/batch1/visitors_camp_l2",
-    "csr:kingdom/batch1/visitors_camp_l3"
+    "csr:kingdom/studio/visitors_camp_l1",
+    "csr:kingdom/studio/visitors_camp_l2",
+    "csr:kingdom/studio/visitors_camp_l3"
   ],
   "ground_level": 0,
   "terrain": "flexible",
   "batch": 1,
-  "door_side": "front"
+  "studio": {
+    "visitors_camp_l1": 4,
+    "visitors_camp_l2": 4,
+    "visitors_camp_l3": 4
+  }
 }

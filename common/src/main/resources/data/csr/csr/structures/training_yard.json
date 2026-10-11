@@ -1,0 +1,29 @@
+{
+  "id": "csr:training_yard",
+  "name": "Training yard",
+  "design": "ready",
+  "tier": 3,
+  "zone": "inner",
+  "role": "military",
+  "footprint": [
+    11,
+    5,
+    11
+  ],
+  "cost": "auto",
+  "variant_group": "training_yard",
+  "structure": "csr:kingdom/studio/training_yard_l1",
+  "levels": [
+    "csr:kingdom/studio/training_yard_l1",
+    "csr:kingdom/studio/training_yard_l2",
+    "csr:kingdom/studio/training_yard_l3"
+  ],
+  "ground_level": 0,
+  "terrain": "flexible",
+  "batch": 3,
+  "studio": {
+    "training_yard_l1": 2,
+    "training_yard_l2": 2,
+    "training_yard_l3": 2
+  }
+}
