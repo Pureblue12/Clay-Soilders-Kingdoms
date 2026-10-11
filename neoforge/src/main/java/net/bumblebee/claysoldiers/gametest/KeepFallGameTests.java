@@ -42,7 +42,7 @@ public class KeepFallGameTests {
     private static final BlockPos EASEL = new BlockPos(24, 2, 6);
     private static final String WHAT = "keep_fall";
 
-    @GameTest(template = StructureBuildGameTests.TEMPLATE, timeoutTicks = 600, batch = "keep_fall")
+    @GameTest(template = "gametest/structure_build", timeoutTicks = 600, batch = "keep_fall")
     public static void keepUpperFloorReturnIsRecorded(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         StructureMeta meta = StructureRegistry.get(level.getServer()).byId(KEEP).orElseThrow();
