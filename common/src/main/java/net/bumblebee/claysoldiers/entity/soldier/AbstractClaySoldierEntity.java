@@ -1697,6 +1697,12 @@ public class AbstractClaySoldierEntity extends ClayMobTeamOwnerEntity implements
         if (allProperties().canGlide()) {
             return false;
         }
+        // A working soldier's path drops up to EdgeGuard.SAFE_DROP: 3 blocks onto a slab or a stair's low step is 3.5,
+        // which the pathfinder counts as 3. Such a planned drop never hurts (D74).
+        if (workSelector.isWorking() && pFallDistance <= EdgeGuard.SAFE_DROP + EdgeGuard.FALL_MARGIN) {
+            DebugLog.event(DebugCategory.DAMAGE, this, "fall of %s blocks while working: a planned drop, no damage", pFallDistance);
+            return false;
+        }
 
         return super.causeFallDamage(pFallDistance, pMultiplier, pSource);
     }

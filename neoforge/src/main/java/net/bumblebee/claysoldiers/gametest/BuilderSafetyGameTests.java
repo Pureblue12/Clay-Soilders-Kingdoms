@@ -17,6 +17,7 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Half;
@@ -38,7 +39,8 @@ import static net.bumblebee.claysoldiers.gametest.ClaySoldierGameTests.SOLDIER;
  * placed into them, and walled themselves into a 1x1 shaft of the keep. Each test asserts the CORRECT behavior.
  * D65 (run 38124453564): the town hall's builders walked out of an unglazed window onto its open shutters and fell to
  * their deaths, because vanilla's pathfinder treats an open trapdoor as a floor. D68 (run 38140495889): they also fell
- * through the tops of fences and panes, which vanilla counts as floors too.
+ * through the tops of fences and panes, which vanilla counts as floors too. D74 (run 38165377544): they hopped off a
+ * stair's low step at the top of a planned drop and lost health on drops onto half-height blocks until they died.
  */
 @GameTestHolder(ClaySoldiersCommon.MOD_ID)
 @PrefixGameTestTemplate(false)
@@ -62,6 +64,68 @@ public class BuilderSafetyGameTests {
             helper.assertTrue(soldier.isAlive(), "BUG (fall death): the working builder died from a 6-block fall");
             helper.assertTrue(soldier.onGround(), "The builder has not landed yet");
             helper.assertTrue(soldier.getHealth() < soldier.getMaxHealth(), "The fall did not hurt the builder at all");
+            helper.succeed();
+        });
+    }
+
+    /**
+     * BUG TEST (hurt by a planned drop): a working builder drops 3 blocks onto the top of a slab, 3.5 in all. The
+     * pathfinder counts that as a 3-block drop and plans it, and the edge guard lets it through, so it must not hurt (town
+     * hall builders lost a point of health on every such drop until they died, run 38165377544; D74).
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 200)
+    public static void workingBuilderIsNotHurtByAPlannedDrop(GameTestHelper helper) {
+        BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "planned_drop", 1, 1, 1, BlockPos.ZERO);
+        ClaySoldierEntity soldier = ClaySoldierGameTests.setUpBuilder(helper, blueprint, List.of(new ItemStack(Items.COBBLESTONE))).soldier();
+        BlockPos slab = new BlockPos(12, ClaySoldierGameTests.GROUND_Y, 12);
+        helper.setBlock(slab, Blocks.COBBLESTONE_SLAB);
+        BlockPos slabAbsolute = helper.absolutePos(slab);
+        helper.runAfterDelay(20, () -> soldier.teleportTo(slabAbsolute.getX() + 0.5, slabAbsolute.getY() + 4.0, slabAbsolute.getZ() + 0.5));
+        helper.runAfterDelay(80, () -> {
+            helper.assertTrue(soldier.isAlive(), "The builder died");
+            helper.assertTrue(soldier.onGround(), "The builder has not landed yet");
+            helper.assertTrue(soldier.getHealth() >= soldier.getMaxHealth(),
+                    "BUG (hurt by a planned drop): a 3.5-block drop onto a slab cost the working builder " + (soldier.getMaxHealth() - soldier.getHealth()));
+            helper.succeed();
+        });
+    }
+
+    /**
+     * BUG TEST (hop off a stair): a soldier stands on the low step of a stair at the edge of a 3-high ledge and walks to
+     * the ground below. Vanilla's move control hops whenever the feet are below the top of the block they stand in, so the
+     * soldier hopped 1.25 up and fell 3.75 instead of 2.5 (town hall builders, every fall trace of run 38165377544; D74).
+     * The low step is walked off without a hop: the soldier never rises above the step and lands unhurt.
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 300)
+    public static void soldierDoesNotHopOffAStairAtADrop(GameTestHelper helper) {
+        for (int x = 4; x <= 6; x++) {
+            for (int y = ClaySoldierGameTests.GROUND_Y; y <= 4; y++) {
+                helper.setBlock(new BlockPos(x, y, 8), Blocks.COBBLESTONE);
+            }
+        }
+        BlockPos stair = new BlockPos(4, 4, 8);
+        helper.setBlock(stair, Blocks.SPRUCE_STAIRS.defaultBlockState().setValue(StairBlock.FACING, Direction.EAST));
+        ClaySoldierEntity soldier = DoorGameTests.spawnSoldier(helper, stair.above(), DevScenarios.RED_TEAM);
+        BlockPos stairAbsolute = helper.absolutePos(stair);
+        double stepTop = stairAbsolute.getY() + 0.5;
+        soldier.moveTo(stairAbsolute.getX() + 0.25, stepTop, stairAbsolute.getZ() + 0.5, 0, 0);
+        BlockPos target = helper.absolutePos(new BlockPos(1, ClaySoldierGameTests.GROUND_Y, 8));
+        double[] highest = {Double.NEGATIVE_INFINITY};
+        helper.onEachTick(() -> {
+            if (helper.getTick() < 5) {
+                return;
+            }
+            highest[0] = Math.max(highest[0], soldier.getY());
+            if (helper.getTick() % 10 == 0) {
+                soldier.getNavigation().moveTo(target.getX() + 0.5, target.getY(), target.getZ() + 0.5, 1.0);
+            }
+        });
+        helper.runAfterDelay(250, () -> {
+            helper.assertTrue(soldier.isAlive(), "BUG (hop off a stair): the soldier died from the drop");
+            helper.assertTrue(highest[0] < stepTop + 0.3,
+                    "BUG (hop off a stair): the soldier hopped up to y " + highest[0] + " from the step at " + stepTop);
+            helper.assertTrue(soldier.getY() < target.getY() + 0.1, "The soldier did not get down, it is at " + soldier.position());
+            helper.assertTrue(soldier.getHealth() >= soldier.getMaxHealth(), "The drop hurt the soldier");
             helper.succeed();
         });
     }
