@@ -267,10 +267,18 @@ public class BuilderSafetyGameTests {
         BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "stranded", 1, 1, 1, BlockPos.ZERO);
         ClaySoldierEntity soldier = ClaySoldierGameTests.setUpBuilder(helper, blueprint, List.of(new ItemStack(Items.COBBLESTONE))).soldier();
         BlockPos top = helper.absolutePos(pillar(helper, 9, 11, 9, 11));
-        soldier.teleportTo(top.getX() + 0.5, top.getY(), top.getZ() + 0.5);
+        boolean[] stranded = {false};
+        // Strand it once it carries the block: it must have found its easel first (it looks for one only 3 blocks down).
+        helper.onEachTick(() -> {
+            if (!stranded[0] && soldier.getCarriedStack().is(Items.COBBLESTONE)) {
+                stranded[0] = true;
+                soldier.teleportTo(top.getX() + 0.5, top.getY(), top.getZ() + 0.5);
+            }
+        });
         helper.succeedWhen(() -> {
             helper.assertTrue(soldier.isAlive(), "The builder died");
-            helper.assertBlockPresent(Blocks.COBBLESTONE, SPOT.above());
+            helper.assertTrue(stranded[0], "The builder never carried the block");
+            helper.assertBlockPresent(Blocks.COBBLESTONE, SPOT);
         });
     }
 
