@@ -4,11 +4,15 @@ import net.bumblebee.claysoldiers.block.blueprint.EaselBlockEntity;
 import net.bumblebee.claysoldiers.blueprint.BlueprintData;
 import net.bumblebee.claysoldiers.blueprint.site.BuildSitePlanner;
 import net.bumblebee.claysoldiers.entity.goal.workgoal.BuildBlueprintGoal;
+import net.bumblebee.claysoldiers.entity.goal.workgoal.BuilderReach;
 import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
 import net.bumblebee.claysoldiers.entity.soldier.ClaySoldierEntity;
 import net.bumblebee.claysoldiers.init.ModEntityTypes;
 import net.bumblebee.claysoldiers.init.ModRegistries;
 import net.bumblebee.claysoldiers.scaffold.TestStructures;
+import net.bumblebee.claysoldiers.structure.StructureBlueprints;
+import net.bumblebee.claysoldiers.structure.StructureMeta;
+import net.bumblebee.claysoldiers.structure.StructurePaster;
 import net.bumblebee.claysoldiers.tuning.Tuning;
 import net.bumblebee.claysoldiers.team.TeamLoyaltyManger;
 import net.minecraft.core.BlockPos;
@@ -95,6 +99,48 @@ public final class DevScenarios {
             soldiers.add(spawnWorker(level, origin.relative(right, 1 + i).relative(forward), RED_TEAM, player, BuildBlueprintGoal.class, chestPos));
         }
         return new BuildTestResult(chestPos, easelPos, soldiers, items);
+    }
+
+    /** Scaffold material put in the supply of a structure build that is taller than builders reach (9). */
+    public static final int STRUCTURE_SCAFFOLD_STOCK = 256;
+
+    /**
+     * Result of {@link #structureBuild}.
+     *
+     * @param supply keeps the chest stocked; tick it (GameTests) or {@link MaterialSupply#start start} it (dev commands)
+     */
+    public record StructureBuildResult(EaselBlockEntity easel, ChestBlockEntity chest, List<ClaySoldierEntity> soldiers,
+                                       MaterialSupply supply, List<ItemStack> materials, boolean scaffold) {
+    }
+
+    /**
+     * Sets up builders for one detail level of a kingdom structure, in the Small House scenario's layout (the same as
+     * the batch-1 builder GameTests): an easel 3 ahead facing back (the structure goes on its far side, centered), a
+     * chest 2 ahead and 2 to the right, 3 red builders 1 ahead. The chest is kept stocked with the level's materials
+     * by a {@link MaterialSupply} (most structures need more than a chest holds), plus
+     * {@link #STRUCTURE_SCAFFOLD_STOCK} scaffold material when the structure is taller than builders reach.
+     */
+    public static StructureBuildResult structureBuild(ServerLevel level, Player owner, BlockPos origin, Direction forward,
+                                                      StructureMeta meta, int detailLevel) {
+        Direction right = forward.getClockWise();
+        BlueprintData blueprint = StructureBlueprints.blueprint(level, meta, detailLevel);
+        BlockPos easelPos = origin.relative(forward, 3);
+        BlockPos chestPos = origin.relative(forward, 2).relative(right, 2);
+        List<ItemStack> materials = new ArrayList<>(blueprint.createServerPlan().orElseThrow().getNeededItems());
+        int height = StructurePaster.template(level, meta, detailLevel).getSize().getY();
+        boolean scaffold = height > BuilderReach.MAX_PLACE_HEIGHT + 1;
+        if (scaffold) {
+            materials.add(new ItemStack(BuiltInRegistries.BLOCK.get(Tuning.SCAFFOLD_MATERIAL.get()).asItem(), STRUCTURE_SCAFFOLD_STOCK));
+        }
+        ChestBlockEntity chest = placeChest(level, chestPos, List.of());
+        EaselBlockEntity easel = placeEasel(level, easelPos, forward.getOpposite(), blueprint);
+        MaterialSupply supply = new MaterialSupply(level, chestPos, materials, () -> easel.isRemoved() || easel.isFinished());
+        supply.restock();
+        List<ClaySoldierEntity> soldiers = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            soldiers.add(spawnWorker(level, origin.relative(forward).relative(right, i), RED_TEAM, owner, BuildBlueprintGoal.class, chestPos));
+        }
+        return new StructureBuildResult(easel, chest, soldiers, supply, materials, scaffold);
     }
 
     /**

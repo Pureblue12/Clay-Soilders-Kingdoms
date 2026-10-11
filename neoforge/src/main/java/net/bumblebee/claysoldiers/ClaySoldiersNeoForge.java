@@ -158,6 +158,9 @@ public class ClaySoldiersNeoForge {
         NeoForge.EVENT_BUS.addListener(KingdomEvents::onRightClickBlock);
         if (ClaySoldiersCommon.PLATFORM.isDevEnv()) {
             NeoForge.EVENT_BUS.addListener(RecorderIndicator::onServerTick);
+            // Keeps the chests of "/csr dev structure build" stocked.
+            NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.tick.ServerTickEvent.Post event) ->
+                    net.bumblebee.claysoldiers.dev.MaterialSupply.tickAll(event.getServer()));
         }
 
         modContainer.registerConfig(ModConfig.Type.SERVER, ConfigNeoForge.SPEC);

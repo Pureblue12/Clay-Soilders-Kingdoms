@@ -37,7 +37,7 @@ Starts a headless test server, runs every test in
 `DoorGameTests`, `TuningGameTests`, `StructureRegistryGameTests`, `StructurePasteGameTests`,
 `LayoutCheckerGameTests`, `KingdomDataGameTests`, `KingdomGameTests`, `KingdomBookGameTests`, `KingdomBookRefreshGameTests`, `TerrainScoreGameTests`, `TerrainScanGameTests`,
 `TerrainGradingGameTests`, `TerrainFoundingGameTests`, `ScaffoldPlannerGameTests`, `ScaffoldBuildGameTests`,
-`ScaffoldCleanupGameTests`), prints
+`ScaffoldCleanupGameTests`, `StructureBuildGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Templates: `data/csr/structure/gametest/platform.nbt` (16x8x16) and `terrain.nbt` (32x16x32, for test terrains);
@@ -69,6 +69,17 @@ them in its "Stall reports" step. GitHub's machines are slower: the one wall-clo
 - The framework also puts a barrier roof at the top of a test area (16 high for `terrain`): tests that build higher
   use `skyAccess = true`. Builders only follow paths up to their follow range (16): keep a test's chest within about
   14 blocks of every block.
+
+### Structure build tests (every Studio structure, separate workflow)
+
+`StructureBuildGameTests` has builders build every structure promoted from the Studio, every level, from scratch
+(about 156 builds). Too slow for the suite: the builds only exist when `CSR_STRUCTURE_BUILDS` is set (`all` or a shard
+`k/n`; `CSR_STRUCTURE_BUILDS_ONLY=keep,church` limits them) and are optional. Run `tools/structure_builds.sh`
+(writes `build/structure-results.tsv`) or the GitHub workflow "Structure builds" (`.github/workflows/structure-builds.yml`,
+4 shards, a result table per structure in the run summary; runs when structure files or the test change, or by hand).
+A build fails at once after 6000 ticks without progress, with a stall report. The chest is kept stocked by
+`dev/MaterialSupply` (most structures need more than 27 stacks). The required test `buildListMatchesRegistry` keeps the
+list in `StructureBuildGameTests.STRUCTURES` in step with the registry: add a row when a structure is promoted.
 
 Current status (2026-10-04, after stage 3 Tall construction spike and its in-game fixes D41, D42): all 168 required tests pass (the suite takes a few
 minutes: the scaffold tests build whole towers and the Small House). `SuspectedBugGameTests` covers the easel right-click:
@@ -250,6 +261,7 @@ the time it was made; a different hash means the registry changed.
 | `/csr build <blueprint>` (book link) | see "Starting a build" below |
 | `/csr dev tuning reload` / `show <key>` | re-read the tuning file / show a value, its default and range (book: Tuning) |
 | `/csr dev structure place <id> [facing]` | paste a registry structure where you stand, builders' conventions (book: Structures) |
+| `/csr dev structure build <id> [level]` | 3 builders build a Studio structure (default: top level) ahead of you; the chest is refilled as it empties (book: Structures, "Builders build") |
 | `/csr dev structure undo` / `reload` / `list` | undo the last paste / re-read structures from disk / list all |
 | `/csr dev kingdom stock_add` / `stock_remove <resource> [amount]`, `stock_show` | test the stockpile of the kingdom you stand in (book: Kingdom, which also links `/csr kingdom found/book/status/disband`) |
 | `/csr dev terrain scan` / `site` | scan the ground around you / score the keep site where you stand and show the best nearby (book: Terrain) |
