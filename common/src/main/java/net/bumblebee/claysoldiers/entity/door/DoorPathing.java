@@ -16,10 +16,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.pathfinder.AmphibiousNodeEvaluator;
 import net.minecraft.world.level.pathfinder.PathFinder;
+import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.PathfindingContext;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Set;
 
 /**
  * The soldiers' two navigations (walking, and swimming for soldiers that can swim), identical to vanilla's except that
@@ -50,8 +53,31 @@ public final class DoorPathing {
      * Vanilla ground navigation with {@link #withDoorAccess}.
      */
     public static class Ground extends GroundPathNavigation {
+        /** Extra walked length every path of this navigation may have (D62); 0 outside building work. */
+        private float rangeBonus;
+
         public Ground(Mob mob, Level level) {
             super(mob, level);
+        }
+
+        /**
+         * Lets every path of this soldier be {@code bonus} blocks longer than its follow range allows (vanilla rejects
+         * paths walked longer than the follow range, 16, and counts the length generously). Builders set it while they
+         * work for a build (D62): the way around a big building, back to the easel or the chest, is longer than 16.
+         * The region searched grows with it, so searches cost more while it is set.
+         */
+        public void setRangeBonus(float bonus) {
+            this.rangeBonus = bonus;
+        }
+
+        public float getRangeBonus() {
+            return rangeBonus;
+        }
+
+        @Nullable
+        @Override
+        protected Path createPath(Set<BlockPos> targets, int regionOffset, boolean offsetUpward, int accuracy, float followRange) {
+            return super.createPath(targets, regionOffset, offsetUpward, accuracy, followRange + rangeBonus);
         }
 
         /**

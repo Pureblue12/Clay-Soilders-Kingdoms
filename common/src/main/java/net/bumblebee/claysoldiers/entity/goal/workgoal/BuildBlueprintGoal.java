@@ -1,9 +1,5 @@
 package net.bumblebee.claysoldiers.entity.goal.workgoal;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.bumblebee.claysoldiers.tuning.Tuning;
 import net.bumblebee.claysoldiers.scaffold.Scaffolds;
 import net.bumblebee.claysoldiers.scaffold.ScaffoldClimber;
@@ -16,6 +12,7 @@ import net.bumblebee.claysoldiers.capability.IBlockCache;
 import net.bumblebee.claysoldiers.blueprint.ReachOrigin;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
+import net.bumblebee.claysoldiers.entity.door.DoorPathing;
 import net.bumblebee.claysoldiers.entity.door.UseDoorGoal;
 import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
 import net.bumblebee.claysoldiers.init.ModBlocks;
@@ -65,8 +62,6 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     public static final int RETRY_COOLDOWN_MIN = 20;
     public static final int RETRY_COOLDOWN_RANDOM = 20;
     private int retryCooldown = 0;
-    /** The follow range bonus while working for a build with scaffolding (see {@link #updatePathSearch}). */
-    private static final ResourceLocation SCAFFOLD_PATH_RANGE = ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, "scaffold_path_range");
     /**
      * The reachability test handed to the easel; it also tells scaffold planning where this builder comes from (its
      * storage), since walking distances are measured from there.
@@ -106,6 +101,8 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     private int repathTicks;
     /** The path search multiplier this goal last set (1 = normal). */
     private float pathSearchMultiplier = 1.0F;
+    /** Whether the easel's build has scaffolding (its builders plan their route again every {@code scaffold.repath_ticks}). */
+    private boolean scaffoldBuild;
     /**
      * Tiny soldiers count a path as walked when they are within 0.675 blocks of its last block's center, which is often
      * still the block before it; placing is measured from the block they stand in. So after the path, the builder
@@ -196,27 +193,26 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     }
 
     /**
-     * Routes up a scaffold are long and wind around, and vanilla only accepts paths whose walked length is under the
-     * follow range (16; each step up counts about 1.4). So while this builder's easel has scaffolding, its paths may
-     * be {@code scaffold.path_range_bonus} blocks longer and its search may look at
-     * {@code scaffold.path_nodes_multiplier} times more steps. Builds without scaffolding keep the normal search.
+     * While this builder works for a build, its paths may be longer and its search bigger than vanilla's (D61, D62):
+     * vanilla only accepts paths whose walked length is under the follow range (16; each step up counts about 1.4),
+     * and the way around a big building, to a standing spot, back to the easel or to the chest, is longer than that.
+     * Every path gets {@code build.path_range_bonus} more blocks and {@code build.path_nodes_multiplier} times more
+     * steps; while the easel has scaffolding, the larger of these and the {@code scaffold.path_*} values (routes up a
+     * scaffold wind around). A builder without an easel keeps vanilla's limits.
      */
     private void updatePathSearch() {
-        boolean scaffold = easelPos != null && soldier.level() instanceof ServerLevel level && Scaffolds.hasJob(level, easelPos.pos());
-        float multiplier = scaffold ? Tuning.SCAFFOLD_PATH_NODES_MULTIPLIER.get() : 1.0F;
+        boolean building = easelPos != null;
+        scaffoldBuild = building && soldier.level() instanceof ServerLevel level && Scaffolds.hasJob(level, easelPos.pos());
+        float multiplier = !building ? 1.0F : scaffoldBuild
+                ? Math.max(Tuning.BUILD_PATH_NODES_MULTIPLIER.get(), Tuning.SCAFFOLD_PATH_NODES_MULTIPLIER.get()) : Tuning.BUILD_PATH_NODES_MULTIPLIER.get();
         if (multiplier != pathSearchMultiplier) {
             pathSearchMultiplier = multiplier;
             soldier.getNavigation().setMaxVisitedNodesMultiplier(multiplier);
         }
-        AttributeInstance range = soldier.getAttribute(Attributes.FOLLOW_RANGE);
-        if (range != null) {
-            boolean has = range.hasModifier(SCAFFOLD_PATH_RANGE);
-            int bonus = Tuning.SCAFFOLD_PATH_RANGE_BONUS.get();
-            if (scaffold && bonus > 0 && !has) {
-                range.addTransientModifier(new AttributeModifier(SCAFFOLD_PATH_RANGE, bonus, AttributeModifier.Operation.ADD_VALUE));
-            } else if ((!scaffold || bonus == 0) && has) {
-                range.removeModifier(SCAFFOLD_PATH_RANGE);
-            }
+        int bonus = !building ? 0 : scaffoldBuild
+                ? Math.max(Tuning.BUILD_PATH_RANGE_BONUS.get(), Tuning.SCAFFOLD_PATH_RANGE_BONUS.get()) : Tuning.BUILD_PATH_RANGE_BONUS.get();
+        if (soldier.getNavigation() instanceof DoorPathing.Ground ground && ground.getRangeBonus() != bonus) {
+            ground.setRangeBonus(bonus);
         }
     }
 
@@ -434,7 +430,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             return false;
         }
         // With scaffolding, plan the route again every scaffold.repath_ticks: tiny soldiers climb floating steps better with fresh routes.
-        boolean repath = pathSearchMultiplier != 1.0F && ++repathTicks >= Tuning.SCAFFOLD_REPATH_TICKS.get();
+        boolean repath = scaffoldBuild && ++repathTicks >= Tuning.SCAFFOLD_REPATH_TICKS.get();
         if (this.soldier.getNavigation().isDone() || repath) {
             repathTicks = 0;
             if (!repath && pathEnd != null && !soldier.blockPosition().equals(pathEnd) && lastStepTicks++ < MAX_LAST_STEP_TICKS) {
@@ -494,10 +490,10 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             pathSearchMultiplier = 1.0F;
             soldier.getNavigation().setMaxVisitedNodesMultiplier(1.0F);
         }
-        AttributeInstance range = soldier.getAttribute(Attributes.FOLLOW_RANGE);
-        if (range != null) {
-            range.removeModifier(SCAFFOLD_PATH_RANGE);
+        if (soldier.getNavigation() instanceof DoorPathing.Ground ground) {
+            ground.setRangeBonus(0);
         }
+        scaffoldBuild = false;
     }
 
     @Override

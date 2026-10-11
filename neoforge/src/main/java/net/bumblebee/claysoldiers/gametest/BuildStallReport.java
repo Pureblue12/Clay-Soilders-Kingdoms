@@ -98,7 +98,7 @@ final class BuildStallReport {
         }
         lines.add("chest " + chest.getBlockPos().toShortString() + (chest.isRemoved() ? " (removed)" : "") + ": " + stock);
         ScaffoldSavedData.get(helper.getLevel()).job(easel.getBlockPos()).ifPresent(job -> lines.add("scaffold job: " + job.placed().size() + " of "
-                + job.planned().size() + " planned blocks up, " + job.active().size() + " active request(s), columns " + job.columns()));
+                + job.planned().size() + " planned blocks up, columns " + job.columns()));
         for (ClaySoldierEntity builder : builders) {
             if (builder.isAlive()) {
                 lines.add("  builder " + DebugLog.snapshot(List.of(builder)).getFirst());
