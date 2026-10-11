@@ -67,8 +67,8 @@ them in its "Stall reports" step. GitHub's machines are slower: the one wall-clo
   aren't about terrain found with `Kingdoms.found(..., true)` (force) there (D32).
 - Grading and test-terrain undo share the structure paste's global undo history: tests that undo get their own batch.
 - The framework also puts a barrier roof at the top of a test area (16 high for `terrain`): tests that build higher
-  use `skyAccess = true`. Builders only follow paths up to their follow range (16; searches for blueprint blocks get
-  `build.path_range_bonus` 16 more, D61): keep a test's chest within about 28 walked blocks of every block.
+  use `skyAccess = true`. Builders only follow paths up to their follow range (16; the search for a standing spot next to a
+  blueprint block gets `build.path_range_bonus` 16 more, D61): keep a test's chest within about 28 walked blocks of every block.
 
 ### Structure build tests (every Studio structure, separate workflow)
 
@@ -216,8 +216,8 @@ Code: `common/.../scaffold/`; comparison, recommendation and height rules: `docs
     the sweep (easel gone or no plan, every `scaffold.sweep_ticks`, `Scaffolds.tick`).
   - A position a player changed is never removed: recorded (SCAFFOLD "kept") and nearby players are told.
 - **While a build has scaffold, its builders** get a fresh route every 20 ticks and precise steps on scaffold blocks
-  (`DoorPathing.Ground.followThePath`). Every builder's path searches to blueprint blocks get a longer range and a bigger
-  search (`build.path_*`, D61); walking to storage and other paths keep the normal limits.
+  (`DoorPathing.Ground.followThePath`). Every builder's search for a standing spot next to a blueprint block has its own longer, bigger
+  path search (`build.path_*`, D61); walking to storage and other paths keep the normal limits.
 - **Recorder SCAFFOLD:** planned, placed, removed, climbing, stuck, cleanup, kept.
 
 ### Known limitations

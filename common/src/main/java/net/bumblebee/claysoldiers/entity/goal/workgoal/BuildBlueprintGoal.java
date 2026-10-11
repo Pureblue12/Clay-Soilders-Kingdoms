@@ -67,8 +67,6 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     private int retryCooldown = 0;
     /** The follow range bonus while working for a build with scaffolding (see {@link #updatePathSearch}). */
     private static final ResourceLocation SCAFFOLD_PATH_RANGE = ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, "scaffold_path_range");
-    /** The follow range bonus for path searches to blueprint blocks (see {@link #withLongerPaths}). */
-    private static final ResourceLocation BUILD_PATH_RANGE = ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, "build_path_range");
     /**
      * The reachability test handed to the easel; it also tells scaffold planning where this builder comes from (its
      * storage), since walking distances are measured from there.
@@ -211,32 +209,6 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         }
     }
 
-    /**
-     * Runs a path search for a blueprint block with a longer path limit (D61). Vanilla only accepts paths whose walked
-     * length is under the follow range (16), measured from where the builder asks, usually beside its storage: the far
-     * side of bigger buildings was out of reach. So these searches may be {@code build.path_range_bonus} blocks longer
-     * and look at {@code build.path_nodes_multiplier} times more steps (unless the scaffold settings already give
-     * more). Only these searches: walking to storage, combat and everything else keep the normal limits.
-     */
-    private <T> T withLongerPaths(Supplier<T> search) {
-        AttributeInstance range = soldier.getAttribute(Attributes.FOLLOW_RANGE);
-        int bonus = Tuning.BUILD_PATH_RANGE_BONUS.get();
-        boolean addRange = range != null && bonus > 0 && !range.hasModifier(SCAFFOLD_PATH_RANGE);
-        float nodes = Math.max(pathSearchMultiplier, Tuning.BUILD_PATH_NODES_MULTIPLIER.get());
-        if (addRange) {
-            range.addTransientModifier(new AttributeModifier(BUILD_PATH_RANGE, bonus, AttributeModifier.Operation.ADD_VALUE));
-        }
-        soldier.getNavigation().setMaxVisitedNodesMultiplier(nodes);
-        try {
-            return search.get();
-        } finally {
-            soldier.getNavigation().setMaxVisitedNodesMultiplier(pathSearchMultiplier);
-            if (addRange) {
-                range.removeModifier(BUILD_PATH_RANGE);
-            }
-        }
-    }
-
     private void getRequestFromStorage() {
         if (moveToPoi()) {
             assert getCapCache() != null;
@@ -321,10 +293,6 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     }
 
     private boolean canReach(BlockPos pos) {
-        return withLongerPaths(() -> canReachNow(pos));
-    }
-
-    private boolean canReachNow(BlockPos pos) {
         if (unreachableReasons == null) {
             return BuilderReach.canReachToPlace(soldier, pos) || canClimbTo(pos);
         }
@@ -438,7 +406,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                 return false;
             }
             // Walk the same kind of path the reachable check accepted: it ends where the block can be placed.
-            Path path = withLongerPaths(() -> BuilderReach.pathToPlace(soldier, request.getPos()));
+            Path path = BuilderReach.pathToPlace(soldier, request.getPos());
             if (path == null && easelPos != null && soldier.level() instanceof ServerLevel level && climber.start(level, easelPos.pos(), request.getPos())) {
                 return false; // out of reach from the ground: climb a scaffolding column
             }
