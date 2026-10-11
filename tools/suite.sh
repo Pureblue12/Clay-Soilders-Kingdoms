@@ -15,7 +15,14 @@ rm -rf neoforge/runs/gametest/world
 failed=$(grep -E "LogTestReporter\]: [a-z0-9_]+ failed at" build/suite.log | sed -E 's/.*LogTestReporter\]: ([a-z0-9_]+) failed at.*/\1/' | sort -u)
 optional=$(grep -E "LogTestReporter\]: \(optional\) [a-z0-9_]+ failed at" build/suite.log | sed -E 's/.*\(optional\) ([a-z0-9_]+) failed at.*/\1/' | sort -u)
 [ -n "$optional" ] && echo "optional failed (not counted): $(echo $optional)"
-grep -E "required tests (passed|failed)" build/suite.log | sed -E 's/.*GameTestServer\]: //'
+summary=$(grep -E "required tests (passed|failed)" build/suite.log | sed -E 's/.*GameTestServer\]: //')
+if [ -z "$summary" ]; then
+    # The test server never printed its summary: it crashed or was cut off, which is not a pass.
+    echo "SUITE DID NOT FINISH (no summary line in build/suite.log); last lines:"
+    tail -n 60 build/suite.log | cut -c1-300
+    exit 1
+fi
+echo "$summary"
 expected=$(printf '%s\n' "$@" | sed '/^$/d' | sort -u)
 if [ "$failed" != "$expected" ]; then
     echo "SUITE NOT AS EXPECTED."
