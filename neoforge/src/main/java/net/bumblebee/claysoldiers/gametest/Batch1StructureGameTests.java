@@ -5,6 +5,7 @@ import net.bumblebee.claysoldiers.block.blueprint.EaselBlockEntity;
 import net.bumblebee.claysoldiers.blueprint.BlueprintData;
 import net.bumblebee.claysoldiers.dev.DevScenarios;
 import net.bumblebee.claysoldiers.entity.goal.workgoal.BuildBlueprintGoal;
+import net.bumblebee.claysoldiers.entity.soldier.ClaySoldierEntity;
 import net.bumblebee.claysoldiers.structure.StructureBlueprints;
 import net.bumblebee.claysoldiers.structure.StructureFidelity;
 import net.bumblebee.claysoldiers.structure.StructureMeta;
@@ -20,6 +21,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
@@ -116,7 +118,7 @@ public class Batch1StructureGameTests {
                 int timeout = (int) Math.max(2000, estimate * 3 + 1000);
                 // Each build in its own batch: tests in one batch run at the same time side by side, and builders take
                 // the nearest easel, which can be the next test's.
-                tests.add(test("batch1_build_" + name, "batch1build" + name, timeout, true, helper -> buildersBuildIt(helper, entry, detail)));
+                tests.add(test("batch1_build_" + name, "batch1build" + name, timeout, true, helper -> buildersBuildIt(helper, entry, detail, timeout)));
             }
         }
         tests.add(test("batch1_upgrade", "batch1cottageupgradel1tol2inplace", 12_000, false, Batch1StructureGameTests::upgradeInPlace));
@@ -242,14 +244,15 @@ public class Batch1StructureGameTests {
      * with exactly the blueprint's materials and 3 builders ({@link #setUpBuilders}). Every block is placed, the result matches the file block
      * by block (air included, neighbour connections aside), and the time is within the tolerance of the doc's estimate.
      */
-    static void buildersBuildIt(GameTestHelper helper, Entry entry, int detail) {
+    static void buildersBuildIt(GameTestHelper helper, Entry entry, int detail, int timeoutTicks) {
         ServerLevel level = helper.getLevel();
         StructureMeta meta = meta(helper, entry);
         BlueprintData blueprint = StructureBlueprints.blueprint(level, meta, detail);
         BlockPos easelPos = helper.absolutePos(new BlockPos(16, 2, 6));
         EaselBlockEntity easel = DevScenarios.placeEasel(level, easelPos, Direction.NORTH, blueprint);
         List<ItemStack> items = blueprint.createServerPlan().orElseThrow().getNeededItems();
-        setUpBuilders(helper, items);
+        Builders builders = setUpBuilders(helper, items);
+        BuildStallReport.watch(helper, entry.path() + " L" + detail, timeoutTicks, easel, builders.chest(), builders.soldiers());
         long start = helper.getTick();
         long estimate = estimate(entry, detail);
         long[] finished = {-1};
@@ -288,14 +291,20 @@ public class Batch1StructureGameTests {
      * the doc's estimates use: the player would stand at (16, 2, 3) facing south, the easel is 3 ahead at (16, 2, 6),
      * the chest 2 ahead and 2 to the right, the builders 1 ahead.
      */
-    static void setUpBuilders(GameTestHelper helper, List<ItemStack> items) {
+    static Builders setUpBuilders(GameTestHelper helper, List<ItemStack> items) {
         ServerLevel level = helper.getLevel();
         BlockPos chestPos = helper.absolutePos(new BlockPos(14, 2, 5));
-        DevScenarios.placeChest(level, chestPos, items);
+        ChestBlockEntity chest = DevScenarios.placeChest(level, chestPos, items);
+        List<ClaySoldierEntity> soldiers = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            DevScenarios.spawnWorker(level, helper.absolutePos(new BlockPos(16 - i, 2, 4)), DevScenarios.RED_TEAM,
-                    ClaySoldierGameTests.owner(level), BuildBlueprintGoal.class, chestPos);
+            soldiers.add(DevScenarios.spawnWorker(level, helper.absolutePos(new BlockPos(16 - i, 2, 4)), DevScenarios.RED_TEAM,
+                    ClaySoldierGameTests.owner(level), BuildBlueprintGoal.class, chestPos));
         }
+        return new Builders(chest, soldiers);
+    }
+
+    /** The chest and the builders {@link #setUpBuilders} placed. */
+    record Builders(ChestBlockEntity chest, List<ClaySoldierEntity> soldiers) {
     }
 
     /** How closely the world matches a structure file placed by an easel. */

@@ -205,7 +205,21 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         return blockInfoList.stream().map(blockInfo -> targetPosition(base, settings, blockInfo)).toList();
     }
 
-    private static BlockPos targetPosition(BlockPos base, BlueprintTemplateSettings settings, BlueprintBlockInfo blockInfo) {
+    /**
+     * One line per block this plan still has to place: its world position, block, whether its spot is free, whether it is
+     * cooling down after a failed placement, and its last request (for GameTest failure reports; changes nothing).
+     */
+    public List<String> describeRemaining(Level level, BlockPos base, BlueprintTemplateSettings settings) {
+        long time = level.getGameTime();
+        return blockInfoList.stream().map(info -> {
+            BlockPos pos = targetPosition(base, settings, info);
+            return "%s %s | spot %s | %s | free to hand out: %s | %s".formatted(pos.toShortString(), info.getState(),
+                    canPlaceAt(level, pos) ? "free" : "taken by " + level.getBlockState(pos),
+                    info.isCoolingDown(time) ? "cooling down" : "no cooldown", info.hasAvailableRequest(time), info);
+        }).toList();
+    }
+
+    private static BlockPos targetPosition(BlockPos base,BlueprintTemplateSettings settings, BlueprintBlockInfo blockInfo) {
         return base.offset(adjustForStructureSettings(settings, blockInfo.getPos()));
     }
 

@@ -45,6 +45,7 @@ assert all(v in KNOWN_OK for v in PALETTES['oak_a2'].values()), 'oak_a2 must onl
 
 # Single-character palette keys for Studio files ('.' is air).
 KEYS = '#ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@$%&*+=-~^!?<>/|:;,_(){}[]'
+KEYS += 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ'   # big sites (mine 3) need more
 
 
 def discover():
@@ -166,8 +167,8 @@ def write_drafts(entry, s):
     files = []
     for level in s.levels():
         f = os.path.join(OUT, 'drafts', f"{entry['path']}_l{level}.json")
-        with open(f, 'w') as fh:
-            json.dump(studio_file(entry, s, level), fh, indent=1)
+        with open(f, 'w', encoding='utf-8') as fh:
+            json.dump(studio_file(entry, s, level), fh, indent=1, ensure_ascii=False)
         files.append(f)
     return files
 

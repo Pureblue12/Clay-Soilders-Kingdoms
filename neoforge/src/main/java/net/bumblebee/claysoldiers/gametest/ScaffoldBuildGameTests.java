@@ -100,6 +100,7 @@ public class ScaffoldBuildGameTests {
      * fail) once everything else holds.
      */
     static void finishesAndCleansUp(GameTestHelper helper, Scenario scenario, String what, Runnable alsoCheck) {
+        BuildStallReport.watch(helper, what, LONG_TIMEOUT, scenario.easel(), scenario.chest(), scenario.builders());
         long[] structureDone = {-1};
         helper.onEachTick(() -> {
             if (structureDone[0] < 0 && scenario.easel().isFinished()) {
