@@ -253,7 +253,7 @@ public final class Scaffolds {
                                               BlueprintTemplateSettings settings, @Nullable ScaffoldJob existing) {
         long start = System.nanoTime();
         ScaffoldInput input = input(level, easel, home, plan.targetPositions(base, settings), plan.doorPositions(base, settings),
-                existing == null ? Set.of() : existing.placed(), plan.targetStates(base, settings), plan.footprintCorners(base, settings));
+                existing == null ? Set.of() : existing.placed(), plan.targetStates(base, settings));
         if (input.structure().isEmpty() || ScaffoldPlanner.aboveReach(input).isEmpty()) {
             return Optional.ofNullable(existing);
         }
@@ -319,13 +319,10 @@ public final class Scaffolds {
      * planner placed the chapel's door first and found the nave sealed, so no column inside it).
      */
     static ScaffoldInput input(ServerLevel level, BlockPos easel, BlockPos home, List<BlockPos> targets, Set<BlockPos> doors, Set<BlockPos> scaffold,
-                               Map<BlockPos, BlockState> future, List<BlockPos> site) {
-        List<BlockPos> extent = new ArrayList<>(targets);
-        extent.addAll(site);
-        BoundingBox box = BoundingBox.encapsulatingPositions(extent).orElseThrow();
+                               Map<BlockPos, BlockState> future) {
+        BoundingBox box = BoundingBox.encapsulatingPositions(targets).orElseThrow();
         // The plan only lists blocks still to place, so the region reaches down to the easel's ground (the site's base),
-        // and it includes where the builders come from. It covers the whole structure, not only the blocks left: church L3's
-        // last two blocks sat above the nave, whose only way in (a side door) was outside a region drawn around them (D78).
+        // and it includes where the builders come from.
         int bottom = Math.min(Math.min(box.minY(), easel.getY()), home.getY()) - 2;
         BoundingBox region = new BoundingBox(Math.min(box.minX() - ScaffoldInput.MARGIN, home.getX() - 3), bottom,
                 Math.min(box.minZ() - ScaffoldInput.MARGIN, home.getZ() - 3), Math.max(box.maxX() + ScaffoldInput.MARGIN, home.getX() + 3),
