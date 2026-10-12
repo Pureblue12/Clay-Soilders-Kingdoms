@@ -276,6 +276,9 @@ Code: `common/.../scaffold/`; comparison, recommendation and height rules: `docs
   standing spot or a column's base that runs out of steps goes on from where it ended (`ChainedPath`, up to 3 searches, D76): the way up
   the keep's two staircases ran out of steps on the grass around the chest. Walking to a column's base may take
   `scaffold.walk_ticks_per_step` ticks per step of the path (at least 200).
+- **Column footing (D77):** vanilla scaffolding falls at once unless the block under it has a full top face, so the planner
+  never stands a column on a stair, slab, carpet or other floor without one (`ScaffoldInput.noFooting`, blocks still to place
+  count as what they will be). Keep L2's annex columns stood on the pews and were never there to climb.
 - **Recorder SCAFFOLD:** planned, placed, removed, climbing, stuck, cleanup, kept.
 
 ### Known limitations
