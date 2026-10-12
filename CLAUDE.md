@@ -90,7 +90,9 @@ fidelity check ignores a daylight detector's power and a brewing stand's bottles
 graveyard L2, market stall L3 and gatehouse L1. A model, not the game: keep it in step when the rules it copies change.
 A build fails at once after 6000 ticks without progress, with a stall report, and ends as "too slow" (⏱️ in the table) after
 45 minutes of real time (`CSR_STRUCTURE_BUILD_MINUTES`, workflow input `minutes`; 0 = no limit): keep L2 and L3 need longer, so
-verify them with `only=keep` and `minutes=0`. The chest is kept stocked by
+verify them with `only=keep` and `minutes=0`. For experiments the workflow also takes `tuning` (a tuning file's JSON for every build, `CSR_STRUCTURE_BUILD_TUNING`) and
+`profile` (`CSR_STRUCTURE_BUILD_PROFILE`: each finished build writes a "CSR build profile" line, `BuildProfile`: blocks handed out,
+follow-ups, stacks taken back, waits; the run prints them in its "Build profiles" step). The chest is kept stocked by
 `dev/MaterialSupply` (most structures need more than 27 stacks; it stocks the items the easel hands out next, counting the slots partial stacks take,
 brings back an item lost with a builder, D70, and merges the part stacks builders put back, making room for the item needed now, D79). The test area
 (`gametest/structure_build.nbt`, 48x24x48) has a grass floor. The required test `buildListMatchesRegistry` keeps the

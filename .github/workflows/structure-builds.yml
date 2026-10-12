@@ -18,6 +18,16 @@ on:
         required: false
         default: "45"
         type: string
+      tuning:
+        description: "Experiment: tuning values for every build, as a tuning file, e.g. {\"build.follow_plan\": 0} (empty = the shipped file)"
+        required: false
+        default: ""
+        type: string
+      profile:
+        description: "Write a profile line per finished build (blocks handed out, follow-ups, waits; BuildProfile)"
+        required: false
+        default: false
+        type: boolean
   pull_request:
     paths:
       - common/src/main/resources/data/csr/structure/kingdom/studio/**
@@ -48,6 +58,9 @@ env:
   CSR_STRUCTURE_BUILDS_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.only || '' }}
   # Real-time budget per build (StructureBuildGameTests.wallClockMinutes); 45 unless started by hand with another value.
   CSR_STRUCTURE_BUILD_MINUTES: ${{ github.event_name == 'workflow_dispatch' && inputs.minutes || '45' }}
+  # Experiments only (StructureBuildGameTests): tuning values for every build, and a profile line per finished build.
+  CSR_STRUCTURE_BUILD_TUNING: ${{ github.event_name == 'workflow_dispatch' && inputs.tuning || '' }}
+  CSR_STRUCTURE_BUILD_PROFILE: ${{ github.event_name == 'workflow_dispatch' && inputs.profile && '1' || '' }}
 
 jobs:
   # How many machines: one per build, at most 20 (GitHub runs up to 20 jobs at once on a free account).
@@ -114,6 +127,11 @@ jobs:
         if: always()
         run: |
           grep -E "CSR stall report" build/structure-builds.log | sed -E 's/.*CSR stall report //' | awk -F: '{ n[$1]++ } n[$1] <= 300' || echo "no stall reports"
+
+      - name: Build profiles
+        if: always()
+        run: |
+          grep -E "CSR build profile" build/structure-builds.log | sed -E 's/.*CSR build profile //' || echo "no build profiles"
 
       - name: Upload results
         if: always()

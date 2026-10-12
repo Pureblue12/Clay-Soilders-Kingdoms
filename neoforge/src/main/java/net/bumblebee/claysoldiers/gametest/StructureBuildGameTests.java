@@ -228,6 +228,12 @@ public class StructureBuildGameTests {
      */
     static void buildersBuildIt(GameTestHelper helper, Entry entry, int level, int timeoutTicks) {
         ServerLevel world = helper.getLevel();
+        String tuning = System.getenv("CSR_STRUCTURE_BUILD_TUNING");
+        if (tuning != null && !tuning.isBlank()) {
+            // An experiment's tuning values (workflow input "tuning"), loaded again for each build: other tests in the same
+            // server restore the real file. The required suite running alongside sees them too; its results don't count here.
+            GameTestTuning.load(tuning).problems().forEach(problem -> ClaySoldiersCommon.LOGGER.warn("CSR structure build tuning: {}", problem));
+        }
         String name = entry.testName(level);
         StructureMeta meta = StructureRegistry.get(world.getServer()).byId(entry.id())
                 .orElseThrow(() -> new GameTestAssertException("no registry entry " + entry.id()));
@@ -235,7 +241,15 @@ public class StructureBuildGameTests {
                 helper.absolutePos(new BlockPos(24, 2, 3)), Direction.SOUTH, meta, level);
         EaselBlockEntity easel = setup.easel();
         StructureTemplate template = StructurePaster.template(world, meta, level);
+        boolean profile = profiling();
+        if (profile) {
+            // Registered before the stall report's watcher, which clears the recorder on the tick the easel finishes.
+            BuildProfile.watch(helper, name, easel);
+        }
         BuildStallReport.watch(helper, name, timeoutTicks, easel, setup.chest(), setup.soldiers());
+        if (profile) {
+            DebugLog.setCapacity(BuildProfile.CAPACITY);
+        }
         long start = helper.getTick();
         long startNanos = System.nanoTime();
         long budgetNanos = wallClockMinutes() * 60_000_000_000L;
@@ -280,6 +294,12 @@ public class StructureBuildGameTests {
         });
         helper.succeedWhen(() -> helper.assertTrue(passed[0], "not built yet: " + describe(easel,
                 ScaffoldSavedData.get(world).job(easel.getBlockPos()))));
+    }
+
+    /** Whether {@code CSR_STRUCTURE_BUILD_PROFILE} is set (workflow input "profile"): each finished build writes a profile line. */
+    static boolean profiling() {
+        String setting = System.getenv("CSR_STRUCTURE_BUILD_PROFILE");
+        return setting != null && !setting.isBlank() && !setting.equals("0") && !setting.equalsIgnoreCase("false");
     }
 
     /** {@code CSR_STRUCTURE_BUILD_MINUTES}, or {@link #DEFAULT_WALL_CLOCK_MINUTES} when unset or not a number. */
