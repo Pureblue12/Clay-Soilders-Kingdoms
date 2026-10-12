@@ -907,6 +907,76 @@
       ],
       "block": "minecraft:air",
       "why": "a flower on cobblestone can't be placed"
+    },
+    {
+      "level": "tree_farm_l2",
+      "pos": [
+        5,
+        2,
+        1
+      ],
+      "block": "minecraft:spruce_planks",
+      "why": "the lanterns and hanging sign under the gateway hung from top-half slabs (no face to hang from; they popped off when the slab was placed): full planks"
+    },
+    {
+      "level": "tree_farm_l2",
+      "pos": [
+        6,
+        2,
+        1
+      ],
+      "block": "minecraft:spruce_planks",
+      "why": "the lanterns and hanging sign under the gateway hung from top-half slabs (no face to hang from; they popped off when the slab was placed): full planks"
+    },
+    {
+      "level": "tree_farm_l2",
+      "pos": [
+        7,
+        2,
+        1
+      ],
+      "block": "minecraft:spruce_planks",
+      "why": "the lanterns and hanging sign under the gateway hung from top-half slabs (no face to hang from; they popped off when the slab was placed): full planks"
+    },
+    {
+      "level": "tree_farm_l3",
+      "pos": [
+        5,
+        2,
+        1
+      ],
+      "block": "minecraft:spruce_planks",
+      "why": "the lanterns and hanging sign under the gateway hung from top-half slabs (no face to hang from; they popped off when the slab was placed): full planks"
+    },
+    {
+      "level": "tree_farm_l3",
+      "pos": [
+        6,
+        2,
+        1
+      ],
+      "block": "minecraft:spruce_planks",
+      "why": "the lanterns and hanging sign under the gateway hung from top-half slabs (no face to hang from; they popped off when the slab was placed): full planks"
+    },
+    {
+      "level": "tree_farm_l3",
+      "pos": [
+        7,
+        2,
+        1
+      ],
+      "block": "minecraft:spruce_planks",
+      "why": "the lanterns and hanging sign under the gateway hung from top-half slabs (no face to hang from; they popped off when the slab was placed): full planks"
+    },
+    {
+      "level": "quarry_l3",
+      "pos": [
+        15,
+        3,
+        2
+      ],
+      "block": "minecraft:spruce_planks",
+      "why": "the lantern at (15,2,2) hung from a top-half slab (no face to hang from): full planks above it"
     }
   ]
 }

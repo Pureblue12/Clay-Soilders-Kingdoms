@@ -84,8 +84,8 @@ Before any game test: `python3 tools/buildability.py [ids]` (standard library, n
 on 4 cores) simulates the builders with the mod's rules (build order, `BuilderReach`, the walking model of `ScaffoldGrid`,
 scaffold columns outside the structure) and gives each level a verdict: STUCK (blocks no standing spot reaches, or gravel
 placed before the block under it), RISKY (blocks placeable only from a spot with no way back, fence/wall/pane tops 4+ high
-the pathfinder walks on), DECOR (finishes, but hanging lanterns under top slabs/stairs, plants on air, a daylight detector or
-filled brewing stand won't match the file), SCAFFOLD, BUILDABLE. The workflow puts its table in the run summary. Against the
+the pathfinder walks on), DECOR (finishes, but hanging lanterns under top slabs or plants on air won't match the file; the
+fidelity check ignores a daylight detector's power and a brewing stand's bottles), SCAFFOLD, BUILDABLE. The workflow puts its table in the run summary. Against the
 2026-10-11 run (107 of 156 built) it flagged 41 of the 47 failed levels with 3 false alarms; it misses training yard,
 graveyard L2, market stall L3 and gatehouse L1. A model, not the game: keep it in step when the rules it copies change.
 A build fails at once after 6000 ticks without progress, with a stall report, and ends as "too slow" (⏱️ in the table) after
