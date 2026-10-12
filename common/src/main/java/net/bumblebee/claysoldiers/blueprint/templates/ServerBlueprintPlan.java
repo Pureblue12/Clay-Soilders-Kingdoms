@@ -411,15 +411,18 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         List<BlueprintBlockInfo> current = new ArrayList<>();
         List<BlockPos> carried = new ArrayList<>();
         for (BlueprintBlockInfo info : blockInfoList) {
-            if (buildPlan.wave(info.getPos()) == wave) {
+            int infoWave = buildPlan.wave(info.getPos());
+            if (infoWave == wave) {
+                current.add(info);
+            } else if (infoWave < wave && info.timesGivenUp() >= PLAN_GIVE_UPS) {
                 // A block builders keep giving up on can't be reached from the plan's spots here (keep L1: a chest 10 up,
-                // handed out and given up for 6,000 ticks): it's left to the whole-list search, which can start scaffold.
-                if (info.timesGivenUp() >= PLAN_GIVE_UPS) {
-                    DebugLog.event(DebugCategory.BUILD, null, "plan: %s at %s given up %s times, left to the normal search",
-                            info.getState().getBlock(), targetPosition(base, settings, info), info.timesGivenUp());
-                } else {
-                    current.add(info);
-                }
+                // handed out and given up for 6,000 ticks): it leaves the plan, so it no longer holds its wave back (chapel
+                // L3: one such block kept the plan on its wave for the rest of the build, every block came from the
+                // whole-list search and stacks could only follow up inside that wave: twice the time). It stays on offer
+                // with the normal standing-spot search, and the whole-list search after the plan can start scaffold.
+                DebugLog.event(DebugCategory.BUILD, null, "plan: %s at %s given up %s times, left to the normal search",
+                        info.getState().getBlock(), targetPosition(base, settings, info), info.timesGivenUp());
+                current.add(info);
             }
             if (!info.hasAvailableRequest(level.getGameTime())) {
                 carried.add(targetPosition(base, settings, info));
@@ -602,13 +605,15 @@ public class ServerBlueprintPlan extends BlueprintPlan {
 
     /**
      * The lowest wave of the build plan with blocks still to place (D80), or {@link BuildPlan#UNPLANNED} when the build
-     * doesn't follow a plan or only blocks the plan leaves out are left.
+     * doesn't follow a plan or only blocks the plan leaves out (or that left it, given up) are left.
      */
     private int currentWave() {
         int wave = BuildPlan.UNPLANNED;
         if (buildPlan != null && Tuning.BUILD_FOLLOW_PLAN.get() != 0) {
             for (BlueprintBlockInfo info : blockInfoList) {
-                wave = Math.min(wave, buildPlan.wave(info.getPos()));
+                if (info.timesGivenUp() < PLAN_GIVE_UPS) { // a block builders gave up on has left the plan (see getRequest)
+                    wave = Math.min(wave, buildPlan.wave(info.getPos()));
+                }
             }
         }
         return wave;
