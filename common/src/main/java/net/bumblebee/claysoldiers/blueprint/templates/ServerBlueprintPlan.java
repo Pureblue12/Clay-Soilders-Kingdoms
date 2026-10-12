@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
 public class ServerBlueprintPlan extends BlueprintPlan {
     private final List<BlueprintBlockInfo> blockInfoList;
     private static final String BUILD_PLAN_TAG = "build_plan";
-    /** The structure's pre-baked build plan (D80), or {@code null} (blocks are handed out in list order, as before). */
+    /** The structure's pre-baked build plan (D82), or {@code null} (blocks are handed out in list order, as before). */
     @Nullable
     private final BuildPlan buildPlan;
     /** Whether the last request search that handed out nothing skipped blocks out of reach (for scaffolding). */
@@ -75,7 +75,7 @@ public class ServerBlueprintPlan extends BlueprintPlan {
     }
 
     /**
-     * @param buildPlan the structure's pre-baked build plan (D80), or {@code null}; {@code blockInfoList} is already in its
+     * @param buildPlan the structure's pre-baked build plan (D82), or {@code null}; {@code blockInfoList} is already in its
      *                  order ({@link ImmutableTemplate#withPlan})
      */
     public ServerBlueprintPlan(Vec3i size, List<StructureTemplate.StructureBlockInfo> blockInfoList, @Nullable BuildPlan buildPlan) {
@@ -419,7 +419,7 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         if (buildPlan == null || Tuning.BUILD_FOLLOW_PLAN.get() == 0) {
             return search(blockInfoList, level, base, settings, canReach, "").request();
         }
-        // With a pre-baked plan (D80): only the blocks of the lowest wave not yet built, in random order, those away from
+        // With a pre-baked plan (D82): only the blocks of the lowest wave not yet built, in random order, those away from
         // the blocks other builders carry first, so builders pick different blocks and spread out. Every order inside a
         // wave was checked offline. When none of them can be handed out and no other builder has one of them (out of
         // reach here, cooling down after failing: the world differs from the plan), the whole list is searched as before.
@@ -658,7 +658,7 @@ public class ServerBlueprintPlan extends BlueprintPlan {
     }
 
     /**
-     * The lowest wave of the build plan with blocks still to place (D80), or {@link BuildPlan#UNPLANNED} when the build
+     * The lowest wave of the build plan with blocks still to place (D82), or {@link BuildPlan#UNPLANNED} when the build
      * doesn't follow a plan or only blocks the plan leaves out (or that left it, given up) are left.
      */
     private int currentWave() {
@@ -678,7 +678,7 @@ public class ServerBlueprintPlan extends BlueprintPlan {
      * next block here instead of walking back to the easel and its chest: the nearest free block of that item in the same
      * layer (same height) whose spot is reachable from where it stands, or null. Never a door, never a block whose spot
      * below is still an unplaced block of this plan (so nothing is put on air the layer order would have filled first),
-     * and at most {@link #FOLLOW_UP_REACH_TESTS} path searches. A build that follows a plan (D80) takes only blocks of the
+     * and at most {@link #FOLLOW_UP_REACH_TESTS} path searches. A build that follows a plan (D82) takes only blocks of the
      * current wave (or up to the wave handed out past a stuck one, {@code frontier}), or of the next one well clear of it
      * (see {@code lookahead}), so a builder with a stack never closes a way in that a later wave's block would.
      */

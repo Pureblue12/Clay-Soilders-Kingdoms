@@ -430,7 +430,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                     bringBack = true;
                 }
                 request.setFinished();
-                // A short, random breather before asking for the next block, so builders don't move in lockstep (D80;
+                // A short, random breather before asking for the next block, so builders don't move in lockstep (D82;
                 // builds that follow a plan only: the others keep their timing).
                 int pause = Tuning.BUILD_PAUSE_TICKS.get();
                 retryCooldown = pause > 0 && !request.standingSpots().isEmpty() ? soldier.getRandom().nextInt(pause + 1) : 0;
@@ -567,7 +567,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     }
 
     /**
-     * This builder's own pace on the way to a block (D80): the normal speed give or take
+     * This builder's own pace on the way to a block (D82): the normal speed give or take
      * {@code build.walk_speed_spread_percent}, fixed per soldier (from its id), so a crew doesn't walk in step. Builds that
      * follow a plan only.
      */

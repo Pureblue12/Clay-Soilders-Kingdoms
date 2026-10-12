@@ -29,6 +29,8 @@ final class ScaffoldGrid {
     private final BitSet floor;
     /** Scaffolding column cells: not solid, soldiers can be inside them and climb up and down (approach e). */
     private final BitSet climbable;
+    /** Solid cells a soldier walks under: their shape doesn't reach down to the cell's bottom (D80). */
+    private final BitSet overhead;
     /** How many blocks more a builder inside a column reaches up (D78; 0 for the usual reach). */
     private int columnReachBonus;
 
@@ -40,6 +42,16 @@ final class ScaffoldGrid {
         solid = new BitSet(sizeX * sizeY * sizeZ);
         floor = new BitSet(sizeX * sizeY * sizeZ);
         climbable = new BitSet(sizeX * sizeY * sizeZ);
+        overhead = new BitSet(sizeX * sizeY * sizeZ);
+    }
+
+    /** Marks cells a soldier can walk under even when they are solid (D80). */
+    void setOverhead(Collection<BlockPos> cells) {
+        cells.forEach(pos -> {
+            if (inside(pos)) {
+                overhead.set(index(pos.getX(), pos.getY(), pos.getZ()));
+            }
+        });
     }
 
     /** Lets a builder inside a column reach {@code bonus} blocks more up (D78). */
@@ -116,12 +128,15 @@ final class ScaffoldGrid {
         cells.forEach(cell -> set(cell, standOn));
     }
 
-    /** Whether a soldier can stand with its feet in this cell. */
+    /**
+     * Whether a soldier can stand with its feet in this cell: free, a floor below, and nothing above but air or a block it
+     * walks under (D80).
+     */
     boolean standable(int x, int y, int z) {
         if (climbable(x, y, z)) {
             return true;
         }
-        if (!inside(x, y, z) || y - 1 < region.minY() || solid(x, y, z) || solid(x, y + 1, z)) {
+        if (!inside(x, y, z) || y - 1 < region.minY() || solid(x, y, z) || solid(x, y + 1, z) && !overhead.get(index(x, y + 1, z))) {
             return false;
         }
         return floor.get(index(x, y - 1, z));

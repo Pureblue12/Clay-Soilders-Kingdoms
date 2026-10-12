@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Pre-baked build plans (D80): every promoted structure level has a plan made from its current file, a blueprint made
+ * Pre-baked build plans (D82): every promoted structure level has a plan made from its current file, a blueprint made
  * from a structure follows its plan's order, the plan survives saving, and builders build from it.
  */
 @GameTestHolder(ClaySoldiersCommon.MOD_ID)

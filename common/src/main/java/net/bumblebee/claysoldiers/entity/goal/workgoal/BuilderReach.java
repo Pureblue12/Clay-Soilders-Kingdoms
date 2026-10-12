@@ -91,7 +91,7 @@ public final class BuilderReach {
 
     /**
      * Like {@link #pathToPlace(PathfinderMob, BlockPos)}, but tries the build plan's standing spots for the block first
-     * (D80): one of them chosen per builder (builders spread round the block), then the nearest of them; only when none can be
+     * (D82): one of them chosen per builder (builders spread round the block), then the nearest of them; only when none can be
      * walked to (the ground differs from the plan's, another soldier stands there) the normal search runs.
      */
     @Nullable
@@ -126,7 +126,7 @@ public final class BuilderReach {
         return check(builder, target, explainDoors, List.of());
     }
 
-    /** Like {@link #check(PathfinderMob, BlockPos, boolean)}, with the build plan's standing spots tried first (D80). */
+    /** Like {@link #check(PathfinderMob, BlockPos, boolean)}, with the build plan's standing spots tried first (D82). */
     public static Reach check(PathfinderMob builder, BlockPos target, boolean explainDoors, List<BlockPos> plannedSpots) {
         Reach reach;
         if (plannedSpots.isEmpty()) {
@@ -163,7 +163,7 @@ public final class BuilderReach {
         }
         if (!free.isEmpty()) {
             // The nearest by path of the plan's free spots: they are spread round the block (both sides of a wall), and
-            // a spot picked at random sent builders round the building half the time (D80; build times up to twice main's).
+            // a spot picked at random sent builders round the building half the time (D82; build times up to twice main's).
             Path path = longPath(builder, new HashSet<>(free));
             if (path != null && path.canReach() && endsWithinReach(path, target)) {
                 return new Reach(path, "");
@@ -288,7 +288,7 @@ public final class BuilderReach {
         return pathToPlace(builder, target) != null;
     }
 
-    /** Like {@link #canReachToPlace(PathfinderMob, BlockPos)}, with the build plan's standing spots tried first (D80). */
+    /** Like {@link #canReachToPlace(PathfinderMob, BlockPos)}, with the build plan's standing spots tried first (D82). */
     public static boolean canReachToPlace(PathfinderMob builder, BlockPos target, List<BlockPos> plannedSpots) {
         return pathToPlace(builder, target, plannedSpots) != null;
     }

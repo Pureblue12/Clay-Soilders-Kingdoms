@@ -239,7 +239,7 @@ export function promote(store: Store, opts: { dryRun?: boolean; only?: string[] 
   return { rows, skipped, noScaffoldHeight: NO_SCAFFOLD_HEIGHT };
 }
 
-// Every promoted level gets a pre-baked build plan made from its new file (tools/build_plan.py, D80); CI fails while a
+// Every promoted level gets a pre-baked build plan made from its new file (tools/build_plan.py, D82); CI fails while a
 // plan is missing or older than its structure.
 function planBuilds(ids: string[]) {
   const tool = path.join(STUDIO_ROOT, '..', 'tools', 'build_plan.py');

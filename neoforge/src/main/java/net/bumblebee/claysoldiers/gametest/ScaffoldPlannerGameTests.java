@@ -248,6 +248,25 @@ public class ScaffoldPlannerGameTests {
     }
 
     /**
+     * The same hall with a hanging lantern in the top of its doorway (like the church L3's side porch, the only way into its
+     * nave): a soldier, under half a block tall, walks under it, so the roof's middle is still reached from columns inside
+     * (D80). Without that the planner counts the doorway as sealed.
+     */
+    @GameTest(template = PLATFORM)
+    public static void soldiersWalkUnderAHangingLantern(GameTestHelper helper) {
+        BlockPos lantern = new BlockPos(5, 2, 0);
+        List<BlockPos> hall = new ArrayList<>(wideHall());
+        hall.add(lantern);
+        ScaffoldInput input = ScaffoldInput.flat(hall, 0);
+        ScaffoldPlan sealed = ScaffoldPlanner.plan(input, ScaffoldApproach.CLIMBED_COLUMNS);
+        helper.assertFalse(sealed.complete(), "The hall's roof is reached without walking under the lantern, the test shows nothing: " + sealed.describe());
+        ScaffoldPlan plan = ScaffoldPlanner.plan(input.withOverhead(Set.of(lantern)), ScaffoldApproach.CLIMBED_COLUMNS);
+        helper.assertTrue(plan.complete() && plan.unreachable().isEmpty(), "Not every block is reachable walking under the lantern: " + plan.describe());
+        helper.assertTrue(plan.teardownComplete(), "The scaffold can't be taken down: " + plan.describe());
+        helper.succeed();
+    }
+
+    /**
      * A hall 11 by 11 with walls 11 high, a door gap and a flat roof on top (y 12), on ground at y 0.
      */
     private static List<BlockPos> wideHall() {

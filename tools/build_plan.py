@@ -9,7 +9,7 @@
 
 Like a shooter game's pre-baked navigation, the builders get their route worked out before the build starts instead of
 searching for it live. Nothing is written by hand: the plan comes from the structure file, so a new building gets one
-the moment it is generated or promoted (D80).
+the moment it is generated or promoted (D82).
 
 How ("assembly by disassembly"): start from the finished structure in the structure build test's layout (flat ground,
 chest beside the easel; the walking and reach model of tools/buildability.py, i.e. the mod's own rules) and take it

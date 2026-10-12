@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Every structure level has a pre-baked build plan made from its current file (D80); seconds, no game.
+      # Every structure level has a pre-baked build plan made from its current file (D82); seconds, no game.
       - name: Build plans up to date
         run: python3 tools/build_plan.py --check
 

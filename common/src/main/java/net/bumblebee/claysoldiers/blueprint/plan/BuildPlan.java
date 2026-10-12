@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 /**
- * A pre-baked build plan for one structure level (D80), worked out offline by {@code tools/build_plan.py} from the
+ * A pre-baked build plan for one structure level (D82), worked out offline by {@code tools/build_plan.py} from the
  * structure's block list: the order to build in, as waves, and for every block a few spots a builder can stand on to place
  * it. Inside a wave the order is free (every block of a wave can be placed whichever of the others are already there),
  * which lets builders pick at random and spread out without leaving the plan.

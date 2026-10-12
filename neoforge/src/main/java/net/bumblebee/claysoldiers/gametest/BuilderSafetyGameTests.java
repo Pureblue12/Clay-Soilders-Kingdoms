@@ -17,6 +17,7 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -528,6 +529,42 @@ public class BuilderSafetyGameTests {
             Path low = onLowRim.getNavigation().createPath(shallowAbsolute, 0);
             helper.assertTrue(low != null && low.canReach() && low.getEndNode() != null && low.getEndNode().asBlockPos().equals(shallowAbsolute),
                     "No path into the 1-deep pit, which the soldier can hop out of");
+            helper.succeed();
+        });
+    }
+
+    /**
+     * BUG TEST (a nook under a hanging lantern counted as a pit, D80): the pit rule (D67) asked for 2 free blocks of head
+     * room in the cell a soldier leaves to, but a soldier is under half a block tall and walks under a hanging lantern.
+     * Keep L3's last banner stayed unbuilt: the only way to the scaffold column in the back tower's top room led
+     * through a cell whose one free side was under the room's hanging lantern (structure build run 38289792867, every
+     * search for the column's base ended 2 cells short). A 1-wide nook whose only way out passes under a hanging
+     * lantern must not count as a pit: a soldier gets a path into it.
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 100)
+    public static void soldierWalksIntoANookUnderAHangingLantern(GameTestHelper helper) {
+        int y = ClaySoldierGameTests.GROUND_Y;
+        BlockPos nook = new BlockPos(8, y, 6);
+        BlockPos underLantern = nook.south();
+        for (int dz = -1; dz <= 1; dz++) {
+            for (int dy = 0; dy < 2; dy++) {
+                helper.setBlock(nook.offset(-1, dy, dz), Blocks.COBBLESTONE);
+                helper.setBlock(nook.offset(1, dy, dz), Blocks.COBBLESTONE);
+            }
+        }
+        helper.setBlock(nook.north(), Blocks.COBBLESTONE);
+        helper.setBlock(nook.north().above(), Blocks.COBBLESTONE);
+        helper.setBlock(underLantern.above(2), Blocks.COBBLESTONE);
+        helper.setBlock(underLantern.above(), Blocks.LANTERN.defaultBlockState().setValue(LanternBlock.HANGING, true));
+        ClaySoldierEntity soldier = walker(helper, new BlockPos(8, y, 11));
+        BlockPos nookAbsolute = helper.absolutePos(nook);
+        helper.runAfterDelay(5, () -> {
+            helper.assertTrue(soldier.onGround(), "The soldier has not landed");
+            helper.assertTrue(helper.getBlockState(underLantern.above()).is(Blocks.LANTERN), "The hanging lantern fell");
+            Path path = soldier.getNavigation().createPath(nookAbsolute, 0);
+            helper.assertTrue(path != null && path.canReach() && path.getEndNode() != null && path.getEndNode().asBlockPos().equals(nookAbsolute),
+                    "BUG (nook under a hanging lantern counted as a pit): no path into the nook, ends at "
+                            + (path == null || path.getEndNode() == null ? "-" : path.getEndNode().asBlockPos()));
             helper.succeed();
         });
     }
