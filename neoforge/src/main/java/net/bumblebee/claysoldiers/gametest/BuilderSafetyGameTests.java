@@ -174,6 +174,28 @@ public class BuilderSafetyGameTests {
     }
 
     /**
+     * BUG TEST (berry bushes): a soldier stands where the blueprint wants a sweet berry bush. A bush has no collision
+     * box, so the "block would overlap a creature" rule let it through, and the soldier ended up inside it, hurt until it
+     * died (hospital L3: all three builders, D81). The bush must wait until the soldier is gone.
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 1000)
+    public static void berryBushIsNotPlacedOnASoldier(GameTestHelper helper) {
+        helper.setBlock(SPOT.below(), Blocks.GRASS_BLOCK);
+        BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "bush_on_the_spot", 1, 1, 1, Blocks.SWEET_BERRY_BUSH, BlockPos.ZERO);
+        ClaySoldierGameTests.setUpBuilder(helper, blueprint, List.of(new ItemStack(Items.SWEET_BERRIES)));
+        ClaySoldierEntity bystander = bystander(helper, SPOT);
+        helper.runAfterDelay(400, () -> {
+            helper.assertBlockPresent(Blocks.AIR, SPOT);
+            helper.assertTrue(bystander.isAlive(), "The bystander died");
+            bystander.discard();
+        });
+        helper.succeedWhen(() -> {
+            helper.assertTrue(helper.getTick() > 400, "Too early");
+            helper.assertBlockPresent(Blocks.SWEET_BERRY_BUSH, SPOT);
+        });
+    }
+
+    /**
      * BUG TEST (walled in): a soldier stands in a 1x1 pit whose fourth side is two blueprint blocks (feet and head
      * level). The lower one may be placed (the soldier can still hop out), the upper one must wait until the soldier is
      * gone, because it would close the last way out (keep builders walled themselves into a shaft and stood there for

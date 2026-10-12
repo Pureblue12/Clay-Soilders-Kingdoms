@@ -172,6 +172,11 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
     (structure build run 38129993219): vanilla's pathfinder drops a mob up to 3 blocks into any cell, pits included.
     The soldiers' pathfinder blocks every cell without a way out sideways (`DoorPathing.withoutPits`, D67;
     `soldierDoesNotDropIntoAPit`).
+- Fixed (berry bushes, D81): hospital L3's three builders died inside sweet berry bushes (structure build run
+  38222520802). A bush has no collision box, so the easel's "block would overlap a creature" rule placed it on a builder
+  standing there. The easel now also waits while any part of a creature is in the cell of a block that hurts whoever is
+  inside it (sweet berry bush, wither rose, fire, powder snow; `ServerBlueprintPlan.hurtsInside`;
+  `berryBushIsNotPlacedOnASoldier`). Vanilla's pathfinder already refuses to walk into a berry bush.
 - Fixed (slow builders, D79): every block was a round trip (easel, chest, ONE item, spot, back), about one block per
   114 ticks for keep L3's crew. A builder now takes up to `build.carry_count` (16) of the item and, after placing one, goes
   straight to the nearest free block of that item in the same layer it can reach (`ServerBlueprintPlan.getFollowUpRequest`:
