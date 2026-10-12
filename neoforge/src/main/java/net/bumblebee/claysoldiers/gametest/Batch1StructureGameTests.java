@@ -51,10 +51,11 @@ public class Batch1StructureGameTests {
     static final long MIN_TIME_SLACK = 100;
     /**
      * The doc's build-time model (docs/STRUCTURES.md, rule 4, D63): with 3 builders, a block within reach takes this many
-     * ticks per block of the structure's width plus depth (builders walk farther on bigger footprints). For the Small
-     * House's 7 by 9 this gives its measured 22.5 ticks per block.
+     * ticks per block of the structure's width plus depth (builders walk farther on bigger footprints). Was 1.4 (the
+     * Small House's measured 22.5 ticks per block); since builders carry a stack and place nearby blocks in a row (D79)
+     * the batch-1 builds take 0.4 to 0.95 of that (CI run 38220105839: cottage L1 1,503 ticks against 3,405).
      */
-    static final double TICKS_PER_BLOCK_PER_SIDE = 1.4;
+    static final double TICKS_PER_BLOCK_PER_SIDE = 0.95;
 
     /**
      * One batch-1 structure: id path, width plus depth, and its block count per level as the doc lists it (level 1 =

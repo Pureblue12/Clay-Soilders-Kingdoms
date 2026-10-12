@@ -396,7 +396,9 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
 
 
     private void placeBlock() {
-        climber.descend();
+        boolean holding = climber.isHolding();
+        // Up a scaffolding column with more blocks in hand, the builder stays up while the next block is placeable from there (D79).
+        boolean stayUp = false;
         var requestHandler = easelPos.getCapability();
         if (requestHandler != null) {
             if (requestHandler.doRequest(request)) {
@@ -408,6 +410,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                 if (!soldier.getCarriedStack().isEmpty() && !(request instanceof ScaffoldRequest)) {
                     followUpFrom = request.getPos();
                     followUpWait = 0;
+                    stayUp = holding;
                 }
                 if (request instanceof ScaffoldRequest scaffold && scaffold.isRemoval() && scaffold.refund() && scaffold.removedCount() > 0) {
                     // The scaffold taken down goes back to storage (a whole column for climbed columns).
@@ -428,6 +431,9 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         } else {
             easelPos = null;
         }
+        if (!stayUp) {
+            climber.descend();
+        }
     }
 
     /**
@@ -435,6 +441,23 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
      * it carries it there at once. None: it brings the rest back to storage and asks the easel as usual.
      */
     private void findFollowUp() {
+        if (climber.isHolding()) {
+            // Up a column: only a block placeable from right here; otherwise climb down and look again from the ground.
+            var handler = easelPos == null ? null : easelPos.getCapability();
+            ItemStack carried = soldier.getCarriedStack();
+            request = handler == null || carried.isEmpty() ? null
+                    : handler.getFollowUpRequest(pos -> BuilderReach.canPlaceFrom(soldier, pos), carried.getItem(), followUpFrom);
+            if (request == null) {
+                climber.descend();
+                return; // followUpFrom stays: the search runs again once down
+            }
+            followUpFrom = null;
+            request.setPlacing();
+            carryTicks = 0;
+            placeWait = 0;
+            DebugLog.event(DebugCategory.BUILD, soldier, "next %s at %s from the column (carrying %s)", request.getItem(), request.getPos(), carried.getCount());
+            return;
+        }
         if (!soldier.onGround() && followUpWait++ < MAX_FOLLOW_UP_WAIT_TICKS) {
             return; // mid-hop: a path search now would find nothing
         }

@@ -138,6 +138,9 @@ public class ScaffoldBuildGameTests {
         Scenario scenario = scenario(helper, TestStructures.Shape.TOWER, 20, new BlockPos(16, 2, 8), new BlockPos(9, 2, 6));
         helper.onEachTick(() -> {
             if (DebugLog.contains(build, "gave up")) {
+                List<net.bumblebee.claysoldiers.debug.DebugEvent> events = DebugLog.events();
+                events.subList(Math.max(0, events.size() - 60), events.size())
+                        .forEach(event -> ClaySoldiersCommon.LOGGER.info("CSR stall report tower 20: {}", event.toLine()));
                 DebugLog.reset();
                 helper.fail("A builder gave up carrying while building the tower");
             }
