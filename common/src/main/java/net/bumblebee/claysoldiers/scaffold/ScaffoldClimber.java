@@ -159,7 +159,10 @@ public final class ScaffoldClimber {
         if (path != null) {
             soldier.getNavigation().moveTo(path, 1);
         }
-        DebugLog.event(DebugCategory.SCAFFOLD, soldier, "climbing the column at %s to y=%s for %s (walk up to %s ticks)", base, standY, target, walkLimit);
+        BlockPos column = base;
+        int y = standY;
+        int limit = walkLimit;
+        DebugLog.event(DebugCategory.SCAFFOLD, soldier, () -> "climbing the column at %s to y=%s for %s (walk up to %s ticks)".formatted(column, y, target, limit));
         return true;
     }
 
