@@ -151,26 +151,15 @@ public final class BuilderReach {
             }
         }
         if (!free.isEmpty()) {
-            // Random per builder, but the same spot each time this builder looks again (no dithering between spots).
-            BlockPos chosen = free.stream().min(java.util.Comparator.comparingLong(spot -> mix(builder.getId(), spot))).orElseThrow();
-            Path path = longPath(builder, Set.of(chosen));
-            if (path == null || !path.canReach() || !endsWithinReach(path, target)) {
-                path = free.size() > 1 ? longPath(builder, new HashSet<>(free)) : null;
-            }
+            // The nearest by path of the plan's free spots: they are spread round the block (both sides of a wall), and
+            // a spot picked at random sent builders round the building half the time (D80; build times up to twice main's).
+            Path path = longPath(builder, new HashSet<>(free));
             if (path != null && path.canReach() && endsWithinReach(path, target)) {
                 return new Reach(path, "");
             }
         }
         DebugLog.event(DebugCategory.PATHING, builder, "none of the plan's %s standing spots for %s can be walked to (%s free), searching", plannedSpots.size(), target, free.size());
         return find(builder, target);
-    }
-
-    /** A hash of a builder and a spot, spread over all bits (each builder ranks a block's spots in its own order). */
-    private static long mix(int builderId, BlockPos spot) {
-        long h = spot.asLong() * 0x9E3779B97F4A7C15L + builderId;
-        h ^= h >>> 33;
-        h *= 0xFF51AFD7ED558CCDL;
-        return h ^ (h >>> 33);
     }
 
     /** Whether another soldier (or any other mob) stands in {@code spot}: builders spread out over a block's spots. */

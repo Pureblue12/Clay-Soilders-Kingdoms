@@ -302,7 +302,7 @@ and the "Structure builds" summary has its table. Never edit a plan by hand: cha
   A builder carrying a stack (D79) takes its next nearby block only from that same wave (`getFollowUpRequest`).
   A block builders gave up twice (`ServerBlueprintPlan.PLAN_GIVE_UPS`) leaves the plan: the normal search hands it out
   without the plan's spots, so scaffolding can start (keep L1's chest; `blockGivenUpTwiceLeavesThePlan`).
-- Builders try the plan's spots first (`BuilderReach.findPlanned`: one at random, then the nearest), then the normal search.
+- Builders try the plan's spots first (`BuilderReach.findPlanned`: the nearest free one by path; a random one sent builders round the building), then the normal search.
 - Blocks the plan leaves out (need scaffold) come after it. `build.follow_plan` 0 turns it all off.
 - Natural touches for builds that follow a plan: a random pause after placing (`build.pause_ticks`), each builder's own pace
   (`build.walk_speed_spread_percent`).
