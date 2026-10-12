@@ -128,7 +128,18 @@ public final class BuilderReach {
 
     /** Like {@link #check(PathfinderMob, BlockPos, boolean)}, with the build plan's standing spots tried first (D80). */
     public static Reach check(PathfinderMob builder, BlockPos target, boolean explainDoors, List<BlockPos> plannedSpots) {
-        Reach reach = plannedSpots.isEmpty() ? find(builder, target) : findPlanned(builder, target, plannedSpots);
+        Reach reach;
+        if (plannedSpots.isEmpty()) {
+            reach = find(builder, target);
+        } else if (Tuning.BUILD_PLAN_SPOTS_FIRST.get() == 0) {
+            // The normal search first (the nearest spot the builder can place from), the plan's spots only when it fails.
+            reach = find(builder, target);
+            if (!reach.reachable()) {
+                reach = findPlanned(builder, target, plannedSpots);
+            }
+        } else {
+            reach = findPlanned(builder, target, plannedSpots);
+        }
         if (reach.reachable()) {
             return reach;
         }

@@ -121,6 +121,8 @@ public final class Tuning {
             "1: builders follow a structure's pre-baked build plan (data/csr/build_plan, made by tools/build_plan.py): the plan's waves in order, a random block of the current wave, the plan's standing spots first (D80). 0: hand out blocks in the blueprint's normal order and search for standing spots, as before.", 1, 0, 1));
     public static final TuningKey.IntKey BUILD_PLAN_LOOKAHEAD_CLEARANCE = register(new TuningKey.IntKey("build.plan_lookahead_clearance",
             "In builds that follow a plan, while other builders finish the current wave's last blocks, an idle builder may take a block of the next wave that is more than this many blocks from every block of the current wave still to place and its standing spots (D80); 0 = wait for the wave to finish.", 4, 0, 16));
+    public static final TuningKey.IntKey BUILD_PLAN_SPOTS_FIRST = register(new TuningKey.IntKey("build.plan_spots_first",
+            "In builds that follow a plan, 1: a builder walks to the nearest free one of the plan's standing spots for its block, and searches only when none can be walked to; 0: it searches the nearest spot it can place from first and uses the plan's spots only when that search fails (D80).", 1, 0, 1));
     public static final TuningKey.IntKey BUILD_PAUSE_TICKS = register(new TuningKey.IntKey("build.pause_ticks",
             "After placing a block of a build that follows a plan, a builder waits a random 0 to this many ticks before asking for the next one, so a crew doesn't move in lockstep (D80); 0 = no pause.", 6, 0, 200));
     public static final TuningKey.IntKey BUILD_WALK_SPEED_SPREAD_PERCENT = register(new TuningKey.IntKey("build.walk_speed_spread_percent",
