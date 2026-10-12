@@ -175,6 +175,40 @@ public class ScaffoldPlannerGameTests {
      */
     @GameTest(template = PLATFORM)
     public static void plannerPutsColumnsInsideAWideRoof(GameTestHelper helper) {
+        ScaffoldPlan plan = ScaffoldPlanner.plan(ScaffoldInput.flat(wideHall(), 0), ScaffoldApproach.CLIMBED_COLUMNS);
+        helper.assertTrue(plan.complete() && plan.unreachable().isEmpty(), "Not every block is reachable: " + plan.describe());
+        helper.assertTrue(plan.teardownComplete(), "The scaffold can't be taken down: " + plan.describe());
+        helper.assertTrue(plan.scaffold().stream().anyMatch(pos -> pos.getX() > 0 && pos.getX() < 10 && pos.getZ() > 0 && pos.getZ() < 10),
+                "No column inside the hall: " + plan.describe());
+        helper.succeed();
+    }
+
+    /**
+     * The same hall with every other floor cell inside a stair or carpet (like the keep L2 annex's pews): scaffolding put on
+     * such a floor falls at once, so no column may stand there, and the roof must still be reachable from the others (D77).
+     */
+    @GameTest(template = PLATFORM)
+    public static void columnsDoNotStandOnStairOrCarpetFloors(GameTestHelper helper) {
+        Set<BlockPos> pews = new java.util.HashSet<>();
+        for (int x = 1; x <= 9; x++) {
+            for (int z = 1; z <= 9; z++) {
+                if ((x + z) % 2 == 0) {
+                    pews.add(new BlockPos(x, 0, z));
+                }
+            }
+        }
+        ScaffoldPlan plan = ScaffoldPlanner.plan(ScaffoldInput.flat(wideHall(), 0).withNoFooting(pews), ScaffoldApproach.CLIMBED_COLUMNS);
+        Set<BlockPos> scaffold = Set.copyOf(plan.scaffold());
+        List<BlockPos> onPews = scaffold.stream().filter(pos -> !scaffold.contains(pos.below()) && pews.contains(pos.below())).toList();
+        helper.assertTrue(onPews.isEmpty(), "Columns stand on a stair or carpet floor at " + onPews + ": " + plan.describe());
+        helper.assertTrue(plan.complete() && plan.unreachable().isEmpty(), "Not every block is reachable: " + plan.describe());
+        helper.succeed();
+    }
+
+    /**
+     * A hall 11 by 11 with walls 11 high, a door gap and a flat roof on top (y 12), on ground at y 0.
+     */
+    private static List<BlockPos> wideHall() {
         List<BlockPos> hall = new ArrayList<>();
         for (int y = 1; y <= 12; y++) {
             for (int x = 0; x <= 10; x++) {
@@ -187,12 +221,7 @@ public class ScaffoldPlannerGameTests {
                 }
             }
         }
-        ScaffoldPlan plan = ScaffoldPlanner.plan(ScaffoldInput.flat(hall, 0), ScaffoldApproach.CLIMBED_COLUMNS);
-        helper.assertTrue(plan.complete() && plan.unreachable().isEmpty(), "Not every block is reachable: " + plan.describe());
-        helper.assertTrue(plan.teardownComplete(), "The scaffold can't be taken down: " + plan.describe());
-        helper.assertTrue(plan.scaffold().stream().anyMatch(pos -> pos.getX() > 0 && pos.getX() < 10 && pos.getZ() > 0 && pos.getZ() < 10),
-                "No column inside the hall: " + plan.describe());
-        helper.succeed();
+        return hall;
     }
 
     /** The Small House (151 blocks) is within reach everywhere: no scaffold. */

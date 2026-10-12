@@ -9,6 +9,7 @@ import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.tuning.Tuning;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -252,7 +253,7 @@ public final class Scaffolds {
                                               BlueprintTemplateSettings settings, @Nullable ScaffoldJob existing) {
         long start = System.nanoTime();
         ScaffoldInput input = input(level, easel, home, plan.targetPositions(base, settings), plan.doorPositions(base, settings),
-                existing == null ? Set.of() : existing.placed());
+                existing == null ? Set.of() : existing.placed(), plan.targetStates(base, settings));
         if (input.structure().isEmpty() || ScaffoldPlanner.aboveReach(input).isEmpty()) {
             return Optional.ofNullable(existing);
         }
@@ -302,7 +303,8 @@ public final class Scaffolds {
      * count as open: doors are handed out last and soldiers open wooden doors, so a doorway is a way in (D71; the
      * planner placed the chapel's door first and found the nave sealed, so no column inside it).
      */
-    static ScaffoldInput input(ServerLevel level, BlockPos easel, BlockPos home, List<BlockPos> targets, Set<BlockPos> doors, Set<BlockPos> scaffold) {
+    static ScaffoldInput input(ServerLevel level, BlockPos easel, BlockPos home, List<BlockPos> targets, Set<BlockPos> doors, Set<BlockPos> scaffold,
+                               Map<BlockPos, BlockState> future) {
         BoundingBox box = BoundingBox.encapsulatingPositions(targets).orElseThrow();
         // The plan only lists blocks still to place, so the region reaches down to the easel's ground (the site's base),
         // and it includes where the builders come from.
@@ -312,11 +314,19 @@ public final class Scaffolds {
                 box.maxY() + 3, Math.max(box.maxZ() + ScaffoldInput.MARGIN, home.getZ() + 3));
         Set<BlockPos> solid = new HashSet<>();
         Set<BlockPos> blocked = new HashSet<>(targets);
+        Set<BlockPos> noFooting = new HashSet<>();
         BlockPos.betweenClosedStream(region).forEach(pos -> {
             if (scaffold.contains(pos)) {
                 return; // the build's own scaffold: the planner puts it in again (climbable), it isn't in the way
             }
             BlockState state = level.getBlockState(pos);
+            // Scaffolding needs a full top face under it (or scaffolding beside it): on a stair, slab or carpet floor it
+            // falls at once, and the column is never there to climb (keep L2's annex pews, D77). Blocks still to place count
+            // as what they will be.
+            BlockState floor = future.getOrDefault(pos, state);
+            if (!floor.getCollisionShape(level, pos).isEmpty() && !floor.isFaceSturdy(level, pos, Direction.UP)) {
+                noFooting.add(pos.immutable());
+            }
             boolean woodenDoor = state.getBlock() instanceof DoorBlock door && door.type().canOpenByHand();
             if (!woodenDoor && !state.getCollisionShape(level, pos).isEmpty()) {
                 solid.add(pos.immutable());
@@ -336,7 +346,7 @@ public final class Scaffolds {
         // A column's base may be as far as builders walk while they work for a build (the larger bonus, as
         // BuildBlueprintGoal sets it): the keep's far roof corners need columns more than maxPath away (D75).
         int columnPath = BUILDER_FOLLOW_RANGE + Math.max(Tuning.BUILD_PATH_RANGE_BONUS.get(), Tuning.SCAFFOLD_PATH_RANGE_BONUS.get()) - PATH_MARGIN;
-        return new ScaffoldInput(region, solid, blocked, remaining, home, maxPath, Math.max(maxPath, columnPath));
+        return new ScaffoldInput(region, solid, blocked, remaining, home, maxPath, Math.max(maxPath, columnPath), noFooting);
     }
 
     /**

@@ -314,7 +314,8 @@ public final class ScaffoldPlanner {
         for (int x = region.minX() + 1; x < region.maxX() - 1; x++) {
             for (int z = region.minZ() + 1; z < region.maxZ() - 1; z++) {
                 for (int base = region.minY() + 1; base <= top; base++) {
-                    if (!built.standable(x, base, z) || input.blocked().contains(new BlockPos(x, base, z))) {
+                    if (!built.standable(x, base, z) || input.blocked().contains(new BlockPos(x, base, z))
+                            || input.noFooting().contains(new BlockPos(x, base - 1, z))) {
                         continue;
                     }
                     Spot probe = new Spot(x, z, base, 0, true);
@@ -352,7 +353,8 @@ public final class ScaffoldPlanner {
                     continue;
                 }
                 int base = site.lowestReachable(ground, x, z);
-                if (base == Integer.MIN_VALUE || columns && openSides(site, ground, x, base, z) < 2) {
+                if (base == Integer.MIN_VALUE || columns && (openSides(site, ground, x, base, z) < 2
+                        || input.noFooting().contains(new BlockPos(x, base - 1, z)))) {
                     continue;
                 }
                 Spot probe = new Spot(x, z, base, 0, columns);

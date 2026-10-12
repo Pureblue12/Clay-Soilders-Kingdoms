@@ -303,6 +303,18 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         return blockInfoList.stream().map(blockInfo -> targetPosition(base, settings, blockInfo)).toList();
     }
 
+    /**
+     * The block each block this plan still has to place will be once placed, by world position (the scaffold planner
+     * checks which floors a column can stand on, D77). Changes nothing.
+     */
+    public Map<BlockPos, BlockState> targetStates(BlockPos base, BlueprintTemplateSettings settings) {
+        Map<BlockPos, BlockState> states = new HashMap<>();
+        for (BlueprintBlockInfo info : blockInfoList) {
+            states.put(targetPosition(base, settings, info), info.getState().mirror(settings.mirror()).rotate(settings.rotation()));
+        }
+        return states;
+    }
+
     /** Where the doors this plan still has to place go (handed out last; soldiers walk through their doorways). */
     public java.util.Set<BlockPos> doorPositions(BlockPos base, BlueprintTemplateSettings settings) {
         return blockInfoList.stream().filter(BlueprintBlockInfo::isDoor)
