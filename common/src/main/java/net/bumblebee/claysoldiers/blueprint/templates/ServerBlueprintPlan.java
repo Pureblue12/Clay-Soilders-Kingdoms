@@ -429,6 +429,46 @@ public class ServerBlueprintPlan extends BlueprintPlan {
     }
 
     /**
+     * A builder that has just placed a block at {@code placed} and still carries more of {@code item} (D79) asks for its
+     * next block here instead of walking back to the easel and its chest: the nearest free block of that item in the same
+     * layer (same height) whose spot is reachable from where it stands, or null. Never a door, never a block whose spot
+     * below is still an unplaced block of this plan (so nothing is put on air the layer order would have filled first),
+     * and at most {@link #FOLLOW_UP_REACH_TESTS} path searches.
+     */
+    public @Nullable BlueprintRequest getFollowUpRequest(ServerLevel level, BlockPos base, BlueprintTemplateSettings settings,
+                                                         Predicate<BlockPos> canReach, Item item, BlockPos placed) {
+        long now = level.getGameTime();
+        java.util.Set<BlockPos> unplaced = new java.util.HashSet<>();
+        List<Map.Entry<BlueprintBlockInfo, BlockPos>> candidates = new java.util.ArrayList<>();
+        for (BlueprintBlockInfo blockInfo : blockInfoList) {
+            BlockPos pos = targetPosition(base, settings, blockInfo);
+            unplaced.add(pos);
+            if (blockInfo.isDoor() || pos.getY() != placed.getY() || !blockInfo.isFor(item) || blockInfo.isCoolingDown(now)
+                    || !blockInfo.hasAvailableRequest(now) || !canPlaceAt(level, pos)) {
+                continue;
+            }
+            candidates.add(Map.entry(blockInfo, pos));
+        }
+        candidates.sort(java.util.Comparator.comparingDouble(entry -> entry.getValue().distSqr(placed)));
+        int tests = 0;
+        for (Map.Entry<BlueprintBlockInfo, BlockPos> candidate : candidates) {
+            if (unplaced.contains(candidate.getValue().below())) {
+                continue;
+            }
+            if (tests++ >= FOLLOW_UP_REACH_TESTS) {
+                break;
+            }
+            if (canReach.test(candidate.getValue())) {
+                return candidate.getKey().getRequest(now, candidate.getValue());
+            }
+        }
+        return null;
+    }
+
+    /** Path searches a follow-up request search may make (see {@link #getFollowUpRequest}). */
+    public static final int FOLLOW_UP_REACH_TESTS = 6;
+
+    /**
      * Forgets which blocks were found out of reach, so the next request search checks them again (call when the world
      * around the build changed, e.g. a block of the build was placed or removed).
      */

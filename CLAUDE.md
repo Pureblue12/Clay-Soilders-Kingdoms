@@ -170,6 +170,11 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
     (structure build run 38129993219): vanilla's pathfinder drops a mob up to 3 blocks into any cell, pits included.
     The soldiers' pathfinder blocks every cell without a way out sideways (`DoorPathing.withoutPits`, D67;
     `soldierDoesNotDropIntoAPit`).
+- Fixed (slow builders, D79): every block was a round trip (easel, chest, ONE item, spot, back), about one block per
+  114 ticks for keep L3's crew. A builder now takes up to `build.carry_count` (16) of the item and, after placing one, goes
+  straight to the nearest free block of that item in the same layer it can reach (`ServerBlueprintPlan.getFollowUpRequest`:
+  no doors, nothing over a spot still to fill); only when there is none does it walk back and put the rest in the chest
+  (`followUpIsNearestInTheSameLayer`, `builderPlacesARowWithOneTripToTheChest`).
 - Fixed (door race): doors-last only ordered the list, so a door could be handed out while other blocks were
   still being carried (a glass pane got locked out in the 08:03 recording). Now `ServerBlueprintPlan.getRequest`
   hands out a door only when no other (non-door) block with a free spot remains; doors don't wait for each

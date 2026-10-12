@@ -61,6 +61,56 @@ public class BuildRequestGameTests {
      * the second spot and leave the first empty. Suspected cause: placing ignores the request's position and fills
      * the first free spot for that block type.
      */
+    /**
+     * D79: a builder that still carries more of a block's item gets the nearest free block of that item in the same layer
+     * as the one it placed, never a block above a spot still to fill and never one of another item.
+     */
+    @GameTest(template = PLATFORM)
+    public static void followUpIsNearestInTheSameLayer(GameTestHelper helper) {
+        Map<BlockPos, BlockState> blocks = new LinkedHashMap<>();
+        blocks.put(new BlockPos(0, 0, 0), Blocks.COBBLESTONE.defaultBlockState());
+        blocks.put(new BlockPos(0, 0, 4), Blocks.COBBLESTONE.defaultBlockState());
+        blocks.put(new BlockPos(0, 0, 1), Blocks.OAK_PLANKS.defaultBlockState());
+        blocks.put(new BlockPos(0, 1, 2), Blocks.COBBLESTONE.defaultBlockState());
+        blocks.put(new BlockPos(0, 0, 2), Blocks.STONE.defaultBlockState());
+        BlueprintData blueprint = blueprint(helper, "follow_up", 1, 2, 5, blocks);
+        EaselBlockEntity easel = DevScenarios.placeEasel(helper.getLevel(), helper.absolutePos(EASEL), Direction.NORTH, blueprint);
+        BlockPos placed = helper.absolutePos(EASEL.offset(0, 0, 5)); // local (0, 0, 3): not in the plan
+        BlockPos nearest = helper.absolutePos(EASEL.offset(0, 0, 6));
+
+        BlueprintRequest next = easel.getBlueprintRequestHandler().getFollowUpRequest(pos -> true, Items.COBBLESTONE, placed);
+        helper.assertTrue(next != null && next.getPos().equals(nearest), "The follow-up should be the cobblestone in the same layer at "
+                + nearest.toShortString() + ", got " + next);
+        BlueprintRequest none = easel.getBlueprintRequestHandler().getFollowUpRequest(pos -> true, Items.COBBLESTONE, placed.above());
+        helper.assertTrue(none == null, "The cobblestone above the unplaced stone must wait for it, got " + none);
+        helper.succeed();
+    }
+
+    /**
+     * D79: a builder takes a stack from its chest and places a row of blocks one after another, without walking back to
+     * the chest between them (before: one trip per block).
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 600)
+    public static void builderPlacesARowWithOneTripToTheChest(GameTestHelper helper) {
+        BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "row", 5, 1, 7,
+                new BlockPos(0, 0, 6), new BlockPos(1, 0, 6), new BlockPos(2, 0, 6), new BlockPos(3, 0, 6), new BlockPos(4, 0, 6));
+        ClaySoldierGameTests.Builder builder = ClaySoldierGameTests.setUpBuilder(helper, blueprint,
+                List.of(new ItemStack(Items.COBBLESTONE, 5)));
+        int[] last = {5};
+        int[] trips = {0};
+        helper.onEachTick(() -> {
+            int count = builder.chest().countItem(Items.COBBLESTONE);
+            if (count < last[0]) {
+                trips[0]++;
+            }
+            last[0] = count;
+        });
+        helper.succeedWhen(() -> {
+            helper.assertTrue(builder.easel().isFinished(), "The row is not built yet");
+            helper.assertTrue(trips[0] == 1, "The builder should have taken the row's blocks in one trip, took " + trips[0]);
+        });
+    }
+
     @GameTest(template = PLATFORM)
     public static void placedAtRequestedSpot(GameTestHelper helper) {
         BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "two_spots", 1, 1, 3,
