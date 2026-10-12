@@ -128,6 +128,12 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     private BlockPos followUpFrom;
     /** Ticks waited for this builder to land before the follow-up search (vanilla finds no path while a mob is in the air). */
     private int followUpWait;
+    /**
+     * Whether this builder just climbed down a column for its follow-up search: it then only takes a block reachable from
+     * the ground. Walking from one column's base to another's hugs the building and passes other columns, which tiny
+     * soldiers climb into by accident (the 20-high tower test: a builder ended 12 up beside a column and gave up).
+     */
+    private boolean cameDown;
     /** Ticks a follow-up search waits at most for this builder to land. */
     private static final int MAX_FOLLOW_UP_WAIT_TICKS = 10;
 
@@ -449,6 +455,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                     : handler.getFollowUpRequest(pos -> BuilderReach.canPlaceFrom(soldier, pos), carried.getItem(), followUpFrom);
             if (request == null) {
                 climber.descend();
+                cameDown = true;
                 return; // followUpFrom stays: the search runs again once down
             }
             followUpFrom = null;
@@ -464,10 +471,13 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         BlockPos placed = followUpFrom;
         followUpFrom = null;
         followUpWait = 0;
+        boolean groundOnly = cameDown;
+        cameDown = false;
         ItemStack carried = soldier.getCarriedStack();
         var requestHandler = easelPos == null ? null : easelPos.getCapability();
         if (requestHandler != null && !carried.isEmpty()) {
-            request = requestHandler.getFollowUpRequest(reachTest, carried.getItem(), placed);
+            request = requestHandler.getFollowUpRequest(groundOnly ? pos -> BuilderReach.canReachToPlace(soldier, pos) : reachTest,
+                    carried.getItem(), placed);
         }
         if (request != null) {
             request.setPlacing();
@@ -582,6 +592,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         stuckTicks = 0;
         placeWait = 0;
         followUpFrom = null;
+        cameDown = false;
         climber.reset();
         if (pathSearchMultiplier != 1.0F) {
             pathSearchMultiplier = 1.0F;
