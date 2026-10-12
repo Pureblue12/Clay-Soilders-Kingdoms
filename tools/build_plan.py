@@ -144,6 +144,18 @@ class Structure:
             s = support(name, props, pos)
             if s is not None and s in self.blocks:
                 self.supports[pos] = s
+        # Blocks that stay only while nothing next to them changes (a lantern hanging under leaves, which give it no
+        # face to hang from; a plant on stone): the mod's normal order places them after everything around them, so
+        # they are left out of the plan and come after it (garden L3: a lantern under azalea leaves dropped when a
+        # fence of a later wave went in next to it).
+        named = {pos: (name, props) for pos, (_, _, name, props) in self.blocks.items()}
+        at = lambda p: named.get(p, ("grass_block", {}) if p[1] < self.base[1] else ("air", {}))
+        self.fragile = set()
+        for pos, (name, props) in named.items():
+            above = at((pos[0], pos[1] + 1, pos[2]))[0]
+            if props.get("hanging") == "true" and above.endswith("_leaves") \
+                    or B.unsupported(name, props, pos, at):
+                self.fragile.add(pos)
 
     def put(self, grid, pos):
         for cell in [pos] + self.extra.get(pos, []):
@@ -381,7 +393,7 @@ def plan_level(job):
     if not os.path.exists(path):
         return sid, lv, "NO FILE", 0, 0, 0, 0, path, None
     st = Structure(path)
-    left_out = set()
+    left_out = set(st.fragile)
     for _ in range(MAX_REPLANS):
         waves, stuck = disassemble(st, left_out)
         if not stuck:
