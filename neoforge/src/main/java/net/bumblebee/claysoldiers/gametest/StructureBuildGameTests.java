@@ -44,7 +44,9 @@ import java.util.stream.Collectors;
  * reach), the Small House layout ({@link DevScenarios#structureBuild}, the same setup as {@code /csr dev structure build}).
  * A build passes when the easel is finished, its scaffold is gone and the world matches the file block by block (air
  * included, structure void and neighbour connections aside). A build that makes no progress for {@link #STALL_TICKS}
- * fails at once, with a stall report in the log.
+ * fails at once, with a stall report in the log. So does a build still running after {@link #wallClockMinutes()} minutes of
+ * real time ("too slow"), so one huge build can't hold a whole run hostage (keep L3 placed a block every ~114 ticks and
+ * would have needed about 5 hours).
  * <p>
  * About 156 builds, far too slow for the normal suite: the tests only exist when the environment variable
  * {@code CSR_STRUCTURE_BUILDS} is set ({@code all}, or a shard {@code k/n}; {@code CSR_STRUCTURE_BUILDS_ONLY} limits
@@ -62,6 +64,8 @@ public class StructureBuildGameTests {
     static final String TEMPLATE = ClaySoldiersCommon.MOD_ID + ":gametest/structure_build";
     /** A build whose remaining blocks and scaffold don't change for this long fails (the rest would only time out). */
     static final int STALL_TICKS = 6000;
+    /** Real-time budget per build in minutes unless {@code CSR_STRUCTURE_BUILD_MINUTES} says otherwise (0 = no limit). */
+    static final int DEFAULT_WALL_CLOCK_MINUTES = 45;
     /** How often progress is checked, in ticks. */
     static final int CHECK_TICKS = 100;
     /** Same build-time model as batch 1 ({@link Batch1StructureGameTests#TICKS_PER_BLOCK_PER_SIDE}); used for timeouts and shards. */
@@ -233,6 +237,8 @@ public class StructureBuildGameTests {
         StructureTemplate template = StructurePaster.template(world, meta, level);
         BuildStallReport.watch(helper, name, timeoutTicks, easel, setup.chest(), setup.soldiers());
         long start = helper.getTick();
+        long startNanos = System.nanoTime();
+        long budgetNanos = wallClockMinutes() * 60_000_000_000L;
         long[] lastChange = {start};
         String[] lastProgress = {""};
         boolean[] passed = {false};
@@ -264,9 +270,26 @@ public class StructureBuildGameTests {
                 fail(helper, name, entry, level, "stalled: no progress for " + STALL_TICKS + " ticks, " + describe(easel, job)
                         + ", " + (helper.getTick() - start) + " ticks in" + (setup.scaffold() ? " (needs scaffold)" : ""));
             }
+            if (budgetNanos > 0 && System.nanoTime() - startNanos > budgetNanos) {
+                BuildStallReport.report(helper, name, easel, setup.chest(), setup.soldiers())
+                        .forEach(line -> ClaySoldiersCommon.LOGGER.info("CSR stall report {}: {}", name, line));
+                DebugLog.reset();
+                fail(helper, name, entry, level, "too slow: still building after " + wallClockMinutes() + " minutes of real time, "
+                        + describe(easel, job) + ", " + (helper.getTick() - start) + " ticks in" + (setup.scaffold() ? " (needs scaffold)" : ""));
+            }
         });
         helper.succeedWhen(() -> helper.assertTrue(passed[0], "not built yet: " + describe(easel,
                 ScaffoldSavedData.get(world).job(easel.getBlockPos()))));
+    }
+
+    /** {@code CSR_STRUCTURE_BUILD_MINUTES}, or {@link #DEFAULT_WALL_CLOCK_MINUTES} when unset or not a number. */
+    static int wallClockMinutes() {
+        String setting = System.getenv("CSR_STRUCTURE_BUILD_MINUTES");
+        try {
+            return setting == null || setting.isBlank() ? DEFAULT_WALL_CLOCK_MINUTES : Math.max(0, Integer.parseInt(setting.trim()));
+        } catch (NumberFormatException e) {
+            return DEFAULT_WALL_CLOCK_MINUTES;
+        }
     }
 
     private static void fail(GameTestHelper helper, String name, Entry entry, int level, String reason) {
