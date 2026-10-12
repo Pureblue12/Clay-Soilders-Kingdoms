@@ -315,6 +315,16 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         return states;
     }
 
+    /**
+     * The world cells the whole template covers, placed blocks included (the scaffold planner's re-plans look at the
+     * whole site, not only around the blocks left, D78). Changes nothing.
+     */
+    public java.util.List<BlockPos> footprintCorners(BlockPos base, BlueprintTemplateSettings settings) {
+        Vec3i size = getSize();
+        BlockPos far = new BlockPos(Math.max(0, size.getX() - 1), Math.max(0, size.getY() - 1), Math.max(0, size.getZ() - 1));
+        return java.util.List.of(base.offset(adjustForStructureSettings(settings, BlockPos.ZERO)), base.offset(adjustForStructureSettings(settings, far)));
+    }
+
     /** Where the doors this plan still has to place go (handed out last; soldiers walk through their doorways). */
     public java.util.Set<BlockPos> doorPositions(BlockPos base, BlueprintTemplateSettings settings) {
         return blockInfoList.stream().filter(BlueprintBlockInfo::isDoor)
