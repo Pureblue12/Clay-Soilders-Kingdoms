@@ -80,9 +80,13 @@ public class ServerBlueprintPlan extends BlueprintPlan {
     }
 
     public static ServerBlueprintPlan load(CompoundTag tag, HolderLookup.Provider registries) {
-        // The saved block list is in hand-out order already (the plan's, when there is one).
+        // Loading sorts the blocks into the normal order again; with a plan, they go back into the plan's.
         BuildPlan buildPlan = tag.contains(BUILD_PLAN_TAG, Tag.TAG_COMPOUND) ? BuildPlan.load(tag.getCompound(BUILD_PLAN_TAG)) : null;
-        ServerBlueprintPlan serverBlueprintPlan = new ServerBlueprintPlan(BlueprintUtil.getSizeFromTag(tag), ImmutableTemplate.loadPallet(registries.lookupOrThrow(Registries.BLOCK), tag.getList("palette", 10), tag.getList(StructureTemplate.BLOCKS_TAG, 10), List.of()), buildPlan);
+        List<StructureTemplate.StructureBlockInfo> blocks = ImmutableTemplate.loadPallet(registries.lookupOrThrow(Registries.BLOCK), tag.getList("palette", 10), tag.getList(StructureTemplate.BLOCKS_TAG, 10), List.of());
+        if (buildPlan != null) {
+            blocks = buildPlan.order(blocks, StructureTemplate.StructureBlockInfo::pos);
+        }
+        ServerBlueprintPlan serverBlueprintPlan = new ServerBlueprintPlan(BlueprintUtil.getSizeFromTag(tag), blocks, buildPlan);
         serverBlueprintPlan.loadHasStarted(tag);
         return serverBlueprintPlan;
     }
