@@ -1,6 +1,5 @@
 package net.bumblebee.claysoldiers.blueprint.templates;
 
-import net.bumblebee.claysoldiers.entity.goal.workgoal.ReachMap;
 import net.bumblebee.claysoldiers.blueprint.BlueprintRequest;
 import net.bumblebee.claysoldiers.blueprint.BlueprintTemplateSettings;
 import net.bumblebee.claysoldiers.blueprint.ReachOrigin;
@@ -395,7 +394,7 @@ public class ServerBlueprintPlan extends BlueprintPlan {
             var infoAbsolutePos = targetPosition(base, settings, blockInfo);
             if (!canReach.test(infoAbsolutePos)) {
                 // Path searches are expensive: this builder doesn't search again for a while, unless the build changes.
-                if (Tuning.BUILD_UNREACHABLE_RECHECK_TICKS.get() > 0 && !ReachMap.enabled()) { // a reach map look is cheap (D76)
+                if (Tuning.BUILD_UNREACHABLE_RECHECK_TICKS.get() > 0) {
                     unreachableFor.put(blockInfo, level.getGameTime() + Tuning.BUILD_UNREACHABLE_RECHECK_TICKS.get());
                 }
                 unreachable++;

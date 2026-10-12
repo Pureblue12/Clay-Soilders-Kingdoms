@@ -475,6 +475,9 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             if (path == null && easelPos != null && soldier.level() instanceof ServerLevel level && climber.start(level, easelPos.pos(), request.getPos())) {
                 return false; // out of reach from the ground: climb a scaffolding column
             }
+            if (path == null && ReachMap.enabled() && easelPos != null) {
+                path = ReachMap.routeToPlace(soldier, easelPos.pos(), request.getPos());
+            }
             pathEnd = path == null || path.getEndNode() == null ? null : path.getEndNode().asBlockPos();
             lastStepTicks = 0;
             if (path != null) {

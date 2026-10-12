@@ -12,6 +12,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.PathNavigationRegion;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.NodeEvaluator;
 import net.minecraft.world.level.pathfinder.Path;
@@ -100,32 +101,55 @@ public final class ReachMap {
      * that {@link BuilderReach#canPlaceFrom} accepts is on the map.
      */
     public static boolean canReachToPlace(PathfinderMob builder, BlockPos easel, BlockPos target) {
-        return of(builder, easel).bestSpot(target) != null;
+        return of(builder, easel).bestSpot(builder.level(), target) != null;
     }
 
     /**
-     * A path to the nearest (walked) spot {@code target} can be placed from: vanilla's path from where the builder
-     * stands to that one spot (cheap, since the spot is known to be reachable), or, when that search fails, the route
-     * read off the map. Falls back to {@link BuilderReach#pathToPlace} when the map has no spot (it may be stale).
+     * A path to a spot {@code target} can be placed from: the old search first ({@link BuilderReach#pathToPlace}), so
+     * builders walk exactly as before whenever it finds a way; when it doesn't (its step budget ran out), vanilla's
+     * path to the map's nearest spot, which is cheap because that spot is known to be reachable. {@code null} when
+     * neither finds one: the builder may then climb a scaffolding column, or walk {@link #routeToPlace}.
      */
     @Nullable
     public static Path pathToPlace(PathfinderMob builder, BlockPos easel, BlockPos target) {
-        ReachMap map = MAPS.get(new Key(builder.level().dimension(), easel.immutable()));
-        BlockPos spot = map == null ? null : map.bestSpot(target);
-        if (spot == null) {
-            return BuilderReach.pathToPlace(builder, target);
-        }
-        Path path = BuilderReach.pathToSpot(builder, spot);
-        if (path != null && path.canReach() && path.getEndNode() != null && BuilderReach.canPlaceFrom(Vec3.atBottomCenterOf(path.getEndNode().asBlockPos()), target)) {
+        Path path = BuilderReach.pathToPlace(builder, target);
+        if (path != null) {
             return path;
         }
-        Path route = map.route(spot);
-        DebugLog.event(DebugCategory.PATHING, builder, "vanilla found no path to %s for %s, walking the reach map's route (%s steps)", spot, target, route == null ? 0 : route.getNodeCount());
+        ReachMap map = MAPS.get(new Key(builder.level().dimension(), easel.immutable()));
+        BlockPos spot = map == null ? null : map.bestSpot(builder.level(), target);
+        if (spot == null) {
+            return null;
+        }
+        path = BuilderReach.pathToSpot(builder, spot);
+        if (path != null && path.canReach() && path.getEndNode() != null && BuilderReach.canPlaceFrom(Vec3.atBottomCenterOf(path.getEndNode().asBlockPos()), target)) {
+            DebugLog.event(DebugCategory.PATHING, builder, "path search for %s found no way, walking to the reach map's spot %s", target, spot);
+            return path;
+        }
+        return null;
+    }
+
+    /**
+     * The map's own route to its nearest spot for {@code target} (from where the map was made, beside the easel), for a
+     * builder no path search got a way for. {@code null} when the map has none.
+     */
+    @Nullable
+    public static Path routeToPlace(PathfinderMob builder, BlockPos easel, BlockPos target) {
+        ReachMap map = MAPS.get(new Key(builder.level().dimension(), easel.immutable()));
+        BlockPos spot = map == null ? null : map.bestSpot(builder.level(), target);
+        Path route = spot == null ? null : map.route(spot);
+        if (route != null) {
+            DebugLog.event(DebugCategory.PATHING, builder, "no path search found a way to %s, walking the reach map's route to %s (%s steps)", target, spot, route.getNodeCount());
+        }
         return route;
     }
 
+    /**
+     * The spot on the map nearest (walked) to the easel that {@code target} can be placed from. Never a doorway: a
+     * builder standing there keeps the door from being closed.
+     */
     @Nullable
-    private BlockPos bestSpot(BlockPos target) {
+    private BlockPos bestSpot(Level level, BlockPos target) {
         BlockPos best = null;
         float bestDistance = Float.MAX_VALUE;
         int range = Mth.floor(BuilderReach.HORIZONTAL_REACH);
@@ -136,7 +160,8 @@ public final class ReachMap {
                     feet.set(target.getX() + dx, target.getY() - below, target.getZ() + dz);
                     float walked = distance.get(feet.asLong());
                     if (!Float.isNaN(walked) && walked < bestDistance
-                            && BuilderReach.canPlaceFrom(new Vec3(feet.getX() + 0.5, feet.getY(), feet.getZ() + 0.5), target)) {
+                            && BuilderReach.canPlaceFrom(new Vec3(feet.getX() + 0.5, feet.getY(), feet.getZ() + 0.5), target)
+                            && !(level.getBlockState(feet).getBlock() instanceof DoorBlock)) {
                         best = feet.immutable();
                         bestDistance = walked;
                     }
