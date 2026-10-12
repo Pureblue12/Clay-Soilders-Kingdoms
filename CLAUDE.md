@@ -307,7 +307,8 @@ Pending (not started):
   column the simulated build never gets into is dropped. The planner leaves doors out and counts wooden doors as open (D71),
   so a building's doorway is a way in. A block counts as in reach within 24 walked blocks of the chest, a column's base within
   56 (the builders' real limit, 16 + 48, minus `Scaffolds.PATH_MARGIN`; D75).
-  A spot needing feet more than 8 below it, with no floor builders walk to in between (the church belfry spire), stays unbuilt.
+  A block no column reaches within 8 (the church spire top, 9 and 10 above the highest column cell under it) is placed by a
+  builder stretching up from inside a column, up to `scaffold.column_reach_bonus` (2) more (D78); higher than that it stays unbuilt.
 - A blueprint block that is already there and replaceable (e.g. short grass where short grass grows) counts
   as free but can never be placed (placing the same block fails), so the blueprint never finishes; the
   cooldown only stops it from starving the rest. Not confirmed in game; not fixed.

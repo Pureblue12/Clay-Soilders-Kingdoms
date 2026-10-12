@@ -452,7 +452,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             var handler = easelPos == null ? null : easelPos.getCapability();
             ItemStack carried = soldier.getCarriedStack();
             request = handler == null || carried.isEmpty() ? null
-                    : handler.getFollowUpRequest(pos -> BuilderReach.canPlaceFrom(soldier, pos), carried.getItem(), followUpFrom);
+                    : handler.getFollowUpRequest(pos -> BuilderReach.canPlaceFrom(soldier, pos) || climber.holdsInReachOf(pos), carried.getItem(), followUpFrom);
             if (request == null) {
                 climber.descend();
                 cameDown = true;
@@ -525,7 +525,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     }
 
     protected boolean moveToRequest() {
-        if (BuilderReach.canPlaceFrom(soldier, request.getPos())) {
+        if (BuilderReach.canPlaceFrom(soldier, request.getPos()) || climber.holdsInReachOf(request.getPos())) {
             this.soldier.getNavigation().stop();
             pathEnd = null;
             return true;

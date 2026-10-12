@@ -169,6 +169,48 @@ public class ScaffoldPlannerGameTests {
     }
 
     /**
+     * A bell tower like the church's: a 5 by 5 tower with a door, a floor at y 10 builders can't walk to, and a spire
+     * whose top is 18 up, right above the tower's middle. The highest column cell under it is 9 (below the floor), one
+     * more than the usual reach: only stretching up from inside the column reaches it (D78).
+     */
+    @GameTest(template = PLATFORM)
+    public static void spireTopIsReachedStretchingUpFromAColumn(GameTestHelper helper) {
+        ScaffoldInput input = ScaffoldInput.flat(bellTower(), 0);
+        BlockPos top = new BlockPos(2, 18, 2);
+        ScaffoldPlan usual = ScaffoldPlanner.plan(input, ScaffoldApproach.CLIMBED_COLUMNS);
+        helper.assertTrue(usual.unreachable().contains(top), "The spire top is in the usual reach, the test shows nothing: " + usual.describe());
+        ScaffoldPlan stretched = ScaffoldPlanner.plan(input.withColumnReachBonus(2), ScaffoldApproach.CLIMBED_COLUMNS);
+        helper.assertTrue(stretched.complete() && stretched.unreachable().isEmpty(), "Not every block is reachable stretching up: " + stretched.describe());
+        helper.assertTrue(stretched.teardownComplete(), "The scaffold can't be taken down: " + stretched.describe());
+        helper.succeed();
+    }
+
+    /** The bell tower of {@link #spireTopIsReachedStretchingUpFromAColumn}, on ground at y 0. */
+    private static List<BlockPos> bellTower() {
+        List<BlockPos> tower = new ArrayList<>();
+        for (int y = 1; y <= 10; y++) {
+            for (int x = 0; x <= 4; x++) {
+                for (int z = 0; z <= 4; z++) {
+                    boolean wall = x == 0 || x == 4 || z == 0 || z == 4;
+                    boolean door = x == 2 && z == 0 && y <= 2;
+                    if (y == 10 || wall && !door) {
+                        tower.add(new BlockPos(x, y, z));
+                    }
+                }
+            }
+        }
+        for (int x = 1; x <= 3; x++) {
+            for (int z = 1; z <= 3; z++) {
+                tower.add(new BlockPos(x, 11, z));
+            }
+        }
+        for (int y = 12; y <= 18; y++) {
+            tower.add(new BlockPos(2, y, 2));
+        }
+        return tower;
+    }
+
+    /**
      * A hall 11 by 11 with walls 11 high, a door gap and a flat roof on top: columns outside the footprint reach only 2
      * blocks into the roof, so its middle needs columns standing on the floor inside (D69, like the keep's roof and the
      * chapel's steeple cap). Every block must be reachable and the scaffold must come down again.
