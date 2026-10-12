@@ -272,7 +272,10 @@ Code: `common/.../scaffold/`; comparison, recommendation and height rules: `docs
 - **While a build has scaffold, its builders** get a fresh route every 20 ticks and precise steps on scaffold blocks
   (`DoorPathing.Ground.followThePath`). Every builder's search for a standing spot next to a blueprint block has its own longer, bigger
   path search (`build.path_*`, D61), and since D62 every path a builder walks while it works for a build (to the easel, to
-  its chest) has the same longer limit (`DoorPathing.Ground.setRangeBonus`); paths outside building work keep vanilla's.
+  its chest) has the same longer limit (`DoorPathing.Ground.setRangeBonus`); paths outside building work keep vanilla's. A builder's search for a
+  standing spot or a column's base that runs out of steps goes on from where it ended (`ChainedPath`, up to 3 searches, D76): the way up
+  the keep's two staircases ran out of steps on the grass around the chest. Walking to a column's base may take
+  `scaffold.walk_ticks_per_step` ticks per step of the path (at least 200).
 - **Recorder SCAFFOLD:** planned, placed, removed, climbing, stuck, cleanup, kept.
 
 ### Known limitations

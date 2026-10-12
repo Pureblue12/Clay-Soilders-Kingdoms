@@ -136,6 +136,8 @@ public final class Tuning {
             "A scaffold request a builder has had this long without finishing it can be handed to another builder, in ticks.", 600, 100, 12_000));
     public static final TuningKey.IntKey SCAFFOLD_PATH_NODES_MULTIPLIER = register(new TuningKey.IntKey("scaffold.path_nodes_multiplier",
             "While a builder works for a build with scaffolding, its path searches may look at this many times more steps (routes up a scaffold wind around); the larger of this and build.path_nodes_multiplier counts.", 4, 1, 16));
+    public static final TuningKey.IntKey SCAFFOLD_WALK_TICKS_PER_STEP = register(new TuningKey.IntKey("scaffold.walk_ticks_per_step",
+            "A builder walking to a scaffold column's base gives up after this many ticks per step of its path (at least 200 ticks; D76).", 20, 5, 200));
     public static final TuningKey.IntKey SCAFFOLD_PATH_RANGE_BONUS = register(new TuningKey.IntKey("scaffold.path_range_bonus",
             "While a builder works for a build with scaffolding, its paths may be this many blocks longer (vanilla limits a path's walked length to the follow range, 16; each step up a scaffold counts about 1.4); the larger of this and build.path_range_bonus counts.", 16, 0, 64));
     public static final TuningKey.IntKey SCAFFOLD_REPATH_TICKS = register(new TuningKey.IntKey("scaffold.repath_ticks",

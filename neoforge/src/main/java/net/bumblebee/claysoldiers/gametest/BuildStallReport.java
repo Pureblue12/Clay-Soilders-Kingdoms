@@ -7,6 +7,7 @@ import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugEvent;
 import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.entity.soldier.ClaySoldierEntity;
+import net.bumblebee.claysoldiers.scaffold.ScaffoldClimber;
 import net.bumblebee.claysoldiers.scaffold.ScaffoldSavedData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -133,6 +134,9 @@ final class BuildStallReport {
     private static String pathTo(ClaySoldierEntity builder, BlockPos base) {
         if (builder == null) {
             return "no builder alive";
+        }
+        if (ScaffoldClimber.pathToBase(builder, base) != null) {
+            return "path reaches it from " + builder.blockPosition().toShortString();
         }
         Path path = builder.getNavigation().createPath(base, 1);
         if (path == null) {

@@ -207,6 +207,8 @@ public final class DoorPathing {
     public static class Ground extends GroundPathNavigation {
         /** Extra walked length every path of this navigation may have (D62); 0 outside building work. */
         private float rangeBonus;
+        /** How many times more steps this navigation's searches may look at (vanilla's base: 16 per block of follow range). */
+        private float nodesMultiplier = 1.0F;
 
         public Ground(Mob mob, Level level) {
             super(mob, level);
@@ -224,6 +226,17 @@ public final class DoorPathing {
 
         public float getRangeBonus() {
             return rangeBonus;
+        }
+
+        @Override
+        public void setMaxVisitedNodesMultiplier(float multiplier) {
+            super.setMaxVisitedNodesMultiplier(multiplier);
+            this.nodesMultiplier = multiplier;
+        }
+
+        /** The multiplier last given to {@link #setMaxVisitedNodesMultiplier} (vanilla keeps it private); 1 by default. */
+        public float getNodesMultiplier() {
+            return nodesMultiplier;
         }
 
         @Nullable
@@ -267,17 +280,7 @@ public final class DoorPathing {
 
         @Override
         protected PathFinder createPathFinder(int maxVisitedNodes) {
-            this.nodeEvaluator = new WalkNodeEvaluator() {
-                @Override
-                public PathType getPathType(PathfindingContext context, int x, int y, int z) {
-                    return soldierRules(mob, context, x, y, z, super.getPathType(context, x, y, z));
-                }
-
-                @Override
-                public Node getStart() {
-                    return startOutsideABlockedCell(mob, super.getStart(), this::canStartAt, this::getStartNode);
-                }
-            };
+            this.nodeEvaluator = new WalkNodes(mob);
             this.nodeEvaluator.setCanPassDoors(true);
             return new PathFinder(this.nodeEvaluator, maxVisitedNodes);
         }
@@ -293,19 +296,77 @@ public final class DoorPathing {
 
         @Override
         protected PathFinder createPathFinder(int maxVisitedNodes) {
-            this.nodeEvaluator = new AmphibiousNodeEvaluator(false) {
-                @Override
-                public PathType getPathType(PathfindingContext context, int x, int y, int z) {
-                    return soldierRules(mob, context, x, y, z, super.getPathType(context, x, y, z));
-                }
-
-                @Override
-                public Node getStart() {
-                    return startOutsideABlockedCell(mob, super.getStart(), this::canStartAt, this::getStartNode);
-                }
-            };
+            this.nodeEvaluator = new SwimNodes(mob);
             this.nodeEvaluator.setCanPassDoors(true);
             return new PathFinder(this.nodeEvaluator, maxVisitedNodes);
+        }
+    }
+
+    /**
+     * A node evaluator whose next search can start somewhere other than where the soldier stands: {@link ChainedPath}
+     * continues a search from the cell where the previous one ran out of steps (D76).
+     */
+    public interface StartAt {
+        /** The cell the next search starts from, or null for where the soldier stands (always reset after use). */
+        void startAt(@Nullable BlockPos cell);
+    }
+
+    /** The walking navigation's node evaluator: vanilla's with {@link #soldierRules}. */
+    static final class WalkNodes extends WalkNodeEvaluator implements StartAt {
+        private final Mob owner;
+        @Nullable
+        private BlockPos startAt;
+
+        WalkNodes(Mob owner) {
+            this.owner = owner;
+        }
+
+        @Override
+        public void startAt(@Nullable BlockPos cell) {
+            this.startAt = cell;
+        }
+
+        @Override
+        public PathType getPathType(PathfindingContext context, int x, int y, int z) {
+            return soldierRules(owner, context, x, y, z, super.getPathType(context, x, y, z));
+        }
+
+        @Override
+        public Node getStart() {
+            if (startAt != null) {
+                return getStartNode(startAt);
+            }
+            return startOutsideABlockedCell(owner, super.getStart(), this::canStartAt, this::getStartNode);
+        }
+    }
+
+    /** The swimming navigation's node evaluator: vanilla's amphibious one with {@link #soldierRules}. */
+    static final class SwimNodes extends AmphibiousNodeEvaluator implements StartAt {
+        private final Mob owner;
+        @Nullable
+        private BlockPos startAt;
+
+        SwimNodes(Mob owner) {
+            super(false);
+            this.owner = owner;
+        }
+
+        @Override
+        public void startAt(@Nullable BlockPos cell) {
+            this.startAt = cell;
+        }
+
+        @Override
+        public PathType getPathType(PathfindingContext context, int x, int y, int z) {
+            return soldierRules(owner, context, x, y, z, super.getPathType(context, x, y, z));
+        }
+
+        @Override
+        public Node getStart() {
+            if (startAt != null) {
+                return getStartNode(startAt);
+            }
+            return startOutsideABlockedCell(owner, super.getStart(), this::canStartAt, this::getStartNode);
         }
     }
 }
