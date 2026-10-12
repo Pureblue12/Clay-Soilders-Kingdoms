@@ -2,11 +2,16 @@ package net.bumblebee.claysoldiers.scaffold;
 
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
+import net.bumblebee.claysoldiers.entity.door.ChainedPath;
+import net.bumblebee.claysoldiers.entity.door.DoorPathing;
 import net.bumblebee.claysoldiers.entity.goal.workgoal.BuilderReach;
 import net.bumblebee.claysoldiers.tuning.Tuning;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
@@ -16,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * A builder's climbing behavior for scaffolding columns (approach e). Vanilla mobs never plan climbing, so builders
@@ -25,8 +31,8 @@ import java.util.Optional;
  * One per builder goal; {@link #reset} restores gravity.
  */
 public final class ScaffoldClimber {
-    /** How long walking to a column's base may take before giving up, in ticks. */
-    private static final int MAX_WALK_TICKS = 200;
+    /** The least time walking to a column's base may take before giving up, in ticks; longer paths get more (D76). */
+    private static final int MIN_WALK_TICKS = 200;
     /** How many levels up a column a builder standing there (not climbing) counts as stranded. */
     private static final int STRANDED_LEVEL = 2;
 
@@ -38,6 +44,7 @@ public final class ScaffoldClimber {
     private BlockPos base;
     private int standY;
     private int walkTicks;
+    private int walkLimit;
     /** Per game tick: whether a column base could be walked to (path searches are expensive). */
     private final Map<BlockPos, Boolean> baseReachable = new HashMap<>();
     private long cacheTick = -1;
@@ -147,10 +154,15 @@ public final class ScaffoldClimber {
         state = State.WALKING;
         walkTicks = 0;
         Path path = pathToBase(base);
+        // Tiny soldiers walk slowly: the keep's upper-floor columns are 50 steps from the chest (D76).
+        walkLimit = Math.max(MIN_WALK_TICKS, path == null ? 0 : path.getNodeCount() * Tuning.SCAFFOLD_WALK_TICKS_PER_STEP.get());
         if (path != null) {
             soldier.getNavigation().moveTo(path, 1);
         }
-        DebugLog.event(DebugCategory.SCAFFOLD, soldier, "climbing the column at %s to y=%s for %s", base, standY, target);
+        BlockPos column = base;
+        int y = standY;
+        int limit = walkLimit;
+        DebugLog.event(DebugCategory.SCAFFOLD, soldier, () -> "climbing the column at %s to y=%s for %s (walk up to %s ticks)".formatted(column, y, target, limit));
         return true;
     }
 
@@ -172,8 +184,8 @@ public final class ScaffoldClimber {
                     soldier.getNavigation().stop();
                     soldier.setNoGravity(true);
                     state = State.CLIMBING;
-                } else if (++walkTicks > MAX_WALK_TICKS) {
-                    DebugLog.event(DebugCategory.SCAFFOLD, soldier, "stuck: couldn't walk to the column at %s", base);
+                } else if (++walkTicks > walkLimit) {
+                    DebugLog.event(DebugCategory.SCAFFOLD, soldier, "stuck: couldn't walk to the column at %s in %s ticks", base, walkLimit);
                     reset();
                 } else if (soldier.getNavigation().isDone() || walkTicks % Tuning.SCAFFOLD_REPATH_TICKS.get() == 0) {
                     if (soldier.position().distanceToSqr(x, base.getY(), z) < 2.5 * 2.5) {
@@ -247,8 +259,26 @@ public final class ScaffoldClimber {
 
     @Nullable
     private Path pathToBase(BlockPos columnBase) {
+        return pathToBase(soldier, columnBase);
+    }
+
+    /**
+     * A path for {@code soldier} to a column's base, or null: the navigation's own limits, and a search that runs out of
+     * steps goes on from where it ended ({@link ChainedPath}, D76).
+     */
+    @Nullable
+    public static Path pathToBase(PathfinderMob soldier, BlockPos columnBase) {
+        PathNavigation navigation = soldier.getNavigation();
+        float bonus = 0;
+        float multiplier = 1;
+        if (navigation instanceof DoorPathing.Ground ground) {
+            bonus = ground.getRangeBonus();
+            multiplier = ground.getNodesMultiplier();
+        }
+        float range = (float) soldier.getAttributeValue(Attributes.FOLLOW_RANGE) + bonus;
+        int nodes = Mth.floor(soldier.getAttributeBaseValue(Attributes.FOLLOW_RANGE) * 16.0 * multiplier);
         for (int accuracy = 0; accuracy <= 1; accuracy++) {
-            Path path = soldier.getNavigation().createPath(columnBase, accuracy);
+            Path path = ChainedPath.find(soldier, Set.of(columnBase), range, nodes, accuracy);
             if (path != null && path.canReach()) {
                 return path;
             }

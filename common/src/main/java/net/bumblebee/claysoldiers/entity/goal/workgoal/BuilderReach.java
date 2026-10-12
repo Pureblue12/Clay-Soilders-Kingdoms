@@ -2,6 +2,8 @@ package net.bumblebee.claysoldiers.entity.goal.workgoal;
 
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
+import net.bumblebee.claysoldiers.entity.door.ChainedPath;
+import net.bumblebee.claysoldiers.entity.door.DoorPathing;
 import net.bumblebee.claysoldiers.tuning.Tuning;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -9,13 +11,11 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.PathNavigationRegion;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.NodeEvaluator;
 import net.minecraft.world.level.pathfinder.Path;
-import net.minecraft.world.level.pathfinder.PathFinder;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -153,19 +153,19 @@ public final class BuilderReach {
      * A path to one of {@code targets} with a longer limit than the navigation's own (D61). Vanilla only accepts paths
      * whose walked length is under the follow range (16), measured from where the builder asks, usually beside its
      * storage, so the far side of bigger buildings was out of reach. This search may be {@code build.path_range_bonus}
-     * blocks longer and look at {@code build.path_nodes_multiplier} times more steps, with the navigation's own rules
-     * (its node evaluator: doors, water). Nothing else changes: the soldier's follow range and its navigation stay as
-     * they are, so walking to storage, combat and vanilla's own route updates keep the normal limits.
+     * blocks longer and look at {@code build.path_nodes_multiplier} times more steps (or as many as the navigation's own
+     * searches, when more), with the navigation's own rules (its node evaluator: doors, water). A search that runs out of
+     * steps goes on from where it ended ({@link ChainedPath}, D76). Nothing else changes: the soldier's follow range and its
+     * navigation stay as they are, so walking to storage, combat and vanilla's own route updates keep the normal limits.
      */
     @Nullable
     private static Path longPath(PathfinderMob builder, Set<BlockPos> targets) {
         double baseRange = builder.getAttributeBaseValue(Attributes.FOLLOW_RANGE);
         float range = (float) Math.max(builder.getAttributeValue(Attributes.FOLLOW_RANGE), baseRange + Tuning.BUILD_PATH_RANGE_BONUS.get());
-        int nodes = Mth.floor(baseRange * 16.0 * Tuning.BUILD_PATH_NODES_MULTIPLIER.get());
-        BlockPos from = builder.blockPosition();
-        int region = (int) range + 8;
-        PathNavigationRegion area = new PathNavigationRegion(builder.level(), from.offset(-region, -region, -region), from.offset(region, region, region));
-        return new PathFinder(builder.getNavigation().getNodeEvaluator(), nodes).findPath(area, builder, targets, range, 0, 1.0F);
+        float multiplier = Math.max(Tuning.BUILD_PATH_NODES_MULTIPLIER.get(),
+                builder.getNavigation() instanceof DoorPathing.Ground ground ? ground.getNodesMultiplier() : 1.0F);
+        int nodes = Mth.floor(baseRange * 16.0 * multiplier);
+        return ChainedPath.find(builder, targets, range, nodes, 0);
     }
 
     /**
