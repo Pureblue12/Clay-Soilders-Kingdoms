@@ -49,6 +49,7 @@
   "scaffold.sweep_ticks": 100,
   "scaffold.request_stale_ticks": 600,
   "scaffold.path_nodes_multiplier": 4,
+  "scaffold.base_path_nodes_multiplier": 16,
   "scaffold.walk_ticks_per_step": 20,
   "scaffold.column_reach_bonus": 2,
   "scaffold.path_range_bonus": 16,
