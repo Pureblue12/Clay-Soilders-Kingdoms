@@ -439,12 +439,61 @@ public class ServerBlueprintPlan extends BlueprintPlan {
             return inWave.request();
         }
         if (inWave.assigned() > 0) {
-            // Other builders are on this wave's last blocks: wait for them (no scaffolding: nothing is stuck).
+            // Other builders are on this wave's last blocks. Rather than wait for them (a crew stood idle at every wave's
+            // end: chapel L3 took twice as long as without the plan), take a block of the next wave well away from them.
+            List<BlueprintBlockInfo> next = lookahead(base, settings, wave);
+            if (!next.isEmpty()) {
+                next.sort(order);
+                Search ahead = search(next, level, base, settings, canReach, "plan wave " + (wave + 1) + " ahead: ");
+                if (ahead.request() != null) {
+                    return ahead.request();
+                }
+            }
+            // Nothing far enough from them: wait (no scaffolding: nothing is stuck).
             lastSearchFoundUnreachable = false;
             return null;
         }
         DebugLog.event(DebugCategory.BUILD, null, "plan: nothing of wave %s can be handed out (%s blocks left in it), searching every block", wave, current.size());
         return search(blockInfoList, level, base, settings, canReach, "outside the plan: ").request();
+    }
+
+    /**
+     * Blocks of wave {@code wave + 1} that may be handed out while builders finish wave {@code wave} (see {@link #getRequest}):
+     * those more than {@code build.plan_lookahead_clearance} blocks from every block of the wave still to place and from
+     * their planned standing spots. The plan only checked the next wave with this one finished, so a block placed early
+     * stays clear of where this wave's last blocks are placed from; one that blocks a way anyway is caught by the
+     * give-ups (the blocked block leaves the plan). Shuffled; empty with the clearance at 0.
+     */
+    private List<BlueprintBlockInfo> lookahead(BlockPos base, BlueprintTemplateSettings settings, int wave) {
+        int clearance = Tuning.BUILD_PLAN_LOOKAHEAD_CLEARANCE.get();
+        if (clearance <= 0) {
+            return List.of();
+        }
+        List<BlockPos> keepClear = new ArrayList<>();
+        List<BlueprintBlockInfo> next = new ArrayList<>();
+        for (BlueprintBlockInfo info : blockInfoList) {
+            int infoWave = buildPlan.wave(info.getPos());
+            if (infoWave == wave) {
+                keepClear.add(targetPosition(base, settings, info));
+                keepClear.addAll(plannedSpots(base, settings, info));
+            } else if (infoWave == wave + 1 && info.timesGivenUp() < PLAN_GIVE_UPS) {
+                next.add(info);
+            }
+        }
+        next.removeIf(info -> within(targetPosition(base, settings, info), keepClear, clearance));
+        Collections.shuffle(next);
+        return next;
+    }
+
+    /** Whether {@code pos} is within {@code distance} blocks (on every axis) of any of {@code others}. */
+    private static boolean within(BlockPos pos, List<BlockPos> others, int distance) {
+        for (BlockPos other : others) {
+            if (Math.abs(pos.getX() - other.getX()) <= distance && Math.abs(pos.getY() - other.getY()) <= distance
+                    && Math.abs(pos.getZ() - other.getZ()) <= distance) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Distance steps (blocks) inside which a wave's blocks count as equally near the builder (see {@link #getRequest}). */
@@ -571,18 +620,25 @@ public class ServerBlueprintPlan extends BlueprintPlan {
      * layer (same height) whose spot is reachable from where it stands, or null. Never a door, never a block whose spot
      * below is still an unplaced block of this plan (so nothing is put on air the layer order would have filled first),
      * and at most {@link #FOLLOW_UP_REACH_TESTS} path searches. A build that follows a plan (D80) takes only blocks of the
-     * current wave, so a builder with a stack never closes a way in that a later wave's block would.
+     * current wave, or of the next one well clear of it (see {@code lookahead}), so a builder with a stack never closes a
+     * way in that a later wave's block would.
      */
     public @Nullable BlueprintRequest getFollowUpRequest(ServerLevel level, BlockPos base, BlueprintTemplateSettings settings,
                                                          Predicate<BlockPos> canReach, Item item, BlockPos placed) {
         long now = level.getGameTime();
         int wave = currentWave();
+        // The next wave's blocks clear of this wave's (see lookahead): a builder that took one keeps going with its stack.
+        java.util.Set<BlueprintBlockInfo> ahead = wave == BuildPlan.UNPLANNED ? java.util.Set.of()
+                : java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<>());
+        if (wave != BuildPlan.UNPLANNED) {
+            ahead.addAll(lookahead(base, settings, wave));
+        }
         java.util.Set<BlockPos> unplaced = new java.util.HashSet<>();
         List<Map.Entry<BlueprintBlockInfo, BlockPos>> candidates = new java.util.ArrayList<>();
         for (BlueprintBlockInfo blockInfo : blockInfoList) {
             BlockPos pos = targetPosition(base, settings, blockInfo);
             unplaced.add(pos);
-            if (wave != BuildPlan.UNPLANNED && buildPlan.wave(blockInfo.getPos()) != wave) {
+            if (wave != BuildPlan.UNPLANNED && buildPlan.wave(blockInfo.getPos()) != wave && !ahead.contains(blockInfo)) {
                 continue;
             }
             if (blockInfo.isDoor() || pos.getY() != placed.getY() || !blockInfo.isFor(item) || blockInfo.isCoolingDown(now)
