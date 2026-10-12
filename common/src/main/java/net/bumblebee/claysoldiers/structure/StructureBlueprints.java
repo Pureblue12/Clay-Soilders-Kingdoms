@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Turns a kingdom structure's file (one detail level) into an easel blueprint, so builders build exactly that file
  * through the normal blueprint pipeline (same block order and blacklist as the blueprints of the {@code blueprint}
- * registry, or the order of the structure's pre-baked build plan when it has one, D78). The blueprint lives in memory only: like the scaffold test structures, an easel holding it keeps its
+ * registry, or the order of the structure's pre-baked build plan when it has one, D80). The blueprint lives in memory only: like the scaffold test structures, an easel holding it keeps its
  * plan across a reload but not its name.
  */
 public final class StructureBlueprints {
@@ -32,7 +32,7 @@ public final class StructureBlueprints {
         List<Holder<Block>> blacklist = blocks.get(ModTags.Blocks.BLUEPRINT_BLACK_LISTED)
                 .map(set -> set.stream().toList()).orElse(List.of());
         var blueprintTemplate = ImmutableTemplate.create(blocks, tag, blacklist);
-        // The structure's pre-baked build plan (D78), when tools/build_plan.py made one: its order and standing spots.
+        // The structure's pre-baked build plan (D80), when tools/build_plan.py made one: its order and standing spots.
         ResourceLocation file = meta.levelFile(detailLevel);
         if (file != null) {
             var plan = BuildPlans.load(level.getServer().getResourceManager(), file);

@@ -60,13 +60,21 @@ public final class BuilderReach {
      * Returns whether a builder standing with its feet at {@code feet} can place a block at {@code target}.
      */
     public static boolean canPlaceFrom(Vec3 feet, BlockPos target) {
+        return canPlaceFrom(feet, target, 0);
+    }
+
+    /**
+     * Like {@link #canPlaceFrom(Vec3, BlockPos)}, reaching {@code extraHeight} more above the feet: a builder inside a
+     * scaffolding column whose block no column reaches the usual way stretches up (D78).
+     */
+    public static boolean canPlaceFrom(Vec3 feet, BlockPos target, int extraHeight) {
         double dx = target.getX() + 0.5 - feet.x;
         double dz = target.getZ() + 0.5 - feet.z;
         int dy = target.getY() - Mth.floor(feet.y);
         if (dy == 0 && Mth.floor(feet.x) == target.getX() && Mth.floor(feet.z) == target.getZ()) {
             return false; // the block the builder stands in: it would build itself in
         }
-        return dx * dx + dz * dz < HORIZONTAL_REACH * HORIZONTAL_REACH && dy >= -MAX_PLACE_DEPTH && dy <= MAX_PLACE_HEIGHT;
+        return dx * dx + dz * dz < HORIZONTAL_REACH * HORIZONTAL_REACH && dy >= -MAX_PLACE_DEPTH && dy <= MAX_PLACE_HEIGHT + extraHeight;
     }
 
     /**
@@ -83,7 +91,7 @@ public final class BuilderReach {
 
     /**
      * Like {@link #pathToPlace(PathfinderMob, BlockPos)}, but tries the build plan's standing spots for the block first
-     * (D78): one of them chosen per builder (builders spread round the block), then the nearest of them; only when none can be
+     * (D80): one of them chosen per builder (builders spread round the block), then the nearest of them; only when none can be
      * walked to (the ground differs from the plan's, another soldier stands there) the normal search runs.
      */
     @Nullable
@@ -118,7 +126,7 @@ public final class BuilderReach {
         return check(builder, target, explainDoors, List.of());
     }
 
-    /** Like {@link #check(PathfinderMob, BlockPos, boolean)}, with the build plan's standing spots tried first (D78). */
+    /** Like {@link #check(PathfinderMob, BlockPos, boolean)}, with the build plan's standing spots tried first (D80). */
     public static Reach check(PathfinderMob builder, BlockPos target, boolean explainDoors, List<BlockPos> plannedSpots) {
         Reach reach = plannedSpots.isEmpty() ? find(builder, target) : findPlanned(builder, target, plannedSpots);
         if (reach.reachable()) {
@@ -280,7 +288,7 @@ public final class BuilderReach {
         return pathToPlace(builder, target) != null;
     }
 
-    /** Like {@link #canReachToPlace(PathfinderMob, BlockPos)}, with the build plan's standing spots tried first (D78). */
+    /** Like {@link #canReachToPlace(PathfinderMob, BlockPos)}, with the build plan's standing spots tried first (D80). */
     public static boolean canReachToPlace(PathfinderMob builder, BlockPos target, List<BlockPos> plannedSpots) {
         return pathToPlace(builder, target, plannedSpots) != null;
     }

@@ -106,6 +106,7 @@ public final class ScaffoldPlanner {
     private static ScaffoldGrid emptySite(ScaffoldInput input) {
         ScaffoldGrid grid = new ScaffoldGrid(input.region());
         grid.setAll(input.solid(), true);
+        grid.setColumnReachBonus(input.columnReachBonus());
         return grid;
     }
 
@@ -264,7 +265,7 @@ public final class ScaffoldPlanner {
     private static Set<BlockPos> coverRounds(ScaffoldInput input, List<Spot> spots, Map<Spot, Integer> chosen, Set<BlockPos> uncovered,
                                              Set<BlockPos> stuckMatters, boolean columns) {
         for (int round = 0; round < ROUNDS && !uncovered.isEmpty(); round++) {
-            cover(spots, chosen, uncovered);
+            cover(spots, chosen, uncovered, input.columnReachBonus());
             Set<BlockPos> stuck = new LinkedHashSet<>(simulate(input, steps(chosen), columns).stuck());
             stuck.retainAll(stuckMatters);
             uncovered = stuck;
@@ -283,7 +284,7 @@ public final class ScaffoldPlanner {
         List<Spot> candidates = new ArrayList<>(spots);
         for (int round = 0; round < INNER_ROUNDS && !uncovered.isEmpty(); round++) {
             Set<BlockPos> before = Set.copyOf(uncovered);
-            cover(candidates, chosen, uncovered);
+            cover(candidates, chosen, uncovered, input.columnReachBonus());
             Simulation simulation = simulate(input, steps(chosen), true);
             Set<BlockPos> used = simulation.scaffoldEntered();
             List<Spot> unused = chosen.keySet().stream().filter(spot -> !outer.contains(spot) && !used.contains(spot.step(0))).toList();
@@ -394,7 +395,7 @@ public final class ScaffoldPlanner {
      * Greedy cover: repeatedly adds the pillar (or raises a chosen one) that reaches the most uncovered blocks per
      * step block, until everything is covered or nothing helps.
      */
-    private static void cover(List<Spot> spots, Map<Spot, Integer> chosen, Set<BlockPos> uncovered) {
+    private static void cover(List<Spot> spots, Map<Spot, Integer> chosen, Set<BlockPos> uncovered, int columnReachBonus) {
         while (!uncovered.isEmpty()) {
             Spot best = null;
             int bestHeight = -1;
@@ -407,7 +408,7 @@ public final class ScaffoldPlanner {
                 }
                 Map<BlockPos, Integer> need = new HashMap<>();
                 for (BlockPos block : uncovered) {
-                    int h = firstStepReaching(spot, block);
+                    int h = firstStepReaching(spot, block, columnReachBonus);
                     if (h >= 0) {
                         need.put(block, h);
                     }
@@ -436,11 +437,15 @@ public final class ScaffoldPlanner {
         }
     }
 
-    /** The lowest step of {@code spot} a builder standing on it could place {@code block} from, or -1. */
-    private static int firstStepReaching(Spot spot, BlockPos block) {
+    /**
+     * The lowest step of {@code spot} a builder standing on it could place {@code block} from, or -1. Inside a column it
+     * reaches {@code columnReachBonus} more up (D78).
+     */
+    private static int firstStepReaching(Spot spot, BlockPos block, int columnReachBonus) {
+        int bonus = spot.column() ? columnReachBonus : 0;
         for (int h = 0; h < spot.maxSteps(); h++) {
             BlockPos feet = spot.feet(h);
-            if (!feet.equals(block) && BuilderReach.canPlaceFrom(new Vec3(feet.getX() + 0.5, feet.getY(), feet.getZ() + 0.5), block)) {
+            if (!feet.equals(block) && BuilderReach.canPlaceFrom(new Vec3(feet.getX() + 0.5, feet.getY(), feet.getZ() + 0.5), block, bonus)) {
                 return h;
             }
         }

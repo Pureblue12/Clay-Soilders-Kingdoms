@@ -1,8 +1,11 @@
 package net.bumblebee.claysoldiers.gametest;
 
+import com.google.gson.JsonParser;
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.blueprint.BlueprintData;
+import net.bumblebee.claysoldiers.blueprint.BlueprintRequest;
 import net.bumblebee.claysoldiers.blueprint.BlueprintTemplateSettings;
+import net.bumblebee.claysoldiers.block.blueprint.EaselBlockEntity;
 import net.bumblebee.claysoldiers.blueprint.plan.BuildPlan;
 import net.bumblebee.claysoldiers.blueprint.templates.ImmutableTemplate;
 import net.bumblebee.claysoldiers.blueprint.templates.ServerBlueprintPlan;
@@ -18,17 +21,22 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Pre-baked build plans (D78): every promoted structure level has a plan made from its current file, a blueprint made
+ * Pre-baked build plans (D80): every promoted structure level has a plan made from its current file, a blueprint made
  * from a structure follows its plan's order, the plan survives saving, and builders build from it.
  */
 @GameTestHolder(ClaySoldiersCommon.MOD_ID)
@@ -112,6 +120,29 @@ public class BuildPlanGameTests {
         helper.assertTrue(order(loaded).equals(order(plan)), "the order changed on saving");
         BlockPos first = order(plan).get(0);
         helper.assertTrue(loaded.buildPlan().spots(first).equals(plan.buildPlan().spots(first)), "standing spots changed on saving");
+        helper.succeed();
+    }
+
+    /**
+     * A builder carrying a stack (D79) takes its next nearby block only from the plan's current wave: here the cobblestone
+     * next to the one it placed is in a later wave, so it gets the one further away in the current wave.
+     */
+    @GameTest(template = ClaySoldierGameTests.PLATFORM)
+    public static void followUpStaysInTheCurrentWave(GameTestHelper helper) {
+        Map<BlockPos, BlockState> blocks = new LinkedHashMap<>();
+        blocks.put(new BlockPos(0, 0, 0), Blocks.COBBLESTONE.defaultBlockState());
+        blocks.put(new BlockPos(0, 0, 2), Blocks.COBBLESTONE.defaultBlockState());
+        BlueprintData plain = BuildRequestGameTests.blueprint(helper, "follow_up_wave", 1, 1, 5, blocks);
+        BuildPlan plan = BuildPlan.fromJson(JsonParser.parseString("{\"format\": 1, \"blocks\": [[0, 0, 0, 0], [0, 0, 2, 1]]}").getAsJsonObject());
+        BlueprintData blueprint = new BlueprintData(ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, "gametest/follow_up_wave"), "gametest.follow_up_wave", 0);
+        blueprint.bindStructure(((ImmutableTemplate) plain.getTemplate()).withPlan(plan));
+        EaselBlockEntity easel = DevScenarios.placeEasel(helper.getLevel(), helper.absolutePos(ClaySoldierGameTests.EASEL), Direction.NORTH, blueprint);
+        BlockPos placed = helper.absolutePos(ClaySoldierGameTests.EASEL.offset(0, 0, 5)); // local (0, 0, 3): next to the wave-1 block
+        BlockPos waveZero = helper.absolutePos(ClaySoldierGameTests.EASEL.offset(0, 0, 2));
+
+        BlueprintRequest next = easel.getBlueprintRequestHandler().getFollowUpRequest(pos -> true, Items.COBBLESTONE, placed);
+        helper.assertTrue(next != null && next.getPos().equals(waveZero), "The follow-up should be the wave-0 cobblestone at "
+                + waveZero.toShortString() + ", got " + next);
         helper.succeed();
     }
 

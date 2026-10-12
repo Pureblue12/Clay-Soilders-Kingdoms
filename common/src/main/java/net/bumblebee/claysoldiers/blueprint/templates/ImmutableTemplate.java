@@ -36,7 +36,7 @@ import java.util.*;
 public class ImmutableTemplate extends BaseImmutableTemplate {
     private static final Logger LOGGER = LogUtils.getLogger();
     private final List<StructureTemplate.StructureBlockInfo> blockInfoList;
-    /** The structure's pre-baked build plan (D78), or {@code null}: the blocks are then handed out in their normal order. */
+    /** The structure's pre-baked build plan (D80), or {@code null}: the blocks are then handed out in their normal order. */
     @Nullable
     private final BuildPlan buildPlan;
 
@@ -51,7 +51,7 @@ public class ImmutableTemplate extends BaseImmutableTemplate {
     }
 
     /**
-     * This template with a pre-baked build plan (D78): its blocks in the plan's order (blocks the plan doesn't know after
+     * This template with a pre-baked build plan (D80): its blocks in the plan's order (blocks the plan doesn't know after
      * the planned ones, in their normal order), and the plan handed to every server plan made from it.
      */
     public ImmutableTemplate withPlan(BuildPlan plan) {

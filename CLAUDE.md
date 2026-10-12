@@ -91,8 +91,8 @@ graveyard L2, market stall L3 and gatehouse L1. A model, not the game: keep it i
 A build fails at once after 6000 ticks without progress, with a stall report, and ends as "too slow" (⏱️ in the table) after
 45 minutes of real time (`CSR_STRUCTURE_BUILD_MINUTES`, workflow input `minutes`; 0 = no limit): keep L2 and L3 need longer, so
 verify them with `only=keep` and `minutes=0`. The chest is kept stocked by
-`dev/MaterialSupply` (most structures need more than 27 stacks; it stocks the items the easel hands out next, and brings back an item lost
-with a builder, D70). The test area
+`dev/MaterialSupply` (most structures need more than 27 stacks; it stocks the items the easel hands out next, counting the slots partial stacks take,
+brings back an item lost with a builder, D70, and merges the part stacks builders put back, making room for the item needed now, D79). The test area
 (`gametest/structure_build.nbt`, 48x24x48) has a grass floor. The required test `buildListMatchesRegistry` keeps the
 list in `StructureBuildGameTests.STRUCTURES` in step with the registry: add a row when a structure is promoted.
 
@@ -172,6 +172,11 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
     (structure build run 38129993219): vanilla's pathfinder drops a mob up to 3 blocks into any cell, pits included.
     The soldiers' pathfinder blocks every cell without a way out sideways (`DoorPathing.withoutPits`, D67;
     `soldierDoesNotDropIntoAPit`).
+- Fixed (slow builders, D79): every block was a round trip (easel, chest, ONE item, spot, back), about one block per
+  114 ticks for keep L3's crew. A builder now takes up to `build.carry_count` (16) of the item and, after placing one, goes
+  straight to the nearest free block of that item in the same layer it can reach (`ServerBlueprintPlan.getFollowUpRequest`:
+  no doors, nothing over a spot still to fill); only when there is none does it walk back and put the rest in the chest
+  (`followUpIsNearestInTheSameLayer`, `builderPlacesARowWithOneTripToTheChest`).
 - Fixed (door race): doors-last only ordered the list, so a door could be handed out while other blocks were
   still being carried (a glass pane got locked out in the 08:03 recording). Now `ServerBlueprintPlan.getRequest`
   hands out a door only when no other (non-door) block with a free spot remains; doors don't wait for each
@@ -283,7 +288,7 @@ Code: `common/.../scaffold/`; comparison, recommendation and height rules: `docs
   count as what they will be). Keep L2's annex columns stood on the pews and were never there to climb.
 - **Recorder SCAFFOLD:** planned, placed, removed, climbing, stuck, cleanup, kept.
 
-### Build plans (pre-baked routes, D78)
+### Build plans (pre-baked routes, D80)
 
 Every structure level ships `data/csr/build_plan/kingdom/studio/<level>.json`, made by `python3 tools/build_plan.py [ids]`
 (standard library, about 2 minutes for all levels) from the structure file alone: the build order as waves and, per block,
@@ -294,6 +299,7 @@ and the "Structure builds" summary has its table. Never edit a plan by hand: cha
   plan is saved with the easel's build.
 - `ServerBlueprintPlan.getRequest` hands out a random block of the lowest unfinished wave, away from blocks other builders
   carry; when none can be handed out and no builder holds one, it searches every block as before (BUILD event "plan: ...").
+  A builder carrying a stack (D79) takes its next nearby block only from that same wave (`getFollowUpRequest`).
 - Builders try the plan's spots first (`BuilderReach.findPlanned`: one at random, then the nearest), then the normal search.
 - Blocks the plan leaves out (need scaffold) come after it. `build.follow_plan` 0 turns it all off.
 - Natural touches for builds that follow a plan: a random pause after placing (`build.pause_ticks`), each builder's own pace
@@ -318,7 +324,8 @@ Pending (not started):
   column the simulated build never gets into is dropped. The planner leaves doors out and counts wooden doors as open (D71),
   so a building's doorway is a way in. A block counts as in reach within 24 walked blocks of the chest, a column's base within
   56 (the builders' real limit, 16 + 48, minus `Scaffolds.PATH_MARGIN`; D75).
-  A spot needing feet more than 8 below it, with no floor builders walk to in between (the church belfry spire), stays unbuilt.
+  A block no column reaches within 8 (the church spire top, 9 and 10 above the highest column cell under it) is placed by a
+  builder stretching up from inside a column, up to `scaffold.column_reach_bonus` (2) more (D78); higher than that it stays unbuilt.
 - A blueprint block that is already there and replaceable (e.g. short grass where short grass grows) counts
   as free but can never be placed (placing the same block fails), so the blueprint never finishes; the
   cooldown only stops it from starving the rest. Not confirmed in game; not fixed.

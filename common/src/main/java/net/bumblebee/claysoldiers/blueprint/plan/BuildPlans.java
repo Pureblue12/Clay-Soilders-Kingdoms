@@ -11,7 +11,7 @@ import java.io.Reader;
 import java.util.Optional;
 
 /**
- * Finds the pre-baked build plan of a structure file (D78): {@code data/<namespace>/build_plan/<path>.json} for the
+ * Finds the pre-baked build plan of a structure file (D80): {@code data/<namespace>/build_plan/<path>.json} for the
  * structure {@code <namespace>:<path>}, written by {@code tools/build_plan.py}. A structure without one builds as before.
  */
 public final class BuildPlans {

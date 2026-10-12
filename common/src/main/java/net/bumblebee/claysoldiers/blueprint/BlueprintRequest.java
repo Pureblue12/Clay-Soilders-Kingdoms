@@ -12,7 +12,7 @@ public class BlueprintRequest {
     private Status status = Status.STARTED;
     /** Set by the plan when a soldier was in the way of placing (D64); the builder reads and clears it, then tries again. */
     private boolean soldierInTheWay;
-    /** Where the build plan says a builder can stand to place this block (D78); empty without a plan. */
+    /** Where the build plan says a builder can stand to place this block (D80); empty without a plan. */
     private List<BlockPos> standingSpots = List.of();
 
     public BlueprintRequest(Item item, BlockPos pos, long start) {
@@ -71,7 +71,7 @@ public class BlueprintRequest {
         standingSpots = List.copyOf(spots);
     }
 
-    /** Where the build plan says a builder can stand to place this block (D78); empty without a plan. */
+    /** Where the build plan says a builder can stand to place this block (D80); empty without a plan. */
     public List<BlockPos> standingSpots() {
         return standingSpots;
     }

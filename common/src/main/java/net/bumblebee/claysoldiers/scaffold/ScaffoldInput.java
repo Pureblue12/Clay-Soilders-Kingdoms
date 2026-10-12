@@ -23,19 +23,23 @@ import java.util.Set;
  *                  the column they climb, D75), or 0 for no limit
  * @param noFooting solid cells (now or once built) whose top can't hold a scaffolding column: stairs, slabs and carpet
  *                  floors; scaffolding put on them falls (D77)
+ * @param columnReachBonus how many blocks more than {@link net.bumblebee.claysoldiers.entity.goal.workgoal.BuilderReach#MAX_PLACE_HEIGHT}
+ *                  a builder inside a column reaches up; 0 except for the planner's second try when the usual reach leaves
+ *                  blocks stuck (D78)
  */
 public record ScaffoldInput(BoundingBox region, Set<BlockPos> solid, Set<BlockPos> blocked, List<BlockPos> structure,
-                            @Nullable BlockPos home, int maxPath, int columnPath, Set<BlockPos> noFooting) {
+                            @Nullable BlockPos home, int maxPath, int columnPath, Set<BlockPos> noFooting,
+                            int columnReachBonus) {
     /** Blocks of margin around the structure: room for step pillars and the ramp. */
     public static final int MARGIN = 4;
 
     public ScaffoldInput(BoundingBox region, Set<BlockPos> solid, Set<BlockPos> blocked, List<BlockPos> structure) {
-        this(region, solid, blocked, structure, null, 0, 0, Set.of());
+        this(region, solid, blocked, structure, null, 0, 0, Set.of(), 0);
     }
 
     public ScaffoldInput(BoundingBox region, Set<BlockPos> solid, Set<BlockPos> blocked, List<BlockPos> structure,
                          @Nullable BlockPos home, int maxPath) {
-        this(region, solid, blocked, structure, home, maxPath, maxPath, Set.of());
+        this(region, solid, blocked, structure, home, maxPath, maxPath, Set.of(), 0);
     }
 
     public ScaffoldInput {
@@ -47,7 +51,12 @@ public record ScaffoldInput(BoundingBox region, Set<BlockPos> solid, Set<BlockPo
 
     /** The same input where scaffolding can't stand on {@code cells} (tests). */
     public ScaffoldInput withNoFooting(Set<BlockPos> cells) {
-        return new ScaffoldInput(region, solid, blocked, structure, home, maxPath, columnPath, cells);
+        return new ScaffoldInput(region, solid, blocked, structure, home, maxPath, columnPath, cells, columnReachBonus);
+    }
+
+    /** The same input where a builder inside a column reaches {@code bonus} more blocks up (D78). */
+    public ScaffoldInput withColumnReachBonus(int bonus) {
+        return new ScaffoldInput(region, solid, blocked, structure, home, maxPath, columnPath, noFooting, bonus);
     }
 
     /**

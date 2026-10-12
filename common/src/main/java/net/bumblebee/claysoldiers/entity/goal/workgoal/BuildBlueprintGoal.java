@@ -126,6 +126,22 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     @Nullable
     private BlockPos pathEnd;
     private int lastStepTicks;
+    /**
+     * Where this builder just placed a block while it still carries more of that item ({@code build.carry_count}, D79):
+     * it asks the easel for the nearest free block of the item in that layer before walking back to the easel and its chest.
+     */
+    @Nullable
+    private BlockPos followUpFrom;
+    /** Ticks waited for this builder to land before the follow-up search (vanilla finds no path while a mob is in the air). */
+    private int followUpWait;
+    /**
+     * Whether this builder just climbed down a column for its follow-up search: it then only takes a block reachable from
+     * the ground. Walking from one column's base to another's hugs the building and passes other columns, which tiny
+     * soldiers climb into by accident (the 20-high tower test: a builder ended 12 up beside a column and gave up).
+     */
+    private boolean cameDown;
+    /** Ticks a follow-up search waits at most for this builder to land. */
+    private static final int MAX_FOLLOW_UP_WAIT_TICKS = 10;
 
     public BuildBlueprintGoal(AbstractClaySoldierEntity soldier, Supplier<WorkSelectorGoal> workSelector, int searchRange) {
         super(soldier, workSelector);
@@ -169,7 +185,10 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         }
 
         if (request == null) {
-            if (bringBack) {
+            if (followUpFrom != null) {
+                setStatus(SEARCHING_ID);
+                findFollowUp();
+            } else if (bringBack) {
                 setStatus(RETURNING_ID);
                 if (returnCarried()) {
                     bringBack = false;
@@ -246,7 +265,9 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                 var returned = storage.tryInserting(soldier.getCarriedStack());
                 soldier.dropItemStack(returned);
             }
-            soldier.setCarriedStack(storage.tryExtracting(stack -> stack.is(request.getItem()), 1));
+            // A stack of a block's item at once (D79): after placing one, the next block of the item nearby comes without a trip back.
+            int amount = request instanceof ScaffoldRequest ? 1 : Tuning.BUILD_CARRY_COUNT.get();
+            soldier.setCarriedStack(storage.tryExtracting(stack -> stack.is(request.getItem()), amount));
             if (soldier.getCarriedStack().isEmpty()) {
                 // The storage does not have the item: don't place anything, ask again after a break.
                 DebugLog.event(DebugCategory.BUILD, soldier, "storage has no %s for %s, request cancelled", request.getItem(), request.getPos());
@@ -387,20 +408,29 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
 
 
     private void placeBlock() {
-        climber.descend();
+        boolean holding = climber.isHolding();
+        // Up a scaffolding column with more blocks in hand, the builder stays up while the next block is placeable from there (D79).
+        boolean stayUp = false;
         var requestHandler = easelPos.getCapability();
         if (requestHandler != null) {
             if (requestHandler.doRequest(request)) {
                 // The easel only fills the request's own spot, so this is the actual position.
                 DebugLog.event(DebugCategory.BUILD, soldier, "placed %s at %s", request.getItem(), request.getPos());
-                soldier.setCarriedStack(ItemStack.EMPTY);
+                ItemStack left = soldier.getCarriedStack().copy();
+                left.shrink(1);
+                soldier.setCarriedStack(left.isEmpty() || !left.is(request.getItem()) ? ItemStack.EMPTY : left);
+                if (!soldier.getCarriedStack().isEmpty() && !(request instanceof ScaffoldRequest)) {
+                    followUpFrom = request.getPos();
+                    followUpWait = 0;
+                    stayUp = holding;
+                }
                 if (request instanceof ScaffoldRequest scaffold && scaffold.isRemoval() && scaffold.refund() && scaffold.removedCount() > 0) {
                     // The scaffold taken down goes back to storage (a whole column for climbed columns).
                     soldier.setCarriedStack(new ItemStack(scaffold.getItem(), scaffold.removedCount()));
                     bringBack = true;
                 }
                 request.setFinished();
-                // A short, random breather before asking for the next block, so builders don't move in lockstep (D78;
+                // A short, random breather before asking for the next block, so builders don't move in lockstep (D80;
                 // builds that follow a plan only: the others keep their timing).
                 int pause = Tuning.BUILD_PAUSE_TICKS.get();
                 retryCooldown = pause > 0 && !request.standingSpots().isEmpty() ? soldier.getRandom().nextInt(pause + 1) : 0;
@@ -416,6 +446,59 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             request = null;
         } else {
             easelPos = null;
+        }
+        if (!stayUp) {
+            climber.descend();
+        }
+    }
+
+    /**
+     * Asks the easel for this builder's next block of the item it still carries, near the one it just placed (D79). Found:
+     * it carries it there at once. None: it brings the rest back to storage and asks the easel as usual.
+     */
+    private void findFollowUp() {
+        if (climber.isHolding()) {
+            // Up a column: only a block placeable from right here; otherwise climb down and look again from the ground.
+            var handler = easelPos == null ? null : easelPos.getCapability();
+            ItemStack carried = soldier.getCarriedStack();
+            request = handler == null || carried.isEmpty() ? null
+                    : handler.getFollowUpRequest(pos -> BuilderReach.canPlaceFrom(soldier, pos) || climber.holdsInReachOf(pos), carried.getItem(), followUpFrom);
+            if (request == null) {
+                climber.descend();
+                cameDown = true;
+                return; // followUpFrom stays: the search runs again once down
+            }
+            followUpFrom = null;
+            request.setPlacing();
+            carryTicks = 0;
+            placeWait = 0;
+            DebugLog.event(DebugCategory.BUILD, soldier, "next %s at %s from the column (carrying %s)", request.getItem(), request.getPos(), carried.getCount());
+            return;
+        }
+        if (!soldier.onGround() && followUpWait++ < MAX_FOLLOW_UP_WAIT_TICKS) {
+            return; // mid-hop: a path search now would find nothing
+        }
+        BlockPos placed = followUpFrom;
+        followUpFrom = null;
+        followUpWait = 0;
+        boolean groundOnly = cameDown;
+        cameDown = false;
+        ItemStack carried = soldier.getCarriedStack();
+        var requestHandler = easelPos == null ? null : easelPos.getCapability();
+        if (requestHandler != null && !carried.isEmpty()) {
+            request = requestHandler.getFollowUpRequest(groundOnly ? pos -> BuilderReach.canReachToPlace(soldier, pos) : reachTest,
+                    carried.getItem(), placed);
+        }
+        if (request != null) {
+            request.setPlacing();
+            carryTicks = 0;
+            placeWait = 0;
+            pathEnd = null;
+            repathTicks = 0;
+            DebugLog.event(DebugCategory.BUILD, soldier, "next %s at %s (carrying %s)", request.getItem(), request.getPos(), carried.getCount());
+        } else {
+            bringBack = !carried.isEmpty();
+            if (bringBack) DebugLog.event(DebugCategory.BUILD, soldier, "no more %s to place nearby, returning %s to storage", carried.getItem(), carried.getCount());
         }
     }
 
@@ -452,7 +535,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     }
 
     protected boolean moveToRequest() {
-        if (BuilderReach.canPlaceFrom(soldier, request.getPos())) {
+        if (BuilderReach.canPlaceFrom(soldier, request.getPos()) || climber.holdsInReachOf(request.getPos())) {
             this.soldier.getNavigation().stop();
             pathEnd = null;
             return true;
@@ -484,7 +567,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     }
 
     /**
-     * This builder's own pace on the way to a block (D78): the normal speed give or take
+     * This builder's own pace on the way to a block (D80): the normal speed give or take
      * {@code build.walk_speed_spread_percent}, fixed per soldier (from its id), so a crew doesn't walk in step. Builds that
      * follow a plan only.
      */
@@ -533,6 +616,8 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         }
         stuckTicks = 0;
         placeWait = 0;
+        followUpFrom = null;
+        cameDown = false;
         climber.reset();
         if (pathSearchMultiplier != 1.0F) {
             pathSearchMultiplier = 1.0F;

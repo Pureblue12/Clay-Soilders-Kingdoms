@@ -12,11 +12,18 @@ import net.bumblebee.claysoldiers.dev.DevCategory;
 import net.bumblebee.claysoldiers.dev.DevTool;
 import net.bumblebee.claysoldiers.dev.DevToolRegistry;
 import net.bumblebee.claysoldiers.dev.DevTools;
+import net.bumblebee.claysoldiers.dev.DevScenarios;
+import net.bumblebee.claysoldiers.dev.MaterialSupply;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
@@ -206,5 +213,37 @@ public class DevToolkitGameTests {
         for (int link : links) {
             helper.assertTrue(link >= 1 && link <= pages.size(), "Contents link to missing page " + link);
         }
+    }
+
+    /**
+     * The test chest's supply stocks the item asked for now even when builders' partial stacks fill the slots:
+     * keep L2 and town hall L2 stalled with every usable slot taken by items needed later (one item in 2 slots) and
+     * the item asked for (stone_bricks, white_terracotta) waiting outside, never counted as lost.
+     */
+    @GameTest(template = ClaySoldierGameTests.PLATFORM)
+    public static void materialSupplyStocksTheNextItemWhenPartialStacksFillTheChest(GameTestHelper helper) {
+        List<Item> later = List.of(Items.OAK_PLANKS, Items.SPRUCE_PLANKS, Items.BIRCH_PLANKS, Items.JUNGLE_PLANKS,
+                Items.ACACIA_PLANKS, Items.DARK_OAK_PLANKS, Items.MANGROVE_PLANKS, Items.CHERRY_PLANKS, Items.BAMBOO_PLANKS,
+                Items.CRIMSON_PLANKS, Items.WARPED_PLANKS, Items.COBBLESTONE, Items.STONE, Items.GRANITE, Items.DIORITE,
+                Items.ANDESITE, Items.BRICKS, Items.SANDSTONE, Items.GLASS, Items.WHITE_WOOL, Items.TORCH, Items.LANTERN);
+        List<ItemStack> inChest = new ArrayList<>();
+        // The first item needed later sits in 2 partial stacks (builders put back what they carried): 23 stacks, plus one
+        // more of the first, fill the 24 usable slots (27 minus MaterialSupply.FREE_SLOTS).
+        inChest.add(new ItemStack(later.get(0), 10));
+        later.forEach(item -> inChest.add(new ItemStack(item, 10)));
+        inChest.add(new ItemStack(Items.SCAFFOLDING, 10));
+        BlockPos chestPos = helper.absolutePos(new BlockPos(2, 2, 2));
+        ChestBlockEntity chest = DevScenarios.placeChest(helper.getLevel(), chestPos, List.of());
+        for (int slot = 0; slot < inChest.size(); slot++) {
+            chest.setItem(slot, inChest.get(slot));
+        }
+        List<Item> demand = new ArrayList<>();
+        demand.add(Items.STONE_BRICKS);
+        demand.addAll(later);
+        MaterialSupply supply = new MaterialSupply(helper.getLevel(), chestPos, List.of(new ItemStack(Items.STONE_BRICKS, 20)),
+                () -> demand, () -> false);
+        supply.restock();
+        helper.assertTrue(chest.countItem(Items.STONE_BRICKS) > 0, "the item asked for now stays outside a chest full of items needed later");
+        helper.succeed();
     }
 }
