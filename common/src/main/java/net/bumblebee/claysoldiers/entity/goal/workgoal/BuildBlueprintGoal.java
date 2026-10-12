@@ -580,12 +580,14 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             }
             // Walk the same kind of path the reachable check accepted: it ends where the block can be placed.
             Path path = BuilderReach.pathToPlace(soldier, request.getPos());
+            // A scaffolding column that reaches the block comes before the reach map's spot: chapel L2's last slab had a
+            // map spot builders never got to, while a column beside it stood unused (D80).
+            if (path == null && easelPos != null && soldier.level() instanceof ServerLevel level && climber.start(level, easelPos.pos(), request.getPos())) {
+                return false; // out of reach from the ground: climb a scaffolding column
+            }
             if (path == null && ReachMap.enabled() && easelPos != null) {
                 path = ReachMap.pathToMapSpot(soldier, easelPos.pos(), request.getPos());
                 onMapRoute |= path != null;
-            }
-            if (path == null && easelPos != null && soldier.level() instanceof ServerLevel level && climber.start(level, easelPos.pos(), request.getPos())) {
-                return false; // out of reach from the ground: climb a scaffolding column
             }
             if (path == null && ReachMap.enabled() && easelPos != null) {
                 path = ReachMap.routeToPlace(soldier, easelPos.pos(), request.getPos());

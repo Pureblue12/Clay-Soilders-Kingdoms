@@ -118,10 +118,15 @@ public final class ReachMap {
      */
     public static boolean canReachToPlace(PathfinderMob builder, BlockPos easel, BlockPos target) {
         ReachMap map = of(builder, easel);
-        if (builder.level().getGameTime() < map.distrusted.getOrDefault(target.asLong(), Long.MIN_VALUE)) {
+        if (map.distrusts(builder.level(), target)) {
             return false;
         }
         return map.bestSpot(builder.level(), target) != null;
+    }
+
+    /** Whether builders gave up walking the map's way to {@code target} often enough lately that it counts as out of reach. */
+    private boolean distrusts(Level level, BlockPos target) {
+        return level.getGameTime() < distrusted.getOrDefault(target.asLong(), Long.MIN_VALUE);
     }
 
     /**
@@ -153,7 +158,7 @@ public final class ReachMap {
     @Nullable
     public static Path pathToMapSpot(PathfinderMob builder, BlockPos easel, BlockPos target) {
         ReachMap map = MAPS.get(new Key(builder.level().dimension(), easel.immutable()));
-        BlockPos spot = map == null ? null : map.bestSpot(builder.level(), target);
+        BlockPos spot = map == null || map.distrusts(builder.level(), target) ? null : map.bestSpot(builder.level(), target);
         if (spot == null) {
             return null;
         }
@@ -172,7 +177,7 @@ public final class ReachMap {
     @Nullable
     public static Path routeToPlace(PathfinderMob builder, BlockPos easel, BlockPos target) {
         ReachMap map = MAPS.get(new Key(builder.level().dimension(), easel.immutable()));
-        BlockPos spot = map == null ? null : map.bestSpot(builder.level(), target);
+        BlockPos spot = map == null || map.distrusts(builder.level(), target) ? null : map.bestSpot(builder.level(), target);
         Path route = spot == null ? null : map.route(spot);
         if (route != null) {
             DebugLog.event(DebugCategory.PATHING, builder, "no path search found a way to %s, walking the reach map's route to %s (%s steps)", target, spot, route.getNodeCount());
