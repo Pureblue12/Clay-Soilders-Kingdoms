@@ -260,9 +260,11 @@ public class Batch1StructureGameTests {
         EaselBlockEntity easel = DevScenarios.placeEasel(level, easelPos, Direction.NORTH, blueprint);
         List<ItemStack> items = blueprint.createServerPlan().orElseThrow().getNeededItems();
         Builders builders = setUpBuilders(helper, items);
-        BuildStallReport.watch(helper, entry.path() + " L" + detail, timeoutTicks, easel, builders.chest(), builders.soldiers());
-        long start = helper.getTick();
         long estimate = estimate(entry, detail);
+        double slack = entry.path().equals("well") || entry.path().equals("farm") ? 2 * TIME_TOLERANCE : TIME_TOLERANCE;
+        BuildStallReport.watch(helper, entry.path() + " L" + detail, timeoutTicks, estimate + Math.max(Math.round(estimate * slack), MIN_TIME_SLACK),
+                easel, builders.chest(), builders.soldiers());
+        long start = helper.getTick();
         long[] finished = {-1};
         helper.succeedWhen(() -> {
             helper.assertTrue(easel.isFinished(), "not finished: " + remaining(easel));
