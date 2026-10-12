@@ -301,10 +301,8 @@ public final class ScaffoldClimber {
 
     /**
      * A path for {@code soldier} to a column's base, or null: the navigation's own limits, and a search that runs out of
-     * steps goes on from where it ended ({@link ChainedPath}, D76). When that falls short, it searches once more with
-     * {@code scaffold.base_path_nodes_multiplier} times vanilla's steps: vanilla's search heads straight for the target,
-     * and keep L3's back tower column stands in the tower's top room, right above a hay pile outside the tower; the
-     * search ended on the hay, and the next one started there found nothing closer (D80).
+     * steps goes on from where it ended ({@link ChainedPath}, D76). Where a search that falls short ends is recorded
+     * (PATHING): keep L3's last banner waited on a column whose base every search missed by 2 cells (D80).
      */
     @Nullable
     public static Path pathToBase(PathfinderMob soldier, BlockPos columnBase) {
@@ -316,19 +314,7 @@ public final class ScaffoldClimber {
             multiplier = ground.getNodesMultiplier();
         }
         float range = (float) soldier.getAttributeValue(Attributes.FOLLOW_RANGE) + bonus;
-        double vanillaNodes = soldier.getAttributeBaseValue(Attributes.FOLLOW_RANGE) * 16.0;
-        Path path = pathToBase(soldier, columnBase, range, Mth.floor(vanillaNodes * multiplier));
-        float wider = Tuning.SCAFFOLD_BASE_PATH_NODES_MULTIPLIER.get();
-        if (path == null && wider > multiplier) {
-            path = pathToBase(soldier, columnBase, range, Mth.floor(vanillaNodes * wider));
-            DebugLog.event(DebugCategory.PATHING, soldier, "way to scaffold column base %s %s with %s times vanilla's search",
-                    columnBase, path == null ? "not found even" : "found only", wider);
-        }
-        return path;
-    }
-
-    @Nullable
-    private static Path pathToBase(PathfinderMob soldier, BlockPos columnBase, float range, int nodes) {
+        int nodes = Mth.floor(soldier.getAttributeBaseValue(Attributes.FOLLOW_RANGE) * 16.0 * multiplier);
         Path last = null;
         for (int accuracy = 0; accuracy <= 1; accuracy++) {
             Path path = ChainedPath.find(soldier, Set.of(columnBase), range, nodes, accuracy);
@@ -338,9 +324,9 @@ public final class ScaffoldClimber {
             last = path;
         }
         Path shortOf = last;
-        DebugLog.event(DebugCategory.PATHING, soldier, () -> "path to scaffold column base %s ends at %s after %s steps (%s nodes)"
+        DebugLog.event(DebugCategory.PATHING, soldier, () -> "path to scaffold column base %s ends at %s after %s steps"
                 .formatted(columnBase, shortOf == null || shortOf.getEndNode() == null ? "-" : shortOf.getEndNode().asBlockPos(),
-                        shortOf == null ? 0 : shortOf.getNodeCount(), nodes));
+                        shortOf == null ? 0 : shortOf.getNodeCount()));
         return null;
     }
 }

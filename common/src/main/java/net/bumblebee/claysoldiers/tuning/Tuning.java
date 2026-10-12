@@ -140,8 +140,6 @@ public final class Tuning {
             "A scaffold request a builder has had this long without finishing it can be handed to another builder, in ticks.", 600, 100, 12_000));
     public static final TuningKey.IntKey SCAFFOLD_PATH_NODES_MULTIPLIER = register(new TuningKey.IntKey("scaffold.path_nodes_multiplier",
             "While a builder works for a build with scaffolding, its path searches may look at this many times more steps (routes up a scaffold wind around); the larger of this and build.path_nodes_multiplier counts.", 4, 1, 16));
-    public static final TuningKey.IntKey SCAFFOLD_BASE_PATH_NODES_MULTIPLIER = register(new TuningKey.IntKey("scaffold.base_path_nodes_multiplier",
-            "When a builder's search for the way to a scaffold column's base falls short, it searches once more looking at this many times more steps than vanilla (a column high inside a tower, right above a spot outside it that the search gets stuck at; D80).", 16, 1, 64));
     public static final TuningKey.IntKey SCAFFOLD_WALK_TICKS_PER_STEP = register(new TuningKey.IntKey("scaffold.walk_ticks_per_step",
             "A builder walking to a scaffold column's base gives up after this many ticks per step of its path (at least 200 ticks; D76).", 20, 5, 200));
     public static final TuningKey.IntKey SCAFFOLD_PATH_RANGE_BONUS = register(new TuningKey.IntKey("scaffold.path_range_bonus",
