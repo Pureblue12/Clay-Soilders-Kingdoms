@@ -105,7 +105,9 @@ def cell(row):
             return f"✅ {int(row['ticks']):,} ticks"
         except ValueError:
             return "✅"
-    return "❌" if row["status"] == "FAIL" else "⚪"
+    if row["status"] == "FAIL":
+        return "⏱️" if row["reason"].startswith("too slow") else "❌"
+    return "⚪"
 
 
 def note(levels):
