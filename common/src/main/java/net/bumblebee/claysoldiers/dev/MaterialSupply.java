@@ -121,32 +121,52 @@ public final class MaterialSupply {
      * The items to keep in the chest: materials the plan never listed (scaffold material), then the plan's items in
      * hand-out order. Leftovers of plan items already all placed are not kept: they filled every slot with 1 to 3 of
      * each kind while the item asked for waited outside (structure build run 38156523957: inn, smithy, stables, ...).
+     * Each item costs the slots its stacks take in the chest (at least one): builders put back partial stacks in slots
+     * of their own, and counting kinds instead kept every slot full of items needed later while the item asked for
+     * now waited outside, with nothing ever "lost" (keep L2: stone_bricks, town hall L2: white_terracotta).
      */
     private Set<Item> wanted(ChestBlockEntity chest, int slots) {
         List<Item> order = demand.get();
         Set<Item> listed = new LinkedHashSet<>(order);
         planItems.addAll(listed);
         Set<Item> wanted = new LinkedHashSet<>();
+        int used = 0;
         for (ItemStack stack : waiting) {
-            if (!listed.contains(stack.getItem()) && !planItems.contains(stack.getItem())) {
-                wanted.add(stack.getItem());
+            if (!listed.contains(stack.getItem()) && !planItems.contains(stack.getItem()) && wanted.add(stack.getItem())) {
+                used += slotsFor(chest, stack.getItem());
             }
         }
         for (int slot = 0; slot < chest.getContainerSize(); slot++) {
             ItemStack stack = chest.getItem(slot);
-            if (!stack.isEmpty() && !listed.contains(stack.getItem()) && !planItems.contains(stack.getItem())) {
-                wanted.add(stack.getItem());
+            if (!stack.isEmpty() && !listed.contains(stack.getItem()) && !planItems.contains(stack.getItem()) && wanted.add(stack.getItem())) {
+                used += slotsFor(chest, stack.getItem());
             }
         }
         for (Item item : listed) {
-            if (wanted.size() >= slots) {
+            if (used >= slots) {
                 break;
             }
             if (chest.countItem(item) > 0 || hasWaiting(item)) {
+                int cost = slotsFor(chest, item);
+                if (used + cost > slots) {
+                    break;
+                }
                 wanted.add(item);
+                used += cost;
             }
         }
         return wanted;
+    }
+
+    /** Slots an item takes in the chest, at least one (the slot it needs when it isn't there yet). */
+    private static int slotsFor(ChestBlockEntity chest, Item item) {
+        int stacks = 0;
+        for (int slot = 0; slot < chest.getContainerSize(); slot++) {
+            if (chest.getItem(slot).is(item)) {
+                stacks++;
+            }
+        }
+        return Math.max(1, stacks);
     }
 
     /**
