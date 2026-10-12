@@ -456,9 +456,44 @@ public class ServerBlueprintPlan extends BlueprintPlan {
             lastSearchFoundUnreachable = false;
             return null;
         }
-        DebugLog.event(DebugCategory.BUILD, null, "plan: nothing of wave %s can be handed out (%s blocks left in it), searching every block", wave, current.size());
+        // Nothing of this wave can be handed out and nobody carries any of it: its last blocks are stuck here (out of reach
+        // from where the world differs from the plan, cooling down, or never placeable). Go on with the next wave that has
+        // something, rather than with the whole list in the normal order (chapel L3: one stuck block sent 967 of 1,077
+        // hand-outs there, without the plan's spots and with stacks that could only follow up in the stuck wave).
+        java.util.TreeMap<Integer, List<BlueprintBlockInfo>> later = new java.util.TreeMap<>();
+        for (BlueprintBlockInfo info : blockInfoList) {
+            int infoWave = buildPlan.wave(info.getPos());
+            if (infoWave > wave && infoWave != BuildPlan.UNPLANNED && info.timesGivenUp() < PLAN_GIVE_UPS) {
+                later.computeIfAbsent(infoWave, w -> new ArrayList<>()).add(info);
+            }
+        }
+        for (Map.Entry<Integer, List<BlueprintBlockInfo>> entry : later.entrySet()) {
+            List<BlueprintBlockInfo> blocks = entry.getValue();
+            Collections.shuffle(blocks, new java.util.Random(level.getRandom().nextLong()));
+            blocks.sort(order);
+            Search past = search(blocks, level, base, settings, canReach, "plan wave " + entry.getKey() + " past stuck wave " + wave + ": ");
+            if (past.request() != null) {
+                if (entry.getKey() > frontier) {
+                    DebugLog.event(DebugCategory.BUILD, null, "plan: nothing of wave %s can be handed out (%s blocks left in it), going on with wave %s",
+                            wave, current.size(), entry.getKey());
+                    frontier = entry.getKey();
+                }
+                return past.request();
+            }
+            if (past.assigned() > 0) {
+                lastSearchFoundUnreachable = false;
+                return null; // others are on that wave's last blocks: wait, as above
+            }
+        }
+        DebugLog.event(DebugCategory.BUILD, null, "plan: nothing of wave %s or later can be handed out (%s blocks left in it), searching every block", wave, current.size());
         return search(blockInfoList, level, base, settings, canReach, "outside the plan: ").request();
     }
+
+    /**
+     * The latest wave handed out past a stuck one (see {@link #getRequest}): stacks may follow up in any wave up to it, since
+     * an earlier wave's block never closes the way to a later one. Memory only.
+     */
+    private int frontier;
 
     /**
      * Blocks of wave {@code wave + 1} that may be handed out while builders finish wave {@code wave} (see {@link #getRequest}):
@@ -625,8 +660,8 @@ public class ServerBlueprintPlan extends BlueprintPlan {
      * layer (same height) whose spot is reachable from where it stands, or null. Never a door, never a block whose spot
      * below is still an unplaced block of this plan (so nothing is put on air the layer order would have filled first),
      * and at most {@link #FOLLOW_UP_REACH_TESTS} path searches. A build that follows a plan (D80) takes only blocks of the
-     * current wave, or of the next one well clear of it (see {@code lookahead}), so a builder with a stack never closes a
-     * way in that a later wave's block would.
+     * current wave (or up to the wave handed out past a stuck one, {@code frontier}), or of the next one well clear of it
+     * (see {@code lookahead}), so a builder with a stack never closes a way in that a later wave's block would.
      */
     public @Nullable BlueprintRequest getFollowUpRequest(ServerLevel level, BlockPos base, BlueprintTemplateSettings settings,
                                                          Predicate<BlockPos> canReach, Item item, BlockPos placed) {
@@ -643,7 +678,7 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         for (BlueprintBlockInfo blockInfo : blockInfoList) {
             BlockPos pos = targetPosition(base, settings, blockInfo);
             unplaced.add(pos);
-            if (wave != BuildPlan.UNPLANNED && buildPlan.wave(blockInfo.getPos()) != wave && !ahead.contains(blockInfo)) {
+            if (wave != BuildPlan.UNPLANNED && buildPlan.wave(blockInfo.getPos()) > Math.max(wave, frontier) && !ahead.contains(blockInfo)) {
                 continue;
             }
             if (blockInfo.isDoor() || pos.getY() != placed.getY() || !blockInfo.isFor(item) || blockInfo.isCoolingDown(now)
