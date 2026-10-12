@@ -93,6 +93,10 @@ def support(name, props, pos):
             if props.get(side) == "true":
                 return x + dx, y, z + dz
         return None
+    if name == "scaffolding":
+        # Scaffolding standing on the block below (stonemason L3's column) takes its state from it; placed first, it
+        # hangs from its neighbour or drops.
+        return x, y - 1, z
     if B.named(name, B.GRAVITY) or B.named(name, B.PLANTS) or B.named(name, STANDING) or name.endswith("_door"):
         return x, y - 1, z
     return None
