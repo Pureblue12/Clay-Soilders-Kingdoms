@@ -92,13 +92,16 @@ final class BuildStallReport {
             lines.add("easel has no server plan: " + easel.getPlan());
         }
         Map<String, Integer> stock = new TreeMap<>();
+        int used = 0;
         for (int slot = 0; slot < chest.getContainerSize(); slot++) {
             ItemStack stack = chest.getItem(slot);
             if (!stack.isEmpty()) {
+                used++;
                 stock.merge(stack.getItem().toString(), stack.getCount(), Integer::sum);
             }
         }
-        lines.add("chest " + chest.getBlockPos().toShortString() + (chest.isRemoved() ? " (removed)" : "") + ": " + stock);
+        lines.add("chest " + chest.getBlockPos().toShortString() + (chest.isRemoved() ? " (removed)" : "") + ", " + used + " of "
+                + chest.getContainerSize() + " slots used: " + stock);
         ScaffoldSavedData.get(helper.getLevel()).job(easel.getBlockPos()).ifPresent(job -> {
             lines.add("scaffold job: " + job.placed().size() + " of " + job.planned().size() + " planned blocks up, columns " + job.columns());
             if (job.columns()) {

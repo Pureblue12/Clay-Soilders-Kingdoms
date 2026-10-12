@@ -13,6 +13,11 @@ on:
         required: false
         default: ""
         type: string
+      minutes:
+        description: "Real-time budget per build in minutes; a build still running then ends as too slow (0 = no limit, e.g. to see keep L2/L3 finish)"
+        required: false
+        default: "45"
+        type: string
   pull_request:
     paths:
       - common/src/main/resources/data/csr/structure/kingdom/studio/**
@@ -41,6 +46,8 @@ concurrency:
 env:
   # Empty unless started by hand with "only" filled in.
   CSR_STRUCTURE_BUILDS_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.only || '' }}
+  # Real-time budget per build (StructureBuildGameTests.wallClockMinutes); 45 unless started by hand with another value.
+  CSR_STRUCTURE_BUILD_MINUTES: ${{ github.event_name == 'workflow_dispatch' && inputs.minutes || '45' }}
 
 jobs:
   # How many machines: one per build, at most 20 (GitHub runs up to 20 jobs at once on a free account).

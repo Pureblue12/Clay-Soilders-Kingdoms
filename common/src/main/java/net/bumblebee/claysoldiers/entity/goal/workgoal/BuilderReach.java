@@ -56,13 +56,21 @@ public final class BuilderReach {
      * Returns whether a builder standing with its feet at {@code feet} can place a block at {@code target}.
      */
     public static boolean canPlaceFrom(Vec3 feet, BlockPos target) {
+        return canPlaceFrom(feet, target, 0);
+    }
+
+    /**
+     * Like {@link #canPlaceFrom(Vec3, BlockPos)}, reaching {@code extraHeight} more above the feet: a builder inside a
+     * scaffolding column whose block no column reaches the usual way stretches up (D78).
+     */
+    public static boolean canPlaceFrom(Vec3 feet, BlockPos target, int extraHeight) {
         double dx = target.getX() + 0.5 - feet.x;
         double dz = target.getZ() + 0.5 - feet.z;
         int dy = target.getY() - Mth.floor(feet.y);
         if (dy == 0 && Mth.floor(feet.x) == target.getX() && Mth.floor(feet.z) == target.getZ()) {
             return false; // the block the builder stands in: it would build itself in
         }
-        return dx * dx + dz * dz < HORIZONTAL_REACH * HORIZONTAL_REACH && dy >= -MAX_PLACE_DEPTH && dy <= MAX_PLACE_HEIGHT;
+        return dx * dx + dz * dz < HORIZONTAL_REACH * HORIZONTAL_REACH && dy >= -MAX_PLACE_DEPTH && dy <= MAX_PLACE_HEIGHT + extraHeight;
     }
 
     /**

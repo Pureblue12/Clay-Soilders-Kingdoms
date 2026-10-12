@@ -53,7 +53,7 @@ Every brief follows these rules ([D43](DECISIONS.md)).
      ([D44](DECISIONS.md), [D51](DECISIONS.md)): **by tier**, level 2 from tier 3, level 3 from tier 6, so
      kingdoms visibly get richer. Prosperity-based unlocks are a possible later addition.
 4. **Detail budget.** Each brief gives the block count per layer and the build time with 3 builders.
-   - **Within reach:** 22.5 ticks per block (the Small House: 151 blocks in about 3,400 ticks).
+   - **Within reach:** about 10 to 15 ticks per block since builders carry a stack ([D79](DECISIONS.md); the cottage L1: 152 blocks in about 1,500 ticks; before D79 22.5 ticks per block, the Small House: 151 blocks in about 3,400 ticks).
    - **Above reach:** about 60 ticks per block, scaffolding trips included (the 20-high wall with corner tower:
      592 blocks in about 28,600 ticks).
    - 20 ticks = 1 second; 1,200 ticks = 1 minute; a Minecraft day is 24,000 ticks.
@@ -1479,7 +1479,8 @@ Approved structures reach the mod only through the promote step: `cd studio && n
 Rules it applies:
 - A Studio structure with `meta.groundLayer` 0 (floors level with the grass) gets `ground_level` 1, and the air in its
   layer 0 becomes structure void ("leave the ground"). **Placement doesn't use `ground_level` yet**, so in game these
-  still sit one block higher than the Studio shows.
+  still sit one block higher than the Studio shows. So a flower, carpet, anvil or gravel in layer 1 over that air would
+  float in game: the air under it becomes grass (dirt under gravel and sand), as the Studio shows it.
 - `fixes` in `promote.json` are small edits to approved versions that can't be built as they are (a hanging lantern with
   nothing above it, flowers on cobblestone). Each says why.
 - To promote a newly approved structure: add (or extend) its entry in `promote.json`, run the command, commit the

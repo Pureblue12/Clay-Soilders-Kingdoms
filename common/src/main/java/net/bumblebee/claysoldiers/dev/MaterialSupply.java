@@ -86,6 +86,7 @@ public final class MaterialSupply {
         }
         int usable = chest.getContainerSize() - FREE_SLOTS;
         resupplyLost(chest);
+        compact(chest);
         Set<Item> wanted = wanted(chest, usable);
         // Stacks nobody needs soon go back to the waiting list, to make room.
         for (int slot = 0; slot < chest.getContainerSize(); slot++) {
@@ -101,6 +102,12 @@ public final class MaterialSupply {
             for (Item item : wanted) {
                 if (round == 0 && chest.countItem(item) > 0) {
                     continue;
+                }
+                if (!hasWaiting(item)) {
+                    continue;
+                }
+                if (round == 0 && (emptySlot(chest) < 0 || usedSlots(chest) >= usable)) {
+                    makeRoom(chest, wanted, item);
                 }
                 int empty = emptySlot(chest);
                 if (empty < 0 || usedSlots(chest) >= usable) {
@@ -121,32 +128,112 @@ public final class MaterialSupply {
      * The items to keep in the chest: materials the plan never listed (scaffold material), then the plan's items in
      * hand-out order. Leftovers of plan items already all placed are not kept: they filled every slot with 1 to 3 of
      * each kind while the item asked for waited outside (structure build run 38156523957: inn, smithy, stables, ...).
+     * Each item costs the slots its stacks take in the chest (at least one): builders put back partial stacks in slots
+     * of their own, and counting kinds instead kept every slot full of items needed later while the item asked for
+     * now waited outside, with nothing ever "lost" (keep L2: stone_bricks, town hall L2: white_terracotta).
      */
     private Set<Item> wanted(ChestBlockEntity chest, int slots) {
         List<Item> order = demand.get();
         Set<Item> listed = new LinkedHashSet<>(order);
         planItems.addAll(listed);
         Set<Item> wanted = new LinkedHashSet<>();
+        int used = 0;
         for (ItemStack stack : waiting) {
-            if (!listed.contains(stack.getItem()) && !planItems.contains(stack.getItem())) {
-                wanted.add(stack.getItem());
+            if (!listed.contains(stack.getItem()) && !planItems.contains(stack.getItem()) && wanted.add(stack.getItem())) {
+                used += slotsFor(chest, stack.getItem());
             }
         }
         for (int slot = 0; slot < chest.getContainerSize(); slot++) {
             ItemStack stack = chest.getItem(slot);
-            if (!stack.isEmpty() && !listed.contains(stack.getItem()) && !planItems.contains(stack.getItem())) {
-                wanted.add(stack.getItem());
+            if (!stack.isEmpty() && !listed.contains(stack.getItem()) && !planItems.contains(stack.getItem()) && wanted.add(stack.getItem())) {
+                used += slotsFor(chest, stack.getItem());
             }
         }
         for (Item item : listed) {
-            if (wanted.size() >= slots) {
+            if (used >= slots) {
                 break;
             }
             if (chest.countItem(item) > 0 || hasWaiting(item)) {
+                int cost = slotsFor(chest, item);
+                if (used + cost > slots) {
+                    break;
+                }
                 wanted.add(item);
+                used += cost;
             }
         }
         return wanted;
+    }
+
+    /** Slots an item takes in the chest, at least one (the slot it needs when it isn't there yet). */
+    private static int slotsFor(ChestBlockEntity chest, Item item) {
+        int stacks = 0;
+        for (int slot = 0; slot < chest.getContainerSize(); slot++) {
+            if (chest.getItem(slot).is(item)) {
+                stacks++;
+            }
+        }
+        return Math.max(1, stacks);
+    }
+
+    /**
+     * Merges stacks of the same item: builders put back what they carry into the first slot that takes it (an empty slot
+     * before a part-used stack of the same item), so returned leftovers spread one item over several slots. Since builders
+     * carry a stack (D79) every row ends with a return, and the fragments filled every slot while the item asked for next
+     * waited outside (keep L1, L2: no stone bricks for 6000 ticks).
+     */
+    private static void compact(ChestBlockEntity chest) {
+        for (int slot = 0; slot < chest.getContainerSize(); slot++) {
+            ItemStack stack = chest.getItem(slot);
+            if (stack.isEmpty() || stack.getCount() >= stack.getMaxStackSize()) {
+                continue;
+            }
+            for (int other = slot + 1; other < chest.getContainerSize() && stack.getCount() < stack.getMaxStackSize(); other++) {
+                ItemStack more = chest.getItem(other);
+                if (!more.isEmpty() && ItemStack.isSameItemSameComponents(stack, more)) {
+                    int moved = Math.min(more.getCount(), stack.getMaxStackSize() - stack.getCount());
+                    stack.grow(moved);
+                    more.shrink(moved);
+                    if (more.isEmpty()) {
+                        chest.setItem(other, ItemStack.EMPTY);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Frees a slot for {@code item}, which the chest has none of: a second stack of a wanted item goes back to the waiting
+     * list first, else the stack of the wanted item needed last (after {@code item}). Without this a chest full of items
+     * needed later keeps the item needed now out.
+     */
+    private void makeRoom(ChestBlockEntity chest, Set<Item> wanted, Item item) {
+        List<Item> order = new ArrayList<>(wanted);
+        int rank = order.indexOf(item);
+        int evict = -1;
+        int evictRank = rank;
+        Set<Item> seen = new LinkedHashSet<>();
+        for (int slot = 0; slot < chest.getContainerSize(); slot++) {
+            ItemStack stack = chest.getItem(slot);
+            if (stack.isEmpty()) {
+                continue;
+            }
+            if (!seen.add(stack.getItem())) {
+                evict = slot;
+                break;
+            }
+            int stackRank = order.indexOf(stack.getItem());
+            if (stackRank > evictRank) {
+                evictRank = stackRank;
+                evict = slot;
+            }
+        }
+        if (evict >= 0) {
+            ItemStack stack = chest.getItem(evict);
+            waiting.add(stack);
+            chest.setItem(evict, ItemStack.EMPTY);
+            DebugLog.event(DebugCategory.BUILD, null, "material supply: made room for %s, put back %s %s", item, stack.getCount(), stack.getItem());
+        }
     }
 
     /**

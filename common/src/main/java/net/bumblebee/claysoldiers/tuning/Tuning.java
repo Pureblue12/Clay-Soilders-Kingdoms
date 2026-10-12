@@ -113,10 +113,12 @@ public final class Tuning {
             "While a builder works for a build, every path it walks (to a standing spot, back to the easel, to its chest) may be this many blocks longer than its follow range (16) allows (vanilla rejects longer paths and counts the walked length generously: a 20-step walk around a wall measured over 32; the way around a big building, back to the easel, is longer than 16). Combat and paths outside building work keep the normal limit; builds with scaffolding use the larger of this and scaffold.path_range_bonus.", 48, 0, 64));
     public static final TuningKey.IntKey BUILD_STRANDED_TICKS = register(new TuningKey.IntKey("build.stranded_ticks",
             "A builder that has found no way to where it is going for this many ticks in a row (no path, or one that ends short) is brought back to a free spot beside its chest, like a player carrying it down (stranded on a roof or upper floor it built, with no way down that isn't a deadly drop); in ticks, 0 = never.", 1200, 0, 100000));
+    public static final TuningKey.IntKey BUILD_CARRY_COUNT = register(new TuningKey.IntKey("build.carry_count",
+            "How many of a block's item a builder takes from its chest at once (D79). After placing one it goes straight to the nearest free block of that item in the same layer it can reach, and only walks back to the easel and its chest when there is none (then it puts back what is left). 1 = one block per trip to the chest.", 16, 1, 64));
     public static final TuningKey.IntKey BUILD_PATH_NODES_MULTIPLIER = register(new TuningKey.IntKey("build.path_nodes_multiplier",
             "While a builder works for a build, its path searches may look at this many times more steps (vanilla: 256).", 4, 1, 16));
     public static final TuningKey.IntKey BUILD_REACH_MAP = register(new TuningKey.IntKey("build.reach_map",
-            "1: builders find out which blueprint blocks they can reach from one map of every spot they can walk to from the easel, made again when the build changes (D78). 0: a vanilla path search per block, as before.", 1, 0, 1));
+            "1: builders find out which blueprint blocks they can reach from one map of every spot they can walk to from the easel, made again when the build changes (D80). 0: a vanilla path search per block, as before.", 1, 0, 1));
     public static final TuningKey.IntKey WORK_FALL_DAMAGE_PERCENT = register(new TuningKey.IntKey("work.fall_damage_percent",
             "Fall damage to a soldier that is working (building, digging, farming), in percent of vanilla's (a fall of 4 blocks costs half a heart). Upstream multiplies every environmental damage by 100, so a 4-block drop kills; builders working on upper floors fell off and died on every tall build. 10000 restores that.", 100, 0, 10000));
     public static final TuningKey.IntKey SCAFFOLD_COLUMNS_FIRST = register(new TuningKey.IntKey("scaffold.columns_first",
@@ -148,6 +150,8 @@ public final class Tuning {
             "On scaffold blocks soldiers follow their path precisely: a step counts as reached within this many hundredths of a block of its center, and they don't cut corners (vanilla: 67 for tiny soldiers, plus corner cutting).", 30, 5, 67));
     public static final TuningKey.IntKey SCAFFOLD_START_AFTER_STUCK_TICKS = register(new TuningKey.IntKey("scaffold.start_after_stuck_ticks",
             "Builders start putting up a build's scaffolding only after finding nothing in reach for this long with no block placed in between (one builder boxed in for a moment doesn't start it), in ticks.", 100, 0, 6000));
+    public static final TuningKey.IntKey SCAFFOLD_COLUMN_REACH_BONUS = register(new TuningKey.IntKey("scaffold.column_reach_bonus",
+            "A builder inside a scaffolding column may place a block this many more above its feet than usual, only for blocks no column reaches the usual way (a spire top above a floor builders can't walk to; D78).", 2, 0, 4));
     public static final TuningKey.IntKey SCAFFOLD_CLIMB_SPEED = register(new TuningKey.IntKey("scaffold.climb_speed_hundredths",
             "How fast builders climb up and down scaffolding columns, in hundredths of a block per tick.", 30, 5, 100));
     public static final TuningKey.IntKey SCAFFOLD_TEARDOWN_STUCK_TICKS = register(new TuningKey.IntKey("scaffold.teardown_stuck_ticks",
