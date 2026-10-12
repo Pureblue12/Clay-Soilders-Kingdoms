@@ -2,6 +2,7 @@ package net.bumblebee.claysoldiers.entity.goal.workgoal;
 
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
+import net.bumblebee.claysoldiers.entity.door.DoorPathing;
 import net.bumblebee.claysoldiers.tuning.Tuning;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -144,15 +145,18 @@ public final class BuilderReach {
      * A path to one of {@code targets} with a longer limit than the navigation's own (D61). Vanilla only accepts paths
      * whose walked length is under the follow range (16), measured from where the builder asks, usually beside its
      * storage, so the far side of bigger buildings was out of reach. This search may be {@code build.path_range_bonus}
-     * blocks longer and look at {@code build.path_nodes_multiplier} times more steps, with the navigation's own rules
-     * (its node evaluator: doors, water). Nothing else changes: the soldier's follow range and its navigation stay as
-     * they are, so walking to storage, combat and vanilla's own route updates keep the normal limits.
+     * blocks longer and look at {@code build.path_nodes_multiplier} times more steps (or as many as the navigation's own
+     * searches, when more: {@code scaffold.path_nodes_multiplier} while the build has scaffolding, D76), with the
+     * navigation's own rules (its node evaluator: doors, water). Nothing else changes: the soldier's follow range and its
+     * navigation stay as they are, so walking to storage, combat and vanilla's own route updates keep the normal limits.
      */
     @Nullable
     private static Path longPath(PathfinderMob builder, Set<BlockPos> targets) {
         double baseRange = builder.getAttributeBaseValue(Attributes.FOLLOW_RANGE);
         float range = (float) Math.max(builder.getAttributeValue(Attributes.FOLLOW_RANGE), baseRange + Tuning.BUILD_PATH_RANGE_BONUS.get());
-        int nodes = Mth.floor(baseRange * 16.0 * Tuning.BUILD_PATH_NODES_MULTIPLIER.get());
+        float multiplier = Math.max(Tuning.BUILD_PATH_NODES_MULTIPLIER.get(),
+                builder.getNavigation() instanceof DoorPathing.Ground ground ? ground.getNodesMultiplier() : 1.0F);
+        int nodes = Mth.floor(baseRange * 16.0 * multiplier);
         BlockPos from = builder.blockPosition();
         int region = (int) range + 8;
         PathNavigationRegion area = new PathNavigationRegion(builder.level(), from.offset(-region, -region, -region), from.offset(region, region, region));

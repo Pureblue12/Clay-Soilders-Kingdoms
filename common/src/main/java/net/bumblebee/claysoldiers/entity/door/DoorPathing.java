@@ -207,6 +207,8 @@ public final class DoorPathing {
     public static class Ground extends GroundPathNavigation {
         /** Extra walked length every path of this navigation may have (D62); 0 outside building work. */
         private float rangeBonus;
+        /** How many times more steps this navigation's searches may look at (vanilla's base: 16 per block of follow range). */
+        private float nodesMultiplier = 1.0F;
 
         public Ground(Mob mob, Level level) {
             super(mob, level);
@@ -224,6 +226,17 @@ public final class DoorPathing {
 
         public float getRangeBonus() {
             return rangeBonus;
+        }
+
+        @Override
+        public void setMaxVisitedNodesMultiplier(float multiplier) {
+            super.setMaxVisitedNodesMultiplier(multiplier);
+            this.nodesMultiplier = multiplier;
+        }
+
+        /** The multiplier last given to {@link #setMaxVisitedNodesMultiplier} (vanilla keeps it private); 1 by default. */
+        public float getNodesMultiplier() {
+            return nodesMultiplier;
         }
 
         @Nullable

@@ -85,7 +85,7 @@ All balancing numbers (costs, radii, rates, caps, unlock thresholds) live in ONE
 | `scaffold.replan_ticks` | 200 | 20–12,000 | How often a stuck build checks again whether it needs (more) scaffolding. |
 | `scaffold.sweep_ticks` | 100 | 20–12,000 | How often scaffold of builds whose easel is gone or has no plan is cleaned up. |
 | `scaffold.request_stale_ticks` | 600 | 100–12,000 | A scaffold request a builder has had this long can go to another builder. |
-| `scaffold.path_nodes_multiplier` | 4 | 1–16 | While a build has scaffolding, its builders' path searches may look at this many times more steps (the larger of this and `build.path_nodes_multiplier`). |
+| `scaffold.path_nodes_multiplier` | 12 | 1–16 | While a build has scaffolding, its builders' path searches may look at this many times more steps (the larger of this and `build.path_nodes_multiplier`), the search for a standing spot included ([D76](DECISIONS.md)). |
 | `scaffold.path_range_bonus` | 16 | 0–64 | While a build has scaffolding, its builders' paths may be this many blocks longer (vanilla limits a path to the follow range, 16; the larger of this and `build.path_range_bonus`). |
 | `scaffold.repath_ticks` | 20 | 5–200 | While a build has scaffolding, builders plan their route again this often while walking to a block or a column. |
 | `scaffold.step_precision_hundredths` | 30 | 5–67 | On scaffold blocks soldiers follow their path precisely (a step counts as reached within this many hundredths of a block of its center; vanilla 67 plus corner cutting). Matters for step approaches 1–3. |
