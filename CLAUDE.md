@@ -89,8 +89,8 @@ filled brewing stand won't match the file), SCAFFOLD, BUILDABLE. The workflow pu
 2026-10-11 run (107 of 156 built) it flagged 41 of the 47 failed levels with 3 false alarms; it misses training yard,
 graveyard L2, market stall L3 and gatehouse L1. A model, not the game: keep it in step when the rules it copies change.
 A build fails at once after 6000 ticks without progress, with a stall report. The chest is kept stocked by
-`dev/MaterialSupply` (most structures need more than 27 stacks; it stocks the items the easel hands out next, and brings back an item lost
-with a builder, D70). The test area
+`dev/MaterialSupply` (most structures need more than 27 stacks; it stocks the items the easel hands out next, brings back an item lost
+with a builder, D70, and merges the part stacks builders put back, making room for the item needed now, D79). The test area
 (`gametest/structure_build.nbt`, 48x24x48) has a grass floor. The required test `buildListMatchesRegistry` keeps the
 list in `StructureBuildGameTests.STRUCTURES` in step with the registry: add a row when a structure is promoted.
 
