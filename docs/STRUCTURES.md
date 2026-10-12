@@ -1479,7 +1479,8 @@ Approved structures reach the mod only through the promote step: `cd studio && n
 Rules it applies:
 - A Studio structure with `meta.groundLayer` 0 (floors level with the grass) gets `ground_level` 1, and the air in its
   layer 0 becomes structure void ("leave the ground"). **Placement doesn't use `ground_level` yet**, so in game these
-  still sit one block higher than the Studio shows.
+  still sit one block higher than the Studio shows. So a flower, carpet, anvil or gravel in layer 1 over that air would
+  float in game: the air under it becomes grass (dirt under gravel and sand), as the Studio shows it.
 - `fixes` in `promote.json` are small edits to approved versions that can't be built as they are (a hanging lantern with
   nothing above it, flowers on cobblestone). Each says why.
 - To promote a newly approved structure: add (or extend) its entry in `promote.json`, run the command, commit the

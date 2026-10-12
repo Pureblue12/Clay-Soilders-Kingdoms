@@ -89,6 +89,28 @@ function doorSide(s: StructureFile): string | null {
   return best ? best.side : null;
 }
 
+const PLANTS = ['sapling', 'short_grass', 'tall_grass', 'fern', 'dead_bush', 'poppy', 'dandelion', 'allium',
+  'azure_bluet', 'blue_orchid', 'tulip', 'oxeye_daisy', 'cornflower', 'lily_of_the_valley', 'rose_bush', 'lilac', 'peony',
+  'sunflower', 'pink_petals', 'sweet_berry_bush', 'azalea', 'flowering_azalea'];
+const STANDS_ON_TOP = ['carpet', 'torch', 'lantern', 'pressure_plate', 'rail', 'candle', 'flower_pot', 'sign', 'banner',
+  'anvil'];
+const FALLS = ['gravel', 'sand', 'red_sand', 'concrete_powder'];
+
+/**
+ * The ground a layer-1 block of a flush structure (groundLayer 0) stands on, when layer 0 under it is air, or null.
+ * The Studio draws that air as grass, but placement doesn't sink the structure yet (ground_level isn't used), so in game
+ * layer 0 is empty air and a flower, carpet or gravel there pops off or falls (2026-10-12 run: graveyard, quarry,
+ * stables, stonemason, well; an anvil falls). Grass where the Studio shows grass; dirt under gravel and sand (grass
+ * under a full block turns to dirt).
+ */
+function groundUnder(name: string, props: Record<string, string>): string | null {
+  const n = shortName(name);
+  const is = (words: string[]) => words.some((w) => n === w || n.endsWith('_' + w));
+  if (is(FALLS)) return 'minecraft:dirt';
+  if (n.includes('wall_') || n.includes('hanging_sign') || props.hanging === 'true') return null;
+  return is(PLANTS) || is(STANDS_ON_TOP) ? 'minecraft:grass_block[snowy=false]' : null;
+}
+
 interface Exported { file: StructureFile; decoration: { pos: [number, number, number]; kind: string; block: string }[]; fixes: Fix[] }
 
 /** Applies fixes, takes decoration-step blocks out and turns sunken layer-0 air into structure void. */
@@ -120,7 +142,11 @@ function prepare(s: StructureFile, fixes: Fix[]): Exported {
       }
   if ((s.meta.groundLayer ?? -1) === 0)
     for (let z = 0; z < sz; z++)
-      for (let x = 0; x < sx; x++) if (isAir(parseBlockState(blocks[cell(x, 0, z)]).name)) blocks[cell(x, 0, z)] = VOID_BLOCK;
+      for (let x = 0; x < sx; x++) {
+        if (!isAir(parseBlockState(blocks[cell(x, 0, z)]).name)) continue;
+        const above = sy > 1 ? parseBlockState(blocks[cell(x, 1, z)]) : null;
+        blocks[cell(x, 0, z)] = above ? groundUnder(above.name, above.properties) ?? VOID_BLOCK : VOID_BLOCK;
+      }
   const file = fromBlocks(s.name, s.version, s.size, (x, y, z) => blocks[cell(x, y, z)], s.meta);
   return { file, decoration, fixes: applied };
 }

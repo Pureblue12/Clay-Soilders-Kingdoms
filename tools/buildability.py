@@ -343,7 +343,8 @@ def unsupported(name, props, pos, at):
         half = above_props.get("half", above_props.get("type"))
         if above == "air":
             return "hangs from nothing"
-        if ("slab" in above or "stairs" in above) and half == "top":
+        # Under a top stair it stays: stairs are placed before lanterns (D69) and never change after (keep, inn, town hall).
+        if "slab" in above and half == "top":
             return f"hangs from the top half of {above} (no face to hang from)"
         if phase(above, above_props, False) != 0 and "slab" not in above and "stairs" not in above \
                 and not named(above, CENTER_POSTS) and not above.endswith("_leaves"):
@@ -363,16 +364,6 @@ def unsupported(name, props, pos, at):
     return None
 
 
-# Block states the game recomputes after placing, so the finished build never matches the file (2026-10-11 run:
-# a daylight detector's power, a brewing stand's bottles).
-def changing_state(name, props):
-    if name == "daylight_detector":
-        return "its power follows the daylight"
-    if name == "brewing_stand" and any(props.get(f"has_bottle_{i}") == "true" for i in range(3)):
-        return "its bottles show what's inside, and it's placed empty"
-    return None
-
-
 def check(path):
     level = Level(path)
     grid = Grid()
@@ -388,7 +379,7 @@ def check(path):
         return finished.get(pos, ("air", {}))
 
     for (_, y, x, z, name, _) in level.blocks:
-        why = changing_state(name, level.props[(x, y, z)]) or unsupported(name, level.props[(x, y, z)], (x, y, z), at)
+        why = unsupported(name, level.props[(x, y, z)], (x, y, z), at)
         if why:
             decor.append((x, y, z, name, why))
     scaffold_cells = 0
