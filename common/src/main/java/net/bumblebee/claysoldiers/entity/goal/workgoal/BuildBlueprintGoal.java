@@ -55,6 +55,8 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     /** While BUILD is recorded: closed doors found in the way during one search, and the blocks behind each. */
     @Nullable
     private Map<BlockPos, List<BlockPos>> blockedByDoor;
+    /** Whether this request search already ran the old searches for one block off the reach map (recorder only, D80). */
+    private boolean explainedOffMap;
     /**
      * When the easel has no reachable block, the builder waits this many ticks plus up to
      * {@link #RETRY_COOLDOWN_RANDOM} more before asking again, instead of asking (and pathfinding) every tick.
@@ -329,6 +331,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             // While BUILD is recorded, collect why blocks are unreachable (one summary line per search).
             unreachableReasons = DebugLog.isOn(DebugCategory.BUILD) ? new LinkedHashMap<>() : null;
             blockedByDoor = unreachableReasons == null ? null : new LinkedHashMap<>();
+            explainedOffMap = false;
             long start = System.nanoTime();
             request = requestHandler.getRequest(reachTest);
             long millis = (System.nanoTime() - start) / 1_000_000;
@@ -377,9 +380,17 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             if (ReachMap.canReachToPlace(soldier, easelPos.pos(), pos) || canClimbTo(pos)) {
                 return true;
             }
-            // No searches while recording either, so a recorded build behaves (and costs) like an unrecorded one (D80).
+            // While recording, only the first block off the map per request search gets the old searches to say why
+            // (closed doors); the rest are counted, so a recorded build costs about what an unrecorded one does (D80).
             if (unreachableReasons != null) {
-                unreachableReasons.merge("not on the build's reach map", 1, Integer::sum);
+                if (explainedOffMap) {
+                    unreachableReasons.merge("not on the build's reach map", 1, Integer::sum);
+                } else {
+                    explainedOffMap = true;
+                    if (explainUnreachable(pos)) {
+                        unreachableReasons.merge("not on the build's reach map though a search finds a way", 1, Integer::sum);
+                    }
+                }
             }
             return false;
         }
@@ -389,6 +400,11 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         if (canClimbTo(pos) && !BuilderReach.canReachToPlace(soldier, pos)) {
             return true;
         }
+        return explainUnreachable(pos);
+    }
+
+    /** Runs the old searches for {@code pos} and records why it is unreachable (recorder only). */
+    private boolean explainUnreachable(BlockPos pos) {
         BuilderReach.Reach reach = BuilderReach.check(soldier, pos, true);
         if (!reach.reachable()) {
             unreachableReasons.merge(reach.whyNot(), 1, Integer::sum);
