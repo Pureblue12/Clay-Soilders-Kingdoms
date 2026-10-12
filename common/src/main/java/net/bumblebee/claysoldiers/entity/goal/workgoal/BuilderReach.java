@@ -141,6 +141,15 @@ public final class BuilderReach {
     }
 
     /**
+     * A path to exactly {@code spot}, with the same longer limit as the search for a standing spot (used with
+     * {@link ReachMap}, which already knows the spot is reachable).
+     */
+    @Nullable
+    static Path pathToSpot(PathfinderMob builder, BlockPos spot) {
+        return longPath(builder, Set.of(spot));
+    }
+
+    /**
      * A path to one of {@code targets} with a longer limit than the navigation's own (D61). Vanilla only accepts paths
      * whose walked length is under the follow range (16), measured from where the builder asks, usually beside its
      * storage, so the far side of bigger buildings was out of reach. This search may be {@code build.path_range_bonus}

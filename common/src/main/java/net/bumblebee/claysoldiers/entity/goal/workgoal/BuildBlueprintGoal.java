@@ -343,6 +343,16 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     }
 
     private boolean canReach(BlockPos pos) {
+        if (ReachMap.enabled() && easelPos != null) {
+            // One look at the build's reach map instead of path searches (D76); the recorder's reasons need searches.
+            if (ReachMap.canReachToPlace(soldier, easelPos.pos(), pos) || canClimbTo(pos)) {
+                return true;
+            }
+            if (unreachableReasons == null) {
+                return false;
+            }
+            // While BUILD is recorded, the searches below still say why (closed doors, D76).
+        }
         if (unreachableReasons == null) {
             return BuilderReach.canReachToPlace(soldier, pos) || canClimbTo(pos);
         }
@@ -460,7 +470,8 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                 return false;
             }
             // Walk the same kind of path the reachable check accepted: it ends where the block can be placed.
-            Path path = BuilderReach.pathToPlace(soldier, request.getPos());
+            Path path = ReachMap.enabled() && easelPos != null
+                    ? ReachMap.pathToPlace(soldier, easelPos.pos(), request.getPos()) : BuilderReach.pathToPlace(soldier, request.getPos());
             if (path == null && easelPos != null && soldier.level() instanceof ServerLevel level && climber.start(level, easelPos.pos(), request.getPos())) {
                 return false; // out of reach from the ground: climb a scaffolding column
             }

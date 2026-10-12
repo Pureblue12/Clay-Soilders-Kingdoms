@@ -1,5 +1,6 @@
 package net.bumblebee.claysoldiers.block.blueprint;
 
+import net.bumblebee.claysoldiers.entity.goal.workgoal.ReachMap;
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.blueprint.BlueprintData;
 import net.bumblebee.claysoldiers.blueprint.BlueprintManger;
@@ -292,6 +293,7 @@ public class EaselBlockEntity extends BlockEntity {
             if (done && template instanceof ServerBlueprintPlan serverPlan) {
                 var settings = getTemplateSettings(); // new scaffold: blocks near it may be reachable now
                 serverPlan.forgetUnreachableNear(scaffold.getPos(), REACH_CHANGE_RADIUS, getTemplateBase(settings), settings);
+                ReachMap.changed(level, worldPosition);
             }
             return done;
         }
@@ -304,6 +306,7 @@ public class EaselBlockEntity extends BlockEntity {
         if (result.isSuccess()) {
             // A new block can be a floor to stand on: blocks near it may be reachable now.
             serverPlan.forgetUnreachableNear(request.getPos(), REACH_CHANGE_RADIUS, getTemplateBase(settings), settings);
+            ReachMap.changed(level, worldPosition);
             if (level instanceof ServerLevel serverLevel) {
                 Scaffolds.structurePlaced(serverLevel, worldPosition);
             }

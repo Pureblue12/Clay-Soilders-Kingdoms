@@ -274,6 +274,10 @@ Code: `common/.../scaffold/`; comparison, recommendation and height rules: `docs
   path search (`build.path_*`, D61), and since D62 every path a builder walks while it works for a build (to the easel, to
   its chest) has the same longer limit (`DoorPathing.Ground.setRangeBonus`); paths outside building work keep vanilla's.
 - **Recorder SCAFFOLD:** planned, placed, removed, climbing, stuck, cleanup, kept.
+- **Reach map (D76, `build.reach_map`):** builders check which blueprint blocks they can reach on one map per build
+  (`ReachMap`: a Dijkstra flood from the easel with the soldiers' own node evaluator), made again after every placed or
+  removed block, instead of up to three vanilla path searches per block. `tools/path_experiments.py` replays builds
+  offline with today's search, a 3x budget, the reach map and a planned build order, and counts the search work.
 
 ### Known limitations
 

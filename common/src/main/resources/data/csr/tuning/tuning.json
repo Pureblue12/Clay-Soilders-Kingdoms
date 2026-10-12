@@ -37,6 +37,7 @@
   "build.path_range_bonus": 48,
   "build.stranded_ticks": 1200,
   "build.path_nodes_multiplier": 4,
+  "build.reach_map": 1,
   "work.fall_damage_percent": 100,
   "scaffold.columns_first": 1,
   "scaffold.material": "minecraft:scaffolding",
