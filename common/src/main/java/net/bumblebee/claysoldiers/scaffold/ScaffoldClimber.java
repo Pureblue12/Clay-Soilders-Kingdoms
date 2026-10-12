@@ -17,6 +17,8 @@ import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,26 +58,28 @@ public final class ScaffoldClimber {
     }
 
     /**
-     * The column cell (lowest first) a builder inside it could work on {@code target} from, if the job is climbed
-     * columns and that column stands from its base up to the cell. Only when no cell is in the usual reach, a cell
-     * {@code scaffold.column_reach_bonus} lower counts: the builder stretches up (D78).
+     * The column cells a builder inside them could work on {@code target} from, of columns that stand from their base up
+     * to the cell: the cells in the usual reach, lowest first, then the cells {@code scaffold.column_reach_bonus} lower,
+     * from where the builder stretches up (D78).
      */
-    @Nullable
-    static BlockPos standingCell(ServerLevel level, ScaffoldJob job, BlockPos target) {
-        BlockPos cell = standingCell(level, job, target, 0);
-        return cell != null ? cell : standingCell(level, job, target, Tuning.SCAFFOLD_COLUMN_REACH_BONUS.get());
+    static List<BlockPos> standingCells(ServerLevel level, ScaffoldJob job, BlockPos target) {
+        List<BlockPos> cells = standingCells(level, job, target, 0);
+        for (BlockPos cell : standingCells(level, job, target, Tuning.SCAFFOLD_COLUMN_REACH_BONUS.get())) {
+            if (!cells.contains(cell)) {
+                cells.add(cell);
+            }
+        }
+        return cells;
     }
 
-    @Nullable
-    private static BlockPos standingCell(ServerLevel level, ScaffoldJob job, BlockPos target, int extraHeight) {
+    private static List<BlockPos> standingCells(ServerLevel level, ScaffoldJob job, BlockPos target, int extraHeight) {
+        List<BlockPos> cells = new ArrayList<>();
         if (!job.columns() || extraHeight < 0) {
-            return null;
+            return cells;
         }
         Block material = Scaffolds.materialOf(job);
-        BlockPos best = null;
         for (BlockPos cell : job.placed()) {
-            if (cell.equals(target) || best != null && cell.getY() >= best.getY()
-                    || !BuilderReach.canPlaceFrom(new Vec3(cell.getX() + 0.5, cell.getY(), cell.getZ() + 0.5), target, extraHeight)) {
+            if (cell.equals(target) || !BuilderReach.canPlaceFrom(new Vec3(cell.getX() + 0.5, cell.getY(), cell.getZ() + 0.5), target, extraHeight)) {
                 continue;
             }
             List<BlockPos> column = job.column(cell);
@@ -86,10 +90,30 @@ public final class ScaffoldClimber {
                 }
             }
             if (standing && column.getFirst().getY() + column.size() > cell.getY()) {
-                best = cell;
+                cells.add(cell);
             }
         }
-        return best;
+        cells.sort(Comparator.comparingInt(BlockPos::getY));
+        return cells;
+    }
+
+    /**
+     * The first of {@link #standingCells} whose column's base this builder can walk to, or null. Not just the lowest
+     * cell: keep L3's last re-plan put a column right beside an older one, and the new one blocked the only way into the
+     * old one's base, so the old column (the lowest cell) could never be climbed while the new one beside it could (D80).
+     */
+    @Nullable
+    private BlockPos reachableCell(ServerLevel level, ScaffoldJob job, BlockPos target) {
+        if (cacheTick != level.getGameTime()) {
+            baseReachable.clear();
+            cacheTick = level.getGameTime();
+        }
+        for (BlockPos cell : standingCells(level, job, target)) {
+            if (baseReachable.computeIfAbsent(job.column(cell).getFirst(), pos -> pathToBase(pos) != null)) {
+                return cell;
+            }
+        }
+        return null;
     }
 
     /**
@@ -132,29 +156,18 @@ public final class ScaffoldClimber {
      */
     public boolean canReach(ServerLevel level, BlockPos easel, BlockPos target) {
         Optional<ScaffoldJob> job = ScaffoldSavedData.get(level).job(easel);
-        if (job.isEmpty() || !job.get().columns()) {
-            return false;
-        }
-        BlockPos cell = standingCell(level, job.get(), target);
-        if (cell == null) {
-            return false;
-        }
-        BlockPos columnBase = job.get().column(cell).getFirst();
-        if (cacheTick != level.getGameTime()) {
-            baseReachable.clear();
-            cacheTick = level.getGameTime();
-        }
-        return baseReachable.computeIfAbsent(columnBase, pos -> pathToBase(pos) != null);
+        return job.isPresent() && reachableCell(level, job.get(), target) != null;
     }
 
     /**
-     * Starts climbing to work on {@code target}: walks to the base of the column with the lowest cell in reach.
+     * Starts climbing to work on {@code target}: walks to the base of the column with the lowest cell in reach whose base
+     * it can walk to.
      *
      * @return false when no column helps
      */
     public boolean start(ServerLevel level, BlockPos easel, BlockPos target) {
         Optional<ScaffoldJob> job = ScaffoldSavedData.get(level).job(easel);
-        BlockPos cell = job.map(j -> standingCell(level, j, target)).orElse(null);
+        BlockPos cell = job.map(j -> reachableCell(level, j, target)).orElse(null);
         if (cell == null) {
             return false;
         }
@@ -288,7 +301,8 @@ public final class ScaffoldClimber {
 
     /**
      * A path for {@code soldier} to a column's base, or null: the navigation's own limits, and a search that runs out of
-     * steps goes on from where it ended ({@link ChainedPath}, D76).
+     * steps goes on from where it ended ({@link ChainedPath}, D76). Where a search that falls short ends is recorded
+     * (PATHING): keep L3's last banner waited on a column whose base every search missed by 2 cells (D80).
      */
     @Nullable
     public static Path pathToBase(PathfinderMob soldier, BlockPos columnBase) {
@@ -301,12 +315,18 @@ public final class ScaffoldClimber {
         }
         float range = (float) soldier.getAttributeValue(Attributes.FOLLOW_RANGE) + bonus;
         int nodes = Mth.floor(soldier.getAttributeBaseValue(Attributes.FOLLOW_RANGE) * 16.0 * multiplier);
+        Path last = null;
         for (int accuracy = 0; accuracy <= 1; accuracy++) {
             Path path = ChainedPath.find(soldier, Set.of(columnBase), range, nodes, accuracy);
             if (path != null && path.canReach()) {
                 return path;
             }
+            last = path;
         }
+        Path shortOf = last;
+        DebugLog.event(DebugCategory.PATHING, soldier, () -> "path to scaffold column base %s ends at %s after %s steps"
+                .formatted(columnBase, shortOf == null || shortOf.getEndNode() == null ? "-" : shortOf.getEndNode().asBlockPos(),
+                        shortOf == null ? 0 : shortOf.getNodeCount()));
         return null;
     }
 }

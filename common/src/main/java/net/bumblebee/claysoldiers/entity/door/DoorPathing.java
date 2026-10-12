@@ -28,6 +28,7 @@ import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.PathfindingContext;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
@@ -171,8 +172,9 @@ public final class DoorPathing {
 
     /**
      * Whether a soldier standing with its feet at {@code feet} can leave the cell sideways: walk or drop into an open
-     * neighbour, go through a door, or hop onto a one-block step. The same rule as the easel's
-     * {@code ServerBlueprintPlan.hasExit}, with doors counted as open.
+     * neighbour (a block over it that doesn't reach down to its cell's bottom leaves room, {@link #headRoom}), go through
+     * a door, or hop onto a one-block step. The easel's {@code ServerBlueprintPlan.hasExit} is the same rule, but with
+     * doors closed and two free cells over a neighbour (stricter: it only makes the easel wait).
      */
     static boolean hasExit(BlockGetter level, BlockPos feet) {
         for (Direction side : Direction.Plane.HORIZONTAL) {
@@ -181,7 +183,7 @@ public final class DoorPathing {
                 return true;
             }
             boolean nextFeet = open(level, next);
-            boolean nextHead = open(level, next.above());
+            boolean nextHead = headRoom(level, next.above());
             if (nextFeet && nextHead) {
                 return true; // walk (or drop)
             }
@@ -194,6 +196,17 @@ public final class DoorPathing {
 
     private static boolean open(BlockGetter level, BlockPos pos) {
         return level.getBlockState(pos).getCollisionShape(level, pos).isEmpty();
+    }
+
+    /**
+     * Whether the cell above a soldier's feet leaves it room: nothing there, or a block whose shape doesn't reach down to
+     * the cell's bottom (a hanging lantern, a top slab, a closed top trapdoor). A soldier is under half a block tall: keep
+     * L3's back tower nook, whose only way out passed under the top room's hanging lantern, counted as a pit, so no
+     * builder ever reached the scaffold column beside it (D80; the scaffold planner's {@code ScaffoldInput.overhead}).
+     */
+    private static boolean headRoom(BlockGetter level, BlockPos pos) {
+        VoxelShape shape = level.getBlockState(pos).getCollisionShape(level, pos);
+        return shape.isEmpty() || shape.min(Direction.Axis.Y) > 0;
     }
 
     /** All soldier rules on vanilla's answer. */

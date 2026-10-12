@@ -317,6 +317,10 @@ Pending (not started):
   56 (the builders' real limit, 16 + 48, minus `Scaffolds.PATH_MARGIN`; D75).
   A block no column reaches within 8 (the church spire top, 9 and 10 above the highest column cell under it) is placed by a
   builder stretching up from inside a column, up to `scaffold.column_reach_bonus` (2) more (D78); higher than that it stays unbuilt.
+  The planner lets soldiers walk under a block whose shape doesn't reach its cell's bottom (hanging lantern, top slab; D80),
+  and when nothing else adds scaffold it tries once more with the walks of up to 3 chained searches (184 blocks; D80); a builder climbs
+  the lowest column cell in reach whose base it can walk to; the soldiers' pit rule (D67) counts such a block over a neighbour
+  as head room, so a nook whose way out passes under a hanging lantern is no pit (`soldierWalksIntoANookUnderAHangingLantern`).
 - A blueprint block that is already there and replaceable (e.g. short grass where short grass grows) counts
   as free but can never be placed (placing the same block fails), so the blueprint never finishes; the
   cooldown only stops it from starving the rest. Not confirmed in game; not fixed.

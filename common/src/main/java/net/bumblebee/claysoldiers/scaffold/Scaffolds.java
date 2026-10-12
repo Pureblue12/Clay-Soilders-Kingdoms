@@ -6,6 +6,7 @@ import net.bumblebee.claysoldiers.blueprint.BlueprintTemplateSettings;
 import net.bumblebee.claysoldiers.blueprint.templates.ServerBlueprintPlan;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
+import net.bumblebee.claysoldiers.entity.door.ChainedPath;
 import net.bumblebee.claysoldiers.tuning.Tuning;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -22,6 +23,7 @@ import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.ScaffoldingBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -287,28 +289,54 @@ public final class Scaffolds {
                 scaffold = longer;
             }
         }
-        ScaffoldPlan chosen = scaffold;
-        List<BlockPos> more = new ArrayList<>(chosen.scaffold());
-        if (existing != null) {
-            more.removeAll(existing.planned());
+        List<BlockPos> more = added(scaffold, existing);
+        if (more.isEmpty() && !scaffold.complete() && approach.columns()) {
+            // Nothing more to put up, and blocks are still stuck: the only floor within reach of them may be farther than
+            // the usual limits. Keep L3's back corner towers: the banner on top is in reach only from a column in the
+            // tower's top room, about 60 walked blocks from the chest up through the tower, and builders walk that far
+            // (ChainedPath, D76). Plan again with the walks a builder makes in up to ChainedPath.MAX_SEARCHES searches,
+            // and keep that plan if it adds scaffold and leaves fewer stuck (D80). Only this late, so every plan the usual
+            // limits make stays as it is.
+            ScaffoldInput far = stretched.withPathLimit(ChainedPath.MAX_SEARCHES * (BUILDER_FOLLOW_RANGE
+                    + Math.max(Tuning.BUILD_PATH_RANGE_BONUS.get(), Tuning.SCAFFOLD_PATH_RANGE_BONUS.get())) - PATH_MARGIN);
+            ScaffoldPlan farther = ScaffoldPlanner.plan(far, approach);
+            List<BlockPos> farMore = added(farther, existing);
+            if (!farMore.isEmpty() && farther.unreachable().size() < scaffold.unreachable().size()) {
+                ScaffoldPlan before = scaffold;
+                DebugLog.event(DebugCategory.SCAFFOLD, null, () -> "easel %s: %d block(s) only in reach walking more than %d blocks (up to %d); before: %s"
+                        .formatted(easel.toShortString(), before.unreachable().size() - farther.unreachable().size(), stretched.columnPath(), far.columnPath(), before.describe()));
+                scaffold = farther;
+                more = farMore;
+            }
         }
-        if (more.isEmpty()) {
+        ScaffoldPlan chosen = scaffold;
+        List<BlockPos> extra = more;
+        if (extra.isEmpty()) {
             DebugLog.event(DebugCategory.SCAFFOLD, null, "stuck at easel %s: %s", easel, chosen.describe());
             return Optional.ofNullable(existing);
         }
-        int total = more.size() + (existing == null ? 0 : existing.planned().size());
+        int total = extra.size() + (existing == null ? 0 : existing.planned().size());
         if (total > Tuning.SCAFFOLD_MAX_BLOCKS.get()) {
             DebugLog.event(DebugCategory.SCAFFOLD, null, "stuck at easel %s: needs %s scaffold blocks, more than scaffold.max_blocks (%s)",
                     easel, total, Tuning.SCAFFOLD_MAX_BLOCKS.get());
             return Optional.ofNullable(existing);
         }
         ScaffoldJob job = existing != null ? existing : new ScaffoldJob(easel, Tuning.SCAFFOLD_MATERIAL.get(), List.of(), Set.of(), approach.columns());
-        job.addPlanned(more);
+        job.addPlanned(extra);
         ScaffoldSavedData.get(level).put(job);
         long millis = (System.nanoTime() - start) / 1_000_000;
-        DebugLog.event(DebugCategory.SCAFFOLD, null, () -> "planned %d scaffold blocks at easel %s in %d ms (%s)".formatted(more.size(), easel.toShortString(),
+        DebugLog.event(DebugCategory.SCAFFOLD, null, () -> "planned %d scaffold blocks at easel %s in %d ms (%s)".formatted(extra.size(), easel.toShortString(),
                 millis, chosen.describe()));
         return Optional.of(job);
+    }
+
+    /** The scaffold cells of {@code plan} the job hasn't planned yet. */
+    private static List<BlockPos> added(ScaffoldPlan plan, @Nullable ScaffoldJob existing) {
+        List<BlockPos> more = new ArrayList<>(plan.scaffold());
+        if (existing != null) {
+            more.removeAll(existing.planned());
+        }
+        return more;
     }
 
     /**
@@ -330,6 +358,7 @@ public final class Scaffolds {
         Set<BlockPos> solid = new HashSet<>();
         Set<BlockPos> blocked = new HashSet<>(targets);
         Set<BlockPos> noFooting = new HashSet<>();
+        Set<BlockPos> overhead = new HashSet<>();
         BlockPos.betweenClosedStream(region).forEach(pos -> {
             if (scaffold.contains(pos)) {
                 return; // the build's own scaffold: the planner puts it in again (climbable), it isn't in the way
@@ -339,8 +368,15 @@ public final class Scaffolds {
             // falls at once, and the column is never there to climb (keep L2's annex pews, D77). Blocks still to place count
             // as what they will be.
             BlockState floor = future.getOrDefault(pos, state);
-            if (!floor.getCollisionShape(level, pos).isEmpty() && !floor.isFaceSturdy(level, pos, Direction.UP)) {
+            VoxelShape shape = floor.getCollisionShape(level, pos);
+            if (!shape.isEmpty() && !floor.isFaceSturdy(level, pos, Direction.UP)) {
                 noFooting.add(pos.immutable());
+            }
+            // A block that doesn't reach down to its cell's bottom (a hanging lantern, a top slab) leaves room under it for a
+            // soldier, under half a block tall: the church's side porch, the only way into its nave, has a hanging lantern
+            // at head height, so the planner found the nave sealed and no column inside it (D80).
+            if (!shape.isEmpty() && shape.min(Direction.Axis.Y) > 0) {
+                overhead.add(pos.immutable());
             }
             boolean woodenDoor = state.getBlock() instanceof DoorBlock door && door.type().canOpenByHand();
             if (!woodenDoor && !state.getCollisionShape(level, pos).isEmpty()) {
@@ -361,7 +397,7 @@ public final class Scaffolds {
         // A column's base may be as far as builders walk while they work for a build (the larger bonus, as
         // BuildBlueprintGoal sets it): the keep's far roof corners need columns more than maxPath away (D75).
         int columnPath = BUILDER_FOLLOW_RANGE + Math.max(Tuning.BUILD_PATH_RANGE_BONUS.get(), Tuning.SCAFFOLD_PATH_RANGE_BONUS.get()) - PATH_MARGIN;
-        return new ScaffoldInput(region, solid, blocked, remaining, home, maxPath, Math.max(maxPath, columnPath), noFooting, 0);
+        return new ScaffoldInput(region, solid, blocked, remaining, home, maxPath, Math.max(maxPath, columnPath), noFooting, overhead, 0);
     }
 
     /**
