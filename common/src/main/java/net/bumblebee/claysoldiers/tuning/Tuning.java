@@ -146,6 +146,8 @@ public final class Tuning {
             "On scaffold blocks soldiers follow their path precisely: a step counts as reached within this many hundredths of a block of its center, and they don't cut corners (vanilla: 67 for tiny soldiers, plus corner cutting).", 30, 5, 67));
     public static final TuningKey.IntKey SCAFFOLD_START_AFTER_STUCK_TICKS = register(new TuningKey.IntKey("scaffold.start_after_stuck_ticks",
             "Builders start putting up a build's scaffolding only after finding nothing in reach for this long with no block placed in between (one builder boxed in for a moment doesn't start it), in ticks.", 100, 0, 6000));
+    public static final TuningKey.IntKey SCAFFOLD_COLUMN_REACH_BONUS = register(new TuningKey.IntKey("scaffold.column_reach_bonus",
+            "A builder inside a scaffolding column may place a block this many more above its feet than usual, only for blocks no column reaches the usual way (a spire top above a floor builders can't walk to; D78).", 2, 0, 4));
     public static final TuningKey.IntKey SCAFFOLD_CLIMB_SPEED = register(new TuningKey.IntKey("scaffold.climb_speed_hundredths",
             "How fast builders climb up and down scaffolding columns, in hundredths of a block per tick.", 30, 5, 100));
     public static final TuningKey.IntKey SCAFFOLD_TEARDOWN_STUCK_TICKS = register(new TuningKey.IntKey("scaffold.teardown_stuck_ticks",

@@ -442,7 +442,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     }
 
     protected boolean moveToRequest() {
-        if (BuilderReach.canPlaceFrom(soldier, request.getPos())) {
+        if (BuilderReach.canPlaceFrom(soldier, request.getPos()) || climber.holdsInReachOf(request.getPos())) {
             this.soldier.getNavigation().stop();
             pathEnd = null;
             return true;
