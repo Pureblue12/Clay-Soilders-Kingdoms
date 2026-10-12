@@ -90,6 +90,8 @@ public abstract class ClayMobEntity extends PathfinderMob implements TeamHolder 
     protected DamageCalculator defaultDamage = (w, e) -> w ? 75 : 100;
     /** Fall damage (vanilla: the fall distance minus 3); like {@link #defaultDamage} unless a subclass says otherwise. */
     protected DamageCalculator fallDamage = (w, e) -> w ? 75 : 100;
+    /** Damage from touching a sweet berry bush or a cactus; like {@link #defaultDamage} unless a subclass says otherwise. */
+    protected DamageCalculator plantDamage = (w, e) -> w ? 75 : 100;
 
     private final DamageSources clayDamageSources;
     private ItemStack spawnedFrom = ItemStack.EMPTY;
@@ -249,6 +251,8 @@ public abstract class ClayMobEntity extends PathfinderMob implements TeamHolder 
                 newDamage *= inWallDamage.calculate(waxed, source.getEntity());
             } else if (source.is(DamageTypeTags.IS_FALL)) {
                 newDamage *= fallDamage.calculate(waxed, source.getEntity());
+            } else if (source.is(DamageTypes.SWEET_BERRY_BUSH) || source.is(DamageTypes.CACTUS)) {
+                newDamage *= plantDamage.calculate(waxed, source.getEntity());
             } else {
                 newDamage *= defaultDamage.calculate(waxed, source.getEntity());
             }
