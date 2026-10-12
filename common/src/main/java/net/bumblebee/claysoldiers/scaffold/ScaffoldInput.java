@@ -23,23 +23,26 @@ import java.util.Set;
  *                  the column they climb, D75), or 0 for no limit
  * @param noFooting solid cells (now or once built) whose top can't hold a scaffolding column: stairs, slabs and carpet
  *                  floors; scaffolding put on them falls (D77)
+ * @param overhead  solid cells (now or once built) whose shape doesn't reach down to the bottom of the cell: a hanging
+ *                  lantern, a top slab, a closed top trapdoor. A soldier (under half a block tall) walks under them, so the
+ *                  cell below stays a standing spot (D80; the church's side porch has a hanging lantern at head height)
  * @param columnReachBonus how many blocks more than {@link net.bumblebee.claysoldiers.entity.goal.workgoal.BuilderReach#MAX_PLACE_HEIGHT}
  *                  a builder inside a column reaches up; 0 except for the planner's second try when the usual reach leaves
  *                  blocks stuck (D78)
  */
 public record ScaffoldInput(BoundingBox region, Set<BlockPos> solid, Set<BlockPos> blocked, List<BlockPos> structure,
                             @Nullable BlockPos home, int maxPath, int columnPath, Set<BlockPos> noFooting,
-                            int columnReachBonus) {
+                            Set<BlockPos> overhead, int columnReachBonus) {
     /** Blocks of margin around the structure: room for step pillars and the ramp. */
     public static final int MARGIN = 4;
 
     public ScaffoldInput(BoundingBox region, Set<BlockPos> solid, Set<BlockPos> blocked, List<BlockPos> structure) {
-        this(region, solid, blocked, structure, null, 0, 0, Set.of(), 0);
+        this(region, solid, blocked, structure, null, 0, 0, Set.of(), Set.of(), 0);
     }
 
     public ScaffoldInput(BoundingBox region, Set<BlockPos> solid, Set<BlockPos> blocked, List<BlockPos> structure,
                          @Nullable BlockPos home, int maxPath) {
-        this(region, solid, blocked, structure, home, maxPath, maxPath, Set.of(), 0);
+        this(region, solid, blocked, structure, home, maxPath, maxPath, Set.of(), Set.of(), 0);
     }
 
     public ScaffoldInput {
@@ -47,16 +50,30 @@ public record ScaffoldInput(BoundingBox region, Set<BlockPos> solid, Set<BlockPo
         blocked = Set.copyOf(blocked);
         structure = List.copyOf(structure);
         noFooting = Set.copyOf(noFooting);
+        overhead = Set.copyOf(overhead);
     }
 
     /** The same input where scaffolding can't stand on {@code cells} (tests). */
     public ScaffoldInput withNoFooting(Set<BlockPos> cells) {
-        return new ScaffoldInput(region, solid, blocked, structure, home, maxPath, columnPath, cells, columnReachBonus);
+        return new ScaffoldInput(region, solid, blocked, structure, home, maxPath, columnPath, cells, overhead, columnReachBonus);
+    }
+
+    /** The same input where soldiers walk under {@code cells} (tests). */
+    public ScaffoldInput withOverhead(Set<BlockPos> cells) {
+        return new ScaffoldInput(region, solid, blocked, structure, home, maxPath, columnPath, noFooting, cells, columnReachBonus);
     }
 
     /** The same input where a builder inside a column reaches {@code bonus} more blocks up (D78). */
     public ScaffoldInput withColumnReachBonus(int bonus) {
-        return new ScaffoldInput(region, solid, blocked, structure, home, maxPath, columnPath, noFooting, bonus);
+        return new ScaffoldInput(region, solid, blocked, structure, home, maxPath, columnPath, noFooting, overhead, bonus);
+    }
+
+    /**
+     * The same input where builders walk up to {@code path} from home to a block or a column's base: the planner's last try
+     * when the usual limits leave blocks stuck (D80).
+     */
+    public ScaffoldInput withPathLimit(int path) {
+        return new ScaffoldInput(region, solid, blocked, structure, home, path, path, noFooting, overhead, columnReachBonus);
     }
 
     /**

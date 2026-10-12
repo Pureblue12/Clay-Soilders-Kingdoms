@@ -106,6 +106,7 @@ public final class ScaffoldPlanner {
     private static ScaffoldGrid emptySite(ScaffoldInput input) {
         ScaffoldGrid grid = new ScaffoldGrid(input.region());
         grid.setAll(input.solid(), true);
+        grid.setOverhead(input.overhead());
         grid.setColumnReachBonus(input.columnReachBonus());
         return grid;
     }
