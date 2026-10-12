@@ -1,6 +1,7 @@
 package net.bumblebee.claysoldiers.entity.goal.workgoal;
 
 import it.unimi.dsi.fastutil.longs.Long2FloatOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
@@ -48,11 +49,16 @@ public final class ReachMap {
     /** Safety cap on the spots of one map (an open field within the walked limit has about 8,000). */
     private static final int MAX_NODES = 40_000;
     /**
-     * How long a blueprint block counts as out of reach after a builder gave it up while walking to the map's spot for
-     * it: the map's step rules can accept a way soldiers don't manage (keep L2's roof slabs, D78). Out of reach, the
-     * easel hands out scaffold for it, as without the map.
+     * How long a blueprint block counts as out of reach after builders gave it up {@link #FAILED_WALKS} times while walking
+     * to the map's spot for it: the map's step rules can accept a way soldiers don't manage (keep L2's roof slabs, D78).
+     * Out of reach, the easel hands out scaffold for it, as without the map.
      */
     static final int DISTRUST_TICKS = 2400;
+    /**
+     * Give-ups on the map's way to one block before it counts as out of reach. One isn't enough: a builder stranded up
+     * high gives its block up once, is brought back to its chest (D72) and then gets there.
+     */
+    static final int FAILED_WALKS = 2;
 
     private record Key(ResourceKey<Level> dimension, BlockPos easel) {
     }
@@ -64,6 +70,8 @@ public final class ReachMap {
     private final Map<Long, Node> nodes = new HashMap<>();
     /** Blueprint blocks builders couldn't walk to though the map has a spot for them, until the game time stored. */
     private final Long2LongOpenHashMap distrusted = new Long2LongOpenHashMap();
+    /** Give-ups on the map's way to a blueprint block since it last counted as out of reach. */
+    private final Long2IntOpenHashMap failedWalks = new Long2IntOpenHashMap();
     private long madeAt;
     private long usedAt;
     private boolean stale = true;
@@ -117,14 +125,22 @@ public final class ReachMap {
     }
 
     /**
-     * {@code builder} gave up {@code target} while walking to the map's spot for it: the block counts as out of reach for
-     * {@link #DISTRUST_TICKS}, so the easel can hand out scaffold for it instead of handing the block out again.
+     * {@code builder} gave up {@code target} while walking to the map's spot for it. After {@link #FAILED_WALKS} such
+     * give-ups the block counts as out of reach for {@link #DISTRUST_TICKS}, so the easel can hand out scaffold for it
+     * instead of handing the block out again.
      */
     public static void walkFailed(PathfinderMob builder, BlockPos easel, BlockPos target) {
         ReachMap map = MAPS.get(new Key(builder.level().dimension(), easel.immutable()));
-        if (map != null) {
+        if (map == null) {
+            return;
+        }
+        int failed = map.failedWalks.addTo(target.asLong(), 1) + 1;
+        if (failed >= FAILED_WALKS) {
+            map.failedWalks.remove(target.asLong());
             map.distrusted.put(target.asLong(), builder.level().getGameTime() + DISTRUST_TICKS);
-            DebugLog.event(DebugCategory.BUILD, builder, "couldn't walk to the reach map's spot for %s: out of reach for %s ticks", target, DISTRUST_TICKS);
+            DebugLog.event(DebugCategory.BUILD, builder, "couldn't walk to the reach map's spot for %s %s times: out of reach for %s ticks", target, failed, DISTRUST_TICKS);
+        } else {
+            DebugLog.event(DebugCategory.BUILD, builder, "couldn't walk to the reach map's spot for %s (%s of %s)", target, failed, FAILED_WALKS);
         }
     }
 
