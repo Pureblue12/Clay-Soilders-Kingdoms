@@ -265,20 +265,35 @@ public final class Scaffolds {
         if (existing != null && existing.columns() != approach.columns()) {
             approach = existing.columns() ? ScaffoldApproach.CLIMBED_COLUMNS : ScaffoldApproach.STEP_PILLARS;
         }
+        // Builders inside a column stretch up for a block no column reaches the usual way (D78), so the planned
+        // scaffold counts as enough when it reaches every block that way.
+        ScaffoldInput stretched = input.withColumnReachBonus(Tuning.SCAFFOLD_COLUMN_REACH_BONUS.get());
         if (existing != null && !existing.planned().isEmpty()
-                && ScaffoldPlanner.simulate(input, existing.planned(), existing.columns()).stuck().isEmpty()) {
+                && ScaffoldPlanner.simulate(stretched, existing.planned(), existing.columns()).stuck().isEmpty()) {
             // The scaffold already planned still reaches every block left: builders were only briefly stuck. Planning
             // from scratch would pick other spots and add columns needlessly.
             DebugLog.event(DebugCategory.SCAFFOLD, null, "easel %s: the planned scaffold still reaches every block left, nothing added", easel);
             return Optional.of(existing);
         }
-        ScaffoldPlan scaffold = ScaffoldPlanner.plan(input, approach);
-        List<BlockPos> more = new ArrayList<>(scaffold.scaffold());
+        ScaffoldPlan usual = ScaffoldPlanner.plan(input, approach);
+        ScaffoldPlan scaffold = usual;
+        if (!usual.complete() && approach.columns() && stretched.columnReachBonus() > 0) {
+            // Some block no column reaches the usual way (the church's spire top, 9 above the highest column cell under
+            // it): plan again letting builders inside a column stretch up, and keep that plan if it leaves fewer stuck (D78).
+            ScaffoldPlan longer = ScaffoldPlanner.plan(stretched, approach);
+            if (longer.unreachable().size() < usual.unreachable().size()) {
+                DebugLog.event(DebugCategory.SCAFFOLD, null, () -> "easel %s: %d block(s) only in reach stretching up from a column (scaffold.column_reach_bonus %d); usual reach: %s"
+                        .formatted(easel.toShortString(), usual.unreachable().size() - longer.unreachable().size(), stretched.columnReachBonus(), usual.describe()));
+                scaffold = longer;
+            }
+        }
+        ScaffoldPlan chosen = scaffold;
+        List<BlockPos> more = new ArrayList<>(chosen.scaffold());
         if (existing != null) {
             more.removeAll(existing.planned());
         }
         if (more.isEmpty()) {
-            DebugLog.event(DebugCategory.SCAFFOLD, null, "stuck at easel %s: %s", easel, scaffold.describe());
+            DebugLog.event(DebugCategory.SCAFFOLD, null, "stuck at easel %s: %s", easel, chosen.describe());
             return Optional.ofNullable(existing);
         }
         int total = more.size() + (existing == null ? 0 : existing.planned().size());
@@ -292,7 +307,7 @@ public final class Scaffolds {
         ScaffoldSavedData.get(level).put(job);
         long millis = (System.nanoTime() - start) / 1_000_000;
         DebugLog.event(DebugCategory.SCAFFOLD, null, () -> "planned %d scaffold blocks at easel %s in %d ms (%s)".formatted(more.size(), easel.toShortString(),
-                millis, scaffold.describe()));
+                millis, chosen.describe()));
         return Optional.of(job);
     }
 
@@ -346,7 +361,7 @@ public final class Scaffolds {
         // A column's base may be as far as builders walk while they work for a build (the larger bonus, as
         // BuildBlueprintGoal sets it): the keep's far roof corners need columns more than maxPath away (D75).
         int columnPath = BUILDER_FOLLOW_RANGE + Math.max(Tuning.BUILD_PATH_RANGE_BONUS.get(), Tuning.SCAFFOLD_PATH_RANGE_BONUS.get()) - PATH_MARGIN;
-        return new ScaffoldInput(region, solid, blocked, remaining, home, maxPath, Math.max(maxPath, columnPath), noFooting);
+        return new ScaffoldInput(region, solid, blocked, remaining, home, maxPath, Math.max(maxPath, columnPath), noFooting, 0);
     }
 
     /**

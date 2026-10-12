@@ -29,6 +29,8 @@ final class ScaffoldGrid {
     private final BitSet floor;
     /** Scaffolding column cells: not solid, soldiers can be inside them and climb up and down (approach e). */
     private final BitSet climbable;
+    /** How many blocks more a builder inside a column reaches up (D78; 0 for the usual reach). */
+    private int columnReachBonus;
 
     ScaffoldGrid(BoundingBox region) {
         this.region = region;
@@ -38,6 +40,11 @@ final class ScaffoldGrid {
         solid = new BitSet(sizeX * sizeY * sizeZ);
         floor = new BitSet(sizeX * sizeY * sizeZ);
         climbable = new BitSet(sizeX * sizeY * sizeZ);
+    }
+
+    /** Lets a builder inside a column reach {@code bonus} blocks more up (D78). */
+    void setColumnReachBonus(int bonus) {
+        columnReachBonus = bonus;
     }
 
     BoundingBox region() {
@@ -241,17 +248,17 @@ final class ScaffoldGrid {
 
     /**
      * Whether a builder can work on {@code target} (place it, or remove it) from some reachable standing spot. The spot
-     * can't be the target itself.
+     * can't be the target itself. From inside a column it reaches the column reach bonus more up (D78).
      */
     boolean canWorkOn(BitSet reachable, BlockPos target) {
         int range = (int) Math.floor(BuilderReach.HORIZONTAL_REACH);
         for (int dx = -range; dx <= range; dx++) {
             for (int dz = -range; dz <= range; dz++) {
-                for (int feet = target.getY() - BuilderReach.MAX_PLACE_HEIGHT; feet <= target.getY() + BuilderReach.MAX_PLACE_DEPTH; feet++) {
+                for (int feet = target.getY() - BuilderReach.MAX_PLACE_HEIGHT - columnReachBonus; feet <= target.getY() + BuilderReach.MAX_PLACE_DEPTH; feet++) {
                     int x = target.getX() + dx;
                     int z = target.getZ() + dz;
                     if ((dx != 0 || dz != 0 || feet != target.getY()) && isReachable(reachable, x, feet, z)
-                            && BuilderReach.canPlaceFrom(new Vec3(x + 0.5, feet, z + 0.5), target)) {
+                            && BuilderReach.canPlaceFrom(new Vec3(x + 0.5, feet, z + 0.5), target, climbable(x, feet, z) ? columnReachBonus : 0)) {
                         return true;
                     }
                 }

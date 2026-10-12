@@ -43,6 +43,8 @@ public final class ScaffoldClimber {
     @Nullable
     private BlockPos base;
     private int standY;
+    /** How many blocks more than usual the builder reaches up from where it holds (D78; 0 normally). */
+    private int stretch;
     private int walkTicks;
     private int walkLimit;
     /** Per game tick: whether a column base could be walked to (path searches are expensive). */
@@ -55,18 +57,25 @@ public final class ScaffoldClimber {
 
     /**
      * The column cell (lowest first) a builder inside it could work on {@code target} from, if the job is climbed
-     * columns and that column stands from its base up to the cell.
+     * columns and that column stands from its base up to the cell. Only when no cell is in the usual reach, a cell
+     * {@code scaffold.column_reach_bonus} lower counts: the builder stretches up (D78).
      */
     @Nullable
     static BlockPos standingCell(ServerLevel level, ScaffoldJob job, BlockPos target) {
-        if (!job.columns()) {
+        BlockPos cell = standingCell(level, job, target, 0);
+        return cell != null ? cell : standingCell(level, job, target, Tuning.SCAFFOLD_COLUMN_REACH_BONUS.get());
+    }
+
+    @Nullable
+    private static BlockPos standingCell(ServerLevel level, ScaffoldJob job, BlockPos target, int extraHeight) {
+        if (!job.columns() || extraHeight < 0) {
             return null;
         }
         Block material = Scaffolds.materialOf(job);
         BlockPos best = null;
         for (BlockPos cell : job.placed()) {
             if (cell.equals(target) || best != null && cell.getY() >= best.getY()
-                    || !BuilderReach.canPlaceFrom(new Vec3(cell.getX() + 0.5, cell.getY(), cell.getZ() + 0.5), target)) {
+                    || !BuilderReach.canPlaceFrom(new Vec3(cell.getX() + 0.5, cell.getY(), cell.getZ() + 0.5), target, extraHeight)) {
                 continue;
             }
             List<BlockPos> column = job.column(cell);
@@ -151,6 +160,7 @@ public final class ScaffoldClimber {
         }
         base = job.get().column(cell).getFirst();
         standY = cell.getY();
+        stretch = BuilderReach.canPlaceFrom(new Vec3(cell.getX() + 0.5, cell.getY(), cell.getZ() + 0.5), target) ? 0 : Tuning.SCAFFOLD_COLUMN_REACH_BONUS.get();
         state = State.WALKING;
         walkTicks = 0;
         Path path = pathToBase(base);
@@ -162,7 +172,8 @@ public final class ScaffoldClimber {
         BlockPos column = base;
         int y = standY;
         int limit = walkLimit;
-        DebugLog.event(DebugCategory.SCAFFOLD, soldier, () -> "climbing the column at %s to y=%s for %s (walk up to %s ticks)".formatted(column, y, target, limit));
+        String stretching = stretch > 0 ? ", stretching up %s more than usual".formatted(stretch) : "";
+        DebugLog.event(DebugCategory.SCAFFOLD, soldier, () -> "climbing the column at %s to y=%s for %s (walk up to %s ticks%s)".formatted(column, y, target, limit, stretching));
         return true;
     }
 
@@ -247,6 +258,14 @@ public final class ScaffoldClimber {
         }
         state = State.IDLE;
         base = null;
+    }
+
+    /**
+     * Whether the builder holds at its working height in a column and can place {@code target} from there, stretching up
+     * if it climbed for a block only in reach that way (D78).
+     */
+    public boolean holdsInReachOf(BlockPos target) {
+        return state == State.HOLDING && BuilderReach.canPlaceFrom(Vec3.atBottomCenterOf(soldier.blockPosition()), target, stretch);
     }
 
     public boolean isActive() {
