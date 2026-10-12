@@ -38,7 +38,7 @@ import java.util.Set;
 /**
  * Structures batch 1 (look A, docs/STRUCTURES.md): for every structure and detail level, the registry entry is valid,
  * a paste is undone exactly, and 3 builders build it through the blueprint pipeline from a stocked chest: every block
- * placed, the result matching the file block by block, in a time within {@link #TIME_TOLERANCE} of the doc's estimate.
+ * placed, the result matching the file block by block, in a time at most {@link #TIME_TOLERANCE} over the doc's estimate.
  * Plus the file rules (levels only add blocks; shell and fittings only KNOWN-OK blocks; nothing BROKEN placed) and an
  * optional test of building level 2 on a finished level 1 (the upgrade-in-place gap, not fixed here).
  */
@@ -47,14 +47,20 @@ public class Batch1StructureGameTests {
     static final String TEMPLATE = ClaySoldiersCommon.MOD_ID + ":gametest/terrain";
     /** Build time may differ from the doc's estimate by this much (fraction of the estimate). */
     static final double TIME_TOLERANCE = 0.5;
-    /** The least deviation from the estimate a build may have (ticks): a builder's break alone takes longer than a tiny build. */
-    static final long MIN_TIME_SLACK = 100;
+    /**
+     * The least deviation from the estimate a build may have (ticks): a builder's break alone takes longer than a tiny build.
+     * Two breaks since D79: a small build is now mostly fixed waits (road L2, 19 blocks: 321 ticks against 209 on CI).
+     */
+    static final long MIN_TIME_SLACK = 200;
     /**
      * The doc's build-time model (docs/STRUCTURES.md, rule 4, D63): with 3 builders, a block within reach takes this many
-     * ticks per block of the structure's width plus depth (builders walk farther on bigger footprints). For the Small
-     * House's 7 by 9 this gives its measured 22.5 ticks per block.
+     * ticks per block of the structure's width plus depth (builders walk farther on bigger footprints). Was 1.4 (the
+     * Small House's measured 22.5 ticks per block); since builders carry a stack and place nearby blocks in a row (D79)
+     * the batch-1 builds take 0.4 to 1.15 of that (CI runs 38220105839 and 38220816998: cottage L1 about 1,500 ticks against
+     * 3,405, hovel L2 539 against 490). How much faster depends on how many blocks of one item a layer has, so the time
+     * is only checked from above: a build may be faster than the model, not slower than it plus the tolerance.
      */
-    static final double TICKS_PER_BLOCK_PER_SIDE = 1.4;
+    static final double TICKS_PER_BLOCK_PER_SIDE = 1.1;
 
     /**
      * One batch-1 structure: id path, width plus depth, and its block count per level as the doc lists it (level 1 =
@@ -276,10 +282,10 @@ public class Batch1StructureGameTests {
             // The farm is fences: since D64/D66 a fence beside a soldier waits until it has moved, and a builder beside
             // a post is put out first (farm L3 2,705 ticks on CI, estimate 1,792; L2 2,018 against 1,232). A tiny build
             // (the bench: 14 ticks) also gets a floor of MIN_TIME_SLACK ticks, since one break (86 ticks on CI) is
-            // longer than the whole build.
+            // longer than the whole build, and a small one is mostly such waits.
             double tolerance = entry.path().equals("well") || entry.path().equals("farm") ? 2 * TIME_TOLERANCE : TIME_TOLERANCE;
             long allowed = Math.max(Math.round(estimate * tolerance), MIN_TIME_SLACK);
-            helper.assertTrue(Math.abs(ticks - estimate) <= allowed,
+            helper.assertTrue(ticks - estimate <= allowed,
                     "build took " + ticks + " ticks, the doc estimates " + estimate + " (allowed ±" + allowed + " ticks)");
         });
     }

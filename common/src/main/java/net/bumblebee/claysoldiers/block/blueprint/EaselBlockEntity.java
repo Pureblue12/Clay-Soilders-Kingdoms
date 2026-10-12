@@ -22,6 +22,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -48,6 +49,15 @@ public class EaselBlockEntity extends BlockEntity {
         @Override
         public @Nullable BlueprintRequest getRequest(Predicate<BlockPos> canReach) {
             return getBlueprintRequest(canReach);
+        }
+
+        @Override
+        public @Nullable BlueprintRequest getFollowUpRequest(Predicate<BlockPos> canReach, Item item, BlockPos placed) {
+            if (!(template instanceof ServerBlueprintPlan plan) || plan.isFinished() || !(level instanceof ServerLevel serverLevel)) {
+                return null;
+            }
+            var settings = getTemplateSettings();
+            return plan.getFollowUpRequest(serverLevel, getTemplateBase(settings), settings, canReach, item, placed);
         }
 
         @Override

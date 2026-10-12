@@ -276,6 +276,11 @@ public final class ScaffoldClimber {
         return state == State.DESCENDING;
     }
 
+    /** Whether this builder holds at its working height in a column (it can place from there). */
+    public boolean isHolding() {
+        return state == State.HOLDING;
+    }
+
     @Nullable
     private Path pathToBase(BlockPos columnBase) {
         return pathToBase(soldier, columnBase);
