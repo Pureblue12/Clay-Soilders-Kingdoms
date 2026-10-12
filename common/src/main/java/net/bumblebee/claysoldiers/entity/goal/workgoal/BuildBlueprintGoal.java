@@ -400,9 +400,10 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                     bringBack = true;
                 }
                 request.setFinished();
-                // A short, random breather before asking for the next block, so builders don't move in lockstep (D78).
+                // A short, random breather before asking for the next block, so builders don't move in lockstep (D78;
+                // builds that follow a plan only: the others keep their timing).
                 int pause = Tuning.BUILD_PAUSE_TICKS.get();
-                retryCooldown = pause > 0 ? soldier.getRandom().nextInt(pause + 1) : 0;
+                retryCooldown = pause > 0 && !request.standingSpots().isEmpty() ? soldier.getRandom().nextInt(pause + 1) : 0;
             } else if (request.takeSoldierInTheWay()) {
                 DebugLog.event(DebugCategory.BUILD, soldier, "soldier in the way of %s at %s, trying again in %s ticks", request.getItem(), request.getPos(), SOLDIER_IN_THE_WAY_RETRY_TICKS);
                 placeWait = SOLDIER_IN_THE_WAY_RETRY_TICKS;
@@ -484,11 +485,12 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
 
     /**
      * This builder's own pace on the way to a block (D78): the normal speed give or take
-     * {@code build.walk_speed_spread_percent}, fixed per soldier (from its id), so a crew doesn't walk in step.
+     * {@code build.walk_speed_spread_percent}, fixed per soldier (from its id), so a crew doesn't walk in step. Builds that
+     * follow a plan only.
      */
     private double walkSpeed() {
         int spread = Tuning.BUILD_WALK_SPEED_SPREAD_PERCENT.get();
-        if (spread <= 0) {
+        if (spread <= 0 || request == null || request.standingSpots().isEmpty()) {
             return 1.0;
         }
         long bits = soldier.getUUID().getLeastSignificantBits();

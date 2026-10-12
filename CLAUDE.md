@@ -296,7 +296,7 @@ and the "Structure builds" summary has its table. Never edit a plan by hand: cha
   carry; when none can be handed out and no builder holds one, it searches every block as before (BUILD event "plan: ...").
 - Builders try the plan's spots first (`BuilderReach.findPlanned`: one at random, then the nearest), then the normal search.
 - Blocks the plan leaves out (need scaffold) come after it. `build.follow_plan` 0 turns it all off.
-- Natural touches for every build: a random pause after placing (`build.pause_ticks`), each builder's own pace
+- Natural touches for builds that follow a plan: a random pause after placing (`build.pause_ticks`), each builder's own pace
   (`build.walk_speed_spread_percent`).
 
 ### Known limitations

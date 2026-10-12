@@ -118,9 +118,9 @@ public final class Tuning {
     public static final TuningKey.IntKey BUILD_FOLLOW_PLAN = register(new TuningKey.IntKey("build.follow_plan",
             "1: builders follow a structure's pre-baked build plan (data/csr/build_plan, made by tools/build_plan.py): the plan's waves in order, a random block of the current wave, the plan's standing spots first (D78). 0: hand out blocks in the blueprint's normal order and search for standing spots, as before.", 1, 0, 1));
     public static final TuningKey.IntKey BUILD_PAUSE_TICKS = register(new TuningKey.IntKey("build.pause_ticks",
-            "After placing a block, a builder waits a random 0 to this many ticks before asking for the next one, so a crew doesn't move in lockstep (D78); 0 = no pause.", 6, 0, 200));
+            "After placing a block of a build that follows a plan, a builder waits a random 0 to this many ticks before asking for the next one, so a crew doesn't move in lockstep (D78); 0 = no pause.", 6, 0, 200));
     public static final TuningKey.IntKey BUILD_WALK_SPEED_SPREAD_PERCENT = register(new TuningKey.IntKey("build.walk_speed_spread_percent",
-            "Each builder walks to its blocks at its own pace: the normal speed give or take up to this many percent, fixed per soldier (D78); 0 = all the same.", 10, 0, 30));
+            "In builds that follow a plan, each builder walks to its blocks at its own pace: the normal speed give or take up to this many percent, fixed per soldier (D78); 0 = all the same.", 10, 0, 30));
     public static final TuningKey.IntKey WORK_FALL_DAMAGE_PERCENT = register(new TuningKey.IntKey("work.fall_damage_percent",
             "Fall damage to a soldier that is working (building, digging, farming), in percent of vanilla's (a fall of 4 blocks costs half a heart). Upstream multiplies every environmental damage by 100, so a 4-block drop kills; builders working on upper floors fell off and died on every tall build. 10000 restores that.", 100, 0, 10000));
     public static final TuningKey.IntKey SCAFFOLD_COLUMNS_FIRST = register(new TuningKey.IntKey("scaffold.columns_first",
