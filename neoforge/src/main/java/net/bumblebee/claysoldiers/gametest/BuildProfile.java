@@ -1,10 +1,8 @@
 package net.bumblebee.claysoldiers.gametest;
 
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
-import net.bumblebee.claysoldiers.block.blueprint.EaselBlockEntity;
 import net.bumblebee.claysoldiers.debug.DebugEvent;
 import net.bumblebee.claysoldiers.debug.DebugLog;
-import net.minecraft.gametest.framework.GameTestHelper;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -40,29 +38,22 @@ final class BuildProfile {
     private BuildProfile() {
     }
 
-    static void watch(GameTestHelper helper, String name, EaselBlockEntity easel) {
-        long start = helper.getTick();
-        boolean[] done = {false};
-        helper.onEachTick(() -> {
-            if (done[0] || !easel.isFinished()) {
-                return;
-            }
-            done[0] = true;
-            Map<String, Integer> counts = new LinkedHashMap<>();
-            COUNTED.keySet().forEach(key -> counts.put(key, 0));
-            int events = 0;
-            for (DebugEvent event : DebugLog.events()) {
-                events++;
-                for (Map.Entry<String, Predicate<String>> counted : COUNTED.entrySet()) {
-                    if (counted.getValue().test(event.message())) {
-                        counts.merge(counted.getKey(), event.count(), Integer::sum);
-                    }
+    /** Writes the profile line of a build that has just finished, {@code ticks} after it started. */
+    static void write(String name, long ticks) {
+        Map<String, Integer> counts = new LinkedHashMap<>();
+        COUNTED.keySet().forEach(key -> counts.put(key, 0));
+        int events = 0;
+        for (DebugEvent event : DebugLog.events()) {
+            events++;
+            for (Map.Entry<String, Predicate<String>> counted : COUNTED.entrySet()) {
+                if (counted.getValue().test(event.message())) {
+                    counts.merge(counted.getKey(), event.count(), Integer::sum);
                 }
             }
-            StringBuilder line = new StringBuilder().append(helper.getTick() - start).append(" ticks");
-            counts.forEach((key, count) -> line.append(", ").append(key).append(' ').append(count));
-            line.append(" (").append(events).append(" events").append(events >= CAPACITY ? ", buffer full: counts low" : "").append(')');
-            ClaySoldiersCommon.LOGGER.info("CSR build profile {}: {}", name, line);
-        });
+        }
+        StringBuilder line = new StringBuilder().append(ticks).append(" ticks");
+        counts.forEach((key, count) -> line.append(", ").append(key).append(' ').append(count));
+        line.append(" (").append(events).append(" events").append(events >= CAPACITY ? ", buffer full: counts low" : "").append(')');
+        ClaySoldiersCommon.LOGGER.info("CSR build profile {}: {}", name, line);
     }
 }

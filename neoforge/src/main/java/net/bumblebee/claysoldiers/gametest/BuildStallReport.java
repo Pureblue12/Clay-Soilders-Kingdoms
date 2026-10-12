@@ -52,6 +52,16 @@ final class BuildStallReport {
      * Starts recording and arranges the report. Call at the start of the test; {@code timeoutTicks} is the test's own.
      */
     static void watch(GameTestHelper helper, String what, int timeoutTicks, EaselBlockEntity easel, ChestBlockEntity chest, List<ClaySoldierEntity> builders) {
+        watch(helper, what, timeoutTicks, easel, chest, builders, () -> {
+        });
+    }
+
+    /**
+     * As above; {@code whenFinished} runs on the tick the easel is found finished, before the recorder is cleared (tick
+     * handlers run in no fixed order, so another handler can't read the recorder then).
+     */
+    static void watch(GameTestHelper helper, String what, int timeoutTicks, EaselBlockEntity easel, ChestBlockEntity chest, List<ClaySoldierEntity> builders,
+                      Runnable whenFinished) {
         // A test that records for its own checks keeps its recorder as it set it up; the report then shows its events.
         boolean ownRecorder = !DebugLog.isRecording();
         if (ownRecorder) {
@@ -67,6 +77,7 @@ final class BuildStallReport {
             }
             if (easel.isFinished()) {
                 done[0] = true;
+                whenFinished.run();
                 if (ownRecorder) {
                     DebugLog.reset();
                 }

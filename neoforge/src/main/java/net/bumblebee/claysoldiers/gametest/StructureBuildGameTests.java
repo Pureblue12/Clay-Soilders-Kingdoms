@@ -242,11 +242,11 @@ public class StructureBuildGameTests {
         EaselBlockEntity easel = setup.easel();
         StructureTemplate template = StructurePaster.template(world, meta, level);
         boolean profile = profiling();
-        if (profile) {
-            // Registered before the stall report's watcher, which clears the recorder on the tick the easel finishes.
-            BuildProfile.watch(helper, name, easel);
-        }
-        BuildStallReport.watch(helper, name, timeoutTicks, easel, setup.chest(), setup.soldiers());
+        long profileStart = helper.getTick();
+        // The profile is counted from the recorder just before the stall report's watcher clears it, when the easel finishes.
+        BuildStallReport.watch(helper, name, timeoutTicks, easel, setup.chest(), setup.soldiers(),
+                profile ? () -> BuildProfile.write(name, helper.getTick() - profileStart) : () -> {
+                });
         if (profile) {
             DebugLog.setCapacity(BuildProfile.CAPACITY);
         }
