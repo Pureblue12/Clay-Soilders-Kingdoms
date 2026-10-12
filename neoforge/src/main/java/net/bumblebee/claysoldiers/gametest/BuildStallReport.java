@@ -94,20 +94,28 @@ final class BuildStallReport {
         });
     }
 
-    /** What slowed a build that did finish: its builders' give-ups and reach map events, then their last BUILD events. */
+    /** What slowed a build that did finish: its builders' give-ups and reach map events, then each builder's last events. */
     static List<String> slowReport(long ticks, List<ClaySoldierEntity> builders) {
         List<String> lines = new ArrayList<>();
         lines.add("finished late, after " + ticks + " ticks");
         List<String> names = builders.stream().map(DebugLog::shortName).toList();
         Predicate<DebugEvent> ours = event -> names.stream().anyMatch(name -> event.toLine().contains(" " + name + " "));
         List<DebugEvent> all = DebugLog.events();
-        List<DebugEvent> slow = tail(all, ours.and(event -> event.toLine().contains("gave up") || event.toLine().contains("reach map")
-                || event.toLine().contains("stranded") || event.toLine().contains("soldier in the way")), 40);
+        long maps = all.stream().filter(ours).filter(event -> event.toLine().contains("reach map made")).count();
+        lines.add(maps + " reach maps made");
+        List<DebugEvent> slow = tail(all, ours.and(event -> !event.toLine().contains("reach map made") && (event.toLine().contains("gave up")
+                || event.toLine().contains("reach map") || event.toLine().contains("stranded") || event.toLine().contains("soldier in the way"))), 40);
         lines.add(slow.size() + " give-ups and reach map events, oldest first:");
         slow.forEach(event -> lines.add("  " + event.toLine()));
-        List<DebugEvent> last = tail(all, ours.and(event -> event.category() == DebugCategory.BUILD), 60);
-        lines.add("last " + last.size() + " BUILD events of its builders, oldest first:");
-        last.forEach(event -> lines.add("  " + event.toLine()));
+        // Per builder, leaving out the noise of idle builders asking for an item another one carries (well L3, run 38310973353).
+        Predicate<DebugEvent> busy = event -> (event.category() == DebugCategory.BUILD || event.category() == DebugCategory.PATHING)
+                && !event.toLine().contains("reach map made") && !event.toLine().contains("storage has no")
+                && !event.toLine().contains("request released (cancelled)") && !event.toLine().contains("got request");
+        for (String name : names) {
+            List<DebugEvent> last = tail(all, busy.and(event -> event.toLine().contains(" " + name + " ")), 25);
+            lines.add("last " + last.size() + " BUILD and PATHING events of " + name + ", oldest first:");
+            last.forEach(event -> lines.add("  " + event.toLine()));
+        }
         return lines;
     }
 
