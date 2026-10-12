@@ -77,6 +77,22 @@ def support(name, props, pos):
         return x, y - 1, z
     if props.get("hanging") == "true" or name.endswith("hanging_sign"):
         return x, y + 1, z
+    if name == "bell":
+        # A bell hangs from the block above (the chapel steeple's) or from its wall, or stands on the floor.
+        attachment = props.get("attachment")
+        if attachment == "ceiling":
+            return x, y + 1, z
+        if attachment in ("single_wall", "double_wall") and facing:
+            return x + facing[0], y, z + facing[2]
+        return x, y - 1, z
+    if name == "vine":
+        # A vine hanging under a block (garden L3's vines under azalea leaves) rests on it, else on a wall it covers.
+        if props.get("up") == "true":
+            return x, y + 1, z
+        for side, (dx, _, dz) in DIRS.items():
+            if props.get(side) == "true":
+                return x + dx, y, z + dz
+        return None
     if B.named(name, B.GRAVITY) or B.named(name, B.PLANTS) or B.named(name, STANDING) or name.endswith("_door"):
         return x, y - 1, z
     return None
