@@ -425,8 +425,15 @@ public class ServerBlueprintPlan extends BlueprintPlan {
                 carried.add(targetPosition(base, settings, info));
             }
         }
+        // Random, but among the wave's blocks nearest the builder first (in steps of NEAR_STEP blocks): a fully random pick
+        // sent builders across the whole site and doubled build times (town hall L1 51,300 ticks against 28,000).
         Collections.shuffle(current, new java.util.Random(level.getRandom().nextLong()));
-        current.sort(Comparator.comparing(info -> nearAny(targetPosition(base, settings, info), carried)));
+        Comparator<BlueprintBlockInfo> order = Comparator.comparing(info -> nearAny(targetPosition(base, settings, info), carried));
+        if (canReach instanceof ReachOrigin origin) {
+            BlockPos from = origin.reachOrigin();
+            order = order.thenComparingInt(info -> (int) Math.sqrt(targetPosition(base, settings, info).distSqr(from)) / NEAR_STEP);
+        }
+        current.sort(order);
         Search inWave = search(current, level, base, settings, canReach, "plan wave " + wave + ": ");
         if (inWave.request() != null) {
             return inWave.request();
@@ -439,6 +446,9 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         DebugLog.event(DebugCategory.BUILD, null, "plan: nothing of wave %s can be handed out (%s blocks left in it), searching every block", wave, current.size());
         return search(blockInfoList, level, base, settings, canReach, "outside the plan: ").request();
     }
+
+    /** Distance steps (blocks) inside which a wave's blocks count as equally near the builder (see {@link #getRequest}). */
+    private static final int NEAR_STEP = 4;
 
     /** Times builders may give up a planned block before the plan stops handing it out (see {@link #getRequest}). */
     public static final int PLAN_GIVE_UPS = 2;
