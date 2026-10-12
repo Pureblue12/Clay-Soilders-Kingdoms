@@ -47,8 +47,11 @@ public class Batch1StructureGameTests {
     static final String TEMPLATE = ClaySoldiersCommon.MOD_ID + ":gametest/terrain";
     /** Build time may differ from the doc's estimate by this much (fraction of the estimate). */
     static final double TIME_TOLERANCE = 0.5;
-    /** The least deviation from the estimate a build may have (ticks): a builder's break alone takes longer than a tiny build. */
-    static final long MIN_TIME_SLACK = 100;
+    /**
+     * The least deviation from the estimate a build may have (ticks): a builder's break alone takes longer than a tiny build.
+     * Two breaks since D79: a small build is now mostly fixed waits (road L2, 19 blocks: 321 ticks against 209 on CI).
+     */
+    static final long MIN_TIME_SLACK = 200;
     /**
      * The doc's build-time model (docs/STRUCTURES.md, rule 4, D63): with 3 builders, a block within reach takes this many
      * ticks per block of the structure's width plus depth (builders walk farther on bigger footprints). Was 1.4 (the
@@ -279,7 +282,7 @@ public class Batch1StructureGameTests {
             // The farm is fences: since D64/D66 a fence beside a soldier waits until it has moved, and a builder beside
             // a post is put out first (farm L3 2,705 ticks on CI, estimate 1,792; L2 2,018 against 1,232). A tiny build
             // (the bench: 14 ticks) also gets a floor of MIN_TIME_SLACK ticks, since one break (86 ticks on CI) is
-            // longer than the whole build.
+            // longer than the whole build, and a small one is mostly such waits.
             double tolerance = entry.path().equals("well") || entry.path().equals("farm") ? 2 * TIME_TOLERANCE : TIME_TOLERANCE;
             long allowed = Math.max(Math.round(estimate * tolerance), MIN_TIME_SLACK);
             helper.assertTrue(ticks - estimate <= allowed,
