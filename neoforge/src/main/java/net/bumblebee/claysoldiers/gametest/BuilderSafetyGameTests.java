@@ -69,6 +69,22 @@ public class BuilderSafetyGameTests {
     }
 
     /**
+     * BUG TEST (berry bush deaths): a working builder brushes a sweet berry bush. Vanilla's 1.0 times upstream's 100
+     * killed it at once (hospital L3: all three builders died in its garden, D81); it must take vanilla's damage and live.
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 200)
+    public static void workingBuilderSurvivesABerryBush(GameTestHelper helper) {
+        BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "berry_bush_survival", 1, 1, 1, BlockPos.ZERO);
+        ClaySoldierEntity soldier = ClaySoldierGameTests.setUpBuilder(helper, blueprint, List.of(new ItemStack(Items.COBBLESTONE))).soldier();
+        helper.runAfterDelay(20, () -> {
+            soldier.hurt(soldier.damageSources().sweetBerryBush(), 1.0f);
+            helper.assertTrue(soldier.isAlive(), "BUG (berry bush death): the working builder died from brushing a berry bush");
+            helper.assertTrue(soldier.getHealth() < soldier.getMaxHealth(), "The bush did not hurt the builder at all");
+            helper.succeed();
+        });
+    }
+
+    /**
      * BUG TEST (hurt by a planned drop): a working builder drops 3 blocks onto the top of a slab, 3.5 in all. The
      * pathfinder counts that as a 3-block drop and plans it, and the edge guard lets it through, so it must not hurt (town
      * hall builders lost a point of health on every such drop until they died, run 38165377544; D74).
@@ -170,6 +186,28 @@ public class BuilderSafetyGameTests {
         helper.succeedWhen(() -> {
             helper.assertTrue(helper.getTick() > 400, "Too early");
             helper.assertBlockPresent(Blocks.COBBLESTONE, SPOT);
+        });
+    }
+
+    /**
+     * BUG TEST (berry bushes): a soldier stands where the blueprint wants a sweet berry bush. A bush has no collision
+     * box, so the "block would overlap a creature" rule let it through, and the soldier ended up inside it, hurt until it
+     * died (hospital L3: all three builders, D81). The bush must wait until the soldier is gone.
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 1000)
+    public static void berryBushIsNotPlacedOnASoldier(GameTestHelper helper) {
+        helper.setBlock(SPOT.below(), Blocks.GRASS_BLOCK);
+        BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "bush_on_the_spot", 1, 1, 1, Blocks.SWEET_BERRY_BUSH, BlockPos.ZERO);
+        ClaySoldierGameTests.setUpBuilder(helper, blueprint, List.of(new ItemStack(Items.SWEET_BERRIES)));
+        ClaySoldierEntity bystander = bystander(helper, SPOT);
+        helper.runAfterDelay(400, () -> {
+            helper.assertBlockPresent(Blocks.AIR, SPOT);
+            helper.assertTrue(bystander.isAlive(), "The bystander died");
+            bystander.discard();
+        });
+        helper.succeedWhen(() -> {
+            helper.assertTrue(helper.getTick() > 400, "Too early");
+            helper.assertBlockPresent(Blocks.SWEET_BERRY_BUSH, SPOT);
         });
     }
 

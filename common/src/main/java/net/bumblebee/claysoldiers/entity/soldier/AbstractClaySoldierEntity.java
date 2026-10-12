@@ -209,6 +209,15 @@ public class AbstractClaySoldierEntity extends ClayMobTeamOwnerEntity implements
             }
             return w ? 75 : 100;
         };
+        // Brushing a sweet berry bush (1.0, times upstream's 100) killed a builder at once: hospital L3 lost all three
+        // builders in its garden (D81). A working soldier takes vanilla's damage and walks on.
+        this.plantDamage = (w, e) -> {
+            if (workSelector.isWorking()) {
+                DebugLog.event(DebugCategory.DAMAGE, this, "plant damage while working: %s%% of vanilla's", Tuning.WORK_PLANT_DAMAGE_PERCENT.get());
+                return Tuning.WORK_PLANT_DAMAGE_PERCENT.get() / 100f;
+            }
+            return w ? 75 : 100;
+        };
         this.delayedScale = getSoldierSize();
     }
 

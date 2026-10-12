@@ -127,6 +127,8 @@ public final class Tuning {
             "In builds that follow a plan, each builder walks to its blocks at its own pace: the normal speed give or take up to this many percent, fixed per soldier (D80); 0 = all the same.", 10, 0, 30));
     public static final TuningKey.IntKey WORK_FALL_DAMAGE_PERCENT = register(new TuningKey.IntKey("work.fall_damage_percent",
             "Fall damage to a soldier that is working (building, digging, farming), in percent of vanilla's (a fall of 4 blocks costs half a heart). Upstream multiplies every environmental damage by 100, so a 4-block drop kills; builders working on upper floors fell off and died on every tall build. 10000 restores that.", 100, 0, 10000));
+    public static final TuningKey.IntKey WORK_PLANT_DAMAGE_PERCENT = register(new TuningKey.IntKey("work.plant_damage_percent",
+            "Damage to a soldier that is working from touching a sweet berry bush or a cactus, in percent of vanilla's (half a heart a touch). Upstream multiplies every environmental damage by 100, so brushing a bush killed a builder at once (hospital L3, D81). 10000 restores that.", 100, 0, 10000));
     public static final TuningKey.IntKey SCAFFOLD_COLUMNS_FIRST = register(new TuningKey.IntKey("scaffold.columns_first",
             "1: once builders start putting up a build's scaffolding (nothing else in reach), they put all of it up before working above reach; 0: they raise it a level at a time, whenever nothing else is in reach.", 1, 0, 1));
     public static final TuningKey.BlockKey SCAFFOLD_MATERIAL = register(new TuningKey.BlockKey("scaffold.material",
