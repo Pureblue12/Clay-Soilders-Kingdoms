@@ -117,7 +117,7 @@ public class BuildPlanGameTests {
      * Builders build the well's level 1 from its plan (with the normal order, the chain and logs above the shaft ended up
      * out of reach: 49 of 54 in the offline replay, unfinished in the structure builds).
      */
-    @GameTest(template = StructureBuildGameTests.TEMPLATE, timeoutTicks = 12000, batch = "build_plan_well", skyAccess = true)
+    @GameTest(template = "gametest/structure_build", timeoutTicks = 12000, batch = "build_plan_well", skyAccess = true)
     public static void buildersBuildTheWellFromItsPlan(GameTestHelper helper) {
         StructureBuildGameTests.Entry well = StructureBuildGameTests.STRUCTURES.stream().filter(e -> e.path().equals("well"))
                 .findFirst().orElseThrow(() -> new GameTestAssertException("the well isn't in StructureBuildGameTests.STRUCTURES"));
