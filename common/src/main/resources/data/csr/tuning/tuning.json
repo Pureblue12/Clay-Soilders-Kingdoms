@@ -43,6 +43,7 @@
   "build.reach_map_distrust_ticks": 2400,
   "build.carry_count": 16,
   "work.fall_damage_percent": 100,
+  "work.plant_damage_percent": 100,
   "scaffold.columns_first": 1,
   "scaffold.material": "minecraft:scaffolding",
   "scaffold.refund": 1,

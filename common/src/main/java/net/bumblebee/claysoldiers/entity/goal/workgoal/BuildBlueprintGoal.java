@@ -55,7 +55,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     /** While BUILD is recorded: closed doors found in the way during one search, and the blocks behind each. */
     @Nullable
     private Map<BlockPos, List<BlockPos>> blockedByDoor;
-    /** Whether this request search already ran the old searches for one block off the reach map (recorder only, D80). */
+    /** Whether this request search already ran the old searches for one block off the reach map (recorder only, D82). */
     private boolean explainedOffMap;
     /**
      * When the easel has no reachable block, the builder waits this many ticks plus up to
@@ -122,7 +122,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     @Nullable
     private BlockPos pathEnd;
     private int lastStepTicks;
-    /** Whether this request's walk used the reach map's spot or route: giving it up then tells the map (D80). */
+    /** Whether this request's walk used the reach map's spot or route: giving it up then tells the map (D82). */
     private boolean onMapRoute;
     /**
      * Where this builder just placed a block while it still carries more of that item ({@code build.carry_count}, D79):
@@ -376,12 +376,12 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
 
     private boolean canReach(BlockPos pos) {
         if (ReachMap.enabled() && easelPos != null) {
-            // One look at the build's reach map instead of path searches (D80); the recorder's reasons need searches.
+            // One look at the build's reach map instead of path searches (D82); the recorder's reasons need searches.
             if (ReachMap.canReachToPlace(soldier, easelPos.pos(), pos) || canClimbTo(pos)) {
                 return true;
             }
             // While recording, only the first block off the map per request search gets the old searches to say why
-            // (closed doors); the rest are counted, so a recorded build costs about what an unrecorded one does (D80).
+            // (closed doors); the rest are counted, so a recorded build costs about what an unrecorded one does (D82).
             if (unreachableReasons != null) {
                 if (explainedOffMap) {
                     unreachableReasons.merge("not on the build's reach map", 1, Integer::sum);
@@ -581,7 +581,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             // Walk the same kind of path the reachable check accepted: it ends where the block can be placed.
             Path path = BuilderReach.pathToPlace(soldier, request.getPos());
             // A scaffolding column that reaches the block comes before the reach map's spot: chapel L2's last slab had a
-            // map spot builders never got to, while a column beside it stood unused (D80).
+            // map spot builders never got to, while a column beside it stood unused (D82).
             if (path == null && easelPos != null && soldier.level() instanceof ServerLevel level && climber.start(level, easelPos.pos(), request.getPos())) {
                 return false; // out of reach from the ground: climb a scaffolding column
             }

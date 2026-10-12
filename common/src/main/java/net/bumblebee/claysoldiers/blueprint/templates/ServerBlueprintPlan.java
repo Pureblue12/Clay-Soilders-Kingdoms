@@ -23,8 +23,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.BaseFireBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CrossCollisionBlock;
+import net.minecraft.world.level.block.PowderSnowBlock;
+import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.world.level.block.WitherRoseBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -218,10 +223,17 @@ public class ServerBlueprintPlan extends BlueprintPlan {
     /**
      * Whether a living creature's body is where {@code state} placed at {@code pos} would be (vanilla's own placement
      * rule: the block's collision shape against every creature's bounding box, so a soldier half inside the cell counts),
-     * or stands in the cell of a fence, wall or pane next to it (which would grow an arm toward the new block).
+     * or stands in the cell of a fence, wall or pane next to it (which would grow an arm toward the new block), or is
+     * partly in the cell of a block that hurts whoever is inside it ({@link #hurtsInside}: a sweet berry bush).
      */
     public static boolean creatureInside(Level level, BlockPos pos, BlockState state) {
         if (!level.isUnobstructed(state, pos, CollisionContext.empty())) {
+            return true;
+        }
+        // A block that hurts whoever is inside it has no collision box, so the rule above lets it through: hospital L3
+        // builders stood where a sweet berry bush was placed and were hurt until they died (D81). Any part of a body
+        // in the cell counts.
+        if (hurtsInside(state) && !level.getEntitiesOfClass(LivingEntity.class, new AABB(pos), LivingEntity::isAlive).isEmpty()) {
             return true;
         }
         // A fence, wall or pane only fills the middle of its cell, so a tiny soldier can stand beside the post without
@@ -241,6 +253,13 @@ public class ServerBlueprintPlan extends BlueprintPlan {
             }
         }
         return false;
+    }
+
+    /** Blocks without a collision box that hurt or trap a creature standing in them (vanilla's {@code entityInside}). */
+    static boolean hurtsInside(BlockState state) {
+        Block block = state.getBlock();
+        return block instanceof SweetBerryBushBlock || block instanceof WitherRoseBlock || block instanceof BaseFireBlock
+                || block instanceof PowderSnowBlock;
     }
 
     /**
