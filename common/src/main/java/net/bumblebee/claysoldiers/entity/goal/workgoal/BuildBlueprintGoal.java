@@ -120,6 +120,8 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     @Nullable
     private BlockPos pathEnd;
     private int lastStepTicks;
+    /** Whether this request's walk used the reach map's spot or route: giving it up then tells the map (D78). */
+    private boolean onMapRoute;
 
     public BuildBlueprintGoal(AbstractClaySoldierEntity soldier, Supplier<WorkSelectorGoal> workSelector, int searchRange) {
         super(soldier, workSelector);
@@ -183,6 +185,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             bringBack = !soldier.getCarriedStack().isEmpty();
             climber.descend();
             request = null;
+            onMapRoute = false;
         } else if (request.hasStarted()) {
             // The give-up timer also runs while fetching the item from storage.
             if (++carryTicks > MAX_CARRY_TICKS) {
@@ -252,6 +255,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         } else {
             easelPos = null;
             request = null;
+            onMapRoute = false;
         }
     }
 
@@ -261,6 +265,10 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     private void giveUpRequest() {
         climber.descend();
         DebugLog.event(DebugCategory.BUILD, soldier, "gave up %s at %s after %s ticks (fetching + carrying), releasing it", request.getItem(), request.getPos(), carryTicks);
+        if (onMapRoute && easelPos != null) {
+            ReachMap.walkFailed(soldier, easelPos.pos(), request.getPos());
+        }
+        onMapRoute = false;
         request.cancel();
         request = null;
         bringBack = !soldier.getCarriedStack().isEmpty();
@@ -414,6 +422,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                 request.cancel();
             }
             request = null;
+            onMapRoute = false;
         } else {
             easelPos = null;
         }
@@ -470,13 +479,17 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                 return false;
             }
             // Walk the same kind of path the reachable check accepted: it ends where the block can be placed.
-            Path path = ReachMap.enabled() && easelPos != null
-                    ? ReachMap.pathToPlace(soldier, easelPos.pos(), request.getPos()) : BuilderReach.pathToPlace(soldier, request.getPos());
+            Path path = BuilderReach.pathToPlace(soldier, request.getPos());
+            if (path == null && ReachMap.enabled() && easelPos != null) {
+                path = ReachMap.pathToMapSpot(soldier, easelPos.pos(), request.getPos());
+                onMapRoute |= path != null;
+            }
             if (path == null && easelPos != null && soldier.level() instanceof ServerLevel level && climber.start(level, easelPos.pos(), request.getPos())) {
                 return false; // out of reach from the ground: climb a scaffolding column
             }
             if (path == null && ReachMap.enabled() && easelPos != null) {
                 path = ReachMap.routeToPlace(soldier, easelPos.pos(), request.getPos());
+                onMapRoute |= path != null;
             }
             pathEnd = path == null || path.getEndNode() == null ? null : path.getEndNode().asBlockPos();
             lastStepTicks = 0;

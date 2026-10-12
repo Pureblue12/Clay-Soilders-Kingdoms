@@ -47,6 +47,12 @@ public final class ReachMap {
     private static final int FORGET_TICKS = 2400;
     /** Safety cap on the spots of one map (an open field within the walked limit has about 8,000). */
     private static final int MAX_NODES = 40_000;
+    /**
+     * How long a blueprint block counts as out of reach after a builder gave it up while walking to the map's spot for
+     * it: the map's step rules can accept a way soldiers don't manage (keep L2's roof slabs, D78). Out of reach, the
+     * easel hands out scaffold for it, as without the map.
+     */
+    static final int DISTRUST_TICKS = 2400;
 
     private record Key(ResourceKey<Level> dimension, BlockPos easel) {
     }
@@ -56,6 +62,8 @@ public final class ReachMap {
     private final Long2FloatOpenHashMap distance = new Long2FloatOpenHashMap();
     private final Long2LongOpenHashMap step = new Long2LongOpenHashMap();
     private final Map<Long, Node> nodes = new HashMap<>();
+    /** Blueprint blocks builders couldn't walk to though the map has a spot for them, until the game time stored. */
+    private final Long2LongOpenHashMap distrusted = new Long2LongOpenHashMap();
     private long madeAt;
     private long usedAt;
     private boolean stale = true;
@@ -101,27 +109,39 @@ public final class ReachMap {
      * that {@link BuilderReach#canPlaceFrom} accepts is on the map.
      */
     public static boolean canReachToPlace(PathfinderMob builder, BlockPos easel, BlockPos target) {
-        return of(builder, easel).bestSpot(builder.level(), target) != null;
+        ReachMap map = of(builder, easel);
+        if (builder.level().getGameTime() < map.distrusted.getOrDefault(target.asLong(), Long.MIN_VALUE)) {
+            return false;
+        }
+        return map.bestSpot(builder.level(), target) != null;
     }
 
     /**
-     * A path to a spot {@code target} can be placed from: the old search first ({@link BuilderReach#pathToPlace}), so
-     * builders walk exactly as before whenever it finds a way; when it doesn't (its step budget ran out), vanilla's
-     * path to the map's nearest spot, which is cheap because that spot is known to be reachable. {@code null} when
-     * neither finds one: the builder may then climb a scaffolding column, or walk {@link #routeToPlace}.
+     * {@code builder} gave up {@code target} while walking to the map's spot for it: the block counts as out of reach for
+     * {@link #DISTRUST_TICKS}, so the easel can hand out scaffold for it instead of handing the block out again.
+     */
+    public static void walkFailed(PathfinderMob builder, BlockPos easel, BlockPos target) {
+        ReachMap map = MAPS.get(new Key(builder.level().dimension(), easel.immutable()));
+        if (map != null) {
+            map.distrusted.put(target.asLong(), builder.level().getGameTime() + DISTRUST_TICKS);
+            DebugLog.event(DebugCategory.BUILD, builder, "couldn't walk to the reach map's spot for %s: out of reach for %s ticks", target, DISTRUST_TICKS);
+        }
+    }
+
+    /**
+     * Vanilla's path to the map's nearest spot for {@code target}, for when the old search ({@link
+     * BuilderReach#pathToPlace}) found no way (its step budget ran out); cheap because that spot is known to be
+     * reachable. {@code null} when it doesn't get there: the builder may then climb a scaffolding column, or walk
+     * {@link #routeToPlace}.
      */
     @Nullable
-    public static Path pathToPlace(PathfinderMob builder, BlockPos easel, BlockPos target) {
-        Path path = BuilderReach.pathToPlace(builder, target);
-        if (path != null) {
-            return path;
-        }
+    public static Path pathToMapSpot(PathfinderMob builder, BlockPos easel, BlockPos target) {
         ReachMap map = MAPS.get(new Key(builder.level().dimension(), easel.immutable()));
         BlockPos spot = map == null ? null : map.bestSpot(builder.level(), target);
         if (spot == null) {
             return null;
         }
-        path = BuilderReach.pathToSpot(builder, spot);
+        Path path = BuilderReach.pathToSpot(builder, spot);
         if (path != null && path.canReach() && path.getEndNode() != null && BuilderReach.canPlaceFrom(Vec3.atBottomCenterOf(path.getEndNode().asBlockPos()), target)) {
             DebugLog.event(DebugCategory.PATHING, builder, "path search for %s found no way, walking to the reach map's spot %s", target, spot);
             return path;
