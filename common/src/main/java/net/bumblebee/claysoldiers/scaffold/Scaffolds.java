@@ -15,7 +15,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
@@ -92,12 +91,13 @@ public final class Scaffolds {
             return null; // maybe only one builder is boxed in for a moment: start the scaffold once the whole build is stuck
         }
         Block material = material(current);
-        Set<Long> columnsWaiting = new HashSet<>(); // columns: only the lowest missing cell can go up next
         for (BlockPos pos : current.planned()) {
             if (current.placed().contains(pos)) {
                 continue;
             }
-            if (current.columns() && !columnsWaiting.add(ChunkPos.asLong(pos.getX(), pos.getZ()))) {
+            // columns: only the lowest missing cell of a column can go up next (a column on an upper floor above
+            // another one at the same x and z is a separate column, D75)
+            if (current.columns() && current.planned().contains(pos.below()) && !current.placed().contains(pos.below())) {
                 continue;
             }
             if (busy(level, current, pos) || !ServerBlueprintPlan.canPlaceAt(level, pos)) {
@@ -333,7 +333,10 @@ public final class Scaffolds {
         // bonus while scaffolding). The planner keeps a margin (the way from the storage, and vanilla's search, which
         // gives up on long winding routes before the limit).
         int maxPath = BUILDER_FOLLOW_RANGE + Tuning.SCAFFOLD_PATH_RANGE_BONUS.get() - PATH_MARGIN;
-        return new ScaffoldInput(region, solid, blocked, remaining, home, maxPath);
+        // A column's base may be as far as builders walk while they work for a build (the larger bonus, as
+        // BuildBlueprintGoal sets it): the keep's far roof corners need columns more than maxPath away (D75).
+        int columnPath = BUILDER_FOLLOW_RANGE + Math.max(Tuning.BUILD_PATH_RANGE_BONUS.get(), Tuning.SCAFFOLD_PATH_RANGE_BONUS.get()) - PATH_MARGIN;
+        return new ScaffoldInput(region, solid, blocked, remaining, home, maxPath, Math.max(maxPath, columnPath));
     }
 
     /**

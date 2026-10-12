@@ -2,7 +2,7 @@
 """Fast static "can this be built" check for every promoted structure level, before any game test runs.
 
   python3 tools/buildability.py                    every structure level (the ones StructureBuildGameTests builds)
-  python3 tools/buildability.py keep church        only these structure ids
+  python3 tools/buildability.py keep church        only these structure ids (keep:2 = only its level 2)
   python3 tools/buildability.py --tsv out.tsv      also write one row per level
   python3 tools/buildability.py --markdown         print the report as a Markdown table (for a CI run summary)
 
@@ -529,7 +529,8 @@ def main(argv):
             return 0
         else:
             ids.append(a.strip(",").removeprefix("csr:"))
-    jobs = [(sid, lv) for sid, levels in entries() if not ids or sid in ids for lv in range(1, levels + 1)]
+    jobs = [(sid, lv) for sid, levels in entries() for lv in range(1, levels + 1)
+            if not ids or sid in ids or f"{sid}:{lv}" in ids]
     if not jobs:
         print("no structure matches " + ", ".join(ids), file=sys.stderr)
         return 2

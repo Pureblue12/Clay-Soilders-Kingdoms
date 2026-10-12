@@ -133,6 +133,16 @@ final class ScaffoldGrid {
      * (walked length, like vanilla's path limit: 1 per level step, about 1.4 per hop up, more for drops).
      */
     BitSet reachable(@Nullable BlockPos home, int maxPath) {
+        return reachable(home, maxPath, maxPath, null);
+    }
+
+    /**
+     * Like {@link #reachable(BlockPos, int)}, with a longer limit for walking to a scaffolding column: the result has the
+     * spots shorter than {@code maxPath} plus the column cells whose base is shorter than {@code columnPath} (climbing
+     * doesn't count, D75). With {@code walk}, every spot shorter than {@code columnPath} is added to it (where a column's
+     * base could stand).
+     */
+    BitSet reachable(@Nullable BlockPos home, int maxPath, int columnPath, @Nullable BitSet walk) {
         int cells = sizeX * sizeY * sizeZ;
         BitSet seen = new BitSet(cells);
         float[] best = new float[cells];
@@ -154,7 +164,7 @@ final class ScaffoldGrid {
                 }
             }
         }
-        float limit = maxPath > 0 ? maxPath : Float.MAX_VALUE;
+        float limit = maxPath > 0 && columnPath > 0 ? Math.max(maxPath, columnPath) : Float.MAX_VALUE;
         while (!queue.isEmpty()) {
             float[] at = queue.poll();
             int x = (int) at[0];
@@ -200,7 +210,19 @@ final class ScaffoldGrid {
                 }
             }
         }
-        return seen;
+        if (walk != null) {
+            walk.or(seen);
+        }
+        if (maxPath <= 0 || columnPath <= maxPath) {
+            return seen;
+        }
+        BitSet work = new BitSet(cells);
+        for (int i = seen.nextSetBit(0); i >= 0; i = seen.nextSetBit(i + 1)) {
+            if (best[i] < maxPath || climbable.get(i)) {
+                work.set(i);
+            }
+        }
+        return work;
     }
 
     private void relax(java.util.PriorityQueue<float[]> queue, float[] best, int x, int y, int z, float distance, float limit) {

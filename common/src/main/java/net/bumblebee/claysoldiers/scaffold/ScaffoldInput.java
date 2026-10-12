@@ -17,15 +17,23 @@ import java.util.Set;
  * @param blocked   cells scaffold must not use (the structure's own cells, the easel, anything not air)
  * @param structure structure blocks still to place, in build order
  * @param home      where builders come from (the easel), or null: from anywhere on the region's edge
- * @param maxPath   longest path (walked length; a hop up counts about 1.4) builders follow from home, or 0 for no limit
+ * @param maxPath   longest path (walked length; a hop up counts about 1.4) builders follow from home to work on a block,
+ *                  or 0 for no limit
+ * @param columnPath longest path builders follow from home to a scaffold column's base (at least {@code maxPath}; once in
+ *                  the column they climb, D75), or 0 for no limit
  */
 public record ScaffoldInput(BoundingBox region, Set<BlockPos> solid, Set<BlockPos> blocked, List<BlockPos> structure,
-                            @Nullable BlockPos home, int maxPath) {
+                            @Nullable BlockPos home, int maxPath, int columnPath) {
     /** Blocks of margin around the structure: room for step pillars and the ramp. */
     public static final int MARGIN = 4;
 
     public ScaffoldInput(BoundingBox region, Set<BlockPos> solid, Set<BlockPos> blocked, List<BlockPos> structure) {
-        this(region, solid, blocked, structure, null, 0);
+        this(region, solid, blocked, structure, null, 0, 0);
+    }
+
+    public ScaffoldInput(BoundingBox region, Set<BlockPos> solid, Set<BlockPos> blocked, List<BlockPos> structure,
+                         @Nullable BlockPos home, int maxPath) {
+        this(region, solid, blocked, structure, home, maxPath, maxPath);
     }
 
     public ScaffoldInput {

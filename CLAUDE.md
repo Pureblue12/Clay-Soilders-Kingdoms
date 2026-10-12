@@ -74,7 +74,7 @@ them in its "Stall reports" step. GitHub's machines are slower: the one wall-clo
 
 `StructureBuildGameTests` has builders build every structure promoted from the Studio, every level, from scratch
 (about 156 builds). Too slow for the suite: the builds only exist when `CSR_STRUCTURE_BUILDS` is set (`all` or a shard
-`k/n`; `CSR_STRUCTURE_BUILDS_ONLY=keep,church` limits them) and are optional. Run `tools/structure_builds.sh`
+`k/n`; `CSR_STRUCTURE_BUILDS_ONLY=keep,church` limits them, `keep:2` to one level) and are optional. Run `tools/structure_builds.sh`
 (writes `build/structure-results.tsv`) or the GitHub workflow "Structure builds" (`.github/workflows/structure-builds.yml`,
 one machine per build up to 20, a result table per structure in the run summary; runs when structure files or the test
 change, or by hand). While they run, the test server ticks as fast as it can (`StructureBuildSprint`, like `/tick sprint`;
@@ -290,8 +290,11 @@ Pending (not started):
 - Blocks more than 8 above any reachable standing spot stay unbuilt (by design of `MAX_PLACE_HEIGHT`).
 - Scaffold columns stand outside the structure's footprint first; only when those can't reach every block (a roof
   more than 2 blocks inside the footprint, the chapel steeple's cap) does the planner add columns standing on the
-  structure's own floors inside it (D69). An inner column the simulated build can't walk to is dropped. The planner leaves
-  doors out and counts wooden doors as open (D71), so a building's doorway is a way in.
+  structure's own floors inside it (D69): on any floor builders walk to, attic floors and lower roofs included (D75). An inner
+  column the simulated build never gets into is dropped. The planner leaves doors out and counts wooden doors as open (D71),
+  so a building's doorway is a way in. A block counts as in reach within 24 walked blocks of the chest, a column's base within
+  56 (the builders' real limit, 16 + 48, minus `Scaffolds.PATH_MARGIN`; D75).
+  A spot needing feet more than 8 below it, with no floor builders walk to in between (the church belfry spire), stays unbuilt.
 - A blueprint block that is already there and replaceable (e.g. short grass where short grass grows) counts
   as free but can never be placed (placing the same block fails), so the blueprint never finishes; the
   cooldown only stops it from starving the rest. Not confirmed in game; not fixed.

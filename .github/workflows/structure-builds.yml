@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       only:
-        description: "Structure ids, comma-separated (e.g. keep,church); empty = all"
+        description: "Structure ids, comma-separated (e.g. keep,church; keep:2 = only level 2); empty = all"
         required: false
         default: ""
         type: string

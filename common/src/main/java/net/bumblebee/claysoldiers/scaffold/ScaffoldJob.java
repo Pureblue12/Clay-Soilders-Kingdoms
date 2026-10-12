@@ -53,10 +53,20 @@ public final class ScaffoldJob {
         return columns;
     }
 
-    /** The placed cells of the column at {@code cell}'s x and z, lowest first. */
+    /**
+     * The placed cells of the column {@code cell} is in, lowest first: the unbroken run of placed cells above and below
+     * it. A column can stand on an upper floor above another one at the same x and z (D75); they are separate columns.
+     */
     public List<BlockPos> column(BlockPos cell) {
-        return placed.stream().filter(pos -> pos.getX() == cell.getX() && pos.getZ() == cell.getZ())
-                .sorted(java.util.Comparator.comparingInt(BlockPos::getY)).toList();
+        BlockPos bottom = cell;
+        while (placed.contains(bottom.below())) {
+            bottom = bottom.below();
+        }
+        List<BlockPos> column = new ArrayList<>();
+        for (BlockPos pos = bottom; placed.contains(pos); pos = pos.above()) {
+            column.add(pos);
+        }
+        return List.copyOf(column);
     }
 
     public List<BlockPos> planned() {

@@ -8,6 +8,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,6 +34,8 @@ public final class ScaffoldPlanner {
     private static final int[][] SPIRAL = {{0, 0}, {1, 0}, {1, 1}, {0, 1}};
     /** How many times the planner adds pillars for blocks the simulation still couldn't reach. */
     private static final int ROUNDS = 4;
+    /** The same for the inner columns, where a round can also only drop columns no one can walk to (D75). */
+    private static final int INNER_ROUNDS = 8;
 
     private ScaffoldPlanner() {
     }
@@ -43,8 +46,10 @@ public final class ScaffoldPlanner {
      * @param stuck              structure blocks never placed
      * @param scaffoldPlaced     scaffold blocks put up, in order
      * @param teardownComplete   every scaffold block could be removed afterwards (top-down)
+     * @param scaffoldEntered    scaffold cells a builder could walk or climb into at some point of the build: a block
+     *                           placed from below but never entered (a column base on a roof) is no use (D75)
      */
-    public record Simulation(List<BlockPos> stuck, List<BlockPos> scaffoldPlaced, boolean teardownComplete) {
+    public record Simulation(List<BlockPos> stuck, List<BlockPos> scaffoldPlaced, boolean teardownComplete, Set<BlockPos> scaffoldEntered) {
     }
 
     public static ScaffoldPlan plan(ScaffoldInput input, ScaffoldApproach approach) {
@@ -88,7 +93,14 @@ public final class ScaffoldPlanner {
     }
 
     private static BitSet reachable(ScaffoldGrid grid, ScaffoldInput input) {
-        return grid.reachable(input.home(), input.maxPath());
+        return grid.reachable(input.home(), input.maxPath(), input.columnPath(), null);
+    }
+
+    /** The standing spots a column's base could be walked to: the longer limit (D75). */
+    private static BitSet walkable(ScaffoldGrid grid, ScaffoldInput input) {
+        BitSet walk = new BitSet();
+        grid.reachable(input.home(), input.maxPath(), input.columnPath(), walk);
+        return walk;
     }
 
     private static ScaffoldGrid emptySite(ScaffoldInput input) {
@@ -110,12 +122,29 @@ public final class ScaffoldPlanner {
      * inside, not steps they stand on.
      */
     public static Simulation simulate(ScaffoldInput input, List<BlockPos> scaffold, boolean columns) {
+        return simulate(input, scaffold, columns, List.of());
+    }
+
+    /**
+     * Like {@link #simulate(ScaffoldInput, List, boolean)}; the cells of {@code watch} a builder could walk into at some
+     * point of the build are added to {@link Simulation#scaffoldEntered}.
+     */
+    private static Simulation simulate(ScaffoldInput input, List<BlockPos> scaffold, boolean columns, Collection<BlockPos> watch) {
         ScaffoldGrid grid = emptySite(input);
+        List<BlockPos> watching = new ArrayList<>(watch);
         List<BlockPos> structure = new ArrayList<>(input.structure());
         List<BlockPos> pending = new ArrayList<>(scaffold);
         List<BlockPos> placedScaffold = new ArrayList<>();
+        Set<BlockPos> entered = new HashSet<>();
         while (!structure.isEmpty()) {
-            BitSet reachable = reachable(grid, input);
+            BitSet walk = new BitSet();
+            BitSet reachable = grid.reachable(input.home(), input.maxPath(), input.columnPath(), walk);
+            for (BlockPos cell : placedScaffold) {
+                if (grid.isReachable(walk, cell.getX(), cell.getY(), cell.getZ())) {
+                    entered.add(cell);
+                }
+            }
+            watching.removeIf(cell -> grid.isReachable(walk, cell.getX(), cell.getY(), cell.getZ()) && entered.add(cell));
             BlockPos next = firstWorkable(grid, reachable, structure);
             if (next != null) {
                 structure.remove(next);
@@ -135,7 +164,7 @@ public final class ScaffoldPlanner {
             placedScaffold.add(step);
         }
         boolean teardown = teardown(grid, input, new ArrayList<>(placedScaffold));
-        return new Simulation(List.copyOf(structure), placedScaffold, teardown);
+        return new Simulation(List.copyOf(structure), placedScaffold, teardown, entered);
     }
 
     private static BlockPos firstWorkable(ScaffoldGrid grid, BitSet reachable, List<BlockPos> blocks) {
@@ -203,7 +232,7 @@ public final class ScaffoldPlanner {
         // Pillars are needed late in the build, so their first step must be reachable with the whole structure standing.
         ScaffoldGrid site = emptySite(input);
         input.structure().forEach(block -> site.set(block, false));
-        BitSet ground = reachable(site, input);
+        BitSet ground = columns ? walkable(site, input) : reachable(site, input);
         List<Spot> spots = spots(input, site, ground, columns);
         Map<Spot, Integer> chosen = new HashMap<>(); // spot -> highest step
         Set<BlockPos> uncovered = new LinkedHashSet<>(toCover);
@@ -214,13 +243,17 @@ public final class ScaffoldPlanner {
             // steeple cap): add columns standing on the structure's own floors (D69). Only then, so every structure
             // the outside columns already cover keeps its plan.
             List<Spot> inner = innerSpots(input);
+            // Only floors builders get to at some point of the build (without the inner columns): the rest of the roofs
+            // and upper floors would only cost rounds (D75).
+            Set<BlockPos> walkedTo = simulate(input, steps(chosen), true, inner.stream().map(spot -> spot.step(0)).toList()).scaffoldEntered();
+            inner.removeIf(spot -> !walkedTo.contains(spot.step(0)));
             if (!inner.isEmpty()) {
                 List<Spot> all = new ArrayList<>(spots);
                 all.addAll(inner);
                 Set<Spot> before = Set.copyOf(chosen.keySet());
-                coverRounds(input, all, chosen, uncovered, stuckMatters, true);
-                // An inner column the simulated build never puts up (its base can't be walked to) is dropped.
-                Set<BlockPos> used = Set.copyOf(simulate(input, steps(chosen), true).scaffoldPlaced());
+                coverInner(input, all, chosen, before, uncovered, stuckMatters);
+                // An inner column the simulated build never puts up or never enters (its base can't be walked to) is dropped.
+                Set<BlockPos> used = simulate(input, steps(chosen), true).scaffoldEntered();
                 chosen.keySet().removeIf(spot -> !before.contains(spot) && !used.contains(spot.step(0)));
             }
         }
@@ -240,23 +273,46 @@ public final class ScaffoldPlanner {
     }
 
     /**
-     * Every place inside the structure's footprint a column could stand on one of the structure's own floors (or the
-     * ground inside it): the lowest free cell of the column with a floor below, rising until the first structure block.
-     * Whether builders can walk to its base when they need it is left to the simulation.
+     * Like {@link #coverRounds} for the inner columns, but a column the simulated build never gets into (its base can't be
+     * walked to: a roof beside a chimney, a floor with no stairs) is dropped and never picked again, so the next round
+     * tries the next best place (D75). The greedy cover picks the cheapest column first, and that is often such a roof
+     * spot right beside the block; without this every round picked it again.
+     */
+    private static void coverInner(ScaffoldInput input, List<Spot> spots, Map<Spot, Integer> chosen, Set<Spot> outer,
+                                   Set<BlockPos> uncovered, Set<BlockPos> stuckMatters) {
+        List<Spot> candidates = new ArrayList<>(spots);
+        for (int round = 0; round < INNER_ROUNDS && !uncovered.isEmpty(); round++) {
+            Set<BlockPos> before = Set.copyOf(uncovered);
+            cover(candidates, chosen, uncovered);
+            Simulation simulation = simulate(input, steps(chosen), true);
+            Set<BlockPos> used = simulation.scaffoldEntered();
+            List<Spot> unused = chosen.keySet().stream().filter(spot -> !outer.contains(spot) && !used.contains(spot.step(0))).toList();
+            Set<BlockPos> stuck = new LinkedHashSet<>(simulation.stuck());
+            stuck.retainAll(stuckMatters);
+            if (stuck.isEmpty() || unused.isEmpty() && stuck.equals(before)) {
+                return;
+            }
+            unused.forEach(chosen::remove);
+            candidates.removeAll(unused);
+            uncovered = stuck;
+        }
+    }
+
+    /**
+     * Every place a column could stand on one of the structure's own floors or roofs, or on the ground inside or beside
+     * it: each free cell with a floor below, rising until the next solid cell. Every floor of every column counts, not
+     * only the lowest under a block still to place (D75): a re-plan late in the build lists only the few blocks left, so
+     * the cells around a chimney cap or a spire top are the attic floor or a lower roof beside it. Whether builders can
+     * walk to a base when they need it is left to the simulation.
      */
     private static List<Spot> innerSpots(ScaffoldInput input) {
         ScaffoldGrid built = emptySite(input);
         input.structure().forEach(block -> built.set(block, true));
-        Set<Long> structureColumns = new HashSet<>();
-        input.structure().forEach(pos -> structureColumns.add(column(pos.getX(), pos.getZ())));
         BoundingBox region = input.region();
         int top = input.structure().stream().mapToInt(BlockPos::getY).max().orElse(region.maxY());
         List<Spot> spots = new ArrayList<>();
         for (int x = region.minX() + 1; x < region.maxX() - 1; x++) {
             for (int z = region.minZ() + 1; z < region.maxZ() - 1; z++) {
-                if (!structureColumns.contains(column(x, z))) {
-                    continue;
-                }
                 for (int base = region.minY() + 1; base <= top; base++) {
                     if (!built.standable(x, base, z) || input.blocked().contains(new BlockPos(x, base, z))) {
                         continue;
@@ -269,7 +325,7 @@ public final class ScaffoldPlanner {
                     if (steps > 1) {
                         spots.add(new Spot(x, z, base, steps, true));
                     }
-                    break; // the lowest floor only
+                    base += steps; // the next floor up starts above this column's top
                 }
             }
         }

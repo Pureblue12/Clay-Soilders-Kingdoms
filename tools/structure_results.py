@@ -160,7 +160,9 @@ def shards(only, most):
     ids = {i.strip().removeprefix("csr:") for i in only.split(",") if i.strip()}
     with open(TESTS, encoding="utf-8") as f:
         entries = ENTRY.findall(f.read())
-    builds = sum(len(blocks.split(",")) for sid, blocks in entries if not ids or sid in ids)
+    # "keep" counts every level, "keep:2" only level 2 (StructureBuildGameTests.selected)
+    builds = sum(1 for sid, blocks in entries for lv in range(1, len(blocks.split(",")) + 1)
+                 if not ids or sid in ids or f"{sid}:{lv}" in ids)
     count = max(1, min(most, builds))
     print(f"count={count}")
     print(f"shards={list(range(1, count + 1))}")
