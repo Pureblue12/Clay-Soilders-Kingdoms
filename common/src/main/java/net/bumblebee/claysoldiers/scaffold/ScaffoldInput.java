@@ -21,25 +21,33 @@ import java.util.Set;
  *                  or 0 for no limit
  * @param columnPath longest path builders follow from home to a scaffold column's base (at least {@code maxPath}; once in
  *                  the column they climb, D75), or 0 for no limit
+ * @param noFooting solid cells (now or once built) whose top can't hold a scaffolding column: stairs, slabs and carpet
+ *                  floors; scaffolding put on them falls (D77)
  */
 public record ScaffoldInput(BoundingBox region, Set<BlockPos> solid, Set<BlockPos> blocked, List<BlockPos> structure,
-                            @Nullable BlockPos home, int maxPath, int columnPath) {
+                            @Nullable BlockPos home, int maxPath, int columnPath, Set<BlockPos> noFooting) {
     /** Blocks of margin around the structure: room for step pillars and the ramp. */
     public static final int MARGIN = 4;
 
     public ScaffoldInput(BoundingBox region, Set<BlockPos> solid, Set<BlockPos> blocked, List<BlockPos> structure) {
-        this(region, solid, blocked, structure, null, 0, 0);
+        this(region, solid, blocked, structure, null, 0, 0, Set.of());
     }
 
     public ScaffoldInput(BoundingBox region, Set<BlockPos> solid, Set<BlockPos> blocked, List<BlockPos> structure,
                          @Nullable BlockPos home, int maxPath) {
-        this(region, solid, blocked, structure, home, maxPath, maxPath);
+        this(region, solid, blocked, structure, home, maxPath, maxPath, Set.of());
     }
 
     public ScaffoldInput {
         solid = Set.copyOf(solid);
         blocked = Set.copyOf(blocked);
         structure = List.copyOf(structure);
+        noFooting = Set.copyOf(noFooting);
+    }
+
+    /** The same input where scaffolding can't stand on {@code cells} (tests). */
+    public ScaffoldInput withNoFooting(Set<BlockPos> cells) {
+        return new ScaffoldInput(region, solid, blocked, structure, home, maxPath, columnPath, cells);
     }
 
     /**

@@ -30,7 +30,7 @@ import java.util.PriorityQueue;
  * One map per build of every spot its builders can walk to from the easel, with the walked distance and the step that
  * leads there (a Dijkstra flood with the soldiers' own step rules: their navigation's node evaluator, so doors, pits,
  * fence tops and trapdoors count exactly as when they walk). Is a blueprint block reachable? One look at the spots
- * around it, instead of up to three vanilla path searches per block per request (D77).
+ * around it, instead of up to three vanilla path searches per block per request (D78).
  * <p>
  * Vanilla's searches stop after a fixed number of steps and then say "no path", also for a block that is reachable
  * (keep L1/L2: the way up is a staircase on the far side), and a failed search always costs its whole budget. The

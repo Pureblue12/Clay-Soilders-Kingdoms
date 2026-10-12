@@ -344,14 +344,14 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
 
     private boolean canReach(BlockPos pos) {
         if (ReachMap.enabled() && easelPos != null) {
-            // One look at the build's reach map instead of path searches (D77); the recorder's reasons need searches.
+            // One look at the build's reach map instead of path searches (D78); the recorder's reasons need searches.
             if (ReachMap.canReachToPlace(soldier, easelPos.pos(), pos) || canClimbTo(pos)) {
                 return true;
             }
             if (unreachableReasons == null) {
                 return false;
             }
-            // While BUILD is recorded, the searches below still say why (closed doors, D77).
+            // While BUILD is recorded, the searches below still say why (closed doors, D78).
         }
         if (unreachableReasons == null) {
             return BuilderReach.canReachToPlace(soldier, pos) || canClimbTo(pos);

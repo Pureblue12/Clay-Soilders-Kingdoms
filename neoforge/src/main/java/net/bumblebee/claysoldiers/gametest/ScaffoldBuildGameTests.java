@@ -164,6 +164,29 @@ public class ScaffoldBuildGameTests {
     }
 
     /**
+     * Characterization of vanilla (D77): scaffolding put on a stair or carpet floor falls at once (its distance is 7 with no
+     * full face under it), while on a full block it stays. Columns planned on the keep L2 annex's pews were never there.
+     */
+    @GameTest(template = ClaySoldierGameTests.PLATFORM)
+    public static void scaffoldingFallsOffAStairOrCarpetFloor(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        BlockPos stair = helper.absolutePos(new BlockPos(3, 2, 3));
+        BlockPos carpet = helper.absolutePos(new BlockPos(6, 2, 3));
+        BlockPos floor = helper.absolutePos(new BlockPos(9, 2, 3));
+        level.setBlock(stair, Blocks.OAK_STAIRS.defaultBlockState(), Block.UPDATE_ALL);
+        level.setBlock(carpet, Blocks.RED_CARPET.defaultBlockState(), Block.UPDATE_ALL);
+        for (BlockPos pos : List.of(stair.above(), carpet.above(), floor)) {
+            level.setBlock(pos, Blocks.SCAFFOLDING.defaultBlockState(), Block.UPDATE_ALL);
+        }
+        helper.runAfterDelay(40, () -> {
+            helper.assertTrue(!level.getBlockState(stair.above()).is(Blocks.SCAFFOLDING), "scaffolding stayed on a stair");
+            helper.assertTrue(!level.getBlockState(carpet.above()).is(Blocks.SCAFFOLDING), "scaffolding stayed on carpet");
+            helper.assertTrue(level.getBlockState(floor).is(Blocks.SCAFFOLDING), "scaffolding fell off a full block");
+            helper.succeed();
+        });
+    }
+
+    /**
      * The full Small House (151 blocks) still finishes with 3 builders, and gets no scaffold: nothing in it is above
      * reach, so its build is unchanged.
      */

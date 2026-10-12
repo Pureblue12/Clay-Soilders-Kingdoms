@@ -17,6 +17,7 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.ScaffoldingBlock;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.Path;
@@ -103,7 +104,8 @@ final class BuildStallReport {
             if (job.columns()) {
                 ClaySoldierEntity walker = builders.stream().filter(ClaySoldierEntity::isAlive).findFirst().orElse(null);
                 job.placed().stream().filter(pos -> job.column(pos).getFirst().equals(pos)).limit(12)
-                        .forEach(base -> lines.add("  column from " + base.toShortString() + ", " + job.column(base).size() + " up: " + pathTo(walker, base)));
+                        .forEach(base -> lines.add("  column from " + base.toShortString() + ", " + job.column(base).size() + " up" + missing(helper, job.column(base))
+                                + ": " + pathTo(walker, base)));
             }
         });
         for (ClaySoldierEntity builder : builders) {
@@ -128,6 +130,12 @@ final class BuildStallReport {
         lines.add("last " + pathing.size() + " PATHING events, oldest first:");
         pathing.forEach(event -> lines.add("  " + event.toLine()));
         return lines;
+    }
+
+    /** Cells of a column the job counts as placed that aren't scaffolding in the world (it fell, D77). */
+    private static String missing(GameTestHelper helper, List<BlockPos> column) {
+        long gone = column.stream().filter(cell -> !(helper.getLevel().getBlockState(cell).getBlock() instanceof ScaffoldingBlock)).count();
+        return gone == 0 ? "" : " (" + gone + " not scaffolding in the world)";
     }
 
     /** Whether {@code builder} finds a path to a scaffold column's base from where it stands (what the climber needs). */
