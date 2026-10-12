@@ -119,6 +119,12 @@ public final class Tuning {
             "While a builder works for a build, its path searches may look at this many times more steps (vanilla: 256).", 4, 1, 16));
     public static final TuningKey.IntKey BUILD_REACH_MAP = register(new TuningKey.IntKey("build.reach_map",
             "1: builders find out which blueprint blocks they can reach from one map of every spot they can walk to from the easel, made again when the build changes (D80). 0: a vanilla path search per block, as before.", 1, 0, 1));
+    public static final TuningKey.IntKey BUILD_REACH_MAP_MAX_AGE_TICKS = register(new TuningKey.IntKey("build.reach_map_max_age_ticks",
+            "A build's reach map this old is made again even when the build didn't change (players, falling blocks, doors) (D80).", 100, 20, 2400));
+    public static final TuningKey.IntKey BUILD_REACH_MAP_FAILED_WALKS = register(new TuningKey.IntKey("build.reach_map_failed_walks",
+            "Give-ups on the reach map's way to one blueprint block before it counts as out of reach, so the easel hands out scaffold for it (D80). 1 is too few: a stranded builder gives its block up once and then gets there.", 2, 1, 10));
+    public static final TuningKey.IntKey BUILD_REACH_MAP_DISTRUST_TICKS = register(new TuningKey.IntKey("build.reach_map_distrust_ticks",
+            "How long a blueprint block counts as out of reach after builders gave up the reach map's way to it build.reach_map_failed_walks times (D80).", 2400, 200, 24000));
     public static final TuningKey.IntKey WORK_FALL_DAMAGE_PERCENT = register(new TuningKey.IntKey("work.fall_damage_percent",
             "Fall damage to a soldier that is working (building, digging, farming), in percent of vanilla's (a fall of 4 blocks costs half a heart). Upstream multiplies every environmental damage by 100, so a 4-block drop kills; builders working on upper floors fell off and died on every tall build. 10000 restores that.", 100, 0, 10000));
     public static final TuningKey.IntKey SCAFFOLD_COLUMNS_FIRST = register(new TuningKey.IntKey("scaffold.columns_first",

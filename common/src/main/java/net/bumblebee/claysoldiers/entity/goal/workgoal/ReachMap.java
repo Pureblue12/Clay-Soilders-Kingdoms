@@ -37,28 +37,15 @@ import java.util.PriorityQueue;
  * (keep L1/L2: the way up is a staircase on the far side), and a failed search always costs its whole budget. The
  * flood has no step budget, only the same walked-length limit as {@link BuilderReach}'s long search, so it never says
  * "unreachable" for a reachable block. It is made again when a block of the build is placed or removed, or when it is
- * older than {@link #MAX_AGE_TICKS} (players and other changes nearby).
+ * older than {@code build.reach_map_max_age_ticks} (players and other changes nearby).
  * <p>
  * Off when {@code build.reach_map} is 0: builders then search as before.
  */
 public final class ReachMap {
-    /** A map this old is made again even when the build didn't change (players, falling blocks, doors). */
-    static final int MAX_AGE_TICKS = 100;
     /** Maps not used for this long are dropped (the easel is gone or the build is finished). */
     private static final int FORGET_TICKS = 2400;
     /** Safety cap on the spots of one map (an open field within the walked limit has about 8,000). */
     private static final int MAX_NODES = 40_000;
-    /**
-     * How long a blueprint block counts as out of reach after builders gave it up {@link #FAILED_WALKS} times while walking
-     * to the map's spot for it: the map's step rules can accept a way soldiers don't manage (keep L2's roof slabs, D80).
-     * Out of reach, the easel hands out scaffold for it, as without the map.
-     */
-    static final int DISTRUST_TICKS = 2400;
-    /**
-     * Give-ups on the map's way to one block before it counts as out of reach. One isn't enough: a builder stranded up
-     * high gives its block up once, is brought back to its chest (D72) and then gets there.
-     */
-    static final int FAILED_WALKS = 2;
 
     private record Key(ResourceKey<Level> dimension, BlockPos easel) {
     }
@@ -106,7 +93,7 @@ public final class ReachMap {
         MAPS.values().removeIf(map -> now - map.usedAt > FORGET_TICKS);
         ReachMap map = MAPS.computeIfAbsent(new Key(level.dimension(), easel.immutable()), key -> new ReachMap());
         map.usedAt = now;
-        if (map.stale || now - map.madeAt > MAX_AGE_TICKS) {
+        if (map.stale || now - map.madeAt > Tuning.BUILD_REACH_MAP_MAX_AGE_TICKS.get()) {
             map.make(builder);
         }
         return map;
@@ -130,8 +117,8 @@ public final class ReachMap {
     }
 
     /**
-     * {@code builder} gave up {@code target} while walking to the map's spot for it. After {@link #FAILED_WALKS} such
-     * give-ups the block counts as out of reach for {@link #DISTRUST_TICKS}, so the easel can hand out scaffold for it
+     * {@code builder} gave up {@code target} while walking to the map's spot for it. After {@code build.reach_map_failed_walks} such
+     * give-ups the block counts as out of reach for {@code build.reach_map_distrust_ticks}, so the easel can hand out scaffold for it
      * instead of handing the block out again.
      */
     public static void walkFailed(PathfinderMob builder, BlockPos easel, BlockPos target) {
@@ -140,12 +127,14 @@ public final class ReachMap {
             return;
         }
         int failed = map.failedWalks.addTo(target.asLong(), 1) + 1;
-        if (failed >= FAILED_WALKS) {
+        int failedWalks = Tuning.BUILD_REACH_MAP_FAILED_WALKS.get();
+        int distrustTicks = Tuning.BUILD_REACH_MAP_DISTRUST_TICKS.get();
+        if (failed >= failedWalks) {
             map.failedWalks.remove(target.asLong());
-            map.distrusted.put(target.asLong(), builder.level().getGameTime() + DISTRUST_TICKS);
-            DebugLog.event(DebugCategory.BUILD, builder, "couldn't walk to the reach map's spot for %s %s times: out of reach for %s ticks", target, failed, DISTRUST_TICKS);
+            map.distrusted.put(target.asLong(), builder.level().getGameTime() + distrustTicks);
+            DebugLog.event(DebugCategory.BUILD, builder, "couldn't walk to the reach map's spot for %s %s times: out of reach for %s ticks", target, failed, distrustTicks);
         } else {
-            DebugLog.event(DebugCategory.BUILD, builder, "couldn't walk to the reach map's spot for %s (%s of %s)", target, failed, FAILED_WALKS);
+            DebugLog.event(DebugCategory.BUILD, builder, "couldn't walk to the reach map's spot for %s (%s of %s)", target, failed, failedWalks);
         }
     }
 
