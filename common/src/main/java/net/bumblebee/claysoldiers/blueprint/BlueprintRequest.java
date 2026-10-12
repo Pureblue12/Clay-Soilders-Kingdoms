@@ -14,6 +14,8 @@ public class BlueprintRequest {
     private boolean soldierInTheWay;
     /** Where the build plan says a builder can stand to place this block (D80); empty without a plan. */
     private List<BlockPos> standingSpots = List.of();
+    /** Whether the builder gave this request up (its give-up timer ran out before it could place the block). */
+    private boolean givenUp;
 
     public BlueprintRequest(Item item, BlockPos pos, long start) {
         this.item = item;
@@ -54,6 +56,16 @@ public class BlueprintRequest {
     }
     public void cancel() {
         status = Status.CANCELLED;
+    }
+
+    /** Cancels this request because the builder gave it up (see {@link #wasGivenUp}). */
+    public void giveUp() {
+        givenUp = true;
+        cancel();
+    }
+
+    public boolean wasGivenUp() {
+        return givenUp;
     }
 
     public void setSoldierInTheWay() {

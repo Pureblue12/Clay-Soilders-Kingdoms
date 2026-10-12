@@ -147,6 +147,33 @@ public class BuildPlanGameTests {
     }
 
     /**
+     * A planned block builders gave up twice (keep L1: a chest the plan's spots said was reachable, handed out and given up
+     * for 6,000 ticks) is left to the normal search: handed out without the plan's standing spots, so the builder looks for
+     * a spot the normal way (and scaffolding can start when there is none).
+     */
+    @GameTest(template = ClaySoldierGameTests.PLATFORM)
+    public static void blockGivenUpTwiceLeavesThePlan(GameTestHelper helper) {
+        Map<BlockPos, BlockState> blocks = new LinkedHashMap<>();
+        blocks.put(new BlockPos(0, 0, 0), Blocks.COBBLESTONE.defaultBlockState());
+        BlueprintData plain = BuildRequestGameTests.blueprint(helper, "given_up", 1, 1, 1, blocks);
+        // One spot, beside the block: (dx + 2) + 5 * (dz + 2) + 25 * (dy + 8) with dx = 1.
+        BuildPlan plan = BuildPlan.fromJson(JsonParser.parseString("{\"format\": 1, \"blocks\": [[0, 0, 0, 0, 213]]}").getAsJsonObject());
+        BlueprintData blueprint = new BlueprintData(ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, "gametest/given_up"), "gametest.given_up", 0);
+        blueprint.bindStructure(((ImmutableTemplate) plain.getTemplate()).withPlan(plan));
+        EaselBlockEntity easel = DevScenarios.placeEasel(helper.getLevel(), helper.absolutePos(ClaySoldierGameTests.EASEL), Direction.NORTH, blueprint);
+
+        for (int giveUp = 0; giveUp < ServerBlueprintPlan.PLAN_GIVE_UPS; giveUp++) {
+            BlueprintRequest request = easel.getBlueprintRequestHandler().getRequest(pos -> true);
+            helper.assertTrue(request != null && !request.standingSpots().isEmpty(), "Give-up " + giveUp + ": the block should come with the plan's spot, got " + request);
+            request.giveUp();
+        }
+        BlueprintRequest request = easel.getBlueprintRequestHandler().getRequest(pos -> true);
+        helper.assertTrue(request != null && request.standingSpots().isEmpty(), "After " + ServerBlueprintPlan.PLAN_GIVE_UPS
+                + " give-ups the block should be handed out without the plan's spots, got " + (request == null ? null : request.standingSpots()));
+        helper.succeed();
+    }
+
+    /**
      * Builders place every block of the well's level 1 from its plan (with the normal order, the chain and logs above the
      * shaft ended up out of reach: 49 of 54 in the offline replay, unfinished in the structure builds). Only "every block
      * placed" is checked: the file's poppies stand on air, so they drop and the finished well never matches the file.

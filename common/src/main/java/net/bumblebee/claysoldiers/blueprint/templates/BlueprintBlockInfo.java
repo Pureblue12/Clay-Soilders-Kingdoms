@@ -43,6 +43,8 @@ public class BlueprintBlockInfo {
     @Nullable
     private BlueprintRequest lastRequest;
     private int placeFailures = 0;
+    /** How many earlier requests for this block builders gave up (not counting {@link #lastRequest}); not saved. */
+    private int givenUp = 0;
     private long cooldownUntil = 0;
 
     public BlueprintBlockInfo(BlockPos pos, BlockState state, @Nullable CompoundTag nbt) {
@@ -108,6 +110,9 @@ public class BlueprintBlockInfo {
         var req = new BlueprintRequest(state.getBlock().asItem(), destinationPos, gameTime);
 
         if (lastRequest != null) {
+            if (lastRequest.wasGivenUp()) {
+                givenUp++;
+            }
             if (!lastRequest.isCancelled() && !lastRequest.isFinished()) {
                 DebugLog.event(DebugCategory.BUILD, null, "request %s went stale after %s ticks, freeing its block",
                         lastRequest, gameTime - lastRequest.getStart());
@@ -117,6 +122,11 @@ public class BlueprintBlockInfo {
         lastRequest = req;
 
         return req;
+    }
+
+    /** How many times builders gave up a request for this block (their give-up timer ran out). */
+    public int timesGivenUp() {
+        return givenUp + (lastRequest != null && lastRequest.wasGivenUp() ? 1 : 0);
     }
 
     /**

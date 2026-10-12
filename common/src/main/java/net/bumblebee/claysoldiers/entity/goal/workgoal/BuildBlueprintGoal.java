@@ -288,7 +288,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     private void giveUpRequest() {
         climber.descend();
         DebugLog.event(DebugCategory.BUILD, soldier, "gave up %s at %s after %s ticks (fetching + carrying), releasing it", request.getItem(), request.getPos(), carryTicks);
-        request.cancel();
+        request.giveUp();
         request = null;
         bringBack = !soldier.getCarriedStack().isEmpty();
         carryTicks = 0;

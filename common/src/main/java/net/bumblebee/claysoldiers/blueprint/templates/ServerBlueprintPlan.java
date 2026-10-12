@@ -412,7 +412,14 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         List<BlockPos> carried = new ArrayList<>();
         for (BlueprintBlockInfo info : blockInfoList) {
             if (buildPlan.wave(info.getPos()) == wave) {
-                current.add(info);
+                // A block builders keep giving up on can't be reached from the plan's spots here (keep L1: a chest 10 up,
+                // handed out and given up for 6,000 ticks): it's left to the whole-list search, which can start scaffold.
+                if (info.timesGivenUp() >= PLAN_GIVE_UPS) {
+                    DebugLog.event(DebugCategory.BUILD, null, "plan: %s at %s given up %s times, left to the normal search",
+                            info.getState().getBlock(), targetPosition(base, settings, info), info.timesGivenUp());
+                } else {
+                    current.add(info);
+                }
             }
             if (!info.hasAvailableRequest(level.getGameTime())) {
                 carried.add(targetPosition(base, settings, info));
@@ -433,6 +440,9 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         return search(blockInfoList, level, base, settings, canReach, "outside the plan: ").request();
     }
 
+    /** Times builders may give up a planned block before the plan stops handing it out (see {@link #getRequest}). */
+    public static final int PLAN_GIVE_UPS = 2;
+
     /** Whether {@code pos} is within 2 blocks of any of {@code others} (a block another builder works on). */
     private static boolean nearAny(BlockPos pos, List<BlockPos> others) {
         for (BlockPos other : others) {
@@ -447,9 +457,12 @@ public class ServerBlueprintPlan extends BlueprintPlan {
     private record Search(@Nullable BlueprintRequest request, int assigned) {
     }
 
-    /** Where builders can stand to place {@code info}, from the plan (world positions; empty without a plan). */
+    /**
+     * Where builders can stand to place {@code info}, from the plan (world positions; empty without a plan, and for a block
+     * builders gave up {@link #PLAN_GIVE_UPS} times: they then look for a spot the normal way).
+     */
     private List<BlockPos> plannedSpots(BlockPos base, BlueprintTemplateSettings settings, BlueprintBlockInfo info) {
-        if (buildPlan == null || Tuning.BUILD_FOLLOW_PLAN.get() == 0) {
+        if (buildPlan == null || Tuning.BUILD_FOLLOW_PLAN.get() == 0 || info.timesGivenUp() >= PLAN_GIVE_UPS) {
             return List.of();
         }
         return buildPlan.spots(info.getPos()).stream().map(spot -> base.offset(adjustForStructureSettings(settings, spot))).toList();
