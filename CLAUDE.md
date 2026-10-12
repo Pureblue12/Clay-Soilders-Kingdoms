@@ -37,7 +37,7 @@ Starts a headless test server, runs every test in
 `DoorGameTests`, `TuningGameTests`, `StructureRegistryGameTests`, `StructurePasteGameTests`,
 `LayoutCheckerGameTests`, `KingdomDataGameTests`, `KingdomGameTests`, `KingdomBookGameTests`, `KingdomBookRefreshGameTests`, `TerrainScoreGameTests`, `TerrainScanGameTests`,
 `TerrainGradingGameTests`, `TerrainFoundingGameTests`, `ScaffoldPlannerGameTests`, `ScaffoldBuildGameTests`,
-`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`), prints
+`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `BuildPlanGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Templates: `data/csr/structure/gametest/platform.nbt` (16x8x16) and `terrain.nbt` (32x16x32, for test terrains);
@@ -282,6 +282,22 @@ Code: `common/.../scaffold/`; comparison, recommendation and height rules: `docs
   never stands a column on a stair, slab, carpet or other floor without one (`ScaffoldInput.noFooting`, blocks still to place
   count as what they will be). Keep L2's annex columns stood on the pews and were never there to climb.
 - **Recorder SCAFFOLD:** planned, placed, removed, climbing, stuck, cleanup, kept.
+
+### Build plans (pre-baked routes, D78)
+
+Every structure level ships `data/csr/build_plan/kingdom/studio/<level>.json`, made by `python3 tools/build_plan.py [ids]`
+(standard library, about 2 minutes for all levels) from the structure file alone: the build order as waves and, per block,
+up to 4 spots to stand on. Worked out by taking the finished structure apart on buildability.py's model; every wave is
+checked from bare ground. Promote runs it; CI's "Build plans up to date" step (`--check`) fails on a missing or stale plan,
+and the "Structure builds" summary has its table. Never edit a plan by hand: change the structure, run the tool.
+- `StructureBlueprints` loads the plan (`BuildPlans`) and orders the blueprint by it (`ImmutableTemplate.withPlan`); the
+  plan is saved with the easel's build.
+- `ServerBlueprintPlan.getRequest` hands out a random block of the lowest unfinished wave, away from blocks other builders
+  carry; when none can be handed out and no builder holds one, it searches every block as before (BUILD event "plan: ...").
+- Builders try the plan's spots first (`BuilderReach.findPlanned`: one at random, then the nearest), then the normal search.
+- Blocks the plan leaves out (need scaffold) come after it. `build.follow_plan` 0 turns it all off.
+- Natural touches for every build: a random pause after placing (`build.pause_ticks`), each builder's own pace
+  (`build.walk_speed_spread_percent`).
 
 ### Known limitations
 

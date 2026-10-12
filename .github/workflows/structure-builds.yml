@@ -73,6 +73,9 @@ jobs:
           ids=$(echo "$CSR_STRUCTURE_BUILDS_ONLY" | tr ',' ' ')
           python3 tools/buildability.py --markdown $ids | tee check.md
           cat check.md >> "$GITHUB_STEP_SUMMARY"
+          python3 tools/build_plan.py --markdown $ids | tee plans.md
+          cat plans.md >> "$GITHUB_STEP_SUMMARY"
+          git status --short common/src/main/resources/data/csr/build_plan | head -5
           exit 0
 
   build:

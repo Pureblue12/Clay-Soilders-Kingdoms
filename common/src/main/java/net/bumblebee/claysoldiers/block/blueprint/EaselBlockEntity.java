@@ -1,6 +1,7 @@
 package net.bumblebee.claysoldiers.block.blueprint;
 
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
+import net.bumblebee.claysoldiers.blueprint.PlannedReach;
 import net.bumblebee.claysoldiers.blueprint.BlueprintData;
 import net.bumblebee.claysoldiers.blueprint.BlueprintManger;
 import net.bumblebee.claysoldiers.blueprint.BlueprintRequest;
@@ -242,7 +243,8 @@ public class EaselBlockEntity extends BlockEntity {
             }
         }
         var request = plan.getRequest(serverLevel, getTemplateBase(settings), settings, canReachDestination);
-        if (request != null && !canReachDestination.test(request.getPos())) {
+        if (request != null && !(canReachDestination instanceof PlannedReach planned && !request.standingSpots().isEmpty()
+                ? planned.canReach(request.getPos(), request.standingSpots()) : canReachDestination.test(request.getPos()))) {
             request.cancel();
             return null;
         }

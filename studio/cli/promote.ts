@@ -8,6 +8,7 @@
 // Builders can't place decoration-step blocks, so they are left out of the NBT (air) and listed in the sidecar instead.
 // On a structure whose layer 0 is level with the ground (meta.groundLayer 0), air in layer 0 becomes structure void
 // ("leave the ground as it is") and the metadata's ground_level is 1 (layer 1 rests on the ground).
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { Store, STUDIO_ROOT } from '../src/server/store.ts';
@@ -208,5 +209,17 @@ export function promote(store: Store, opts: { dryRun?: boolean; only?: string[] 
       unknown: buildability(allBlocks.map((b) => parseBlockState(b).name)).unknown,
     });
   }
+  if (!opts.dryRun && rows.length) planBuilds(rows.map((r) => r.id));
   return { rows, skipped, noScaffoldHeight: NO_SCAFFOLD_HEIGHT };
+}
+
+// Every promoted level gets a pre-baked build plan made from its new file (tools/build_plan.py, D78); CI fails while a
+// plan is missing or older than its structure.
+function planBuilds(ids: string[]) {
+  const tool = path.join(STUDIO_ROOT, '..', 'tools', 'build_plan.py');
+  try {
+    execFileSync('python3', [tool, ...ids.map((id) => id.replace(/^csr:/, ''))], { stdio: 'inherit' });
+  } catch {
+    console.warn(`build plans not updated: run python3 tools/build_plan.py ${ids.join(' ')} from the repository root`);
+  }
 }

@@ -3,6 +3,7 @@ package net.bumblebee.claysoldiers.blueprint.templates;
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.logging.LogUtils;
+import net.bumblebee.claysoldiers.blueprint.plan.BuildPlan;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -35,10 +36,32 @@ import java.util.*;
 public class ImmutableTemplate extends BaseImmutableTemplate {
     private static final Logger LOGGER = LogUtils.getLogger();
     private final List<StructureTemplate.StructureBlockInfo> blockInfoList;
+    /** The structure's pre-baked build plan (D78), or {@code null}: the blocks are then handed out in their normal order. */
+    @Nullable
+    private final BuildPlan buildPlan;
 
     protected ImmutableTemplate(List<StructureTemplate.StructureBlockInfo> blockInfoList, Map<Item, Integer> itemCountMap, Vec3i size, VoxelShape shape) {
+        this(blockInfoList, itemCountMap, size, shape, null);
+    }
+
+    private ImmutableTemplate(List<StructureTemplate.StructureBlockInfo> blockInfoList, Map<Item, Integer> itemCountMap, Vec3i size, VoxelShape shape, @Nullable BuildPlan buildPlan) {
         super(itemCountMap, size, shape);
         this.blockInfoList = blockInfoList;
+        this.buildPlan = buildPlan;
+    }
+
+    /**
+     * This template with a pre-baked build plan (D78): its blocks in the plan's order (blocks the plan doesn't know after
+     * the planned ones, in their normal order), and the plan handed to every server plan made from it.
+     */
+    public ImmutableTemplate withPlan(BuildPlan plan) {
+        return new ImmutableTemplate(List.copyOf(plan.order(blockInfoList, StructureTemplate.StructureBlockInfo::pos)),
+                BlueprintUtil.getNeededItemsFromInfo(blockInfoList, StructureTemplate.StructureBlockInfo::state), size, getShape(), plan);
+    }
+
+    @Nullable
+    public BuildPlan buildPlan() {
+        return buildPlan;
     }
 
     @Override
@@ -56,7 +79,7 @@ public class ImmutableTemplate extends BaseImmutableTemplate {
      */
     @Override
     public Optional<ServerBlueprintPlan> createServer() {
-        return Optional.of(new ServerBlueprintPlan(size, blockInfoList));
+        return Optional.of(new ServerBlueprintPlan(size, blockInfoList, buildPlan));
     }
 
     @Override

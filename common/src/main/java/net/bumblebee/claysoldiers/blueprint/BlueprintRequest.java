@@ -3,6 +3,8 @@ package net.bumblebee.claysoldiers.blueprint;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Item;
 
+import java.util.List;
+
 public class BlueprintRequest {
     private final Item item;
     private final BlockPos pos;
@@ -10,6 +12,8 @@ public class BlueprintRequest {
     private Status status = Status.STARTED;
     /** Set by the plan when a soldier was in the way of placing (D64); the builder reads and clears it, then tries again. */
     private boolean soldierInTheWay;
+    /** Where the build plan says a builder can stand to place this block (D78); empty without a plan. */
+    private List<BlockPos> standingSpots = List.of();
 
     public BlueprintRequest(Item item, BlockPos pos, long start) {
         this.item = item;
@@ -61,6 +65,15 @@ public class BlueprintRequest {
         boolean was = soldierInTheWay;
         soldierInTheWay = false;
         return was;
+    }
+
+    public void setStandingSpots(List<BlockPos> spots) {
+        standingSpots = List.copyOf(spots);
+    }
+
+    /** Where the build plan says a builder can stand to place this block (D78); empty without a plan. */
+    public List<BlockPos> standingSpots() {
+        return standingSpots;
     }
 
     @Override

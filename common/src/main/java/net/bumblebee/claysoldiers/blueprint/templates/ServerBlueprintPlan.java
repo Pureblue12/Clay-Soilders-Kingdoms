@@ -1,6 +1,8 @@
 package net.bumblebee.claysoldiers.blueprint.templates;
 
 import net.bumblebee.claysoldiers.blueprint.BlueprintRequest;
+import net.bumblebee.claysoldiers.blueprint.PlannedReach;
+import net.bumblebee.claysoldiers.blueprint.plan.BuildPlan;
 import net.bumblebee.claysoldiers.blueprint.BlueprintTemplateSettings;
 import net.bumblebee.claysoldiers.blueprint.ReachOrigin;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
@@ -15,6 +17,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -30,6 +33,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,6 +46,10 @@ import java.util.stream.Collectors;
 
 public class ServerBlueprintPlan extends BlueprintPlan {
     private final List<BlueprintBlockInfo> blockInfoList;
+    private static final String BUILD_PLAN_TAG = "build_plan";
+    /** The structure's pre-baked build plan (D78), or {@code null} (blocks are handed out in list order, as before). */
+    @Nullable
+    private final BuildPlan buildPlan;
     /** Whether the last request search that handed out nothing skipped blocks out of reach (for scaffolding). */
     private boolean lastSearchFoundUnreachable;
     /**
@@ -56,12 +66,23 @@ public class ServerBlueprintPlan extends BlueprintPlan {
     }
 
     public ServerBlueprintPlan(Vec3i size, List<StructureTemplate.StructureBlockInfo> blockInfoList) {
+        this(size, blockInfoList, null);
+    }
+
+    /**
+     * @param buildPlan the structure's pre-baked build plan (D78), or {@code null}; {@code blockInfoList} is already in its
+     *                  order ({@link ImmutableTemplate#withPlan})
+     */
+    public ServerBlueprintPlan(Vec3i size, List<StructureTemplate.StructureBlockInfo> blockInfoList, @Nullable BuildPlan buildPlan) {
         super(BlueprintUtil.getNeededItemsFromInfo(blockInfoList, StructureTemplate.StructureBlockInfo::state), size);
         this.blockInfoList = fromBlockInfoList(blockInfoList);
+        this.buildPlan = buildPlan;
     }
 
     public static ServerBlueprintPlan load(CompoundTag tag, HolderLookup.Provider registries) {
-        ServerBlueprintPlan serverBlueprintPlan = new ServerBlueprintPlan(BlueprintUtil.getSizeFromTag(tag), ImmutableTemplate.loadPallet(registries.lookupOrThrow(Registries.BLOCK), tag.getList("palette", 10), tag.getList(StructureTemplate.BLOCKS_TAG, 10), List.of()));
+        // The saved block list is in hand-out order already (the plan's, when there is one).
+        BuildPlan buildPlan = tag.contains(BUILD_PLAN_TAG, Tag.TAG_COMPOUND) ? BuildPlan.load(tag.getCompound(BUILD_PLAN_TAG)) : null;
+        ServerBlueprintPlan serverBlueprintPlan = new ServerBlueprintPlan(BlueprintUtil.getSizeFromTag(tag), ImmutableTemplate.loadPallet(registries.lookupOrThrow(Registries.BLOCK), tag.getList("palette", 10), tag.getList(StructureTemplate.BLOCKS_TAG, 10), List.of()), buildPlan);
         serverBlueprintPlan.loadHasStarted(tag);
         return serverBlueprintPlan;
     }
@@ -103,6 +124,9 @@ public class ServerBlueprintPlan extends BlueprintPlan {
             pTag.put("palette", palletTag);
         }
 
+        if (buildPlan != null) {
+            pTag.put(BUILD_PLAN_TAG, buildPlan.save());
+        }
         saveSize(pTag);
         saveHasStarted(pTag);
         return pTag;
@@ -369,6 +393,72 @@ public class ServerBlueprintPlan extends BlueprintPlan {
      * @param base the base position from which this structure is build
      */
     public @Nullable BlueprintRequest getRequest(ServerLevel level, BlockPos base, BlueprintTemplateSettings settings, Predicate<BlockPos> canReach) {
+        if (buildPlan == null || Tuning.BUILD_FOLLOW_PLAN.get() == 0) {
+            return search(blockInfoList, level, base, settings, canReach, "").request();
+        }
+        // With a pre-baked plan (D78): only the blocks of the lowest wave not yet built, in random order, those away from
+        // the blocks other builders carry first, so builders pick different blocks and spread out. Every order inside a
+        // wave was checked offline. When none of them can be handed out and no other builder has one of them (out of
+        // reach here, cooling down after failing: the world differs from the plan), the whole list is searched as before.
+        int wave = BuildPlan.UNPLANNED;
+        for (BlueprintBlockInfo info : blockInfoList) {
+            wave = Math.min(wave, buildPlan.wave(info.getPos()));
+        }
+        if (wave == BuildPlan.UNPLANNED) {
+            return search(blockInfoList, level, base, settings, canReach, "").request();
+        }
+        List<BlueprintBlockInfo> current = new ArrayList<>();
+        List<BlockPos> carried = new ArrayList<>();
+        for (BlueprintBlockInfo info : blockInfoList) {
+            if (buildPlan.wave(info.getPos()) == wave) {
+                current.add(info);
+            }
+            if (!info.hasAvailableRequest(level.getGameTime())) {
+                carried.add(targetPosition(base, settings, info));
+            }
+        }
+        Collections.shuffle(current, new java.util.Random(level.getRandom().nextLong()));
+        current.sort(Comparator.comparing(info -> nearAny(targetPosition(base, settings, info), carried)));
+        Search inWave = search(current, level, base, settings, canReach, "plan wave " + wave + ": ");
+        if (inWave.request() != null) {
+            return inWave.request();
+        }
+        if (inWave.assigned() > 0) {
+            // Other builders are on this wave's last blocks: wait for them (no scaffolding: nothing is stuck).
+            lastSearchFoundUnreachable = false;
+            return null;
+        }
+        DebugLog.event(DebugCategory.BUILD, null, "plan: nothing of wave %s can be handed out (%s blocks left in it), searching every block", wave, current.size());
+        return search(blockInfoList, level, base, settings, canReach, "outside the plan: ").request();
+    }
+
+    /** Whether {@code pos} is within 2 blocks of any of {@code others} (a block another builder works on). */
+    private static boolean nearAny(BlockPos pos, List<BlockPos> others) {
+        for (BlockPos other : others) {
+            if (Math.abs(pos.getX() - other.getX()) <= 2 && Math.abs(pos.getY() - other.getY()) <= 2 && Math.abs(pos.getZ() - other.getZ()) <= 2) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** What a request search found: the request handed out (or {@code null}), and how many candidates other builders have. */
+    private record Search(@Nullable BlueprintRequest request, int assigned) {
+    }
+
+    /** Where builders can stand to place {@code info}, from the plan (world positions; empty without a plan). */
+    private List<BlockPos> plannedSpots(BlockPos base, BlueprintTemplateSettings settings, BlueprintBlockInfo info) {
+        if (buildPlan == null || Tuning.BUILD_FOLLOW_PLAN.get() == 0) {
+            return List.of();
+        }
+        return buildPlan.spots(info.getPos()).stream().map(spot -> base.offset(adjustForStructureSettings(settings, spot))).toList();
+    }
+
+    private boolean reachable(Predicate<BlockPos> canReach, BlockPos pos, List<BlockPos> spots) {
+        return !spots.isEmpty() && canReach instanceof PlannedReach planned ? planned.canReach(pos, spots) : canReach.test(pos);
+    }
+
+    private Search search(List<BlueprintBlockInfo> candidates, ServerLevel level, BlockPos base, BlueprintTemplateSettings settings, Predicate<BlockPos> canReach, String what) {
         // Blocks another builder has are skipped (no taking over); they become free when cancelled, finished or stale.
         // Blocks that recently failed to place are skipped until their cooldown ends, and doors wait while any other
         // block can still be placed (both checked first: they're cheap and save a path search). Blocks found out of
@@ -383,7 +473,7 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         Boolean doorsMustWait = null; // computed once, at the first door
         Map<BlueprintBlockInfo, Long> unreachableFor = unreachable(canReach);
 
-        for (BlueprintBlockInfo blockInfo : blockInfoList) {
+        for (BlueprintBlockInfo blockInfo : candidates) {
             checked++;
             if (blockInfo.isCoolingDown(level.getGameTime())) {
                 coolingDown++;
@@ -404,7 +494,8 @@ public class ServerBlueprintPlan extends BlueprintPlan {
                 continue;
             }
             var infoAbsolutePos = targetPosition(base, settings, blockInfo);
-            if (!canReach.test(infoAbsolutePos)) {
+            List<BlockPos> spots = plannedSpots(base, settings, blockInfo);
+            if (!reachable(canReach, infoAbsolutePos, spots)) {
                 // Path searches are expensive: this builder doesn't search again for a while, unless the build changes.
                 if (Tuning.BUILD_UNREACHABLE_RECHECK_TICKS.get() > 0) {
                     unreachableFor.put(blockInfo, level.getGameTime() + Tuning.BUILD_UNREACHABLE_RECHECK_TICKS.get());
@@ -418,14 +509,22 @@ public class ServerBlueprintPlan extends BlueprintPlan {
             }
             if (blockInfo.hasAvailableRequest(level.getGameTime())) {
                 lastSearchFoundUnreachable = false;
-                logRequestSearch(checked, coolingDown, doorsWaiting, unreachable, notPlaceable, assigned, "handing out a free block");
-                return blockInfo.getRequest(level.getGameTime(), infoAbsolutePos);
+                logRequestSearch(checked, candidates.size(), coolingDown, doorsWaiting, unreachable, notPlaceable, assigned, what + "handing out a free block");
+                BlueprintRequest request = blockInfo.getRequest(level.getGameTime(), infoAbsolutePos);
+                request.setStandingSpots(spots);
+                return new Search(request, assigned);
             }
             assigned++;
         }
-        logRequestSearch(checked, coolingDown, doorsWaiting, unreachable, notPlaceable, assigned, "nothing to hand out");
+        logRequestSearch(checked, candidates.size(), coolingDown, doorsWaiting, unreachable, notPlaceable, assigned, what + "nothing to hand out");
         lastSearchFoundUnreachable = unreachable > 0;
-        return null;
+        return new Search(null, assigned);
+    }
+
+    /** The pre-baked build plan this build follows, or {@code null} (for GameTests and the recorder; changes nothing). */
+    @Nullable
+    public BuildPlan buildPlan() {
+        return buildPlan;
     }
 
     /**
@@ -482,12 +581,12 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         return blockInfoList.stream().anyMatch(info -> !info.isDoor() && canPlaceAt(level, targetPosition(base, settings, info)));
     }
 
-    private void logRequestSearch(int checked, int coolingDown, int doorsWaiting, int unreachable, int notPlaceable, int assigned, String result) {
+    private void logRequestSearch(int checked, int of, int coolingDown, int doorsWaiting, int unreachable, int notPlaceable, int assigned, String result) {
         if (!DebugLog.isOn(DebugCategory.BUILD)) {
             return;
         }
-        DebugLog.event(DebugCategory.BUILD, null, () -> "request search: checked %d of %d remaining blocks (%d cooling down after failed placing, %d doors waiting for other blocks, %d not reachable, %d not placeable, %d already assigned): %s"
-                .formatted(checked, blockInfoList.size(), coolingDown, doorsWaiting, unreachable, notPlaceable, assigned, result));
+        DebugLog.event(DebugCategory.BUILD, null, () -> "request search: checked %d of %d blocks (%d remaining; %d cooling down after failed placing, %d doors waiting for other blocks, %d not reachable, %d not placeable, %d already assigned): %s"
+                .formatted(checked, of, blockInfoList.size(), coolingDown, doorsWaiting, unreachable, notPlaceable, assigned, result));
     }
 
     @Override

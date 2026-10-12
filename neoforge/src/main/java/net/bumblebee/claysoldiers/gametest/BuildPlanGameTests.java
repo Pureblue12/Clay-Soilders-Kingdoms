@@ -1,0 +1,126 @@
+package net.bumblebee.claysoldiers.gametest;
+
+import net.bumblebee.claysoldiers.ClaySoldiersCommon;
+import net.bumblebee.claysoldiers.blueprint.BlueprintData;
+import net.bumblebee.claysoldiers.blueprint.BlueprintTemplateSettings;
+import net.bumblebee.claysoldiers.blueprint.plan.BuildPlan;
+import net.bumblebee.claysoldiers.blueprint.templates.ImmutableTemplate;
+import net.bumblebee.claysoldiers.blueprint.templates.ServerBlueprintPlan;
+import net.bumblebee.claysoldiers.structure.StructureBlueprints;
+import net.bumblebee.claysoldiers.structure.StructureMeta;
+import net.bumblebee.claysoldiers.structure.StructureRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestAssertException;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.neoforged.neoforge.gametest.GameTestHolder;
+import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Pre-baked build plans (D78): every promoted structure level has a plan made from its current file, a blueprint made
+ * from a structure follows its plan's order, the plan survives saving, and builders build from it.
+ */
+@GameTestHolder(ClaySoldiersCommon.MOD_ID)
+@PrefixGameTestTemplate(false)
+public class BuildPlanGameTests {
+
+    private static ServerBlueprintPlan serverPlan(ServerLevel level, StructureMeta meta, int detailLevel) {
+        BlueprintData data = StructureBlueprints.blueprint(level, meta, detailLevel);
+        return data.getTemplate().createServer().orElseThrow(() -> new GameTestAssertException("no server plan for " + meta.id()));
+    }
+
+    @Nullable
+    private static BuildPlan buildPlan(ServerLevel level, StructureMeta meta, int detailLevel) {
+        return StructureBlueprints.blueprint(level, meta, detailLevel).getTemplate() instanceof ImmutableTemplate template ? template.buildPlan() : null;
+    }
+
+    private static List<BlockPos> order(ServerBlueprintPlan plan) {
+        return plan.targetPositions(BlockPos.ZERO, new BlueprintTemplateSettings(plan.getSize(), Mirror.NONE, Rotation.NONE));
+    }
+
+    private static StructureMeta meta(ServerLevel level, String id) {
+        return StructureRegistry.get(level.getServer()).byId(ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, id))
+                .orElseThrow(() -> new GameTestAssertException("no registry entry " + id));
+    }
+
+    /** Every level of every structure promoted from the Studio has a plan that knows each of its blocks (no stale plan). */
+    @GameTest(template = ClaySoldierGameTests.PLATFORM)
+    public static void everyStudioLevelHasAMatchingPlan(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        List<String> problems = new ArrayList<>();
+        for (StructureBuildGameTests.Entry entry : StructureBuildGameTests.STRUCTURES) {
+            StructureMeta meta = meta(level, entry.path());
+            for (int lv = 1; lv <= meta.levelCount(); lv++) {
+                BuildPlan plan = buildPlan(level, meta, lv);
+                if (plan == null) {
+                    problems.add(entry.path() + " L" + lv + ": no plan");
+                    continue;
+                }
+                int unknown = 0;
+                for (BlockPos pos : order(serverPlan(level, meta, lv))) {
+                    if (!plan.knows(pos)) {
+                        unknown++;
+                    }
+                }
+                if (unknown > 0) {
+                    problems.add(entry.path() + " L" + lv + ": " + unknown + " blocks the plan doesn't know");
+                }
+            }
+        }
+        helper.assertTrue(problems.isEmpty(), "build plans out of date (run python3 tools/build_plan.py): " + problems);
+        helper.succeed();
+    }
+
+    /** A structure's blueprint hands out its blocks in the plan's order: waves never go down along the list. */
+    @GameTest(template = ClaySoldierGameTests.PLATFORM)
+    public static void blueprintFollowsThePlanOrder(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        StructureMeta meta = meta(level, "well");
+        BuildPlan plan = buildPlan(level, meta, 1);
+        helper.assertTrue(plan != null && plan.plannedBlocks() > 0, "the well has no plan");
+        List<BlockPos> order = order(serverPlan(level, meta, 1));
+        int last = -1;
+        for (BlockPos pos : order) {
+            int wave = plan.wave(pos);
+            helper.assertTrue(wave >= last, "wave " + wave + " at " + pos + " comes after wave " + last);
+            last = wave;
+        }
+        helper.assertTrue(plan.waves() > 1, "one wave only: " + plan);
+        helper.succeed();
+    }
+
+    /** An easel's build keeps its plan (order and waves) across saving and loading. */
+    @GameTest(template = ClaySoldierGameTests.PLATFORM)
+    public static void planSurvivesSaveAndLoad(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        ServerBlueprintPlan plan = serverPlan(level, meta(level, "well"), 1);
+        ServerBlueprintPlan loaded = ServerBlueprintPlan.load(plan.save(new CompoundTag()), level.registryAccess());
+        helper.assertTrue(loaded.buildPlan() != null, "the plan was lost on saving");
+        helper.assertTrue(loaded.buildPlan().plannedBlocks() == plan.buildPlan().plannedBlocks()
+                && loaded.buildPlan().waves() == plan.buildPlan().waves(), "saved " + plan.buildPlan() + ", loaded " + loaded.buildPlan());
+        helper.assertTrue(order(loaded).equals(order(plan)), "the order changed on saving");
+        BlockPos first = order(plan).get(0);
+        helper.assertTrue(loaded.buildPlan().spots(first).equals(plan.buildPlan().spots(first)), "standing spots changed on saving");
+        helper.succeed();
+    }
+
+    /**
+     * Builders build the well's level 1 from its plan (with the normal order, the chain and logs above the shaft ended up
+     * out of reach: 49 of 54 in the offline replay, unfinished in the structure builds).
+     */
+    @GameTest(template = StructureBuildGameTests.TEMPLATE, timeoutTicks = 12000, batch = "build_plan_well", skyAccess = true)
+    public static void buildersBuildTheWellFromItsPlan(GameTestHelper helper) {
+        StructureBuildGameTests.Entry well = StructureBuildGameTests.STRUCTURES.stream().filter(e -> e.path().equals("well"))
+                .findFirst().orElseThrow(() -> new GameTestAssertException("the well isn't in StructureBuildGameTests.STRUCTURES"));
+        StructureBuildGameTests.buildersBuildIt(helper, well, 1, 12000);
+    }
+}

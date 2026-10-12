@@ -9,6 +9,7 @@ import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.blueprint.BlueprintRequest;
 import net.bumblebee.claysoldiers.capability.BlueprintRequestHandler;
 import net.bumblebee.claysoldiers.capability.IBlockCache;
+import net.bumblebee.claysoldiers.blueprint.PlannedReach;
 import net.bumblebee.claysoldiers.blueprint.ReachOrigin;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
@@ -76,10 +77,15 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
      */
     private final ReachTest reachTest = new ReachTest();
 
-    private final class ReachTest implements java.util.function.Predicate<BlockPos>, ScaffoldHome, ReachOrigin {
+    private final class ReachTest implements java.util.function.Predicate<BlockPos>, ScaffoldHome, ReachOrigin, PlannedReach {
         @Override
         public boolean test(BlockPos pos) {
-            return canReach(pos);
+            return canReach(pos, List.of());
+        }
+
+        @Override
+        public boolean canReach(BlockPos target, List<BlockPos> spots) {
+            return BuildBlueprintGoal.this.canReach(target, spots);
         }
 
         @Override
@@ -342,14 +348,14 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         });
     }
 
-    private boolean canReach(BlockPos pos) {
+    private boolean canReach(BlockPos pos, List<BlockPos> plannedSpots) {
         if (unreachableReasons == null) {
-            return BuilderReach.canReachToPlace(soldier, pos) || canClimbTo(pos);
+            return BuilderReach.canReachToPlace(soldier, pos, plannedSpots) || canClimbTo(pos);
         }
-        if (canClimbTo(pos) && !BuilderReach.canReachToPlace(soldier, pos)) {
+        if (canClimbTo(pos) && !BuilderReach.canReachToPlace(soldier, pos, plannedSpots)) {
             return true;
         }
-        BuilderReach.Reach reach = BuilderReach.check(soldier, pos, true);
+        BuilderReach.Reach reach = BuilderReach.check(soldier, pos, true, plannedSpots);
         if (!reach.reachable()) {
             unreachableReasons.merge(reach.whyNot(), 1, Integer::sum);
             if (reach.closedDoor() != null && blockedByDoor != null) {
@@ -394,6 +400,9 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                     bringBack = true;
                 }
                 request.setFinished();
+                // A short, random breather before asking for the next block, so builders don't move in lockstep (D78).
+                int pause = Tuning.BUILD_PAUSE_TICKS.get();
+                retryCooldown = pause > 0 ? soldier.getRandom().nextInt(pause + 1) : 0;
             } else if (request.takeSoldierInTheWay()) {
                 DebugLog.event(DebugCategory.BUILD, soldier, "soldier in the way of %s at %s, trying again in %s ticks", request.getItem(), request.getPos(), SOLDIER_IN_THE_WAY_RETRY_TICKS);
                 placeWait = SOLDIER_IN_THE_WAY_RETRY_TICKS;
@@ -460,17 +469,31 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                 return false;
             }
             // Walk the same kind of path the reachable check accepted: it ends where the block can be placed.
-            Path path = BuilderReach.pathToPlace(soldier, request.getPos());
+            Path path = BuilderReach.pathToPlace(soldier, request.getPos(), request.standingSpots());
             if (path == null && easelPos != null && soldier.level() instanceof ServerLevel level && climber.start(level, easelPos.pos(), request.getPos())) {
                 return false; // out of reach from the ground: climb a scaffolding column
             }
             pathEnd = path == null || path.getEndNode() == null ? null : path.getEndNode().asBlockPos();
             lastStepTicks = 0;
             if (path != null) {
-                this.soldier.getNavigation().moveTo(path, 1);
+                this.soldier.getNavigation().moveTo(path, walkSpeed());
             }
         }
         return false;
+    }
+
+    /**
+     * This builder's own pace on the way to a block (D78): the normal speed give or take
+     * {@code build.walk_speed_spread_percent}, fixed per soldier (from its id), so a crew doesn't walk in step.
+     */
+    private double walkSpeed() {
+        int spread = Tuning.BUILD_WALK_SPEED_SPREAD_PERCENT.get();
+        if (spread <= 0) {
+            return 1.0;
+        }
+        long bits = soldier.getUUID().getLeastSignificantBits();
+        double unit = ((bits >>> 11) & 0xFFFF) / (double) 0xFFFF * 2.0 - 1.0; // -1 .. 1
+        return 1.0 + unit * spread / 100.0;
     }
 
     protected boolean isValidTarget(LevelReader pLevel, @Nullable BlockPos pPos) {
@@ -524,6 +547,6 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         return "BuildBlueprintGoal{%s: %s(%s)}".formatted(
                 easelPos == null ? "Null" : "Cap",
                 request,
-                request == null ? (bringBack ? "bringBack" : "-") : canReach(request.getPos()) ? "Can Reach" : "Cannot Reach");
+                request == null ? (bringBack ? "bringBack" : "-") : canReach(request.getPos(), request.standingSpots()) ? "Can Reach" : "Cannot Reach");
     }
 }
