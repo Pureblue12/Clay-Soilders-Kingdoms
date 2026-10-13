@@ -310,8 +310,9 @@ and the "Structure builds" summary has its table. Never edit a plan by hand: cha
 - `ServerBlueprintPlan.getRequest` hands out a random block of the lowest unfinished wave, away from blocks other builders
   carry and among the nearest to the builder (steps of 4 blocks); when none can be handed out and no builder holds one, it goes on with the
   next wave that has something (stacks may then follow up in any wave up to it), and only then searches every block as before (BUILD event "plan: ...").
-  A builder carrying a stack (D79) takes its next nearby block only from that same wave (`getFollowUpRequest`). While the
-  wave's last blocks are carried, idle builders take next-wave blocks clear of them (`build.plan_lookahead_clearance`).
+  A builder carrying a stack (D79) takes its next nearby block only from that same wave (`getFollowUpRequest`) or the lookahead.
+  While the wave's last blocks are carried, idle builders take blocks of the next `build.plan_lookahead_waves` (3) waves clear
+  of every earlier wave's blocks still to place and their spots (`build.plan_lookahead_clearance`).
   A block builders gave up twice (`ServerBlueprintPlan.PLAN_GIVE_UPS`) leaves the plan: it no longer holds its wave back, and
   it is handed out without the plan's spots, so scaffolding can start (keep L1's chest; `blockGivenUpTwiceLeavesThePlan`).
 - Builders walk to the nearest spot they can place from (the normal search) and use the plan's spots only when that fails (`build.plan_spots_first` 0; with 1 they went to the plan's nearest free spot first, `BuilderReach.findPlanned`, and builds took 30% longer than main instead of 16%).

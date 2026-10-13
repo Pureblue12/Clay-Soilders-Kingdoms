@@ -39,6 +39,7 @@
   "build.path_nodes_multiplier": 4,
   "build.follow_plan": 1,
   "build.plan_lookahead_clearance": 4,
+  "build.plan_lookahead_waves": 3,
   "build.plan_spots_first": 0,
   "build.pause_ticks": 6,
   "build.walk_speed_spread_percent": 10,
