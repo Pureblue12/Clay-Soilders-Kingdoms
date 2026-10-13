@@ -26,6 +26,13 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CrossCollisionBlock;
+import net.minecraft.world.level.block.LadderBlock;
+import net.minecraft.world.level.block.RedstoneWallTorchBlock;
+import net.minecraft.world.level.block.WallBannerBlock;
+import net.minecraft.world.level.block.WallSignBlock;
+import net.minecraft.world.level.block.WallSkullBlock;
+import net.minecraft.world.level.block.WallTorchBlock;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.PowderSnowBlock;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.block.WallBlock;
@@ -399,7 +406,9 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         int unreachable = 0;
         int notPlaceable = 0;
         int assigned = 0;
+        int hungWaiting = 0;
         Boolean doorsMustWait = null; // computed once, at the first door
+        java.util.Set<BlockPos> unplaced = null; // computed once, at the first wall-hung block
         Map<BlueprintBlockInfo, Long> unreachableFor = unreachable(canReach);
 
         for (BlueprintBlockInfo blockInfo : blockInfoList) {
@@ -414,6 +423,17 @@ public class ServerBlueprintPlan extends BlueprintPlan {
                 }
                 if (doorsMustWait) {
                     doorsWaiting++;
+                    continue;
+                }
+            }
+            BlockPos wall = hangsOn(blockInfo, base, settings);
+            if (wall != null) {
+                if (unplaced == null) {
+                    unplaced = new java.util.HashSet<>(targetPositions(base, settings));
+                    unplaced.removeAll(doorPositions(base, settings)); // doors wait for everything else: never wait for a door
+                }
+                if (unplaced.contains(wall)) {
+                    hungWaiting++;
                     continue;
                 }
             }
@@ -437,12 +457,12 @@ public class ServerBlueprintPlan extends BlueprintPlan {
             }
             if (blockInfo.hasAvailableRequest(level.getGameTime())) {
                 lastSearchFoundUnreachable = false;
-                logRequestSearch(checked, coolingDown, doorsWaiting, unreachable, notPlaceable, assigned, "handing out a free block");
+                logRequestSearch(checked, coolingDown, doorsWaiting, hungWaiting, unreachable, notPlaceable, assigned, "handing out a free block");
                 return blockInfo.getRequest(level.getGameTime(), infoAbsolutePos);
             }
             assigned++;
         }
-        logRequestSearch(checked, coolingDown, doorsWaiting, unreachable, notPlaceable, assigned, "nothing to hand out");
+        logRequestSearch(checked, coolingDown, doorsWaiting, hungWaiting, unreachable, notPlaceable, assigned, "nothing to hand out");
         lastSearchFoundUnreachable = unreachable > 0;
         return null;
     }
@@ -471,7 +491,8 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         candidates.sort(java.util.Comparator.comparingDouble(entry -> entry.getValue().distSqr(placed)));
         int tests = 0;
         for (Map.Entry<BlueprintBlockInfo, BlockPos> candidate : candidates) {
-            if (unplaced.contains(candidate.getValue().below())) {
+            BlockPos wall = hangsOn(candidate.getKey(), base, settings);
+            if (unplaced.contains(candidate.getValue().below()) || wall != null && unplaced.contains(wall)) {
                 continue;
             }
             if (tests++ >= FOLLOW_UP_REACH_TESTS) {
@@ -482,6 +503,24 @@ public class ServerBlueprintPlan extends BlueprintPlan {
             }
         }
         return null;
+    }
+
+    /**
+     * The block a wall-hung block of this plan (wall torch, wall sign, wall banner, wall head, ladder) hangs on, in world
+     * position, or null for any other block. Such a block is handed out only once the block it hangs on is placed:
+     * placing that block next to it later is a neighbour update that drops the hung block when the wall can't hold it
+     * (stone wall corner L2/L3: a wall torch hangs on a standing banner and fell off whenever the banner came second).
+     */
+    @Nullable
+    private static BlockPos hangsOn(BlueprintBlockInfo info, BlockPos base, BlueprintTemplateSettings settings) {
+        BlockState state = info.getState().mirror(settings.mirror()).rotate(settings.rotation());
+        Block block = state.getBlock();
+        boolean hung = block instanceof WallTorchBlock || block instanceof RedstoneWallTorchBlock || block instanceof WallSignBlock
+                || block instanceof WallBannerBlock || block instanceof WallSkullBlock || block instanceof LadderBlock;
+        if (!hung || !state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+            return null;
+        }
+        return targetPosition(base, settings, info).relative(state.getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite());
     }
 
     /** Path searches a follow-up request search may make (see {@link #getFollowUpRequest}). */
@@ -541,12 +580,12 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         return blockInfoList.stream().anyMatch(info -> !info.isDoor() && canPlaceAt(level, targetPosition(base, settings, info)));
     }
 
-    private void logRequestSearch(int checked, int coolingDown, int doorsWaiting, int unreachable, int notPlaceable, int assigned, String result) {
+    private void logRequestSearch(int checked, int coolingDown, int doorsWaiting, int hungWaiting, int unreachable, int notPlaceable, int assigned, String result) {
         if (!DebugLog.isOn(DebugCategory.BUILD)) {
             return;
         }
-        DebugLog.event(DebugCategory.BUILD, null, () -> "request search: checked %d of %d remaining blocks (%d cooling down after failed placing, %d doors waiting for other blocks, %d not reachable, %d not placeable, %d already assigned): %s"
-                .formatted(checked, blockInfoList.size(), coolingDown, doorsWaiting, unreachable, notPlaceable, assigned, result));
+        DebugLog.event(DebugCategory.BUILD, null, () -> "request search: checked %d of %d remaining blocks (%d cooling down after failed placing, %d doors waiting for other blocks, %d wall-hung blocks waiting for their wall, %d not reachable, %d not placeable, %d already assigned): %s"
+                .formatted(checked, blockInfoList.size(), coolingDown, doorsWaiting, hungWaiting, unreachable, notPlaceable, assigned, result));
     }
 
     @Override

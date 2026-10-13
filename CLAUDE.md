@@ -329,7 +329,7 @@ Pending (not started):
   as free but can never be placed (placing the same block fails), so the blueprint never finishes; the
   cooldown only stops it from starving the rest. Not confirmed in game; not fixed.
 - Layer-by-layer ordering: blocks are handed out as all full cubes and stairs (bottom to top, roof included; stairs
-  since D69, so inside staircases exist before the floors above them), then other non-cube blocks, then blocks with data (beds), then doors.
+  since D69, so inside staircases exist before the floors above them), then other non-cube blocks, then blocks with data (beds), then doors. A wall-hung block (wall torch, sign, banner, head, ladder) waits until the block it hangs on is placed (D83).
 
 Known, unfixed (reported, not confirmed in game): `DigHoleGoal.resetBreakProgress` unregisters
 `currentPos` even when this soldier never registered it; in dev runs `ErrorHandler` throws
