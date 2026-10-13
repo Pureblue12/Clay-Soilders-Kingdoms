@@ -2,6 +2,9 @@ package net.bumblebee.claysoldiers.gametest;
 
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.blueprint.BlueprintData;
+import net.bumblebee.claysoldiers.debug.DebugCategory;
+import net.bumblebee.claysoldiers.debug.DebugEvent;
+import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.entity.goal.workgoal.BuildBlueprintGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
@@ -31,8 +34,8 @@ public class BuilderReachGameTests {
     /** A soldier carrying the same block longer than this is considered stuck. */
     private static final int STUCK_CARRY_TICKS = 600;
     /** {@link #builderOnALongWalkKeepsItsBlock}: the carrying builder stands still this long, then walks for {@link #LONG_WALK_MOVE_TICKS}. */
-    private static final int LONG_WALK_PAUSE_TICKS = 250;
-    private static final int LONG_WALK_MOVE_TICKS = 30;
+    private static final int LONG_WALK_PAUSE_TICKS = 200;
+    private static final int LONG_WALK_MOVE_TICKS = 50;
 
     /**
      * BUG TEST (builders freeze while "Carrying"): one block floating 2 above open ground. Before Fix A the
@@ -158,9 +161,10 @@ public class BuilderReachGameTests {
      * still for {@value #LONG_WALK_PAUSE_TICKS} ticks, then walks for {@value #LONG_WALK_MOVE_TICKS}, again and again,
      * so the walk takes longer than {@code BuildBlueprintGoal.MAX_CARRY_TICKS} while it keeps getting closer. Before D87
      * the builder gave the block up on the way; now it must keep it and place it. (A builder slowed down for good
-     * doesn't do: at a tenth of its speed it never got a block closer, CI run 38446171493.)
+     * doesn't do: at a tenth of its speed it never got a block closer, CI run 38446171493.) Records BUILD (own batch);
+     * a failure writes the last events and the builder's track as "CSR stall report long walk" lines.
      */
-    @GameTest(template = PLATFORM, timeoutTicks = 2600)
+    @GameTest(template = PLATFORM, batch = "long_walk", timeoutTicks = 2600)
     public static void builderOnALongWalkKeepsItsBlock(GameTestHelper helper) {
         BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "far_block", 11, 1, 9, new BlockPos(10, 0, 8));
         ClaySoldierGameTests.Builder builder = ClaySoldierGameTests.setUpBuilder(helper, blueprint,
@@ -169,9 +173,17 @@ public class BuilderReachGameTests {
         double walkingSpeed = speed.getBaseValue();
         BlockPos target = EASEL.offset(5, 0, 10);
         long[] carryingSince = {-1};
+        DebugLog.reset();
+        DebugLog.setEnabled(DebugCategory.byId("BUILD").orElseThrow(), true, helper.getLevel().getServer());
+        List<String> track = new ArrayList<>();
 
         helper.onEachTick(() -> {
             boolean carrying = !builder.soldier().getCarriedStack().isEmpty();
+            if (helper.getTick() % 25 == 0) {
+                track.add("t=%d at %s, %.1f from the block, carrying %s".formatted(helper.getTick(),
+                        builder.soldier().blockPosition().toShortString(),
+                        Math.sqrt(builder.soldier().distanceToSqr(helper.absolutePos(target).getCenter())), carrying));
+            }
             if (carrying && carryingSince[0] < 0) {
                 carryingSince[0] = helper.getTick();
             }
@@ -180,7 +192,15 @@ public class BuilderReachGameTests {
                 speed.setBaseValue(phase < LONG_WALK_PAUSE_TICKS ? 0.0 : walkingSpeed);
             } else if (carryingSince[0] >= 0) {
                 speed.setBaseValue(walkingSpeed);
-                if (!helper.getBlockState(target).is(Blocks.COBBLESTONE)) {
+                boolean placed = helper.getBlockState(target).is(Blocks.COBBLESTONE);
+                if (!placed) {
+                    List<DebugEvent> events = DebugLog.events();
+                    events.subList(Math.max(0, events.size() - 60), events.size())
+                            .forEach(event -> ClaySoldiersCommon.LOGGER.info("CSR stall report long walk: {}", event.toLine()));
+                    track.forEach(line -> ClaySoldiersCommon.LOGGER.info("CSR stall report long walk: {}", line));
+                }
+                DebugLog.reset();
+                if (!placed) {
                     helper.fail("BUG (D87): the builder gave the block up after carrying it %d ticks, though it kept getting closer"
                             .formatted(helper.getTick() - carryingSince[0]), builder.soldier());
                 }
