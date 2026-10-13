@@ -210,6 +210,7 @@ public final class Kingdoms {
             return Result.refused(teamName(server, team) + " has no kingdom.");
         }
         DebugLog.event(DebugCategory.KINGDOM, null, "disbanded the kingdom of %s%s", team, by == null ? "" : " (by " + by.getName().getString() + ")");
+        KingdomKeep.uncrown(server, removed.get());
         return new Result(removed.get(), null);
     }
 

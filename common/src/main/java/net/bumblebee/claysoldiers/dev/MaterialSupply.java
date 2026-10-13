@@ -9,6 +9,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,7 +31,10 @@ import java.util.function.Supplier;
  * doesn't list, such as scaffold material, first) are wanted; stacks of other items go back to the waiting list, and
  * wanted items get a stack in an empty slot. {@link #FREE_SLOTS} stay empty so builders can put back what they carry
  * (scaffold refunds, returned blocks). Filling the chest in list order instead would deadlock: a full chest of items
- * needed later, and the item asked for now still waiting. Dev and GameTests only; in memory only.
+ * needed later, and the item asked for now still waiting. In memory only.
+ * <p>
+ * Where the stacks not in the chest wait is a {@link Store}: a list of the materials (dev commands and GameTests, like a
+ * player with the materials at hand) or a kingdom's stockpile (stage 4, {@code KingdomStore}).
  */
 public final class MaterialSupply {
     /** Ticks between restocks. */
@@ -49,7 +53,7 @@ public final class MaterialSupply {
 
     private final ServerLevel level;
     private final BlockPos chestPos;
-    private final List<ItemStack> waiting = new ArrayList<>();
+    private final Store store;
     private final Supplier<List<Item>> demand;
     private final BooleanSupplier done;
     /** Every item the plan has listed: once it no longer lists one, that item's leftovers aren't kept. */
@@ -64,18 +68,115 @@ public final class MaterialSupply {
      * @param done   stops the supply when true (e.g. the easel is finished or gone)
      */
     public MaterialSupply(ServerLevel level, BlockPos chestPos, List<ItemStack> items, Supplier<List<Item>> demand, BooleanSupplier done) {
+        this(level, chestPos, new ListStore(items), demand, done);
+    }
+
+    /**
+     * @param store  where the stacks not in the chest wait
+     * @param demand the item of every block still to place, in hand-out order
+     * @param done   stops the supply when true (e.g. the easel is finished or gone)
+     */
+    public MaterialSupply(ServerLevel level, BlockPos chestPos, Store store, Supplier<List<Item>> demand, BooleanSupplier done) {
         this.level = level;
         this.chestPos = chestPos.immutable();
+        this.store = store;
         this.demand = demand;
         this.done = done;
         this.planItems = new LinkedHashSet<>(demand.get());
-        for (ItemStack stack : items) {
-            int remaining = stack.getCount();
-            while (remaining > 0) {
-                int count = Math.min(remaining, stack.getMaxStackSize());
-                waiting.add(stack.copyWithCount(count));
-                remaining -= count;
+    }
+
+    /**
+     * Where the stacks not in the chest wait.
+     */
+    public interface Store {
+        /** Whether it holds any of {@code item}. */
+        boolean has(Item item);
+
+        /** Takes one stack (at most a full stack) of {@code item}, or returns null when it has none. */
+        @Nullable
+        ItemStack take(Item item);
+
+        /** Whether a stack taken out of the chest may be put in it (otherwise it stays in the chest). */
+        boolean accepts(ItemStack stack);
+
+        /** Puts a stack taken out of the chest in it. */
+        void put(ItemStack stack);
+
+        /** Items it holds that go in the chest though the plan never lists them (scaffold material), in order. */
+        List<Item> extras();
+
+        /** Whether an item the plan never listed stays in the chest once it is there. */
+        boolean keepsInChest(Item item);
+
+        /** Whether an item lost with a builder is brought again from nothing, like a player with more at hand. */
+        boolean replacesLost();
+
+        /** Stacks it holds. */
+        int stacks();
+    }
+
+    /** The materials as a list of stacks (dev commands and GameTests): has what it was given and replaces lost items. */
+    public static final class ListStore implements Store {
+        private final List<ItemStack> waiting = new ArrayList<>();
+
+        /** @param items the materials (any stack sizes; split into max-size stacks) */
+        public ListStore(List<ItemStack> items) {
+            for (ItemStack stack : items) {
+                int remaining = stack.getCount();
+                while (remaining > 0) {
+                    int count = Math.min(remaining, stack.getMaxStackSize());
+                    waiting.add(stack.copyWithCount(count));
+                    remaining -= count;
+                }
             }
+        }
+
+        @Override
+        public boolean has(Item item) {
+            return waiting.stream().anyMatch(stack -> stack.is(item));
+        }
+
+        @Override
+        @Nullable
+        public ItemStack take(Item item) {
+            for (Iterator<ItemStack> it = waiting.iterator(); it.hasNext(); ) {
+                ItemStack stack = it.next();
+                if (stack.is(item)) {
+                    it.remove();
+                    return stack;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        public boolean accepts(ItemStack stack) {
+            return true;
+        }
+
+        @Override
+        public void put(ItemStack stack) {
+            waiting.add(stack);
+        }
+
+        @Override
+        public List<Item> extras() {
+            return waiting.stream().map(ItemStack::getItem).toList();
+        }
+
+        @Override
+        public boolean keepsInChest(Item item) {
+            return true;
+        }
+
+        @Override
+        public boolean replacesLost() {
+            return true;
+        }
+
+        @Override
+        public int stacks() {
+            return waiting.size();
         }
     }
 
@@ -91,8 +192,8 @@ public final class MaterialSupply {
         // Stacks nobody needs soon go back to the waiting list, to make room.
         for (int slot = 0; slot < chest.getContainerSize(); slot++) {
             ItemStack stack = chest.getItem(slot);
-            if (!stack.isEmpty() && !wanted.contains(stack.getItem())) {
-                waiting.add(stack);
+            if (!stack.isEmpty() && !wanted.contains(stack.getItem()) && store.accepts(stack)) {
+                store.put(stack);
                 chest.setItem(slot, ItemStack.EMPTY);
             }
         }
@@ -138,14 +239,15 @@ public final class MaterialSupply {
         planItems.addAll(listed);
         Set<Item> wanted = new LinkedHashSet<>();
         int used = 0;
-        for (ItemStack stack : waiting) {
-            if (!listed.contains(stack.getItem()) && !planItems.contains(stack.getItem()) && wanted.add(stack.getItem())) {
-                used += slotsFor(chest, stack.getItem());
+        for (Item item : store.extras()) {
+            if (!listed.contains(item) && !planItems.contains(item) && wanted.add(item)) {
+                used += slotsFor(chest, item);
             }
         }
         for (int slot = 0; slot < chest.getContainerSize(); slot++) {
             ItemStack stack = chest.getItem(slot);
-            if (!stack.isEmpty() && !listed.contains(stack.getItem()) && !planItems.contains(stack.getItem()) && wanted.add(stack.getItem())) {
+            if (!stack.isEmpty() && !listed.contains(stack.getItem()) && !planItems.contains(stack.getItem())
+                    && store.keepsInChest(stack.getItem()) && wanted.add(stack.getItem())) {
                 used += slotsFor(chest, stack.getItem());
             }
         }
@@ -228,9 +330,9 @@ public final class MaterialSupply {
                 evict = slot;
             }
         }
-        if (evict >= 0) {
+        if (evict >= 0 && store.accepts(chest.getItem(evict))) {
             ItemStack stack = chest.getItem(evict);
-            waiting.add(stack);
+            store.put(stack);
             chest.setItem(evict, ItemStack.EMPTY);
             DebugLog.event(DebugCategory.BUILD, null, "material supply: made room for %s, put back %s %s", item, stack.getCount(), stack.getItem());
         }
@@ -244,6 +346,9 @@ public final class MaterialSupply {
      * the last of an item is usually in a builder's hands on its way to its spot, and bringing it twice left leftovers.
      */
     private void resupplyLost(ChestBlockEntity chest) {
+        if (!store.replacesLost()) {
+            return;
+        }
         Map<Item, Integer> needed = new LinkedHashMap<>();
         for (Item item : demand.get()) {
             needed.merge(item, 1, Integer::sum);
@@ -259,25 +364,19 @@ public final class MaterialSupply {
             if (now - since >= LOST_AFTER_TICKS) {
                 missingSince.remove(item);
                 ItemStack stack = new ItemStack(item);
-                waiting.add(stack.copyWithCount(Math.min(count, stack.getMaxStackSize())));
+                store.put(stack.copyWithCount(Math.min(count, stack.getMaxStackSize())));
                 DebugLog.event(DebugCategory.BUILD, null, "material supply: %s lost, brought %s more", item, Math.min(count, stack.getMaxStackSize()));
             }
         });
     }
 
     private boolean hasWaiting(Item item) {
-        return waiting.stream().anyMatch(stack -> stack.is(item));
+        return store.has(item);
     }
 
+    @Nullable
     private ItemStack take(Item item) {
-        for (Iterator<ItemStack> it = waiting.iterator(); it.hasNext(); ) {
-            ItemStack stack = it.next();
-            if (stack.is(item)) {
-                it.remove();
-                return stack;
-            }
-        }
-        return null;
+        return store.take(item);
     }
 
     private static int emptySlot(ChestBlockEntity chest) {
@@ -318,7 +417,7 @@ public final class MaterialSupply {
 
     /** Stacks not in the chest. */
     public int waitingStacks() {
-        return waiting.size();
+        return store.stacks();
     }
 
     public BlockPos chestPos() {

@@ -58,6 +58,24 @@ public final class Tuning {
             "Distance of the wall ring from the keep per tier, in blocks (placeholder).", List.of(20, 24, 28, 32, 36, 40, 44, 48, 52, 56), 1, 256));
     public static final TuningKey.IntListKey KINGDOM_ZONE_OUTER_RADIUS = register(new TuningKey.IntListKey("kingdom.zone.outer_radius",
             "Outer edge of the outer zone (fields, camps) per tier, in blocks (placeholder).", List.of(32, 38, 44, 50, 56, 62, 68, 74, 80, 86), 1, 512));
+    public static final TuningKey.IntKey KINGDOM_KEEP_LEVEL = register(new TuningKey.IntKey("kingdom.keep.level",
+            "Which detail level of the keep (csr:keep) a new kingdom builds: 1 = the keep tower (the king sits in the chair of his chamber), 2 = with the great hall and its throne, 3 = the whole castle. Read when the keep is planned.", 1, 1, 3));
+    public static final TuningKey.IntKey KINGDOM_KEEP_SEARCH_RADIUS = register(new TuningKey.IntKey("kingdom.keep.search_radius",
+            "How far from where the kingdom was founded the middle of its keep may be, in blocks (the nearest flat ground wins).", 12, 0, 64));
+    public static final TuningKey.IntKey KINGDOM_KEEP_MAX_HEIGHT_RANGE = register(new TuningKey.IntKey("kingdom.keep.max_height_range",
+            "The most the ground under a keep site (with the easel, the chest and a margin of 1) may rise and fall, in blocks; the kingdom levels it when it starts the keep.", 3, 0, 16));
+    public static final TuningKey.IntKey KINGDOM_KEEP_BUILDERS = register(new TuningKey.IntKey("kingdom.keep.builders",
+            "How many of the kingdom's soldiers build its keep. Only soldiers that can work (holding wheat) and have no job yet are picked, nearest to the keep's chest first.", 3, 1, 16));
+    public static final TuningKey.IntKey KINGDOM_KEEP_SCAFFOLD_STOCK = register(new TuningKey.IntKey("kingdom.keep.scaffold_stock",
+            "How much scaffold material (scaffold.material) the kingdom asks for when its keep is taller than builders reach; builders carry it back when they take the scaffolding down.", 128, 0, 1024));
+    public static final TuningKey.IntKey KINGDOM_KEEP_CHECK_TICKS = register(new TuningKey.IntKey("kingdom.keep.check_ticks",
+            "How often a kingdom looks after its keep (stocks the builders' chest from the stockpile, picks builders, notices it is finished), in ticks.", 20, 1, 1200));
+    public static final TuningKey.IntKey KINGDOM_KEEP_PLAN_RETRY_TICKS = register(new TuningKey.IntKey("kingdom.keep.plan_retry_ticks",
+            "How long a kingdom waits before trying again to place its keep when it found no site (unloaded ground, too uneven, water, another easel), in ticks.", 600, 20, 72_000));
+    public static final TuningKey.IntKey KINGDOM_KING_BONUS_HEALTH = register(new TuningKey.IntKey("kingdom.king_bonus_health",
+            "Extra health a king gets once his keep is built (a clay soldier has 20).", 80, 0, 1000));
+    public static final TuningKey.IntKey KINGDOM_THRONE_WALK_TICKS = register(new TuningKey.IntKey("kingdom.throne_walk_ticks",
+            "How long a king walks toward his throne before his soldiers carry him there (vanilla paths are short and the throne may be up a winding stair), in ticks; 0 = never.", 1200, 0, 72_000));
     public static final TuningKey.IntListKey PERFORMANCE_SOLDIER_CAP = register(new TuningKey.IntListKey("performance.soldier_cap_per_tier",
             "Most clay soldiers a kingdom may have per tier (placeholder until the stage 7 performance checkpoint).",
             List.of(8, 12, 16, 20, 26, 32, 40, 48, 56, 64), 1, 1000));

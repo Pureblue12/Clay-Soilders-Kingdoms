@@ -290,6 +290,7 @@ public class AbstractClaySoldierEntity extends ClayMobTeamOwnerEntity implements
         this.goalSelector.addGoal(1, new ClaySodlierBreathAirGoal(this));
         this.goalSelector.addGoal(1, new UseDoorGoal(this));
         this.goalSelector.addGoal(2, new ClayMobSitGoal(this));
+        this.goalSelector.addGoal(2, new KingThroneGoal(this));
         this.goalSelector.addGoal(3, getOrCreateWorkSelectorGoal());
         this.goalSelector.addGoal(4, new UseAssignedPoiGoal(this, 1.2));
         this.goalSelector.addGoal(4, new FindNearestPoiGoal(this));

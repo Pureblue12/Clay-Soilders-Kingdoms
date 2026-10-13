@@ -3,6 +3,7 @@ package net.bumblebee.claysoldiers.event;
 import net.bumblebee.claysoldiers.commands.KingdomCommand;
 import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
 import net.bumblebee.claysoldiers.kingdom.KingdomBook;
+import net.bumblebee.claysoldiers.kingdom.KingdomKeep;
 import net.bumblebee.claysoldiers.kingdom.Kingdoms;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -17,8 +18,8 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /**
- * Connects kingdoms to the game (all installs, not only dev): a king's death ruins its kingdom, the census runs on
- * server ticks, sneak + right-clicking your own king with a gold block founds a kingdom, and a kingdom book is brought
+ * Connects kingdoms to the game (all installs, not only dev): a king's death ruins its kingdom, the census and the
+ * keep (stage 4) run on server ticks, sneak + right-clicking your own king with a gold block founds a kingdom, and a kingdom book is brought
  * up to date when it is opened.
  */
 public final class KingdomEvents {
@@ -36,6 +37,7 @@ public final class KingdomEvents {
 
     public static void onServerTick(ServerTickEvent.Post event) {
         Kingdoms.tick(event.getServer());
+        KingdomKeep.tick(event.getServer());
     }
 
     /**

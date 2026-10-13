@@ -37,7 +37,7 @@ Starts a headless test server, runs every test in
 `DoorGameTests`, `TuningGameTests`, `StructureRegistryGameTests`, `StructurePasteGameTests`,
 `LayoutCheckerGameTests`, `KingdomDataGameTests`, `KingdomGameTests`, `KingdomBookGameTests`, `KingdomBookRefreshGameTests`, `TerrainScoreGameTests`, `TerrainScanGameTests`,
 `TerrainGradingGameTests`, `TerrainFoundingGameTests`, `ScaffoldPlannerGameTests`, `ScaffoldBuildGameTests`,
-`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`), prints
+`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `KingdomKeepGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Templates: `data/csr/structure/gametest/platform.nbt` (16x8x16) and `terrain.nbt` (32x16x32, for test terrains);
@@ -243,6 +243,24 @@ Code: `common/.../kingdom/` (`Kingdom`, `KingdomSavedData`, `Kingdoms` service, 
   rewrites itself whenever it's opened, in the hand or on a lectern (D24).
 - **Dev only:** `/csr dev kingdom stock_add|stock_remove <resource> [amount]`, `stock_show` (book: Kingdom).
 
+### The kingdom builds its keep (stage 4, draft)
+
+Code: `common/.../kingdom/KingdomKeep` (planner and server tick), `KeepSite` (pure site search), `KingdomStore`
+(stockpile as the builders' chest store, through `dev/MaterialSupply.Store`), `KeepThrone` (seat per structure level),
+`entity/goal/KingThroneGoal`. Decisions D82–D85; numbers `kingdom.keep.*`, `kingdom.king_bonus_health`,
+`kingdom.throne_walk_ticks`.
+- Every `kingdom.keep.check_ticks` an active kingdom without a building plans its keep (master plan v0: the first
+  building is the keep): nearest flat ground to its center, levelled at once, easel + chest like `/csr build`. No site:
+  retried after `kingdom.keep.plan_retry_ticks`; the book's Keep page says why.
+- Builders: up to `kingdom.keep.builders` soldiers of the team in the claim that can work (wheat), have no job and no POI,
+  not the king. Materials: the chest is stocked from the stockpile; items put in the chest that aren't needed soon go to
+  the stockpile; nothing is replaced from nothing.
+- Finished (easel finished): BUILT, chronicle line, the king gets +`kingdom.king_bonus_health` and sits on the seat
+  (keep L1: the chamber chair; L2/L3: the throne). Disbanding takes the health back.
+- The server tick does nothing in a GameTest server (other tests' kingdoms stay untouched): tests call
+  `KingdomKeep.update` themselves.
+- Saved: `KingdomBuilding.level` (kingdom data version 2). Supplies, crews and planning problems are memory only.
+
 ### Terrain (stage 2 spike: site checks; soldiers don't grade yet)
 
 Code: `common/.../terrain/`; background, comparison and recommendation: `docs/TERRAIN.md`; prior art:
@@ -354,6 +372,7 @@ the time it was made; a different hash means the registry changed.
 | `/csr dev structure build <id> [level]` | 3 builders build a Studio structure (default: top level) ahead of you; the chest is refilled as it empties (book: Structures, "Builders build") |
 | `/csr dev structure undo` / `reload` / `list` | undo the last paste / re-read structures from disk / list all |
 | `/csr dev kingdom stock_add` / `stock_remove <resource> [amount]`, `stock_show` | test the stockpile of the kingdom you stand in (book: Kingdom, which also links `/csr kingdom found/book/status/disband`) |
+| `/csr dev kingdom keep_materials` / `keep_now` | put everything the keep needs in the stockpile / let the kingdom look after its keep at once (book: Kingdom) |
 | `/csr dev terrain scan` / `site` | scan the ground around you / score the keep site where you stand and show the best nearby (book: Terrain) |
 | `/csr dev terrain make <shape>` | build a test terrain 16 blocks ahead: slope, hill, cliff, lake_edge, forest, lava_pool, plateau |
 | `/csr dev scaffold build <shape> [height]` | test tower, wall or wall_tower (default 20 high) ahead of you: easel, stocked chest (cobblestone + 128 scaffolding), 3 builders (book: Scaffolding) |
@@ -543,4 +562,4 @@ Optional integrations (JEI, Jade, Accessories, Curios, Create, SmartBrainLib) ar
 - **Stage 3 (Tall construction spike) — done (2026-10-04, waiting for the in-game checklist):** research, scaffold
   planner (5 approaches), climbed scaffolding columns in game, saved jobs with cleanup, Scaffolding dev book category,
   SCAFFOLD recorder category. Recommendation and height rules in `docs/SCAFFOLDING.md`.
-- **Stage 4 (Tier-1 keep built autonomously) — next.**
+- **Stage 4 (Tier-1 keep built autonomously) — in progress (2026-10-13, draft PR):** see "The kingdom builds its keep".

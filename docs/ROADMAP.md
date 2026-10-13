@@ -11,7 +11,7 @@ Earlier work (M0–M2: testing, bug fixes, `/csr build`, builder fixes, doors) i
 | 1 | Kingdom core | M | **done** (in-game checklist pending) |
 | 2 | Terrain spike | L | **done** (in-game checklist pending) |
 | 3 | Tall construction spike | L | **done** (in-game checklist pending) |
-| 4 | Tier-1 keep built autonomously | L | **next** |
+| 4 | Tier-1 keep built autonomously | L | **in progress** (draft, not in the real mod yet) |
 | 5 | Economy loop v1 | L | not started |
 | 5a | Decoration step | M | not started |
 | 6 | Layout and growth | XL | not started |
@@ -130,7 +130,18 @@ Stages are ordered by dependency and risk. Every stage ends playable.
 - **Acceptance test:** a gold-hat king plus the supplied items yields a finished keep with the king on the throne. First real playable.
 - **Depends on:** 1, 2, 3 · **Size:** L
 - **Risks:** keep size versus terrain.
-- **Decisions:** [D3](DECISIONS.md), [D4](DECISIONS.md) · **Status:** not started · **Results:** —
+- **Decisions:** [D3](DECISIONS.md), [D4](DECISIONS.md), D82–D85 · **Status:** in progress (2026-10-13, draft) · **Results:**
+  - **Master plan v0 and planner (`KingdomKeep`, `KeepSite`):** an active kingdom without a keep picks the nearest flat
+    ground to where it was founded (all four directions), levels it at once (logs to the stockpile) and places the
+    keep's easel and chest. Keep level from `kingdom.keep.level` (1).
+  - **Builders:** 3 of the kingdom's own wheat-holding soldiers without a job (never the king, never fighters).
+  - **Materials:** from the stockpile; the owner fills the keep's chest, unneeded items go to the stockpile; the book
+    and `/csr kingdom status` list what is missing. Dev: `/csr dev kingdom keep_materials`, `keep_now`.
+  - **Throne:** keep L1 has no throne room, so the king sits in his chamber's chair (L2/L3: the great hall's throne);
+    +80 health once the keep is built; carried to the seat if he can't walk there in time.
+  - **Tests:** `KingdomKeepGameTests` (the whole loop with the test hut, chest to stockpile, site search, levelling,
+    saved level). The full keep L1 build in game takes about 132,000 ticks (about 2 hours with 3 builders).
+  - **Open:** the owner's in-game checklist; whether keep L1's chamber chair is good enough as the first throne.
 
 ### 5 Economy loop v1
 - **Goal:** lumber camp with replanting, farm, carrier, storehouse, stockpile and renown; a flow audit for each.
