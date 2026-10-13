@@ -2,9 +2,11 @@ package net.bumblebee.claysoldiers.gametest;
 
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.blueprint.BlueprintData;
+import net.bumblebee.claysoldiers.entity.goal.workgoal.BuildBlueprintGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -146,5 +148,37 @@ public class BuilderReachGameTests {
                         .formatted(builder.chest().countItem(Items.COBBLESTONE), blocks.size(),
                                 builder.soldier().getCarriedStack().isEmpty() ? "empty-handed"
                                         : "carrying at " + builder.soldier().blockPosition().toShortString())));
+    }
+
+    /**
+     * D87 TEST (keep L1's last roof flagpole): one block far from the chest, and a builder slowed to a tenth of its
+     * speed, so the walk there takes longer than {@code BuildBlueprintGoal.MAX_CARRY_TICKS}. Before D87 the builder
+     * gave the block up on the way, every time; a builder that keeps getting closer must keep it and place it.
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 2600)
+    public static void builderOnALongWalkKeepsItsBlock(GameTestHelper helper) {
+        BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "far_block", 11, 1, 9, new BlockPos(10, 0, 8));
+        ClaySoldierGameTests.Builder builder = ClaySoldierGameTests.setUpBuilder(helper, blueprint,
+                List.of(new ItemStack(Items.COBBLESTONE, 1)));
+        builder.soldier().getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.03);
+        BlockPos target = EASEL.offset(5, 0, 10);
+        long[] carryingSince = {-1};
+
+        helper.onEachTick(() -> {
+            boolean carrying = !builder.soldier().getCarriedStack().isEmpty();
+            if (carrying && carryingSince[0] < 0) {
+                carryingSince[0] = helper.getTick();
+            } else if (!carrying && carryingSince[0] >= 0) {
+                if (!helper.getBlockState(target).is(Blocks.COBBLESTONE)) {
+                    helper.fail("BUG (D87): the builder gave the block up after carrying it %d ticks, though it kept getting closer"
+                            .formatted(helper.getTick() - carryingSince[0]), builder.soldier());
+                }
+                long carried = helper.getTick() - carryingSince[0];
+                helper.assertTrue(carried > BuildBlueprintGoal.MAX_CARRY_TICKS,
+                        "Setup: the walk took only %d ticks, not longer than the give-up timer (%d); slow the builder more"
+                                .formatted(carried, BuildBlueprintGoal.MAX_CARRY_TICKS));
+                helper.succeed();
+            }
+        });
     }
 }

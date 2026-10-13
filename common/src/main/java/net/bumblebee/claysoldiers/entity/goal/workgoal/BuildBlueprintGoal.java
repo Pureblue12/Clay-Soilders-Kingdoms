@@ -41,15 +41,26 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     private final int verticalSearchRange;
     protected int verticalSearchStart;
     /**
-     * A builder that has had a request this long (fetching from storage + carrying) without placing it gives up:
-     * it returns the block and releases the request, so the block can be handed out again (20 seconds).
-     * Must stay shorter than {@code BlueprintBlockInfo.STALE_REQUEST_TICKS}.
+     * A builder that has had a request this long (fetching from storage + carrying) without getting closer to where it is
+     * going (its storage, then the block's spot) gives up: it returns the block and releases the request, so the block
+     * can be handed out again (20 seconds). Getting {@link #PROGRESS_STEP} closer than ever starts it again (D87), up to
+     * {@code build.carry_max_ticks} in all. Must stay shorter than {@code BlueprintBlockInfo.STALE_REQUEST_TICKS}.
      */
     public static final int MAX_CARRY_TICKS = 400;
+    /** How much closer (straight line, in blocks) a builder must get than ever before to count as getting somewhere (D87). */
+    static final double PROGRESS_STEP = 1.0;
     @Nullable
     private BlueprintRequest request = null;
     private boolean bringBack = false;
     private int carryTicks = 0;
+    /** Ticks since this builder last got {@link #PROGRESS_STEP} closer to where its request takes it (D87). */
+    private int noProgressTicks = 0;
+    /** The closest this builder has been to {@link #progressTarget} for {@link #progressRequest}. */
+    private double closestDistance;
+    @Nullable
+    private BlueprintRequest progressRequest;
+    @Nullable
+    private BlockPos progressTarget;
     @Nullable
     private Map<String, Integer> unreachableReasons;
     /** While BUILD is recorded: closed doors found in the way during one search, and the blocks behind each. */
@@ -204,7 +215,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             request = null;
         } else if (request.hasStarted()) {
             // The give-up timer also runs while fetching the item from storage.
-            if (++carryTicks > MAX_CARRY_TICKS) {
+            if (outOfTime(getPoiPos())) {
                 giveUpRequest();
             } else {
                 getRequestFromStorage();
@@ -212,7 +223,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         } else if (request.isPlacing()) {
             setStatus(CARRYING_ID);
             if (carryTicks == MAX_CARRY_TICKS / 2) DebugLog.event(DebugCategory.BUILD, soldier, "still working on %s at %s after %s ticks", request.getItem(), request.getPos(), carryTicks);
-            if (++carryTicks > MAX_CARRY_TICKS) {
+            if (outOfTime(request.getPos())) {
                 giveUpRequest();
             } else if (placeWait > 0) {
                 placeWait--;
@@ -277,11 +288,44 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     }
 
     /**
+     * Counts one tick of the give-up timer and returns whether this builder should give up its request (D87). A builder
+     * that keeps getting closer to {@code target} (its storage while fetching, the block's spot while carrying) keeps its
+     * request: the long walk up the keep's stairs to its roof flagpoles took more than {@link #MAX_CARRY_TICKS} and every
+     * try was given up a few blocks short. It gives up after {@link #MAX_CARRY_TICKS} without getting
+     * {@link #PROGRESS_STEP} closer than ever, or after {@code build.carry_max_ticks} in all. Getting closer also keeps
+     * the request from going stale, so no other builder takes the block over meanwhile.
+     */
+    private boolean outOfTime(@Nullable BlockPos target) {
+        carryTicks++;
+        if (target == null) {
+            return carryTicks > MAX_CARRY_TICKS;
+        }
+        double distance = Math.sqrt(soldier.distanceToSqr(target.getX() + 0.5, target.getY() + 0.5, target.getZ() + 0.5));
+        if (request != progressRequest || !target.equals(progressTarget)) {
+            progressRequest = request;
+            progressTarget = target;
+            closestDistance = distance;
+            noProgressTicks = 0;
+        } else if (distance <= closestDistance - PROGRESS_STEP) {
+            closestDistance = distance;
+            noProgressTicks = 0;
+            if (request != null) request.renew(soldier.level().getGameTime());
+        } else {
+            noProgressTicks++;
+        }
+        if (carryTicks == MAX_CARRY_TICKS + 1 && noProgressTicks <= MAX_CARRY_TICKS && request != null) {
+            DebugLog.event(DebugCategory.BUILD, soldier, "still getting closer to %s at %s after %s ticks (%s away), keeping it",
+                    request.getItem(), request.getPos(), carryTicks, Math.round(closestDistance));
+        }
+        return noProgressTicks > MAX_CARRY_TICKS || carryTicks > Tuning.BUILD_CARRY_MAX_TICKS.get();
+    }
+
+    /**
      * Cancels the current request (so the block can be handed out again) and brings the carried item back.
      */
     private void giveUpRequest() {
         climber.descend();
-        DebugLog.event(DebugCategory.BUILD, soldier, "gave up %s at %s after %s ticks (fetching + carrying), releasing it", request.getItem(), request.getPos(), carryTicks);
+        DebugLog.event(DebugCategory.BUILD, soldier, "gave up %s at %s after %s ticks (fetching + carrying, %s without getting closer), releasing it", request.getItem(), request.getPos(), carryTicks, noProgressTicks);
         request.cancel();
         request = null;
         bringBack = !soldier.getCarriedStack().isEmpty();
