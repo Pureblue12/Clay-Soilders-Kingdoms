@@ -1,7 +1,7 @@
 package net.bumblebee.claysoldiers.event;
 
-import net.bumblebee.claysoldiers.commands.KingdomCommand;
 import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
+import net.bumblebee.claysoldiers.kingdom.KingStone;
 import net.bumblebee.claysoldiers.kingdom.KingdomBook;
 import net.bumblebee.claysoldiers.kingdom.KingdomKeep;
 import net.bumblebee.claysoldiers.kingdom.Kingdoms;
@@ -19,7 +19,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /**
  * Connects kingdoms to the game (all installs, not only dev): a king's death ruins its kingdom, the census and the
- * keep (stage 4) run on server ticks, sneak + right-clicking your own king with a gold block founds a kingdom, and a kingdom book is brought
+ * keep (stage 4) run on server ticks, sneak + right-clicking your own king with a gold block sends him to found a kingdom, and a kingdom book is brought
  * up to date when it is opened.
  */
 public final class KingdomEvents {
@@ -41,12 +41,14 @@ public final class KingdomEvents {
     }
 
     /**
-     * The in-game founding trigger: sneak + right-click a king of a team loyal to you while holding a gold block. The
-     * block is not used up. Anything else (not sneaking, another item, not a king) is left to the normal interaction.
+     * The in-game founding trigger (D86): sneak + right-click a king of a team loyal to you while holding a gold block.
+     * He takes one block, picks a spot himself, walks there and sets it down, which founds the kingdom
+     * ({@link KingStone}, {@code KingStoneGoal}). Anything else (not sneaking, another item, not a soldier) is left to
+     * the normal interaction.
      */
     public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
         if (!(event.getTarget() instanceof AbstractClaySoldierEntity soldier) || !event.getEntity().isShiftKeyDown()
-                || !event.getItemStack().is(Items.GOLD_BLOCK) || !Kingdoms.isKing(soldier)) {
+                || !event.getItemStack().is(Items.GOLD_BLOCK)) {
             return;
         }
         event.setCanceled(true);
@@ -54,14 +56,8 @@ public final class KingdomEvents {
         if (!(event.getEntity() instanceof ServerPlayer player) || !(event.getLevel() instanceof ServerLevel level)) {
             return;
         }
-        Kingdoms.Result result = Kingdoms.found(level, soldier, player);
-        if (result.ok()) {
-            player.sendSystemMessage(Component.literal("You founded the kingdom of " + Kingdoms.teamName(level.getServer(), soldier.getClayTeamType())
-                    + ". See it with /csr kingdom book; undo with /csr kingdom disband.").withStyle(ChatFormatting.GOLD));
-            KingdomCommand.warn(player.createCommandSourceStack(), result);
-        } else {
-            player.sendSystemMessage(Component.literal("No kingdom founded: " + result.refusal()).withStyle(ChatFormatting.RED));
-        }
+        KingStone.Given given = KingStone.give(level, soldier, player, event.getItemStack());
+        player.sendSystemMessage(Component.literal(given.message()).withStyle(given.ok() ? ChatFormatting.GOLD : ChatFormatting.RED));
     }
 
     /**

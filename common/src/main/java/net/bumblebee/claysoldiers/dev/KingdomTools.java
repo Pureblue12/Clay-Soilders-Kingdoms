@@ -37,7 +37,7 @@ final class KingdomTools {
 
     static void register(DevToolRegistry registry) {
         registry.addCategory(new DevCategory(KINGDOM, "Kingdom",
-                "Found near your king (or sneak + right-click it with a gold block).", false));
+                "Found at once where your king stands (or sneak + right-click him with a gold block: he picks a spot and founds it there).", false));
         registry.addTool(DevTool.link("kingdom_found", KINGDOM, Component.literal("Found kingdom"),
                 "Founds a kingdom around the nearest king of a team loyal to you.", "/csr kingdom found", null));
         registry.addTool(DevTool.link("kingdom_book", KINGDOM, Component.literal("Kingdom book"),

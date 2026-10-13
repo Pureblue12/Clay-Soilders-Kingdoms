@@ -167,6 +167,8 @@ public final class KingdomKeep {
                     + " (" + result.summary().substring("no site: ".length()) + "); trying again later");
         }
         KeepSite.Choice choice = result.best().get();
+        // The gold block the king set down to found the kingdom goes into the keep: it comes back as the throne (D86).
+        KingStone.takeUp(level, kingdom);
         int height = plan.get().getSize().getY();
         Levelled levelled = levelGround(level, choice.minX(MARGIN), choice.maxX(MARGIN), choice.minZ(MARGIN), choice.maxZ(MARGIN),
                 choice.groundY(), choice.groundY() + height + CLEAR_ABOVE);

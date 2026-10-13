@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 
 /**
  * Everything that changes kingdoms goes through here: it keeps the saved data dirty, writes the chronicle and records
- * KINGDOM events. Founding is explicit (a command, the book, or sneak + right-click your king with a gold block),
+ * KINGDOM events. Founding is explicit (a command, the book, or sneak + right-click your king with a gold block, and he founds it where he likes),
  * never automatic, and always reversible ({@link #disband}).
  */
 public final class Kingdoms {

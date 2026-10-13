@@ -130,7 +130,10 @@ Stages are ordered by dependency and risk. Every stage ends playable.
 - **Acceptance test:** a gold-hat king plus the supplied items yields a finished keep with the king on the throne. First real playable.
 - **Depends on:** 1, 2, 3 · **Size:** L
 - **Risks:** keep size versus terrain.
-- **Decisions:** [D3](DECISIONS.md), [D4](DECISIONS.md), D82–D85 · **Status:** in progress (2026-10-13, draft) · **Results:**
+- **Decisions:** [D3](DECISIONS.md), [D4](DECISIONS.md), D82–D86 · **Status:** in progress (2026-10-13, draft) · **Results:**
+  - **Founding by gold block (`KingStone`, D86):** hand your crowned king a gold block (sneak + right-click); he picks a
+    spot himself among the good sites near him, walks there and sets it down, which founds the kingdom. The block goes
+    into the keep when it starts and comes back as the throne.
   - **Master plan v0 and planner (`KingdomKeep`, `KeepSite`):** an active kingdom without a keep picks the nearest flat
     ground to where it was founded (all four directions), levels it at once (logs to the stockpile) and places the
     keep's easel and chest. Keep level from `kingdom.keep.level` (1).
@@ -140,7 +143,7 @@ Stages are ordered by dependency and risk. Every stage ends playable.
   - **Throne:** a gold block the kingdom puts in the finished keep, and the king stands on it (the owner's call). Keep L1
     has no throne room, so it goes in the middle of the king's chamber (L2/L3: in place of the great hall's wooden
     throne); +80 health once the keep is built; carried to the throne if he can't walk there in time.
-  - **Tests:** `KingdomKeepGameTests` (the whole loop with the test hut, chest to stockpile, site search, levelling,
+  - **Tests:** `KingStoneGameTests` (the king founds where he likes, refusals, block taken up), `KingdomKeepGameTests` (the whole loop with the test hut, chest to stockpile, site search, levelling,
     saved level). The full keep L1 build in game takes about 132,000 ticks (about 2 hours with 3 builders).
   - **Open:** the owner's in-game checklist; whether the king's chamber is the right room for the L1 throne.
 

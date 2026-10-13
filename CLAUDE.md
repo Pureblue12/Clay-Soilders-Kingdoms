@@ -37,7 +37,7 @@ Starts a headless test server, runs every test in
 `DoorGameTests`, `TuningGameTests`, `StructureRegistryGameTests`, `StructurePasteGameTests`,
 `LayoutCheckerGameTests`, `KingdomDataGameTests`, `KingdomGameTests`, `KingdomBookGameTests`, `KingdomBookRefreshGameTests`, `TerrainScoreGameTests`, `TerrainScanGameTests`,
 `TerrainGradingGameTests`, `TerrainFoundingGameTests`, `ScaffoldPlannerGameTests`, `ScaffoldBuildGameTests`,
-`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `KingdomKeepGameTests`), prints
+`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `KingdomKeepGameTests`, `KingStoneGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Templates: `data/csr/structure/gametest/platform.nbt` (16x8x16) and `terrain.nbt` (32x16x32, for test terrains);
@@ -227,8 +227,12 @@ Code: `common/.../kingdom/` (`Kingdom`, `KingdomSavedData`, `Kingdoms` service, 
 - **At most one kingdom per team**, ACTIVE or RUINED. Change kingdoms only through `Kingdoms` (it marks the data
   dirty, writes the chronicle, records KINGDOM events).
 - **Founding** is explicit and reversible, never automatic:
-  - in game: sneak + right-click your own king (a clay soldier wearing a gold ingot, its team loyal to you) holding
-    a gold block;
+  - in game (D86): sneak + right-click your own king (a clay soldier wearing a gold ingot, its team loyal to you) holding
+    a gold block. He takes one block (carried in his off hand, saved with him), picks a spot himself at random among the
+    good keep sites near him (`kingdom.stone_pick_tolerance`), walks there and sets the block down beside him: that
+    founds the kingdom around him (`KingStone`, `KingStoneGoal`). A spot he can't reach (`kingdom.stone_walk_ticks`) or
+    where founding is refused is left out; after `kingdom.stone_tries` he drops the block. The block is taken up when
+    the keep starts and comes back as the throne;
   - or `/csr kingdom found` (nearest loyal king within `kingdom.found_search_radius`).
 
   Refused: unsupported dimension (Overworld only), not a living king, team not loyal to you, team already has a

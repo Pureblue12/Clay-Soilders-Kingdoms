@@ -55,6 +55,9 @@ All balancing numbers (costs, radii, rates, caps, unlock thresholds) live in ONE
 | `kingdom.keep.plan_retry_ticks` | 600 | 20–72000 | How long a kingdom waits before trying again to place its keep when it found no site. |
 | `kingdom.king_bonus_health` | 80 | 0–1000 | Extra health a king gets once his keep is built (a clay soldier has 20). |
 | `kingdom.throne_walk_ticks` | 1200 | 0–72000 | How long a king walks toward his throne before his soldiers carry him there; 0 = never. |
+| `kingdom.stone_pick_tolerance` | 10 | 0–100 | A king handed a gold block picks his kingdom's spot at random among the usable keep sites near him scoring at most this many points below the best (0 = always the best). |
+| `kingdom.stone_walk_ticks` | 1200 | 100–72000 | How long a king carrying his gold block walks toward his spot before he picks another. |
+| `kingdom.stone_tries` | 5 | 1–100 | Spots a king carrying his gold block tries (out of reach, founding refused, no site) before he drops it and gives up. |
 | `performance.soldier_cap_per_tier` | 8, 12, 16, 20, 26, 32, 40, 48, 56, 64 | 10 × 1–1000 | Most clay soldiers a kingdom may have per tier. **Placeholder** until the stage 7 performance checkpoint. |
 | `events.warning_time_ticks` | 1200 | 0–72000 | How long before a raid or event the kingdom is warned, in ticks (20 ticks = 1 s). |
 | `terrain.scan_radius` | 24 | 1–64 | How far `/csr dev terrain scan` looks around you (a square of 2r+1 columns). |

@@ -76,6 +76,12 @@ public final class Tuning {
             "Extra health a king gets once his keep is built (a clay soldier has 20).", 80, 0, 1000));
     public static final TuningKey.IntKey KINGDOM_THRONE_WALK_TICKS = register(new TuningKey.IntKey("kingdom.throne_walk_ticks",
             "How long a king walks toward his throne before his soldiers carry him there (vanilla paths are short and the throne may be up a winding stair), in ticks; 0 = never.", 1200, 0, 72_000));
+    public static final TuningKey.IntKey KINGDOM_STONE_PICK_TOLERANCE = register(new TuningKey.IntKey("kingdom.stone_pick_tolerance",
+            "A king handed a gold block picks the spot for his kingdom at random among the usable keep sites near him that score at most this many points below the best (0 = always the best).", 10, 0, 100));
+    public static final TuningKey.IntKey KINGDOM_STONE_WALK_TICKS = register(new TuningKey.IntKey("kingdom.stone_walk_ticks",
+            "How long a king carrying his gold block walks toward the spot he picked before he picks another, in ticks.", 1200, 100, 72_000));
+    public static final TuningKey.IntKey KINGDOM_STONE_TRIES = register(new TuningKey.IntKey("kingdom.stone_tries",
+            "How many spots a king carrying his gold block tries (out of reach, founding refused, or no site found) before he drops it and gives up.", 5, 1, 100));
     public static final TuningKey.IntListKey PERFORMANCE_SOLDIER_CAP = register(new TuningKey.IntListKey("performance.soldier_cap_per_tier",
             "Most clay soldiers a kingdom may have per tier (placeholder until the stage 7 performance checkpoint).",
             List.of(8, 12, 16, 20, 26, 32, 40, 48, 56, 64), 1, 1000));
