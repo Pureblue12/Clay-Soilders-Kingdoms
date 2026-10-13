@@ -7,6 +7,7 @@ import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.entity.soldier.ClaySoldierEntity;
 import net.bumblebee.claysoldiers.init.ModEntityTypes;
 import net.bumblebee.claysoldiers.kingdom.ChronicleEntry;
+import net.bumblebee.claysoldiers.kingdom.KingStone;
 import net.bumblebee.claysoldiers.kingdom.Kingdom;
 import net.bumblebee.claysoldiers.kingdom.KingdomStatus;
 import net.bumblebee.claysoldiers.kingdom.Kingdoms;
@@ -304,11 +305,12 @@ public class KingdomGameTests {
     }
 
     /**
-     * The in-game trigger: a player sneaking and right-clicking their own king with a gold block founds the kingdom,
-     * and the gold block is not used up. Without sneaking nothing is founded.
+     * The in-game trigger (D86): a player sneaking and right-clicking their own king with a gold block hands him one
+     * block; he carries it and founds the kingdom where he sets it down (KingStoneGameTests), not at once. Without
+     * sneaking nothing happens.
      */
     @GameTest(template = PLATFORM, batch = "kingdom_gold_block")
-    public static void goldBlockOnKingFoundsKingdom(GameTestHelper helper) {
+    public static void goldBlockOnKingIsHandedToHim(GameTestHelper helper) {
         clear(helper);
         FakePlayer player = player(helper);
         ClaySoldierEntity king = spawnKing(helper, KING_AT, RED, player);
@@ -316,11 +318,12 @@ public class KingdomGameTests {
             player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(Items.GOLD_BLOCK, 2));
             player.setShiftKeyDown(false);
             player.interactOn(king, net.minecraft.world.InteractionHand.MAIN_HAND);
-            helper.assertTrue(Kingdoms.byTeam(server(helper), RED).isEmpty(), "Founded without sneaking");
+            helper.assertTrue(Kingdoms.byTeam(server(helper), RED).isEmpty() && !KingStone.carries(king), "Something happened without sneaking");
             player.setShiftKeyDown(true);
             player.interactOn(king, net.minecraft.world.InteractionHand.MAIN_HAND);
-            helper.assertTrue(Kingdoms.byTeam(server(helper), RED).isPresent(), "Sneak + right-click with a gold block did not found the kingdom");
-            helper.assertTrue(player.getMainHandItem().is(Items.GOLD_BLOCK) && player.getMainHandItem().getCount() == 2, "The gold block was used up");
+            helper.assertTrue(KingStone.carries(king), "Sneak + right-click with a gold block didn't hand the king the block");
+            helper.assertTrue(player.getMainHandItem().is(Items.GOLD_BLOCK) && player.getMainHandItem().getCount() == 1, "Exactly one gold block should be handed over");
+            helper.assertTrue(Kingdoms.byTeam(server(helper), RED).isEmpty(), "The kingdom was founded at once, before he set the block down");
         } finally {
             player.setShiftKeyDown(false);
             player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, ItemStack.EMPTY);
