@@ -91,6 +91,11 @@ def block_kind(name, props):
         return AIR if props.get("open") == "true" else WALL
     if name.endswith("wall_torch") or name.endswith("wall_sign") or name.endswith("wall_banner") or name.endswith("wall_hanging_sign"):
         return AIR
+    if name == "rail" or name.endswith("_rail"):
+        # No collision, but vanilla's pathfinder (WalkNodeEvaluator, UNPASSABLE_RAIL) keeps a mob that doesn't start its
+        # path on a rail off every rail cell: for builders a rail is a wall (mine L2/L3: the last rails of a tunnel
+        # whose only way in is the rail track were never reached).
+        return WALL
     if any(name == n or name.endswith("_" + n) for n in NO_COLLISION):
         return AIR
     if name.endswith(THIN) or name == "glass_pane":

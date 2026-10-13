@@ -8,6 +8,7 @@ import net.bumblebee.claysoldiers.tuning.Tuning;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
@@ -17,10 +18,13 @@ import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.NodeEvaluator;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.level.pathfinder.PathType;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -82,7 +86,23 @@ public final class BuilderReach {
      */
     @Nullable
     public static Path pathToPlace(PathfinderMob builder, BlockPos target) {
-        return check(builder, target, false).path();
+        return pathToPlace(builder, target, List.of());
+    }
+
+    /**
+     * Like {@link #pathToPlace(PathfinderMob, BlockPos)}, but tries the build plan's standing spots for the block first
+     * (D82): one of them chosen per builder (builders spread round the block), then the nearest of them; only when none can be
+     * walked to (the ground differs from the plan's, another soldier stands there) the normal search runs.
+     */
+    @Nullable
+    public static Path pathToPlace(PathfinderMob builder, BlockPos target, List<BlockPos> plannedSpots) {
+        return pathToPlace(builder, target, plannedSpots, false);
+    }
+
+    /** Like {@link #pathToPlace(PathfinderMob, BlockPos, List)}; with {@code spotsFirst} the plan's spots are tried first. */
+    @Nullable
+    public static Path pathToPlace(PathfinderMob builder, BlockPos target, List<BlockPos> plannedSpots, boolean spotsFirst) {
+        return check(builder, target, false, plannedSpots, spotsFirst).path();
     }
 
     /**
@@ -109,7 +129,28 @@ public final class BuilderReach {
      *                     in the way. This costs one extra path search, so only use it while debugging.
      */
     public static Reach check(PathfinderMob builder, BlockPos target, boolean explainDoors) {
-        Reach reach = find(builder, target);
+        return check(builder, target, explainDoors, List.of());
+    }
+
+    /** Like {@link #check(PathfinderMob, BlockPos, boolean)}, with the build plan's standing spots tried first (D82). */
+    public static Reach check(PathfinderMob builder, BlockPos target, boolean explainDoors, List<BlockPos> plannedSpots) {
+        return check(builder, target, explainDoors, plannedSpots, false);
+    }
+
+    /** Like {@link #check(PathfinderMob, BlockPos, boolean, List)}; with {@code spotsFirst} the plan's spots are tried first. */
+    public static Reach check(PathfinderMob builder, BlockPos target, boolean explainDoors, List<BlockPos> plannedSpots, boolean spotsFirst) {
+        Reach reach;
+        if (plannedSpots.isEmpty()) {
+            reach = find(builder, target);
+        } else if (!spotsFirst && Tuning.BUILD_PLAN_SPOTS_FIRST.get() == 0) {
+            // The normal search first (the nearest spot the builder can place from), the plan's spots only when it fails.
+            reach = find(builder, target);
+            if (!reach.reachable()) {
+                reach = findPlanned(builder, target, plannedSpots);
+            }
+        } else {
+            reach = findPlanned(builder, target, plannedSpots);
+        }
         if (reach.reachable()) {
             return reach;
         }
@@ -121,6 +162,31 @@ public final class BuilderReach {
             }
         }
         return reach;
+    }
+
+    private static Reach findPlanned(PathfinderMob builder, BlockPos target, List<BlockPos> plannedSpots) {
+        List<BlockPos> free = new ArrayList<>();
+        for (BlockPos spot : plannedSpots) {
+            if (builder.level().isLoaded(spot) && canStandAt(builder.level(), spot) && !otherSoldierAt(builder, spot)
+                    && canPlaceFrom(new Vec3(spot.getX() + 0.5, spot.getY(), spot.getZ() + 0.5), target)) {
+                free.add(spot);
+            }
+        }
+        if (!free.isEmpty()) {
+            // The nearest by path of the plan's free spots: they are spread round the block (both sides of a wall), and
+            // a spot picked at random sent builders round the building half the time (D82; build times up to twice main's).
+            Path path = longPath(builder, new HashSet<>(free));
+            if (path != null && path.canReach() && endsWithinReach(path, target)) {
+                return new Reach(path, "");
+            }
+        }
+        DebugLog.event(DebugCategory.PATHING, builder, "none of the plan's %s standing spots for %s can be walked to (%s free), searching", plannedSpots.size(), target, free.size());
+        return find(builder, target);
+    }
+
+    /** Whether another soldier (or any other mob) stands in {@code spot}: builders spread out over a block's spots. */
+    private static boolean otherSoldierAt(PathfinderMob builder, BlockPos spot) {
+        return !builder.level().getEntitiesOfClass(Mob.class, new AABB(spot), mob -> mob != builder).isEmpty();
     }
 
     private static Reach find(PathfinderMob builder, BlockPos target) {
@@ -231,6 +297,11 @@ public final class BuilderReach {
      */
     public static boolean canReachToPlace(PathfinderMob builder, BlockPos target) {
         return pathToPlace(builder, target) != null;
+    }
+
+    /** Like {@link #canReachToPlace(PathfinderMob, BlockPos)}, with the build plan's standing spots tried first (D82). */
+    public static boolean canReachToPlace(PathfinderMob builder, BlockPos target, List<BlockPos> plannedSpots) {
+        return pathToPlace(builder, target, plannedSpots) != null;
     }
 
     private static boolean endsWithinReach(Path path, BlockPos target) {
