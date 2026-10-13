@@ -261,8 +261,9 @@ public class Batch1StructureGameTests {
         List<ItemStack> items = blueprint.createServerPlan().orElseThrow().getNeededItems();
         Builders builders = setUpBuilders(helper, items);
         long estimate = estimate(entry, detail);
-        double slack = entry.path().equals("well") || entry.path().equals("farm") ? 2 * TIME_TOLERANCE : TIME_TOLERANCE;
-        BuildStallReport.watch(helper, entry.path() + " L" + detail, timeoutTicks, estimate + Math.max(Math.round(estimate * slack), MIN_TIME_SLACK),
+        // Reports a build 1.5 times its estimate or slower (at least 100 ticks over), before it fails the time check: well L3 took 217 ticks in one
+        // run and 555 (failed) in another, and a slow run that still passes shows why just as well.
+        BuildStallReport.watch(helper, entry.path() + " L" + detail, timeoutTicks, estimate + Math.max(estimate / 2, 100),
                 easel, builders.chest(), builders.soldiers());
         long start = helper.getTick();
         long[] finished = {-1};
