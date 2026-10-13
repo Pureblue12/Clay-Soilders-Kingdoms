@@ -59,7 +59,7 @@ public final class Tuning {
     public static final TuningKey.IntListKey KINGDOM_ZONE_OUTER_RADIUS = register(new TuningKey.IntListKey("kingdom.zone.outer_radius",
             "Outer edge of the outer zone (fields, camps) per tier, in blocks (placeholder).", List.of(32, 38, 44, 50, 56, 62, 68, 74, 80, 86), 1, 512));
     public static final TuningKey.IntKey KINGDOM_KEEP_LEVEL = register(new TuningKey.IntKey("kingdom.keep.level",
-            "Which detail level of the keep (csr:keep) a new kingdom builds: 1 = the keep tower (the king sits in the chair of his chamber), 2 = with the great hall and its throne, 3 = the whole castle. Read when the keep is planned.", 1, 1, 3));
+            "Which detail level of the keep (csr:keep) a new kingdom builds: 1 = the keep tower (the throne stands in the king's chamber), 2 = with the great hall and its throne, 3 = the whole castle. Read when the keep is planned.", 1, 1, 3));
     public static final TuningKey.IntKey KINGDOM_KEEP_SEARCH_RADIUS = register(new TuningKey.IntKey("kingdom.keep.search_radius",
             "How far from where the kingdom was founded the middle of its keep may be, in blocks (the nearest flat ground wins).", 12, 0, 64));
     public static final TuningKey.IntKey KINGDOM_KEEP_MAX_HEIGHT_RANGE = register(new TuningKey.IntKey("kingdom.keep.max_height_range",

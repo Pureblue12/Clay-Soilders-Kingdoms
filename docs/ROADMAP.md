@@ -137,11 +137,12 @@ Stages are ordered by dependency and risk. Every stage ends playable.
   - **Builders:** 3 of the kingdom's own wheat-holding soldiers without a job (never the king, never fighters).
   - **Materials:** from the stockpile; the owner fills the keep's chest, unneeded items go to the stockpile; the book
     and `/csr kingdom status` list what is missing. Dev: `/csr dev kingdom keep_materials`, `keep_now`.
-  - **Throne:** keep L1 has no throne room, so the king sits in his chamber's chair (L2/L3: the great hall's throne);
-    +80 health once the keep is built; carried to the seat if he can't walk there in time.
+  - **Throne:** a gold block the kingdom puts in the finished keep, and the king stands on it (the owner's call). Keep L1
+    has no throne room, so it goes in the middle of the king's chamber (L2/L3: in place of the great hall's wooden
+    throne); +80 health once the keep is built; carried to the throne if he can't walk there in time.
   - **Tests:** `KingdomKeepGameTests` (the whole loop with the test hut, chest to stockpile, site search, levelling,
     saved level). The full keep L1 build in game takes about 132,000 ticks (about 2 hours with 3 builders).
-  - **Open:** the owner's in-game checklist; whether keep L1's chamber chair is good enough as the first throne.
+  - **Open:** the owner's in-game checklist; whether the king's chamber is the right room for the L1 throne.
 
 ### 5 Economy loop v1
 - **Goal:** lumber camp with replanting, farm, carrier, storehouse, stockpile and renown; a flow audit for each.

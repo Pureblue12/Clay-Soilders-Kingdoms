@@ -46,7 +46,7 @@ All balancing numbers (costs, radii, rates, caps, unlock thresholds) live in ONE
 | `kingdom.zone.inner_radius` | 16, 20, 24, 28, 32, 36, 40, 44, 48, 52 | 10 × 1–256 | Outer edge of the inner zone per tier. **Placeholder.** |
 | `kingdom.zone.wall_radius` | 20, 24, 28, 32, 36, 40, 44, 48, 52, 56 | 10 × 1–256 | Distance of the wall ring from the keep per tier. **Placeholder.** |
 | `kingdom.zone.outer_radius` | 32, 38, 44, 50, 56, 62, 68, 74, 80, 86 | 10 × 1–512 | Outer edge of the outer zone (fields, camps) per tier. **Placeholder.** |
-| `kingdom.keep.level` | 1 | 1–3 | Which detail level of the keep (`csr:keep`) a new kingdom builds: 1 = the keep tower (the king sits in his chamber's chair), 2 = with the great hall and its throne, 3 = the whole castle. Read when the keep is planned (stage 4). |
+| `kingdom.keep.level` | 1 | 1–3 | Which detail level of the keep (`csr:keep`) a new kingdom builds: 1 = the keep tower (the throne stands in the king's chamber), 2 = with the great hall and its throne, 3 = the whole castle. Read when the keep is planned (stage 4). |
 | `kingdom.keep.search_radius` | 12 | 0–64 | How far from where the kingdom was founded the middle of its keep may be; the nearest flat ground wins. |
 | `kingdom.keep.max_height_range` | 3 | 0–16 | The most the ground under a keep site (with the easel, chest and a margin of 1) may rise and fall; the kingdom levels it when it starts the keep. |
 | `kingdom.keep.builders` | 3 | 1–16 | How many of the kingdom's soldiers build its keep (only soldiers that can work, holding wheat, with no job yet; nearest to the keep's chest first). |

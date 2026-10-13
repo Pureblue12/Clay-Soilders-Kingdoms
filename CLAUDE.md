@@ -246,7 +246,7 @@ Code: `common/.../kingdom/` (`Kingdom`, `KingdomSavedData`, `Kingdoms` service, 
 ### The kingdom builds its keep (stage 4, draft)
 
 Code: `common/.../kingdom/KingdomKeep` (planner and server tick), `KeepSite` (pure site search), `KingdomStore`
-(stockpile as the builders' chest store, through `dev/MaterialSupply.Store`), `KeepThrone` (seat per structure level),
+(stockpile as the builders' chest store, through `dev/MaterialSupply.Store`), `KeepThrone` (throne spot per structure level),
 `entity/goal/KingThroneGoal`. Decisions D82–D85; numbers `kingdom.keep.*`, `kingdom.king_bonus_health`,
 `kingdom.throne_walk_ticks`.
 - Every `kingdom.keep.check_ticks` an active kingdom without a building plans its keep (master plan v0: the first
@@ -255,8 +255,9 @@ Code: `common/.../kingdom/KingdomKeep` (planner and server tick), `KeepSite` (pu
 - Builders: up to `kingdom.keep.builders` soldiers of the team in the claim that can work (wheat), have no job and no POI,
   not the king. Materials: the chest is stocked from the stockpile; items put in the chest that aren't needed soon go to
   the stockpile; nothing is replaced from nothing.
-- Finished (easel finished): BUILT, chronicle line, the king gets +`kingdom.king_bonus_health` and sits on the seat
-  (keep L1: the chamber chair; L2/L3: the throne). Disbanding takes the health back.
+- Finished (easel finished): BUILT, chronicle line, the kingdom puts a gold block (the throne) in its spot (keep L1: the
+  middle of the king's chamber; L2/L3: in place of the great hall's wooden throne), the king gets
+  +`kingdom.king_bonus_health` and stands on the gold block. Disbanding takes the health back.
 - The server tick does nothing in a GameTest server (other tests' kingdoms stay untouched): tests call
   `KingdomKeep.update` themselves.
 - Saved: `KingdomBuilding.level` (kingdom data version 2). Supplies, crews and planning problems are memory only.

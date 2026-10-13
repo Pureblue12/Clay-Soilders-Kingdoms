@@ -45,9 +45,9 @@ import static net.bumblebee.claysoldiers.gametest.KingdomGameTests.RED;
 
 /**
  * Stage 4, the kingdom builds its own keep ({@link KingdomKeep}). The whole loop runs with the test hut (5 x 3 x 5,
- * a seat in the middle) instead of the 31 x 20 x 33 keep, which builds for over 100,000 ticks: the kingdom makes three
+ * its throne in the middle) instead of the 31 x 20 x 33 keep, which builds for over 100,000 ticks: the kingdom makes three
  * of its wheat-holding soldiers builders (not the king, not a soldier without wheat), stocks their chest from the
- * stockpile, notices the hut is finished, and its king gets his extra health and sits on the seat. Also: items put in the
+ * stockpile, notices the hut is finished, and its king gets his extra health and stands on the gold block throne. Also: items put in the
  * chest that the build doesn't need go to the stockpile; the site search; levelling; the saved detail level.
  */
 @GameTestHolder(ClaySoldiersCommon.MOD_ID)
@@ -59,7 +59,7 @@ public class KingdomKeepGameTests {
     private static final BlockPos EASEL = new BlockPos(8, GROUND_Y, 4);
 
     @GameTest(template = PLATFORM, batch = "kingdom_keep_build", timeoutTicks = 9000)
-    public static void kingdomBuildsItsKeepAndTheKingSits(GameTestHelper helper) {
+    public static void kingdomBuildsItsKeepAndTheKingTakesHisThrone(GameTestHelper helper) {
         KingdomGameTests.clear(helper);
         ServerLevel level = helper.getLevel();
         MinecraftServer server = level.getServer();
@@ -89,9 +89,9 @@ public class KingdomKeepGameTests {
                 "The hut wasn't started: " + KingdomKeep.describe(server, kingdom));
         BlockPos chest = KingdomKeep.chestPos(easel, Direction.SOUTH);
         helper.assertTrue(level.getBlockEntity(chest) instanceof ChestBlockEntity, "No chest at " + chest.toShortString());
-        BlockPos throne = KingdomKeep.seat(level, KingdomKeep.keep(kingdom).orElseThrow()).orElseThrow();
+        BlockPos throne = KingdomKeep.throne(level, KingdomKeep.keep(kingdom).orElseThrow()).orElseThrow();
         helper.assertTrue(throne.equals(helper.absolutePos(new BlockPos(8, GROUND_Y, 8))),
-                "The hut's seat should be the middle of its floor, " + helper.absolutePos(new BlockPos(8, GROUND_Y, 8)).toShortString() + ", got " + throne.toShortString());
+                "The hut's throne should be the middle of its floor, " + helper.absolutePos(new BlockPos(8, GROUND_Y, 8)).toShortString() + ", got " + throne.toShortString());
 
         helper.onEachTick(() -> KingdomKeep.update(level, kingdom));
         helper.succeedWhen(() -> {
@@ -102,10 +102,12 @@ public class KingdomKeepGameTests {
             KingdomBuilding keep = KingdomKeep.keep(kingdom).orElseThrow();
             helper.assertTrue(keep.state() == KingdomBuilding.State.BUILT, "Not built yet: " + KingdomKeep.describe(server, kingdom));
             helper.assertTrue(king.getAttribute(Attributes.MAX_HEALTH).getValue() > 20, "The king has no extra health: " + king.getMaxHealth());
+            helper.assertTrue(level.getBlockState(throne).is(Blocks.GOLD_BLOCK), "No gold block throne at " + throne.toShortString()
+                    + ": " + level.getBlockState(throne));
             double dx = king.getX() - (throne.getX() + 0.5);
             double dz = king.getZ() - (throne.getZ() + 0.5);
-            helper.assertTrue(king.isInSittingPose() && dx * dx + dz * dz < 1 && Math.abs(king.getY() - throne.getY()) < 1,
-                    "The king isn't sitting on his seat at " + throne.toShortString() + ": at " + king.position() + ", sitting " + king.isInSittingPose());
+            helper.assertTrue(Math.abs(dx) < 0.5 && Math.abs(dz) < 0.5 && Math.abs(king.getY() - (throne.getY() + 1)) < 0.5,
+                    "The king isn't standing on his throne at " + throne.toShortString() + ": at " + king.position());
             Item cobblestone = Items.COBBLESTONE;
             int left = kingdom.resource(BuiltInRegistries.ITEM.getKey(cobblestone));
             helper.assertTrue(left < supplied.getOrDefault(cobblestone, 0), "The stockpile's cobblestone wasn't used: " + left);

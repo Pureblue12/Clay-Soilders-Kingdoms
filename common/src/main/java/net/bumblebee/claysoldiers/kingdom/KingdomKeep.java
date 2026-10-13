@@ -65,8 +65,9 @@ import java.util.UUID;
  *     <li><b>Build:</b> the kingdom picks {@code kingdom.keep.builders} of its own soldiers (only ones that can work, i.e.
  *     hold wheat, and have no job) and makes them builders of the keep. The chest is stocked from the stockpile
  *     ({@link KingdomStore}); the owner supplies materials by putting them in the chest.</li>
- *     <li><b>Built:</b> the keep is finished when its easel is; the king gets {@code kingdom.king_bonus_health} more health
- *     and goes to his throne ({@link KeepThrone}, {@code KingThroneGoal}).</li>
+ *     <li><b>Built:</b> the keep is finished when its easel is; the kingdom puts a gold block, the throne, in its spot
+ *     ({@link KeepThrone}), the king gets {@code kingdom.king_bonus_health} more health and goes to stand on the throne
+ *     ({@code KingThroneGoal}).</li>
  * </ol>
  * Everything is driven by the server tick ({@link #tick}); the material supply and the last planning problem are in
  * memory only (rebuilt from the saved building and the easel after a restart). In a GameTest server the tick does
@@ -314,6 +315,7 @@ public final class KingdomKeep {
             Kingdoms.chronicle(server, kingdom, "The keep of " + Kingdoms.teamName(server, kingdom.team()) + " is finished. "
                     + Kingdoms.kingTitle(server, kingdom, true) + " takes his throne.");
             DebugLog.event(DebugCategory.KINGDOM, null, () -> "keep of %s finished at %s".formatted(kingdom.team(), keep.pos().toShortString()));
+            placeThrone(level, kingdom, keep);
             crown(level, kingdom);
             return;
         }
@@ -370,6 +372,19 @@ public final class KingdomKeep {
 
     // The king
 
+    /**
+     * Puts the throne, a gold block, in its spot in the finished keep (replacing what the structure has there: a carpet,
+     * the wooden throne). The kingdom adds it; it doesn't come from the stockpile.
+     */
+    private static void placeThrone(ServerLevel level, Kingdom kingdom, KingdomBuilding keep) {
+        throne(level, keep).ifPresent(pos -> {
+            if (!level.getBlockState(pos).is(Blocks.GOLD_BLOCK)) {
+                level.setBlock(pos, Blocks.GOLD_BLOCK.defaultBlockState(), Block.UPDATE_ALL);
+            }
+            DebugLog.event(DebugCategory.KINGDOM, null, () -> "throne of %s placed at %s".formatted(kingdom.team(), pos.toShortString()));
+        });
+    }
+
     /** Gives the king of a kingdom with a finished keep his extra health (once; it is saved with him). */
     private static void crown(ServerLevel level, Kingdom kingdom) {
         if (level.getEntity(kingdom.king().id()) instanceof AbstractClaySoldierEntity king && king.isAlive()) {
@@ -400,8 +415,8 @@ public final class KingdomKeep {
     }
 
     /**
-     * Where {@code soldier} sits, if it is the king of an active kingdom whose keep is finished: the keep's seat
-     * ({@link KeepThrone}) in the world.
+     * The throne {@code soldier} stands on, if it is the king of an active kingdom whose keep is finished: the gold block's
+     * position ({@link KeepThrone}) in the world.
      */
     public static Optional<BlockPos> throneFor(AbstractClaySoldierEntity soldier) {
         MinecraftServer server = soldier.getServer();
@@ -411,17 +426,17 @@ public final class KingdomKeep {
         for (Kingdom kingdom : KingdomSavedData.get(server).all()) {
             if (kingdom.status() == KingdomStatus.ACTIVE && kingdom.king().id().equals(soldier.getUUID())
                     && kingdom.dimension().equals(level.dimension())) {
-                return keep(kingdom).filter(keep -> keep.state() == KingdomBuilding.State.BUILT).flatMap(keep -> seat(level, keep));
+                return keep(kingdom).filter(keep -> keep.state() == KingdomBuilding.State.BUILT).flatMap(keep -> throne(level, keep));
             }
         }
         return Optional.empty();
     }
 
-    /** The world position of a building's seat, if its structure has one. */
-    public static Optional<BlockPos> seat(ServerLevel level, KingdomBuilding building) {
-        Optional<BlockPos> seat = KeepThrone.seat(building.structure(), building.level());
+    /** The world position of a building's throne, if its structure has one. */
+    public static Optional<BlockPos> throne(ServerLevel level, KingdomBuilding building) {
+        Optional<BlockPos> throne = KeepThrone.throne(building.structure(), building.level());
         Optional<StructureMeta> meta = StructureRegistry.get(level.getServer()).byId(building.structure());
-        if (seat.isEmpty() || meta.isEmpty()) {
+        if (throne.isEmpty() || meta.isEmpty()) {
             return Optional.empty();
         }
         Vec3i size;
@@ -433,7 +448,7 @@ public final class KingdomKeep {
         Direction easelFacing = building.facing().getOpposite();
         BlueprintTemplateSettings settings = new BlueprintTemplateSettings(size, Mirror.NONE, EaselBlockEntity.rotationFor(easelFacing));
         BlockPos base = EaselBlockEntity.templateBase(building.pos(), easelFacing, settings);
-        return Optional.of(base.offset(StructureTemplate.calculateRelativePosition(settings.convertTo(), seat.get())));
+        return Optional.of(base.offset(StructureTemplate.calculateRelativePosition(settings.convertTo(), throne.get())));
     }
 
     /** Called by {@code KingThroneGoal} when the king is carried to his throne (he couldn't walk there). */
