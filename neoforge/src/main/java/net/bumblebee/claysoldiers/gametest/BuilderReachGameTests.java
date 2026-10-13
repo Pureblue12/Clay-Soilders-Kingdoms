@@ -30,6 +30,9 @@ import static net.bumblebee.claysoldiers.gametest.ClaySoldierGameTests.PLATFORM;
 public class BuilderReachGameTests {
     /** A soldier carrying the same block longer than this is considered stuck. */
     private static final int STUCK_CARRY_TICKS = 600;
+    /** {@link #builderOnALongWalkKeepsItsBlock}: the carrying builder stands still this long, then walks for {@link #LONG_WALK_MOVE_TICKS}. */
+    private static final int LONG_WALK_PAUSE_TICKS = 250;
+    private static final int LONG_WALK_MOVE_TICKS = 30;
 
     /**
      * BUG TEST (builders freeze while "Carrying"): one block floating 2 above open ground. Before Fix A the
@@ -151,16 +154,19 @@ public class BuilderReachGameTests {
     }
 
     /**
-     * D87 TEST (keep L1's last roof flagpole): one block far from the chest, and a builder slowed to a tenth of its
-     * speed, so the walk there takes longer than {@code BuildBlueprintGoal.MAX_CARRY_TICKS}. Before D87 the builder
-     * gave the block up on the way, every time; a builder that keeps getting closer must keep it and place it.
+     * D87 TEST (keep L1's last roof flagpole): one block far from the chest. While the builder carries it, it stands
+     * still for {@value #LONG_WALK_PAUSE_TICKS} ticks, then walks for {@value #LONG_WALK_MOVE_TICKS}, again and again,
+     * so the walk takes longer than {@code BuildBlueprintGoal.MAX_CARRY_TICKS} while it keeps getting closer. Before D87
+     * the builder gave the block up on the way; now it must keep it and place it. (A builder slowed down for good
+     * doesn't do: at a tenth of its speed it never got a block closer, CI run 38446171493.)
      */
     @GameTest(template = PLATFORM, timeoutTicks = 2600)
     public static void builderOnALongWalkKeepsItsBlock(GameTestHelper helper) {
         BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "far_block", 11, 1, 9, new BlockPos(10, 0, 8));
         ClaySoldierGameTests.Builder builder = ClaySoldierGameTests.setUpBuilder(helper, blueprint,
                 List.of(new ItemStack(Items.COBBLESTONE, 1)));
-        builder.soldier().getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.03);
+        var speed = builder.soldier().getAttribute(Attributes.MOVEMENT_SPEED);
+        double walkingSpeed = speed.getBaseValue();
         BlockPos target = EASEL.offset(5, 0, 10);
         long[] carryingSince = {-1};
 
@@ -168,7 +174,12 @@ public class BuilderReachGameTests {
             boolean carrying = !builder.soldier().getCarriedStack().isEmpty();
             if (carrying && carryingSince[0] < 0) {
                 carryingSince[0] = helper.getTick();
-            } else if (!carrying && carryingSince[0] >= 0) {
+            }
+            if (carrying) {
+                long phase = (helper.getTick() - carryingSince[0]) % (LONG_WALK_PAUSE_TICKS + LONG_WALK_MOVE_TICKS);
+                speed.setBaseValue(phase < LONG_WALK_PAUSE_TICKS ? 0.0 : walkingSpeed);
+            } else if (carryingSince[0] >= 0) {
+                speed.setBaseValue(walkingSpeed);
                 if (!helper.getBlockState(target).is(Blocks.COBBLESTONE)) {
                     helper.fail("BUG (D87): the builder gave the block up after carrying it %d ticks, though it kept getting closer"
                             .formatted(helper.getTick() - carryingSince[0]), builder.soldier());
