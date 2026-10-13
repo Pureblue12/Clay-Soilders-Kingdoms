@@ -175,6 +175,19 @@ class Structure:
 
 # ------------------------------------------------------------------------------------------------- walking with paths
 
+def moves(grid, x, y, z):
+    """buildability.py's moves plus a 1-block step down that mirrors its step up. Its drops need head room 2 above
+    the lower cell, which a tiny soldier doesn't: without this a spiral stair is a way up with no way back."""
+    seen = set()
+    for move in B.moves(grid, x, y, z):
+        seen.add(move[:3])
+        yield move
+    for dx, dz in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+        nx, nz = x + dx, z + dz
+        if (nx, y - 1, nz) not in seen and not grid.solid(nx, y, nz) and grid.standable(nx, y - 1, nz):
+            yield nx, y - 1, nz, 1.4142
+
+
 def flood(grid):
     """Standing spots builders walk to from the chest, with the step each was reached by: {cell: previous}."""
     best = {}
@@ -192,7 +205,7 @@ def flood(grid):
         if cell in done:
             continue
         done[cell] = prev[cell]
-        for nx, ny, nz, cost in B.moves(grid, *cell):
+        for nx, ny, nz, cost in moves(grid, *cell):
             nd = d + cost
             n = (nx, ny, nz)
             if nd < B.MAX_PATH and nd < best.get(n, 1e9):
@@ -207,7 +220,7 @@ def flood_back(grid, spots):
     nxt = {}
     incoming = {}
     for cell in spots:
-        for nx, ny, nz, _ in B.moves(grid, *cell):
+        for nx, ny, nz, _ in moves(grid, *cell):
             n = (nx, ny, nz)
             if n in spots:
                 incoming.setdefault(n, []).append(cell)
