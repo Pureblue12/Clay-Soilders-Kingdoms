@@ -104,7 +104,7 @@ final class BuildStallReport {
         long maps = all.stream().filter(ours).filter(event -> event.toLine().contains("reach map made")).count();
         lines.add(maps + " reach maps made");
         List<DebugEvent> slow = tail(all, ours.and(event -> !event.toLine().contains("reach map made") && (event.toLine().contains("gave up")
-                || event.toLine().contains("reach map") || event.toLine().contains("stranded") || event.toLine().contains("soldier in the way"))), 40);
+                || event.toLine().contains("reach map") || event.toLine().contains("couldn't walk") || event.toLine().contains("stranded") || event.toLine().contains("soldier in the way"))), 40);
         lines.add(slow.size() + " give-ups and reach map events, oldest first:");
         slow.forEach(event -> lines.add("  " + event.toLine()));
         // Per builder, leaving out the noise of idle builders asking for an item another one carries (well L3, run 38310973353).

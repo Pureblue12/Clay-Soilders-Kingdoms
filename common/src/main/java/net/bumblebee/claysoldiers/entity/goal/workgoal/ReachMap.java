@@ -129,8 +129,14 @@ public final class ReachMap {
         return level.getGameTime() < distrusted.getOrDefault(target.asLong(), Long.MIN_VALUE);
     }
 
+    /** Whether builders gave up walking to {@code target} lately ({@link #walkFailed}): a scaffolding column should be tried first. */
+    public static boolean walkFailedBefore(PathfinderMob builder, BlockPos easel, BlockPos target) {
+        ReachMap map = MAPS.get(new Key(builder.level().dimension(), easel.immutable()));
+        return map != null && (map.failedWalks.containsKey(target.asLong()) || map.distrusts(builder.level(), target));
+    }
+
     /**
-     * {@code builder} gave up {@code target} while walking to the map's spot for it. After {@code build.reach_map_failed_walks} such
+     * {@code builder} gave up {@code target} while walking to it (the map's spot, or the path search's). After {@code build.reach_map_failed_walks} such
      * give-ups the block counts as out of reach for {@code build.reach_map_distrust_ticks}, so the easel can hand out scaffold for it
      * instead of handing the block out again.
      */
@@ -145,9 +151,9 @@ public final class ReachMap {
         if (failed >= failedWalks) {
             map.failedWalks.remove(target.asLong());
             map.distrusted.put(target.asLong(), builder.level().getGameTime() + distrustTicks);
-            DebugLog.event(DebugCategory.BUILD, builder, "couldn't walk to the reach map's spot for %s %s times: out of reach for %s ticks", target, failed, distrustTicks);
+            DebugLog.event(DebugCategory.BUILD, builder, "couldn't walk to %s %s times: out of the map's reach for %s ticks", target, failed, distrustTicks);
         } else {
-            DebugLog.event(DebugCategory.BUILD, builder, "couldn't walk to the reach map's spot for %s (%s of %s)", target, failed, failedWalks);
+            DebugLog.event(DebugCategory.BUILD, builder, "couldn't walk to %s (%s of %s)", target, failed, failedWalks);
         }
     }
 

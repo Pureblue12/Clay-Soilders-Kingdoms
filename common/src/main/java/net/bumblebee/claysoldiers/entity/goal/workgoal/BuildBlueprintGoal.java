@@ -122,7 +122,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     @Nullable
     private BlockPos pathEnd;
     private int lastStepTicks;
-    /** Whether this request's walk used the reach map's spot or route: giving it up then tells the map (D82). */
+    /** Whether this request's walk used the reach map's spot or route: giving it up then tells the map (D82), as does giving up while carrying the block. */
     private boolean onMapRoute;
     /**
      * Where this builder just placed a block while it still carries more of that item ({@code build.carry_count}, D79):
@@ -288,7 +288,10 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     private void giveUpRequest() {
         climber.descend();
         DebugLog.event(DebugCategory.BUILD, soldier, "gave up %s at %s after %s ticks (fetching + carrying), releasing it", request.getItem(), request.getPos(), carryTicks);
-        if (onMapRoute && easelPos != null) {
+        // Carrying the block, the walk to it failed whichever path it took: chapel L3's bell and slab were given up 20 times
+        // each on the path search's way, which the map never heard of, so no builder ever climbed the column beside them.
+        // Not when it got there (a soldier in the way): that walk worked.
+        if (easelPos != null && (onMapRoute || !soldier.getCarriedStack().isEmpty() && !BuilderReach.canPlaceFrom(soldier, request.getPos()))) {
             ReachMap.walkFailed(soldier, easelPos.pos(), request.getPos());
         }
         onMapRoute = false;
@@ -576,6 +579,11 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             repathTicks = 0;
             if (!repath && pathEnd != null && !soldier.blockPosition().equals(pathEnd) && lastStepTicks++ < MAX_LAST_STEP_TICKS) {
                 this.soldier.getMoveControl().setWantedPosition(pathEnd.getX() + 0.5, pathEnd.getY(), pathEnd.getZ() + 0.5, 1);
+                return false;
+            }
+            // A block builders already gave up walking to: a scaffolding column that reaches it comes first (D82).
+            if (ReachMap.enabled() && easelPos != null && ReachMap.walkFailedBefore(soldier, easelPos.pos(), request.getPos())
+                    && soldier.level() instanceof ServerLevel level && climber.start(level, easelPos.pos(), request.getPos())) {
                 return false;
             }
             // Walk the same kind of path the reachable check accepted: it ends where the block can be placed.
