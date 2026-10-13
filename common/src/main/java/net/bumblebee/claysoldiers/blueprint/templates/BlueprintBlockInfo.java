@@ -92,12 +92,13 @@ public class BlueprintBlockInfo {
     /**
      * Returns whether this BlockInfo has an available {@code BlueprintRequest}.
      * A {@code BlueprintRequest} is available, when no previous {@code BlueprintRequest} was created
-     * or the last {@code BlueprintRequest} got cancelled or was not fulfilled with in {@value #STALE_REQUEST_TICKS} ticks.
+     * or the last {@code BlueprintRequest} got cancelled or was not fulfilled with in {@value #STALE_REQUEST_TICKS} ticks
+     * of its builder last getting closer to it (D87).
      * @param gameTime the current game time.
      * @return whether this BlockInfo has an available {@code BlueprintRequest}
      */
     public boolean hasAvailableRequest(long gameTime) {
-        return lastRequest == null || lastRequest.isCancelled() || lastRequest.getStart() + STALE_REQUEST_TICKS < gameTime;
+        return lastRequest == null || lastRequest.isCancelled() || lastRequest.getLastProgress() + STALE_REQUEST_TICKS < gameTime;
     }
 
     /**

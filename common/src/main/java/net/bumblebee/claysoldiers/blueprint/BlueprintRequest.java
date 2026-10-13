@@ -9,6 +9,8 @@ public class BlueprintRequest {
     private final Item item;
     private final BlockPos pos;
     private final long start;
+    /** When the builder carrying out this request last got closer to where it is going (D87); starts at {@link #start}. */
+    private long lastProgress;
     private Status status = Status.STARTED;
     /** Set by the plan when a soldier was in the way of placing (D64); the builder reads and clears it, then tries again. */
     private boolean soldierInTheWay;
@@ -23,10 +25,21 @@ public class BlueprintRequest {
         this.item = item;
         this.pos = pos;
         this.start = start;
+        this.lastProgress = start;
     }
 
     public long getStart() {
         return start;
+    }
+
+    /** The builder carrying out this request got closer to where it is going: the request isn't stale yet (D87). */
+    public void renew(long gameTime) {
+        lastProgress = Math.max(lastProgress, gameTime);
+    }
+
+    /** When this request was handed out, or later when its builder last got closer to where it is going (D87). */
+    public long getLastProgress() {
+        return lastProgress;
     }
 
     public Item getItem() {
