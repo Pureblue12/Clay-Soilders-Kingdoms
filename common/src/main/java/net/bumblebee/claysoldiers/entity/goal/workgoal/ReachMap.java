@@ -46,6 +46,8 @@ public final class ReachMap {
     private static final int FORGET_TICKS = 2400;
     /** Safety cap on the spots of one map (an open field within the walked limit has about 8,000). */
     private static final int MAX_NODES = 40_000;
+    /** How near the easel a builder stands when it asks for blocks ({@code BuildBlueprintGoal.moveMobToEasel}). */
+    private static final double AT_EASEL = 2.0;
 
     private record Key(ResourceKey<Level> dimension, BlockPos easel) {
     }
@@ -85,8 +87,12 @@ public final class ReachMap {
     /**
      * The map of the build at {@code easel}, made (again) from {@code builder}'s position when needed. Only made from
      * a builder at the easel, where builders ask for blocks: a map made from an upper floor would count spots reachable
-     * only from there (a drop is one-way).
+     * only from there (a drop is one-way). {@code null} when the map needs making and the builder is away from the
+     * easel: a builder looking for its next block where it just placed one (D79) found every map stale (each placed
+     * block makes it so) and made it from there, so the map and its routes started wherever that builder stood (the
+     * likely cause of the slow well L3, road L2 and hovel builds on CI).
      */
+    @Nullable
     static ReachMap of(PathfinderMob builder, BlockPos easel) {
         Level level = builder.level();
         long now = level.getGameTime();
@@ -94,6 +100,9 @@ public final class ReachMap {
         ReachMap map = MAPS.computeIfAbsent(new Key(level.dimension(), easel.immutable()), key -> new ReachMap());
         map.usedAt = now;
         if (map.stale || now - map.madeAt > Tuning.BUILD_REACH_MAP_MAX_AGE_TICKS.get()) {
+            if (!easel.closerToCenterThan(builder.position(), AT_EASEL)) {
+                return null;
+            }
             map.make(builder);
         }
         return map;
@@ -101,10 +110,14 @@ public final class ReachMap {
 
     /**
      * Whether {@code builder} can walk to a spot it can place {@code target} from: one of the spots around the target
-     * that {@link BuilderReach#canPlaceFrom} accepts is on the map.
+     * that {@link BuilderReach#canPlaceFrom} accepts is on the map. Away from the easel with the map out of date, the
+     * old path search answers ({@link BuilderReach#canReachToPlace}).
      */
     public static boolean canReachToPlace(PathfinderMob builder, BlockPos easel, BlockPos target) {
         ReachMap map = of(builder, easel);
+        if (map == null) {
+            return BuilderReach.canReachToPlace(builder, target);
+        }
         if (map.distrusts(builder.level(), target)) {
             return false;
         }
