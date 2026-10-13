@@ -41,7 +41,7 @@ public final class KingdomEvents {
     }
 
     /**
-     * The in-game founding trigger (D86): sneak + right-click a king of a team loyal to you while holding a gold block.
+     * The in-game founding trigger (D92): sneak + right-click a king of a team loyal to you while holding a gold block.
      * He takes one block, picks a spot himself, walks there and sets it down, which founds the kingdom
      * ({@link KingStone}, {@code KingStoneGoal}). Anything else (not sneaking, another item, not a soldier) is left to
      * the normal interaction.

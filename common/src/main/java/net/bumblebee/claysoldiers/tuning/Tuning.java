@@ -143,6 +143,20 @@ public final class Tuning {
             "A builder keeps its block while it keeps getting closer to where it is going (its chest, then the block's spot), and gives it up after 400 ticks without getting a block closer (D87); this is the most it keeps one block in all, in ticks.", 2000, 400, 100000));
     public static final TuningKey.IntKey BUILD_PATH_NODES_MULTIPLIER = register(new TuningKey.IntKey("build.path_nodes_multiplier",
             "While a builder works for a build, its path searches may look at this many times more steps (vanilla: 256).", 4, 1, 16));
+    public static final TuningKey.IntKey BUILD_FOLLOW_PLAN = register(new TuningKey.IntKey("build.follow_plan",
+            "1: builders follow a structure's pre-baked build plan (data/csr/build_plan, made by tools/build_plan.py): the plan's waves in order, a random block of the current wave, the plan's standing spots first (D82). 0: hand out blocks in the blueprint's normal order and search for standing spots, as before.", 1, 0, 1));
+    public static final TuningKey.IntKey BUILD_PLAN_LOOKAHEAD_CLEARANCE = register(new TuningKey.IntKey("build.plan_lookahead_clearance",
+            "In builds that follow a plan, while other builders finish the current wave's last blocks, an idle builder may take a block of the next wave that is more than this many blocks from every block of the current wave still to place and its standing spots (D82); 0 = wait for the wave to finish.", 4, 0, 16));
+    public static final TuningKey.IntKey BUILD_PLAN_LOOKAHEAD_WAVES = register(new TuningKey.IntKey("build.plan_lookahead_waves",
+            "In builds that follow a plan, how many waves past the current one an idle builder may take a block from, and a builder with a stack may follow up into, when the block is clear of every earlier wave's blocks still to place (build.plan_lookahead_clearance) (D82); 1 = only the next wave.", 3, 1, 16));
+    public static final TuningKey.IntKey BUILD_PLAN_FOLLOW_UP_CLEARANCE = register(new TuningKey.IntKey("build.plan_follow_up_clearance",
+            "In builds that follow a plan, a builder with a stack (D79) may follow up into a block of the next build.plan_lookahead_waves waves that is more than this many blocks from every standing spot (and the cell above it) of an earlier wave's block still to place (D82); 0 = only not on such a spot, -1 = only the current wave.", 0, -1, 16));
+    public static final TuningKey.IntKey BUILD_PLAN_SPOTS_FIRST = register(new TuningKey.IntKey("build.plan_spots_first",
+            "In builds that follow a plan, 1: a builder walks to the nearest free one of the plan's standing spots for its block, and searches only when none can be walked to; 0: it searches the nearest spot it can place from first and uses the plan's spots only when that search fails (D82; 0 took 16% longer than main against 30% with 1, same-time runs).", 0, 0, 1));
+    public static final TuningKey.IntKey BUILD_PAUSE_TICKS = register(new TuningKey.IntKey("build.pause_ticks",
+            "After placing a block of a build that follows a plan, a builder waits a random 0 to this many ticks before asking for the next one, so a crew doesn't move in lockstep (D82); 0 = no pause.", 6, 0, 200));
+    public static final TuningKey.IntKey BUILD_WALK_SPEED_SPREAD_PERCENT = register(new TuningKey.IntKey("build.walk_speed_spread_percent",
+            "In builds that follow a plan, each builder walks to its blocks at its own pace: the normal speed give or take up to this many percent, fixed per soldier (D82); 0 = all the same.", 10, 0, 30));
     public static final TuningKey.IntKey WORK_FALL_DAMAGE_PERCENT = register(new TuningKey.IntKey("work.fall_damage_percent",
             "Fall damage to a soldier that is working (building, digging, farming), in percent of vanilla's (a fall of 4 blocks costs half a heart). Upstream multiplies every environmental damage by 100, so a 4-block drop kills; builders working on upper floors fell off and died on every tall build. 10000 restores that.", 100, 0, 10000));
     public static final TuningKey.IntKey WORK_PLANT_DAMAGE_PERCENT = register(new TuningKey.IntKey("work.plant_damage_percent",

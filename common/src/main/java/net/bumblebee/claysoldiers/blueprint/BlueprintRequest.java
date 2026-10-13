@@ -3,6 +3,8 @@ package net.bumblebee.claysoldiers.blueprint;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Item;
 
+import java.util.List;
+
 public class BlueprintRequest {
     private final Item item;
     private final BlockPos pos;
@@ -12,6 +14,12 @@ public class BlueprintRequest {
     private Status status = Status.STARTED;
     /** Set by the plan when a soldier was in the way of placing (D64); the builder reads and clears it, then tries again. */
     private boolean soldierInTheWay;
+    /** Where the build plan says a builder can stand to place this block (D82); empty without a plan. */
+    private List<BlockPos> standingSpots = List.of();
+    /** Whether the builder walks to the plan's standing spots before searching the normal way (a block given up before). */
+    private boolean planSpotsFirst;
+    /** Whether the builder gave this request up (its give-up timer ran out before it could place the block). */
+    private boolean givenUp;
 
     public BlueprintRequest(Item item, BlockPos pos, long start) {
         this.item = item;
@@ -65,6 +73,16 @@ public class BlueprintRequest {
         status = Status.CANCELLED;
     }
 
+    /** Cancels this request because the builder gave it up (see {@link #wasGivenUp}). */
+    public void giveUp() {
+        givenUp = true;
+        cancel();
+    }
+
+    public boolean wasGivenUp() {
+        return givenUp;
+    }
+
     public void setSoldierInTheWay() {
         soldierInTheWay = true;
     }
@@ -74,6 +92,27 @@ public class BlueprintRequest {
         boolean was = soldierInTheWay;
         soldierInTheWay = false;
         return was;
+    }
+
+    public void setStandingSpots(List<BlockPos> spots) {
+        standingSpots = List.copyOf(spots);
+    }
+
+    /** Where the build plan says a builder can stand to place this block (D82); empty without a plan. */
+    public List<BlockPos> standingSpots() {
+        return standingSpots;
+    }
+
+    public void setPlanSpotsFirst(boolean first) {
+        planSpotsFirst = first;
+    }
+
+    /**
+     * Whether the builder tries the plan's standing spots before the nearest spot it can place from (D82): set for a block
+     * builders gave up before, whose nearest spot may be one they can't really get to (chapel L2/L3's annex chest).
+     */
+    public boolean planSpotsFirst() {
+        return planSpotsFirst;
     }
 
     @Override

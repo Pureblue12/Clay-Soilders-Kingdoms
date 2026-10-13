@@ -130,8 +130,8 @@ Stages are ordered by dependency and risk. Every stage ends playable.
 - **Acceptance test:** a gold-hat king plus the supplied items yields a finished keep with the king on the throne. First real playable.
 - **Depends on:** 1, 2, 3 · **Size:** L
 - **Risks:** keep size versus terrain.
-- **Decisions:** [D3](DECISIONS.md), [D4](DECISIONS.md), D82–D86 · **Status:** in progress (2026-10-13, draft) · **Results:**
-  - **Founding by gold block (`KingStone`, D86):** hand your crowned king a gold block (sneak + right-click); he picks a
+- **Decisions:** [D3](DECISIONS.md), [D4](DECISIONS.md), D88–D92 · **Status:** in progress (2026-10-13, draft) · **Results:**
+  - **Founding by gold block (`KingStone`, D92):** hand your crowned king a gold block (sneak + right-click); he picks a
     spot himself among the good sites near him, walks there and sets it down, which founds the kingdom. The block goes
     into the keep when it starts and comes back as the throne.
   - **Master plan v0 and planner (`KingdomKeep`, `KeepSite`):** an active kingdom without a keep picks the nearest flat

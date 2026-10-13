@@ -26,7 +26,7 @@ import static net.bumblebee.claysoldiers.gametest.KingdomGameTests.RED;
 import static net.bumblebee.claysoldiers.gametest.TerrainScanGameTests.TERRAIN;
 
 /**
- * Stage 4, founding by gold block (D86): a king handed a gold block picks a spot himself, walks there and sets it down,
+ * Stage 4, founding by gold block (D92): a king handed a gold block picks a spot himself, walks there and sets it down,
  * which founds the kingdom; only a king of a team loyal to you without a kingdom takes it; the block is taken up when the
  * keep starts. Kingdom data is world-wide, so the tests that found get their own batch and clean up.
  */

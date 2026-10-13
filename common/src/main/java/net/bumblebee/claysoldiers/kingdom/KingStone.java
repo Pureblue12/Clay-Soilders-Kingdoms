@@ -34,7 +34,7 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * Stage 4, the owner's way of founding a kingdom (D86): crown a soldier with a gold ingot (he is a king), then
+ * Stage 4, the owner's way of founding a kingdom (D92): crown a soldier with a gold ingot (he is a king), then
  * sneak + right-click him with a gold block. He takes the block (he carries it in his off hand, so it is saved with him),
  * picks a spot himself, at random among the good keep sites near him ({@code kingdom.stone_pick_tolerance}), walks
  * there ({@code KingStoneGoal}) and sets the block down: that founds the kingdom around him. When the kingdom starts its

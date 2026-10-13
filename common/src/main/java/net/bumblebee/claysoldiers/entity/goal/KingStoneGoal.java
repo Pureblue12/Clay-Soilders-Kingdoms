@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Stage 4 (D86): a king carrying a gold block for a kingdom his team doesn't have yet ({@link KingStone#founding}) picks
+ * Stage 4 (D92): a king carrying a gold block for a kingdom his team doesn't have yet ({@link KingStone#founding}) picks
  * a spot himself, walks there and sets the block down, which founds the kingdom. A spot he can't reach within
  * {@code kingdom.stone_walk_ticks}, or where founding is refused, is left out and he picks another; after
  * {@code kingdom.stone_tries} of them he drops the block and gives up. Fighting interrupts him (as {@link KingThroneGoal}).

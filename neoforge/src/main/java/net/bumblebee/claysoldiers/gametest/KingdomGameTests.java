@@ -305,7 +305,7 @@ public class KingdomGameTests {
     }
 
     /**
-     * The in-game trigger (D86): a player sneaking and right-clicking their own king with a gold block hands him one
+     * The in-game trigger (D92): a player sneaking and right-clicking their own king with a gold block hands him one
      * block; he carries it and founds the kingdom where he sets it down (KingStoneGameTests), not at once. Without
      * sneaking nothing happens.
      */

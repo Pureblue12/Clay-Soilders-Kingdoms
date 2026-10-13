@@ -37,7 +37,7 @@ Starts a headless test server, runs every test in
 `DoorGameTests`, `TuningGameTests`, `StructureRegistryGameTests`, `StructurePasteGameTests`,
 `LayoutCheckerGameTests`, `KingdomDataGameTests`, `KingdomGameTests`, `KingdomBookGameTests`, `KingdomBookRefreshGameTests`, `TerrainScoreGameTests`, `TerrainScanGameTests`,
 `TerrainGradingGameTests`, `TerrainFoundingGameTests`, `ScaffoldPlannerGameTests`, `ScaffoldBuildGameTests`,
-`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `KingdomKeepGameTests`, `KingStoneGameTests`), prints
+`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `BuildPlanGameTests`, `KingdomKeepGameTests`, `KingStoneGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Templates: `data/csr/structure/gametest/platform.nbt` (16x8x16) and `terrain.nbt` (32x16x32, for test terrains);
@@ -90,7 +90,9 @@ fidelity check ignores a daylight detector's power and a brewing stand's bottles
 graveyard L2, market stall L3 and gatehouse L1. A model, not the game: keep it in step when the rules it copies change.
 A build fails at once after 6000 ticks without progress, with a stall report, and ends as "too slow" (⏱️ in the table) after
 45 minutes of real time (`CSR_STRUCTURE_BUILD_MINUTES`, workflow input `minutes`; 0 = no limit): keep L2 and L3 need longer, so
-verify them with `only=keep` and `minutes=0`. The chest is kept stocked by
+verify them with `only=keep` and `minutes=0`. For experiments the workflow also takes `tuning` (a tuning file's JSON for every build, `CSR_STRUCTURE_BUILD_TUNING`) and
+`profile` (`CSR_STRUCTURE_BUILD_PROFILE`: each finished build writes a "CSR build profile" line, `BuildProfile`: blocks handed out,
+follow-ups, stacks taken back, waits; the run prints them in its "Build profiles" step). The chest is kept stocked by
 `dev/MaterialSupply` (most structures need more than 27 stacks; it stocks the items the easel hands out next, counting the slots partial stacks take,
 brings back an item lost with a builder, D70, and merges the part stacks builders put back, making room for the item needed now, D79). The test area
 (`gametest/structure_build.nbt`, 48x24x48) has a grass floor. The required test `buildListMatchesRegistry` keeps the
@@ -229,7 +231,7 @@ Code: `common/.../kingdom/` (`Kingdom`, `KingdomSavedData`, `Kingdoms` service, 
 - **At most one kingdom per team**, ACTIVE or RUINED. Change kingdoms only through `Kingdoms` (it marks the data
   dirty, writes the chronicle, records KINGDOM events).
 - **Founding** is explicit and reversible, never automatic:
-  - in game (D86): sneak + right-click your own king (a clay soldier wearing a gold ingot, its team loyal to you) holding
+  - in game (D92): sneak + right-click your own king (a clay soldier wearing a gold ingot, its team loyal to you) holding
     a gold block. He takes one block (carried in his off hand, saved with him), picks a spot himself at random among the
     good keep sites near him (`kingdom.stone_pick_tolerance`), walks there and sets the block down beside him: that
     founds the kingdom around him (`KingStone`, `KingStoneGoal`). A spot he can't reach (`kingdom.stone_walk_ticks`) or
@@ -253,7 +255,7 @@ Code: `common/.../kingdom/` (`Kingdom`, `KingdomSavedData`, `Kingdoms` service, 
 
 Code: `common/.../kingdom/KingdomKeep` (planner and server tick), `KeepSite` (pure site search), `KingdomStore`
 (stockpile as the builders' chest store, through `dev/MaterialSupply.Store`), `KeepThrone` (throne spot per structure level),
-`entity/goal/KingThroneGoal`. Decisions D82–D85; numbers `kingdom.keep.*`, `kingdom.king_bonus_health`,
+`entity/goal/KingThroneGoal`. Decisions D88–D91; numbers `kingdom.keep.*`, `kingdom.king_bonus_health`,
 `kingdom.throne_walk_ticks`.
 - Every `kingdom.keep.check_ticks` an active kingdom without a building plans its keep (master plan v0: the first
   building is the keep): nearest flat ground to its center, levelled at once, easel + chest like `/csr build`. No site:
@@ -320,6 +322,30 @@ Code: `common/.../scaffold/`; comparison, recommendation and height rules: `docs
   never stands a column on a stair, slab, carpet or other floor without one (`ScaffoldInput.noFooting`, blocks still to place
   count as what they will be). Keep L2's annex columns stood on the pews and were never there to climb.
 - **Recorder SCAFFOLD:** planned, placed, removed, climbing, stuck, cleanup, kept.
+
+### Build plans (pre-baked routes, D82)
+
+Every structure level ships `data/csr/build_plan/kingdom/studio/<level>.json`, made by `python3 tools/build_plan.py [ids]`
+(standard library, about 2 minutes for all levels) from the structure file alone: the build order as waves and, per block,
+up to 4 spots to stand on. Worked out by taking the finished structure apart on buildability.py's model; every wave is
+checked from bare ground. Promote runs it; CI's "Build plans up to date" step (`--check`) fails on a missing or stale plan,
+and the "Structure builds" summary has its table. Never edit a plan by hand: change the structure, run the tool.
+- `StructureBlueprints` loads the plan (`BuildPlans`) and orders the blueprint by it (`ImmutableTemplate.withPlan`); the
+  plan is saved with the easel's build.
+- `ServerBlueprintPlan.getRequest` hands out a random block of the lowest unfinished wave, away from blocks other builders
+  carry and among the nearest to the builder (steps of 4 blocks); when none can be handed out and no builder holds one, it goes on with the
+  next wave that has something (stacks may then follow up in any wave up to it), and only then searches every block as before (BUILD event "plan: ...").
+  A builder carrying a stack (D79) takes its next nearby block from that same wave (`getFollowUpRequest`), or from the next
+  `build.plan_lookahead_waves` waves when the block is off every planned standing spot of an earlier wave's block still to place
+  (`build.plan_follow_up_clearance`).
+  While the wave's last blocks are carried, idle builders take blocks of the next `build.plan_lookahead_waves` (3) waves clear
+  of every earlier wave's blocks still to place and their spots (`build.plan_lookahead_clearance`).
+  A block builders gave up twice (`ServerBlueprintPlan.PLAN_GIVE_UPS`) leaves the plan: it no longer holds its wave back, and
+  it is handed out without the plan's spots, so scaffolding can start (keep L1's chest; `blockGivenUpTwiceLeavesThePlan`); after one give-up its builder tries the plan's spots before the nearest one, and once more after the third (chapel's annex chest).
+- Builders walk to the nearest spot they can place from (the normal search) and use the plan's spots only when that fails (`build.plan_spots_first` 0; with 1 they went to the plan's nearest free spot first, `BuilderReach.findPlanned`, and builds took 30% longer than main instead of 16%).
+- Blocks the plan leaves out (need scaffold) come after it. `build.follow_plan` 0 turns it all off.
+- Natural touches for builds that follow a plan: a random pause after placing (`build.pause_ticks`), each builder's own pace
+  (`build.walk_speed_spread_percent`).
 
 ### Known limitations
 
