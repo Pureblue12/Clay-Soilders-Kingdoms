@@ -33,9 +33,9 @@ import static net.bumblebee.claysoldiers.gametest.ClaySoldierGameTests.PLATFORM;
 public class BuilderReachGameTests {
     /** A soldier carrying the same block longer than this is considered stuck. */
     private static final int STUCK_CARRY_TICKS = 600;
-    /** {@link #builderOnALongWalkKeepsItsBlock}: the carrying builder stands still this long, then walks for {@link #LONG_WALK_MOVE_TICKS}. */
-    private static final int LONG_WALK_PAUSE_TICKS = 200;
-    private static final int LONG_WALK_MOVE_TICKS = 50;
+    /** {@link #builderOnALongWalkKeepsItsBlock}: every this many ticks the carrying builder is moved {@link #LONG_WALK_STEP} closer. */
+    private static final int LONG_WALK_STEP_TICKS = 250;
+    private static final double LONG_WALK_STEP = 2.0;
 
     /**
      * BUG TEST (builders freeze while "Carrying"): one block floating 2 above open ground. Before Fix A the
@@ -157,12 +157,14 @@ public class BuilderReachGameTests {
     }
 
     /**
-     * D87 TEST (keep L1's last roof flagpole): one block far from the chest. While the builder carries it, it stands
-     * still for {@value #LONG_WALK_PAUSE_TICKS} ticks, then walks for {@value #LONG_WALK_MOVE_TICKS}, again and again,
-     * so the walk takes longer than {@code BuildBlueprintGoal.MAX_CARRY_TICKS} while it keeps getting closer. Before D87
-     * the builder gave the block up on the way; now it must keep it and place it. (A builder slowed down for good
-     * doesn't do: at a tenth of its speed it never got a block closer, CI run 38446171493.) Records BUILD (own batch);
-     * a failure writes the last events and the builder's track as "CSR stall report long walk" lines.
+     * D87 TEST (keep L1's last roof flagpole): one block far from the chest. While the builder carries it, it can't
+     * walk (speed 0), and every {@value #LONG_WALK_STEP_TICKS} ticks the test moves it {@value #LONG_WALK_STEP} blocks
+     * closer, so the way takes longer than {@code BuildBlueprintGoal.MAX_CARRY_TICKS} while it keeps getting closer.
+     * Before D87 the builder gave the block up on the way; now it must keep it and place it. The test moves it rather
+     * than letting it walk slowly: at a tenth of its speed it never got a block closer (CI run 38446171493), and with
+     * walking spells between pauses vanilla's stuck check dropped its path in the pauses and it sometimes walked away
+     * (run 38475977446). Records BUILD (own batch); a failure writes the last events and the builder's track as
+     * "CSR stall report long walk" lines.
      */
     @GameTest(template = PLATFORM, batch = "long_walk", timeoutTicks = 2600)
     public static void builderOnALongWalkKeepsItsBlock(GameTestHelper helper) {
@@ -188,8 +190,27 @@ public class BuilderReachGameTests {
                 carryingSince[0] = helper.getTick();
             }
             if (carrying) {
-                long phase = (helper.getTick() - carryingSince[0]) % (LONG_WALK_PAUSE_TICKS + LONG_WALK_MOVE_TICKS);
-                speed.setBaseValue(phase < LONG_WALK_PAUSE_TICKS ? 0.0 : walkingSpeed);
+                speed.setBaseValue(0.0);
+                long carried = helper.getTick() - carryingSince[0];
+                if (carried > 0 && carried % LONG_WALK_STEP_TICKS == 0) {
+                    // One step straight towards the block; the last one ends 1.5 from it, close enough to place.
+                    var soldier = builder.soldier();
+                    var block = helper.absolutePos(target).getCenter();
+                    double dx = block.x - soldier.getX();
+                    double dz = block.z - soldier.getZ();
+                    double away = Math.sqrt(dx * dx + dz * dz);
+                    // A step that would land in a block (the easel lies on the way) goes one further.
+                    double first = Math.min(LONG_WALK_STEP, away - 1.5);
+                    for (double step = first; step > 0 && step <= first + 2 && step <= away - 1.5; step++) {
+                        double x = dx / away * step;
+                        double z = dz / away * step;
+                        if (soldier.level().noCollision(soldier, soldier.getBoundingBox().move(x, 0, z))) {
+                            soldier.getNavigation().stop();
+                            soldier.teleportTo(soldier.getX() + x, soldier.getY(), soldier.getZ() + z);
+                            break;
+                        }
+                    }
+                }
             } else if (carryingSince[0] >= 0) {
                 speed.setBaseValue(walkingSpeed);
                 boolean placed = helper.getBlockState(target).is(Blocks.COBBLESTONE);
