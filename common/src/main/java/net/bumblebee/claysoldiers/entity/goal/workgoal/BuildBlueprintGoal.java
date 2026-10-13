@@ -427,6 +427,9 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             } else if (request.takeSoldierInTheWay()) {
                 DebugLog.event(DebugCategory.BUILD, soldier, "soldier in the way of %s at %s, trying again in %s ticks", request.getItem(), request.getPos(), SOLDIER_IN_THE_WAY_RETRY_TICKS);
                 placeWait = SOLDIER_IN_THE_WAY_RETRY_TICKS;
+                if (!holding) {
+                    stepAside(request.getPos());
+                }
                 return;
             } else {
                 DebugLog.event(DebugCategory.BUILD, soldier, "could not place %s at %s (spot not free?), returning it", request.getItem(), request.getPos());
@@ -439,6 +442,40 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         }
         if (!stayUp) {
             climber.descend();
+        }
+    }
+
+    /**
+     * The builder itself may be the soldier in the way: standing next to the spot, the block would close its own way
+     * out (a slab two above its feet takes away the hop, D64), and waiting where it stands changes nothing (hovel L3 on
+     * CI: 17 refusals in a row while the other builders had nothing to do). It steps to a free cell next to it that is
+     * two blocks from the spot, where the block can't pen it in and it can still place it. None: it stays.
+     */
+    private void stepAside(BlockPos target) {
+        BlockPos feet = soldier.blockPosition();
+        if (Math.abs(feet.getX() - target.getX()) > 1 || Math.abs(feet.getZ() - target.getZ()) > 1) {
+            return; // not next to the spot: someone else is in the way
+        }
+        BlockPos best = null;
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                for (int dy = -1; dy <= 1; dy++) {
+                    BlockPos cell = feet.offset(dx, dy, dz);
+                    if (Math.max(Math.abs(cell.getX() - target.getX()), Math.abs(cell.getZ() - target.getZ())) != 2
+                            || !BuilderReach.canStandAt(soldier.level(), cell)
+                            || !soldier.level().getBlockState(cell.above()).getCollisionShape(soldier.level(), cell.above()).isEmpty()
+                            || !BuilderReach.canPlaceFrom(new net.minecraft.world.phys.Vec3(cell.getX() + 0.5, cell.getY(), cell.getZ() + 0.5), target)) {
+                        continue;
+                    }
+                    if (best == null || cell.distSqr(feet) < best.distSqr(feet)) {
+                        best = cell;
+                    }
+                }
+            }
+        }
+        if (best != null) {
+            DebugLog.event(DebugCategory.BUILD, soldier, "stepping aside to %s to place at %s", best, target);
+            soldier.getNavigation().moveTo(best.getX() + 0.5, best.getY(), best.getZ() + 0.5, 1.0);
         }
     }
 
