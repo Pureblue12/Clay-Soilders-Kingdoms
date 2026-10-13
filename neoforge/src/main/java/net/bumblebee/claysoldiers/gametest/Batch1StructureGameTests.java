@@ -48,10 +48,13 @@ public class Batch1StructureGameTests {
     /** Build time may differ from the doc's estimate by this much (fraction of the estimate). */
     static final double TIME_TOLERANCE = 0.5;
     /**
-     * The least deviation from the estimate a build may have (ticks): a builder's break alone takes longer than a tiny build.
-     * Two breaks since D79: a small build is now mostly fixed waits (road L2, 19 blocks: 321 ticks against 209 on CI).
+     * Ticks every build may take on top of the estimate and its tolerance: fixed waits that don't grow with the build (a
+     * builder's break, 86 ticks on CI; a refused block's retry). Was a floor of 200 (the larger of this and the tolerance);
+     * since builds follow a plan (D82) the order within a wave is random, and small builds spread by about this much from
+     * run to run on CI: road L3 202 to 474 ticks (estimate 253), hovel L3 310 to 653 (estimate 429), in CI runs 38473736321,
+     * 38477495214 and 38482122076. Added to the tolerance, so a big build is still checked at 50% over the model.
      */
-    static final long MIN_TIME_SLACK = 200;
+    static final long FIXED_WAIT_SLACK = 300;
     /**
      * The doc's build-time model (docs/STRUCTURES.md, rule 4, D63): with 3 builders, a block within reach takes this many
      * ticks per block of the structure's width plus depth (builders walk farther on bigger footprints). Was 1.4 (the
@@ -281,10 +284,9 @@ public class Batch1StructureGameTests {
             // there wait until it leaves (396 ticks for L3 on CI, estimate 235), so the well gets twice the tolerance.
             // The farm is fences: since D64/D66 a fence beside a soldier waits until it has moved, and a builder beside
             // a post is put out first (farm L3 2,705 ticks on CI, estimate 1,792; L2 2,018 against 1,232). A tiny build
-            // (the bench: 14 ticks) also gets a floor of MIN_TIME_SLACK ticks, since one break (86 ticks on CI) is
-            // longer than the whole build, and a small one is mostly such waits.
+            // (the bench: 14 ticks) is mostly fixed waits, so every build also gets FIXED_WAIT_SLACK ticks on top.
             double tolerance = entry.path().equals("well") || entry.path().equals("farm") ? 2 * TIME_TOLERANCE : TIME_TOLERANCE;
-            long allowed = Math.max(Math.round(estimate * tolerance), MIN_TIME_SLACK);
+            long allowed = Math.round(estimate * tolerance) + FIXED_WAIT_SLACK;
             helper.assertTrue(ticks - estimate <= allowed,
                     "build took " + ticks + " ticks, the doc estimates " + estimate + " (allowed ±" + allowed + " ticks)");
         });
