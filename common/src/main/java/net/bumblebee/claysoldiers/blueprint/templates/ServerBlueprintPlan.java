@@ -597,10 +597,13 @@ public class ServerBlueprintPlan extends BlueprintPlan {
 
     /**
      * Where builders can stand to place {@code info}, from the plan (world positions; empty without a plan, and for a block
-     * builders gave up {@link #PLAN_GIVE_UPS} times: they then look for a spot the normal way).
+     * builders gave up {@link #PLAN_GIVE_UPS} or another even number of times: they then look for a spot the normal way,
+     * so scaffolding can start; after an odd number the plan's spots come back, tried first: chapel L2's annex chest, given
+     * up 18 times, had a plan spot on the grass beside the annex while the normal search kept sending builders round the
+     * other side, where they got wedged under a planter).
      */
     private List<BlockPos> plannedSpots(BlockPos base, BlueprintTemplateSettings settings, BlueprintBlockInfo info) {
-        if (buildPlan == null || Tuning.BUILD_FOLLOW_PLAN.get() == 0 || info.timesGivenUp() >= PLAN_GIVE_UPS) {
+        if (buildPlan == null || Tuning.BUILD_FOLLOW_PLAN.get() == 0 || info.timesGivenUp() >= PLAN_GIVE_UPS && info.timesGivenUp() % 2 == 0) {
             return List.of();
         }
         return buildPlan.spots(info.getPos()).stream().map(spot -> base.offset(adjustForStructureSettings(settings, spot))).toList();
@@ -666,7 +669,8 @@ public class ServerBlueprintPlan extends BlueprintPlan {
                 request.setStandingSpots(spots);
                 // Given up before: the nearest spot it can be placed from may be one builders can't really get to (chapel
                 // L2/L3: an outside stair beside the annex, reached past a planter they get wedged under), so the plan's
-                // checked spots go first. A second give-up takes the block out of the plan (PLAN_GIVE_UPS).
+                // checked spots go first. A second give-up takes the block out of the plan (PLAN_GIVE_UPS); from then on the
+                // builders alternate between the normal search and the plan's spots (see plannedSpots).
                 if (!spots.isEmpty() && blockInfo.timesGivenUp() > 0) {
                     request.setPlanSpotsFirst(true);
                     DebugLog.event(DebugCategory.BUILD, null, "plan: %s at %s was given up, its builder tries the plan's standing spots first",

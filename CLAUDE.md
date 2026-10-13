@@ -316,7 +316,7 @@ and the "Structure builds" summary has its table. Never edit a plan by hand: cha
   While the wave's last blocks are carried, idle builders take blocks of the next `build.plan_lookahead_waves` (3) waves clear
   of every earlier wave's blocks still to place and their spots (`build.plan_lookahead_clearance`).
   A block builders gave up twice (`ServerBlueprintPlan.PLAN_GIVE_UPS`) leaves the plan: it no longer holds its wave back, and
-  it is handed out without the plan's spots, so scaffolding can start (keep L1's chest; `blockGivenUpTwiceLeavesThePlan`); after one give-up its builder tries the plan's spots before the nearest one (chapel's annex chest).
+  it is handed out without the plan's spots, so scaffolding can start (keep L1's chest; `blockGivenUpTwiceLeavesThePlan`); after one give-up its builder tries the plan's spots before the nearest one, and from the second on it alternates (chapel's annex chest).
 - Builders walk to the nearest spot they can place from (the normal search) and use the plan's spots only when that fails (`build.plan_spots_first` 0; with 1 they went to the plan's nearest free spot first, `BuilderReach.findPlanned`, and builds took 30% longer than main instead of 16%).
 - Blocks the plan leaves out (need scaffold) come after it. `build.follow_plan` 0 turns it all off.
 - Natural touches for builds that follow a plan: a random pause after placing (`build.pause_ticks`), each builder's own pace

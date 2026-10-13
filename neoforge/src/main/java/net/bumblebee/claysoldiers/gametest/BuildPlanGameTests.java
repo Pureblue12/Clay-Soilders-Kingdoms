@@ -169,7 +169,7 @@ public class BuildPlanGameTests {
      * A planned block builders gave up twice (keep L1: a chest the plan's spots said was reachable, handed out and given up
      * for 6,000 ticks) is left to the normal search: handed out without the plan's standing spots, so the builder looks for
      * a spot the normal way (and scaffolding can start when there is none). After the first give-up the builder tries the
-     * plan's spots before the nearest spot (chapel L2/L3's annex chest).
+     * plan's spots before the nearest spot (chapel L2/L3's annex chest), and from the second give-up on it alternates.
      */
     @GameTest(template = ClaySoldierGameTests.PLATFORM)
     public static void blockGivenUpTwiceLeavesThePlan(GameTestHelper helper) {
@@ -192,6 +192,11 @@ public class BuildPlanGameTests {
         BlueprintRequest request = easel.getBlueprintRequestHandler().getRequest(pos -> true);
         helper.assertTrue(request != null && request.standingSpots().isEmpty(), "After " + ServerBlueprintPlan.PLAN_GIVE_UPS
                 + " give-ups the block should be handed out without the plan's spots, got " + (request == null ? null : request.standingSpots()));
+        // Given up again, the plan's spots come back, tried first (the normal search's spot failed too).
+        request.giveUp();
+        request = easel.getBlueprintRequestHandler().getRequest(pos -> true);
+        helper.assertTrue(request != null && !request.standingSpots().isEmpty() && request.planSpotsFirst(),
+                "After another give-up the plan's spots should come back, tried first, got " + request);
         helper.succeed();
     }
 
