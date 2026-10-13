@@ -139,6 +139,8 @@ public final class Tuning {
             "A builder that has found no way to where it is going for this many ticks in a row (no path, or one that ends short) is brought back to a free spot beside its chest, like a player carrying it down (stranded on a roof or upper floor it built, with no way down that isn't a deadly drop); in ticks, 0 = never.", 1200, 0, 100000));
     public static final TuningKey.IntKey BUILD_CARRY_COUNT = register(new TuningKey.IntKey("build.carry_count",
             "How many of a block's item a builder takes from its chest at once (D79). After placing one it goes straight to the nearest free block of that item in the same layer it can reach, and only walks back to the easel and its chest when there is none (then it puts back what is left). 1 = one block per trip to the chest.", 16, 1, 64));
+    public static final TuningKey.IntKey BUILD_CARRY_MAX_TICKS = register(new TuningKey.IntKey("build.carry_max_ticks",
+            "A builder keeps its block while it keeps getting closer to where it is going (its chest, then the block's spot), and gives it up after 400 ticks without getting a block closer (D87); this is the most it keeps one block in all, in ticks.", 2000, 400, 100000));
     public static final TuningKey.IntKey BUILD_PATH_NODES_MULTIPLIER = register(new TuningKey.IntKey("build.path_nodes_multiplier",
             "While a builder works for a build, its path searches may look at this many times more steps (vanilla: 256).", 4, 1, 16));
     public static final TuningKey.IntKey WORK_FALL_DAMAGE_PERCENT = register(new TuningKey.IntKey("work.fall_damage_percent",

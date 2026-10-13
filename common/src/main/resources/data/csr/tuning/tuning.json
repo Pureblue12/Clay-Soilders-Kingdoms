@@ -50,6 +50,7 @@
   "build.stranded_ticks": 1200,
   "build.path_nodes_multiplier": 4,
   "build.carry_count": 16,
+  "build.carry_max_ticks": 2000,
   "work.fall_damage_percent": 100,
   "work.plant_damage_percent": 100,
   "scaffold.columns_first": 1,

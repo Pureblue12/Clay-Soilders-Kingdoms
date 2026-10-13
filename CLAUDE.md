@@ -119,7 +119,9 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
 - Fixed (Fix A): builders froze while "Carrying" a block they could never place, because the reachable
   check (path ends within 2 steps) disagreed with placing (feet < 2 blocks straight-line); idle builders
   also asked the easel every tick. Now one shared rule (`BuilderReach`), a 400-tick give-up timer
-  (`BuildBlueprintGoal.MAX_CARRY_TICKS`) and a 20–40 tick retry cooldown (`builderNeverStuckCarrying`).
+  (`BuildBlueprintGoal.MAX_CARRY_TICKS`) and a 20–40 tick retry cooldown (`builderNeverStuckCarrying`). Since D87 the
+  timer counts ticks without getting 1 block closer, at most `build.carry_max_ticks` in all: the walk to keep L1's last
+  roof flagpole took longer than 400 ticks (`builderOnALongWalkKeepsItsBlock`).
 - Fixed (from the 2026-10-03 recording, `BuildRequestGameTests`):
   - Placing at the wrong spot: builders now fill exactly their request's spot
     (`ServerBlueprintPlan.tryPlacingRequest`); players feeding the easel by hand still fill the first free
@@ -348,7 +350,7 @@ Pending (not started):
   as free but can never be placed (placing the same block fails), so the blueprint never finishes; the
   cooldown only stops it from starving the rest. Not confirmed in game; not fixed.
 - Layer-by-layer ordering: blocks are handed out as all full cubes and stairs (bottom to top, roof included; stairs
-  since D69, so inside staircases exist before the floors above them), then other non-cube blocks, then blocks with data (beds), then doors.
+  since D69, so inside staircases exist before the floors above them), then other non-cube blocks, then blocks with data (beds), then doors. A wall-hung block (wall torch, sign, banner, head, ladder) waits until the block it hangs on is placed (D83).
 
 Known, unfixed (reported, not confirmed in game): `DigHoleGoal.resetBreakProgress` unregisters
 `currentPos` even when this soldier never registered it; in dev runs `ErrorHandler` throws
