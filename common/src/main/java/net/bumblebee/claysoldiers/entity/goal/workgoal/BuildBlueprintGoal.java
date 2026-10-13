@@ -55,6 +55,8 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     /** While BUILD is recorded: closed doors found in the way during one search, and the blocks behind each. */
     @Nullable
     private Map<BlockPos, List<BlockPos>> blockedByDoor;
+    /** Whether this request search already ran the old searches for one block off the reach map (recorder only, D82). */
+    private boolean explainedOffMap;
     /**
      * When the easel has no reachable block, the builder waits this many ticks plus up to
      * {@link #RETRY_COOLDOWN_RANDOM} more before asking again, instead of asking (and pathfinding) every tick.
@@ -120,6 +122,8 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     @Nullable
     private BlockPos pathEnd;
     private int lastStepTicks;
+    /** Whether this request's walk used the reach map's spot or route: giving it up then tells the map (D82), as does giving up while carrying the block. */
+    private boolean onMapRoute;
     /**
      * Where this builder just placed a block while it still carries more of that item ({@code build.carry_count}, D79):
      * it asks the easel for the nearest free block of the item in that layer before walking back to the easel and its chest.
@@ -202,6 +206,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             bringBack = !soldier.getCarriedStack().isEmpty();
             climber.descend();
             request = null;
+            onMapRoute = false;
         } else if (request.hasStarted()) {
             // The give-up timer also runs while fetching the item from storage.
             if (++carryTicks > MAX_CARRY_TICKS) {
@@ -273,6 +278,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         } else {
             easelPos = null;
             request = null;
+            onMapRoute = false;
         }
     }
 
@@ -282,6 +288,13 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     private void giveUpRequest() {
         climber.descend();
         DebugLog.event(DebugCategory.BUILD, soldier, "gave up %s at %s after %s ticks (fetching + carrying), releasing it", request.getItem(), request.getPos(), carryTicks);
+        // Carrying the block, the walk to it failed whichever path it took: chapel L3's bell and slab were given up 20 times
+        // each on the path search's way, which the map never heard of, so no builder ever climbed the column beside them.
+        // Not when it got there (a soldier in the way): that walk worked.
+        if (easelPos != null && (onMapRoute || !soldier.getCarriedStack().isEmpty() && !BuilderReach.canPlaceFrom(soldier, request.getPos()))) {
+            ReachMap.walkFailed(soldier, easelPos.pos(), request.getPos());
+        }
+        onMapRoute = false;
         request.cancel();
         request = null;
         bringBack = !soldier.getCarriedStack().isEmpty();
@@ -321,6 +334,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             // While BUILD is recorded, collect why blocks are unreachable (one summary line per search).
             unreachableReasons = DebugLog.isOn(DebugCategory.BUILD) ? new LinkedHashMap<>() : null;
             blockedByDoor = unreachableReasons == null ? null : new LinkedHashMap<>();
+            explainedOffMap = false;
             long start = System.nanoTime();
             request = requestHandler.getRequest(reachTest);
             long millis = (System.nanoTime() - start) / 1_000_000;
@@ -364,12 +378,36 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     }
 
     private boolean canReach(BlockPos pos) {
+        if (ReachMap.enabled() && easelPos != null) {
+            // One look at the build's reach map instead of path searches (D82); the recorder's reasons need searches.
+            if (ReachMap.canReachToPlace(soldier, easelPos.pos(), pos) || canClimbTo(pos)) {
+                return true;
+            }
+            // While recording, only the first block off the map per request search gets the old searches to say why
+            // (closed doors); the rest are counted, so a recorded build costs about what an unrecorded one does (D82).
+            if (unreachableReasons != null) {
+                if (explainedOffMap) {
+                    unreachableReasons.merge("not on the build's reach map", 1, Integer::sum);
+                } else {
+                    explainedOffMap = true;
+                    if (explainUnreachable(pos)) {
+                        unreachableReasons.merge("not on the build's reach map though a search finds a way", 1, Integer::sum);
+                    }
+                }
+            }
+            return false;
+        }
         if (unreachableReasons == null) {
             return BuilderReach.canReachToPlace(soldier, pos) || canClimbTo(pos);
         }
         if (canClimbTo(pos) && !BuilderReach.canReachToPlace(soldier, pos)) {
             return true;
         }
+        return explainUnreachable(pos);
+    }
+
+    /** Runs the old searches for {@code pos} and records why it is unreachable (recorder only). */
+    private boolean explainUnreachable(BlockPos pos) {
         BuilderReach.Reach reach = BuilderReach.check(soldier, pos, true);
         if (!reach.reachable()) {
             unreachableReasons.merge(reach.whyNot(), 1, Integer::sum);
@@ -427,6 +465,9 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             } else if (request.takeSoldierInTheWay()) {
                 DebugLog.event(DebugCategory.BUILD, soldier, "soldier in the way of %s at %s, trying again in %s ticks", request.getItem(), request.getPos(), SOLDIER_IN_THE_WAY_RETRY_TICKS);
                 placeWait = SOLDIER_IN_THE_WAY_RETRY_TICKS;
+                if (!holding) {
+                    stepAside(request.getPos());
+                }
                 return;
             } else {
                 DebugLog.event(DebugCategory.BUILD, soldier, "could not place %s at %s (spot not free?), returning it", request.getItem(), request.getPos());
@@ -434,11 +475,46 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                 request.cancel();
             }
             request = null;
+            onMapRoute = false;
         } else {
             easelPos = null;
         }
         if (!stayUp) {
             climber.descend();
+        }
+    }
+
+    /**
+     * The builder itself may be the soldier in the way: standing next to the spot, the block would close its own way
+     * out (a slab two above its feet takes away the hop, D64), and waiting where it stands changes nothing (hovel L3 on
+     * CI: 17 refusals in a row while the other builders had nothing to do). It steps to a free cell next to it that is
+     * two blocks from the spot, where the block can't pen it in and it can still place it. None: it stays.
+     */
+    private void stepAside(BlockPos target) {
+        BlockPos feet = soldier.blockPosition();
+        if (Math.abs(feet.getX() - target.getX()) > 1 || Math.abs(feet.getZ() - target.getZ()) > 1) {
+            return; // not next to the spot: someone else is in the way
+        }
+        BlockPos best = null;
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                for (int dy = -1; dy <= 1; dy++) {
+                    BlockPos cell = feet.offset(dx, dy, dz);
+                    if (Math.max(Math.abs(cell.getX() - target.getX()), Math.abs(cell.getZ() - target.getZ())) != 2
+                            || !BuilderReach.canStandAt(soldier.level(), cell)
+                            || !soldier.level().getBlockState(cell.above()).getCollisionShape(soldier.level(), cell.above()).isEmpty()
+                            || !BuilderReach.canPlaceFrom(new net.minecraft.world.phys.Vec3(cell.getX() + 0.5, cell.getY(), cell.getZ() + 0.5), target)) {
+                        continue;
+                    }
+                    if (best == null || cell.distSqr(feet) < best.distSqr(feet)) {
+                        best = cell;
+                    }
+                }
+            }
+        }
+        if (best != null) {
+            DebugLog.event(DebugCategory.BUILD, soldier, "stepping aside to %s to place at %s", best, target);
+            soldier.getNavigation().moveTo(best.getX() + 0.5, best.getY(), best.getZ() + 0.5, 1.0);
         }
     }
 
@@ -542,10 +618,25 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                 this.soldier.getMoveControl().setWantedPosition(pathEnd.getX() + 0.5, pathEnd.getY(), pathEnd.getZ() + 0.5, 1);
                 return false;
             }
+            // A block builders already gave up walking to: a scaffolding column that reaches it comes first (D82).
+            if (ReachMap.enabled() && easelPos != null && ReachMap.walkFailedBefore(soldier, easelPos.pos(), request.getPos())
+                    && soldier.level() instanceof ServerLevel level && climber.start(level, easelPos.pos(), request.getPos())) {
+                return false;
+            }
             // Walk the same kind of path the reachable check accepted: it ends where the block can be placed.
             Path path = BuilderReach.pathToPlace(soldier, request.getPos());
+            // A scaffolding column that reaches the block comes before the reach map's spot: chapel L2's last slab had a
+            // map spot builders never got to, while a column beside it stood unused (D82).
             if (path == null && easelPos != null && soldier.level() instanceof ServerLevel level && climber.start(level, easelPos.pos(), request.getPos())) {
                 return false; // out of reach from the ground: climb a scaffolding column
+            }
+            if (path == null && ReachMap.enabled() && easelPos != null) {
+                path = ReachMap.pathToMapSpot(soldier, easelPos.pos(), request.getPos());
+                onMapRoute |= path != null;
+            }
+            if (path == null && ReachMap.enabled() && easelPos != null) {
+                path = ReachMap.routeToPlace(soldier, easelPos.pos(), request.getPos());
+                onMapRoute |= path != null;
             }
             pathEnd = path == null || path.getEndNode() == null ? null : path.getEndNode().asBlockPos();
             lastStepTicks = 0;

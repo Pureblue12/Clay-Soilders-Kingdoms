@@ -52,6 +52,17 @@ final class BuildStallReport {
      * Starts recording and arranges the report. Call at the start of the test; {@code timeoutTicks} is the test's own.
      */
     static void watch(GameTestHelper helper, String what, int timeoutTicks, EaselBlockEntity easel, ChestBlockEntity chest, List<ClaySoldierEntity> builders) {
+        watch(helper, what, timeoutTicks, Long.MAX_VALUE, easel, chest, builders);
+    }
+
+    /**
+     * Like {@link #watch(GameTestHelper, String, int, EaselBlockEntity, ChestBlockEntity, List)}, and when the build
+     * finishes more than {@code slowTicks} after this call, writes a short slow-build report: the recorded give-ups
+     * and the last BUILD events (a build that finishes late leaves no stall report).
+     */
+    static void watch(GameTestHelper helper, String what, int timeoutTicks, long slowTicks, EaselBlockEntity easel, ChestBlockEntity chest,
+                      List<ClaySoldierEntity> builders) {
+        long start = helper.getTick();
         // A test that records for its own checks keeps its recorder as it set it up; the report then shows its events.
         boolean ownRecorder = !DebugLog.isRecording();
         if (ownRecorder) {
@@ -67,6 +78,9 @@ final class BuildStallReport {
             }
             if (easel.isFinished()) {
                 done[0] = true;
+                if (helper.getTick() - start > slowTicks) {
+                    slowReport(helper.getTick() - start, builders).forEach(line -> ClaySoldiersCommon.LOGGER.info("CSR stall report {}: {}", what, line));
+                }
                 if (ownRecorder) {
                     DebugLog.reset();
                 }
@@ -78,6 +92,31 @@ final class BuildStallReport {
                 }
             }
         });
+    }
+
+    /** What slowed a build that did finish: its builders' give-ups and reach map events, then each builder's last events. */
+    static List<String> slowReport(long ticks, List<ClaySoldierEntity> builders) {
+        List<String> lines = new ArrayList<>();
+        lines.add("finished late, after " + ticks + " ticks");
+        List<String> names = builders.stream().map(DebugLog::shortName).toList();
+        Predicate<DebugEvent> ours = event -> names.stream().anyMatch(name -> event.toLine().contains(" " + name + " "));
+        List<DebugEvent> all = DebugLog.events();
+        long maps = all.stream().filter(ours).filter(event -> event.toLine().contains("reach map made")).count();
+        lines.add(maps + " reach maps made");
+        List<DebugEvent> slow = tail(all, ours.and(event -> !event.toLine().contains("reach map made") && (event.toLine().contains("gave up")
+                || event.toLine().contains("reach map") || event.toLine().contains("couldn't walk") || event.toLine().contains("stranded") || event.toLine().contains("soldier in the way"))), 40);
+        lines.add(slow.size() + " give-ups and reach map events, oldest first:");
+        slow.forEach(event -> lines.add("  " + event.toLine()));
+        // Per builder, leaving out the noise of idle builders asking for an item another one carries (well L3, run 38310973353).
+        Predicate<DebugEvent> busy = event -> (event.category() == DebugCategory.BUILD || event.category() == DebugCategory.PATHING)
+                && !event.toLine().contains("reach map made") && !event.toLine().contains("storage has no")
+                && !event.toLine().contains("request released (cancelled)") && !event.toLine().contains("got request");
+        for (String name : names) {
+            List<DebugEvent> last = tail(all, busy.and(event -> event.toLine().contains(" " + name + " ")), 25);
+            lines.add("last " + last.size() + " BUILD and PATHING events of " + name + ", oldest first:");
+            last.forEach(event -> lines.add("  " + event.toLine()));
+        }
+        return lines;
     }
 
     static List<String> report(GameTestHelper helper, String what, EaselBlockEntity easel, ChestBlockEntity chest, List<ClaySoldierEntity> builders) {

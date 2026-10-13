@@ -260,9 +260,12 @@ public class Batch1StructureGameTests {
         EaselBlockEntity easel = DevScenarios.placeEasel(level, easelPos, Direction.NORTH, blueprint);
         List<ItemStack> items = blueprint.createServerPlan().orElseThrow().getNeededItems();
         Builders builders = setUpBuilders(helper, items);
-        BuildStallReport.watch(helper, entry.path() + " L" + detail, timeoutTicks, easel, builders.chest(), builders.soldiers());
-        long start = helper.getTick();
         long estimate = estimate(entry, detail);
+        // Reports a build 1.5 times its estimate or slower (at least 100 ticks over), before it fails the time check: well L3 took 217 ticks in one
+        // run and 555 (failed) in another, and a slow run that still passes shows why just as well.
+        BuildStallReport.watch(helper, entry.path() + " L" + detail, timeoutTicks, estimate + Math.max(estimate / 2, 100),
+                easel, builders.chest(), builders.soldiers());
+        long start = helper.getTick();
         long[] finished = {-1};
         helper.succeedWhen(() -> {
             helper.assertTrue(easel.isFinished(), "not finished: " + remaining(easel));

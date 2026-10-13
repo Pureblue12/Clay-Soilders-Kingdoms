@@ -295,6 +295,10 @@ Code: `common/.../scaffold/`; comparison, recommendation and height rules: `docs
   never stands a column on a stair, slab, carpet or other floor without one (`ScaffoldInput.noFooting`, blocks still to place
   count as what they will be). Keep L2's annex columns stood on the pews and were never there to climb.
 - **Recorder SCAFFOLD:** planned, placed, removed, climbing, stuck, cleanup, kept.
+- **Reach map (D82, `build.reach_map`):** builders check which blueprint blocks they can reach on one map per build
+  (`ReachMap`: a Dijkstra flood from the easel with the soldiers' own node evaluator), made again after every placed or
+  removed block, instead of up to three vanilla path searches per block. `tools/path_experiments.py` replays builds
+  offline with today's search, a 3x budget, the reach map and a planned build order, and counts the search work.
 
 ### Known limitations
 
@@ -325,7 +329,7 @@ Pending (not started):
   as free but can never be placed (placing the same block fails), so the blueprint never finishes; the
   cooldown only stops it from starving the rest. Not confirmed in game; not fixed.
 - Layer-by-layer ordering: blocks are handed out as all full cubes and stairs (bottom to top, roof included; stairs
-  since D69, so inside staircases exist before the floors above them), then other non-cube blocks, then blocks with data (beds), then doors.
+  since D69, so inside staircases exist before the floors above them), then other non-cube blocks, then blocks with data (beds), then doors. A wall-hung block (wall torch, sign, banner, head, ladder) waits until the block it hangs on is placed (D83).
 
 Known, unfixed (reported, not confirmed in game): `DigHoleGoal.resetBreakProgress` unregisters
 `currentPos` even when this soldier never registered it; in dev runs `ErrorHandler` throws
