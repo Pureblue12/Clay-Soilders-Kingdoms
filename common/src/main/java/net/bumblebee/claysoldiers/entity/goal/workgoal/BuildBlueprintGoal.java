@@ -314,8 +314,8 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             noProgressTicks++;
         }
         if (carryTicks == MAX_CARRY_TICKS + 1 && noProgressTicks <= MAX_CARRY_TICKS && request != null) {
-            DebugLog.event(DebugCategory.BUILD, soldier, "still getting closer to %s at %s after %s ticks (%s away), keeping it",
-                    request.getItem(), request.getPos(), carryTicks, Math.round(closestDistance));
+            DebugLog.event(DebugCategory.BUILD, soldier, "still getting closer to %s at %s, keeping it after %s",
+                    request.getItem(), request.getPos(), carryTicks + " ticks (" + Math.round(closestDistance) + " blocks away)");
         }
         return noProgressTicks > MAX_CARRY_TICKS || carryTicks > Tuning.BUILD_CARRY_MAX_TICKS.get();
     }
@@ -325,7 +325,8 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
      */
     private void giveUpRequest() {
         climber.descend();
-        DebugLog.event(DebugCategory.BUILD, soldier, "gave up %s at %s after %s ticks (fetching + carrying, %s without getting closer), releasing it", request.getItem(), request.getPos(), carryTicks, noProgressTicks);
+        DebugLog.event(DebugCategory.BUILD, soldier, "gave up %s at %s after %s, releasing it", request.getItem(), request.getPos(),
+                carryTicks + " ticks (fetching + carrying, " + noProgressTicks + " without getting closer)");
         request.cancel();
         request = null;
         bringBack = !soldier.getCarriedStack().isEmpty();
