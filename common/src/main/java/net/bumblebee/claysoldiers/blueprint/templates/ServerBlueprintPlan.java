@@ -463,7 +463,7 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         if (inWave.assigned() > 0) {
             // Other builders are on this wave's last blocks. Rather than wait for them (a crew stood idle at every wave's
             // end: chapel L3 took twice as long as without the plan), take a block of the next waves well away from them.
-            List<BlueprintBlockInfo> next = lookahead(base, settings, wave);
+            List<BlueprintBlockInfo> next = lookahead(base, settings, wave, Tuning.BUILD_PLAN_LOOKAHEAD_CLEARANCE.get(), false);
             if (!next.isEmpty()) {
                 next.sort(order);
                 Search ahead = search(next, level, base, settings, canReach, "plan waves after " + wave + " ahead: ");
@@ -520,12 +520,14 @@ public class ServerBlueprintPlan extends BlueprintPlan {
      * {@code build.plan_lookahead_clearance} blocks (on every axis) from every block of an earlier wave still to place and
      * from its planned standing spots. The plan only checked a wave with the earlier ones finished, so a block placed early
      * stays clear of where their last blocks are placed from; one that blocks a way anyway is caught by the give-ups (the
-     * blocked block leaves the plan). Shuffled, nearer waves first; empty with the clearance at 0.
+     * blocked block leaves the plan). Shuffled, nearer waves first. With {@code spotsOnly} (a stack's follow-ups, which are
+     * next to the block just placed and so always near the wave's other blocks) only the earlier blocks' standing spots and
+     * the cells above them are kept clear, {@code clearance} blocks around (0: the cells themselves); otherwise the earlier
+     * blocks too, and a clearance of 0 turns the lookahead off.
      */
-    private List<BlueprintBlockInfo> lookahead(BlockPos base, BlueprintTemplateSettings settings, int wave) {
-        int clearance = Tuning.BUILD_PLAN_LOOKAHEAD_CLEARANCE.get();
+    private List<BlueprintBlockInfo> lookahead(BlockPos base, BlueprintTemplateSettings settings, int wave, int clearance, boolean spotsOnly) {
         int waves = Tuning.BUILD_PLAN_LOOKAHEAD_WAVES.get();
-        if (clearance <= 0 || waves <= 0) {
+        if (clearance < 0 || (clearance == 0 && !spotsOnly) || waves <= 0) {
             return List.of();
         }
         // Every position to keep clear, with the lowest wave that needs it (a block of a later wave than that keeps clear).
@@ -537,9 +539,14 @@ public class ServerBlueprintPlan extends BlueprintPlan {
                 continue;
             }
             if (infoWave < wave + waves) {
-                keepClear.merge(targetPosition(base, settings, info), infoWave, Math::min);
+                if (!spotsOnly) {
+                    keepClear.merge(targetPosition(base, settings, info), infoWave, Math::min);
+                }
                 for (BlockPos spot : plannedSpots(base, settings, info)) {
                     keepClear.merge(spot, infoWave, Math::min);
+                    if (spotsOnly) {
+                        keepClear.merge(spot.above(), infoWave, Math::min);
+                    }
                 }
             }
             if (infoWave > wave && info.timesGivenUp() < PLAN_GIVE_UPS) {
@@ -705,7 +712,7 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         java.util.Set<BlueprintBlockInfo> ahead = wave == BuildPlan.UNPLANNED ? java.util.Set.of()
                 : java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<>());
         if (wave != BuildPlan.UNPLANNED) {
-            ahead.addAll(lookahead(base, settings, wave));
+            ahead.addAll(lookahead(base, settings, wave, Tuning.BUILD_PLAN_FOLLOW_UP_CLEARANCE.get(), true));
         }
         java.util.Set<BlockPos> unplaced = new java.util.HashSet<>();
         List<Map.Entry<BlueprintBlockInfo, BlockPos>> candidates = new java.util.ArrayList<>();

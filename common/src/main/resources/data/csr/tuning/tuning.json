@@ -40,6 +40,7 @@
   "build.follow_plan": 1,
   "build.plan_lookahead_clearance": 4,
   "build.plan_lookahead_waves": 3,
+  "build.plan_follow_up_clearance": 0,
   "build.plan_spots_first": 0,
   "build.pause_ticks": 6,
   "build.walk_speed_spread_percent": 10,
