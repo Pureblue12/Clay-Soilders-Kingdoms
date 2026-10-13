@@ -119,7 +119,9 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
 - Fixed (Fix A): builders froze while "Carrying" a block they could never place, because the reachable
   check (path ends within 2 steps) disagreed with placing (feet < 2 blocks straight-line); idle builders
   also asked the easel every tick. Now one shared rule (`BuilderReach`), a 400-tick give-up timer
-  (`BuildBlueprintGoal.MAX_CARRY_TICKS`) and a 20–40 tick retry cooldown (`builderNeverStuckCarrying`).
+  (`BuildBlueprintGoal.MAX_CARRY_TICKS`) and a 20–40 tick retry cooldown (`builderNeverStuckCarrying`). Since D87 the
+  timer counts ticks without getting 1 block closer, at most `build.carry_max_ticks` in all: the walk to keep L1's last
+  roof flagpole took longer than 400 ticks (`builderOnALongWalkKeepsItsBlock`).
 - Fixed (from the 2026-10-03 recording, `BuildRequestGameTests`):
   - Placing at the wrong spot: builders now fill exactly their request's spot
     (`ServerBlueprintPlan.tryPlacingRequest`); players feeding the easel by hand still fill the first free
