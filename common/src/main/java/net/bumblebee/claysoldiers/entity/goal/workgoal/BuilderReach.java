@@ -198,7 +198,7 @@ public final class BuilderReach {
         return spots;
     }
 
-    private static boolean canStandAt(Level level, BlockPos feet) {
+    static boolean canStandAt(Level level, BlockPos feet) {
         BlockState feetState = level.getBlockState(feet);
         BlockState ground = level.getBlockState(feet.below());
         return feetState.getCollisionShape(level, feet).isEmpty() && feetState.getFluidState().isEmpty()
