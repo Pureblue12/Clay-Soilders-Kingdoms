@@ -14,6 +14,8 @@ public class BlueprintRequest {
     private boolean soldierInTheWay;
     /** Where the build plan says a builder can stand to place this block (D82); empty without a plan. */
     private List<BlockPos> standingSpots = List.of();
+    /** Whether the builder walks to the plan's standing spots before searching the normal way (a block given up before). */
+    private boolean planSpotsFirst;
     /** Whether the builder gave this request up (its give-up timer ran out before it could place the block). */
     private boolean givenUp;
 
@@ -86,6 +88,18 @@ public class BlueprintRequest {
     /** Where the build plan says a builder can stand to place this block (D82); empty without a plan. */
     public List<BlockPos> standingSpots() {
         return standingSpots;
+    }
+
+    public void setPlanSpotsFirst(boolean first) {
+        planSpotsFirst = first;
+    }
+
+    /**
+     * Whether the builder tries the plan's standing spots before the nearest spot it can place from (D82): set for a block
+     * builders gave up before, whose nearest spot may be one they can't really get to (chapel L2/L3's annex chest).
+     */
+    public boolean planSpotsFirst() {
+        return planSpotsFirst;
     }
 
     @Override

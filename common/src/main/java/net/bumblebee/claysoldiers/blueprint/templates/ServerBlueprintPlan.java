@@ -664,6 +664,14 @@ public class ServerBlueprintPlan extends BlueprintPlan {
                 logRequestSearch(checked, candidates.size(), coolingDown, doorsWaiting, unreachable, notPlaceable, assigned, what + "handing out a free block");
                 BlueprintRequest request = blockInfo.getRequest(level.getGameTime(), infoAbsolutePos);
                 request.setStandingSpots(spots);
+                // Given up before: the nearest spot it can be placed from may be one builders can't really get to (chapel
+                // L2/L3: an outside stair beside the annex, reached past a planter they get wedged under), so the plan's
+                // checked spots go first. A second give-up takes the block out of the plan (PLAN_GIVE_UPS).
+                if (!spots.isEmpty() && blockInfo.timesGivenUp() > 0) {
+                    request.setPlanSpotsFirst(true);
+                    DebugLog.event(DebugCategory.BUILD, null, "plan: %s at %s was given up, its builder tries the plan's standing spots first",
+                            blockInfo.getState().getBlock(), infoAbsolutePos);
+                }
                 return new Search(request, assigned);
             }
             assigned++;

@@ -96,7 +96,13 @@ public final class BuilderReach {
      */
     @Nullable
     public static Path pathToPlace(PathfinderMob builder, BlockPos target, List<BlockPos> plannedSpots) {
-        return check(builder, target, false, plannedSpots).path();
+        return pathToPlace(builder, target, plannedSpots, false);
+    }
+
+    /** Like {@link #pathToPlace(PathfinderMob, BlockPos, List)}; with {@code spotsFirst} the plan's spots are tried first. */
+    @Nullable
+    public static Path pathToPlace(PathfinderMob builder, BlockPos target, List<BlockPos> plannedSpots, boolean spotsFirst) {
+        return check(builder, target, false, plannedSpots, spotsFirst).path();
     }
 
     /**
@@ -128,10 +134,15 @@ public final class BuilderReach {
 
     /** Like {@link #check(PathfinderMob, BlockPos, boolean)}, with the build plan's standing spots tried first (D82). */
     public static Reach check(PathfinderMob builder, BlockPos target, boolean explainDoors, List<BlockPos> plannedSpots) {
+        return check(builder, target, explainDoors, plannedSpots, false);
+    }
+
+    /** Like {@link #check(PathfinderMob, BlockPos, boolean, List)}; with {@code spotsFirst} the plan's spots are tried first. */
+    public static Reach check(PathfinderMob builder, BlockPos target, boolean explainDoors, List<BlockPos> plannedSpots, boolean spotsFirst) {
         Reach reach;
         if (plannedSpots.isEmpty()) {
             reach = find(builder, target);
-        } else if (Tuning.BUILD_PLAN_SPOTS_FIRST.get() == 0) {
+        } else if (!spotsFirst && Tuning.BUILD_PLAN_SPOTS_FIRST.get() == 0) {
             // The normal search first (the nearest spot the builder can place from), the plan's spots only when it fails.
             reach = find(builder, target);
             if (!reach.reachable()) {

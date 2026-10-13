@@ -553,7 +553,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
                 return false;
             }
             // Walk the same kind of path the reachable check accepted: it ends where the block can be placed.
-            Path path = BuilderReach.pathToPlace(soldier, request.getPos(), request.standingSpots());
+            Path path = BuilderReach.pathToPlace(soldier, request.getPos(), request.standingSpots(), request.planSpotsFirst());
             if (path == null && easelPos != null && soldier.level() instanceof ServerLevel level && climber.start(level, easelPos.pos(), request.getPos())) {
                 return false; // out of reach from the ground: climb a scaffolding column
             }
