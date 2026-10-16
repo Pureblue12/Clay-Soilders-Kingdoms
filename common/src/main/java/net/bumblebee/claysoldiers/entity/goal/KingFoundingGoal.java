@@ -143,7 +143,7 @@ public class KingFoundingGoal extends Goal {
         }
         spot = null;
         tries++;
-        DebugLog.event(DebugCategory.KINGDOM, king, "spot %d for the kingdom didn't work out: %s", tries, why);
+        DebugLog.event(DebugCategory.KINGDOM, king, "spot %s for the kingdom didn't work out: %s", tries, why);
         if (tries >= Tuning.KINGDOM_FOUND_TRIES.get()) {
             KingFounding.rest(level, king, why);
             tries = 0;
