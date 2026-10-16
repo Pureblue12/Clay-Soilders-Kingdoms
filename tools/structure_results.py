@@ -7,10 +7,10 @@
   python3 tools/structure_results.py table <tsv files...>
       Merges shard TSVs and prints a Markdown report, one row per structure.
       Exits 0 if every structure level passed, 1 otherwise (after printing the table).
-  python3 tools/structure_results.py shards [only] [max]
+  python3 tools/structure_results.py shards [only] [max] [skip]
       Prints GitHub step outputs "count=N" and "shards=[1, ..., N]": N = the number of builds (every level of every
-      structure in StructureBuildGameTests.STRUCTURES, or only the comma-separated ids in [only]), at most [max]
-      (default 20), so no machine starts without a build.
+      structure in StructureBuildGameTests.STRUCTURES, or only the comma-separated ids in [only], minus the ones in
+      [skip], e.g. keep:3), at most [max] (default 20), so no machine starts without a build.
 
 Standard library only.
 """
@@ -158,13 +158,18 @@ ENTRY = re.compile(r'new Entry\("([a-z0-9_]+)", \d+, \d+, ([\d, ]+)\)')
 TESTS = "neoforge/src/main/java/net/bumblebee/claysoldiers/gametest/StructureBuildGameTests.java"
 
 
-def shards(only, most):
-    ids = {i.strip().removeprefix("csr:") for i in only.split(",") if i.strip()}
+def id_set(text):
+    return {i.strip().removeprefix("csr:") for i in text.split(",") if i.strip()}
+
+
+def shards(only, most, skip=""):
+    ids = id_set(only)
+    skipped = id_set(skip)
     with open(TESTS, encoding="utf-8") as f:
         entries = ENTRY.findall(f.read())
     # "keep" counts every level, "keep:2" only level 2 (StructureBuildGameTests.selected)
     builds = sum(1 for sid, blocks in entries for lv in range(1, len(blocks.split(",")) + 1)
-                 if not ids or sid in ids or f"{sid}:{lv}" in ids)
+                 if (not ids or sid in ids or f"{sid}:{lv}" in ids) and sid not in skipped and f"{sid}:{lv}" not in skipped)
     count = max(1, min(most, builds))
     print(f"count={count}")
     print(f"shards={list(range(1, count + 1))}")
@@ -173,8 +178,8 @@ def shards(only, most):
 
 
 def main(argv):
-    if len(argv) in (2, 3, 4) and argv[1] == "shards":
-        return shards(argv[2] if len(argv) > 2 else "", int(argv[3]) if len(argv) > 3 else 20)
+    if len(argv) in (2, 3, 4, 5) and argv[1] == "shards":
+        return shards(argv[2] if len(argv) > 2 else "", int(argv[3]) if len(argv) > 3 else 20, argv[4] if len(argv) > 4 else "")
     if len(argv) == 4 and argv[1] == "parse":
         return parse(argv[2], argv[3])
     if len(argv) >= 3 and argv[1] == "table":
