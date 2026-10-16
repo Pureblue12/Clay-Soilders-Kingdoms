@@ -228,7 +228,7 @@ Code: `common/.../kingdom/` (`Kingdom`, `KingdomSavedData`, `Kingdoms` service, 
 `common/.../commands/KingdomCommand`, game hooks `neoforge/.../event/KingdomEvents`. Decisions D16–D23.
 - **Saved:** `<world>/data/csr_kingdoms.dat`, format version `KingdomSavedData.DATA_VERSION` (1); see the migration
   notes in `docs/DECISIONS.md`. Any format change raises the version and adds a migration.
-- **At most one kingdom per team**, ACTIVE or RUINED. Change kingdoms only through `Kingdoms` (it marks the data
+- **At most one kingdom per team**, ACTIVE or RUINED; a new king of a team with a RUINED kingdom founds a new one in its place (D95). Change kingdoms only through `Kingdoms` (it marks the data
   dirty, writes the chronicle, records KINGDOM events).
 - **Founding** (D93, the owner's call 2026-10-16: "simply dropping a single gold piece to a soldier and the rest will take
   care of itself"): a soldier who picks up a gold ingot is a king, and a king whose team has no kingdom founds one by

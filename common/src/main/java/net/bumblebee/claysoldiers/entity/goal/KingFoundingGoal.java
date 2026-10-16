@@ -29,8 +29,14 @@ public class KingFoundingGoal extends Goal {
     private static final int FIGHT_TICKS = 60;
     /** Ticks between new paths while walking. */
     private static final int REPATH_TICKS = 20;
-    /** How close (horizontally, squared) to the middle of his spot counts as there. */
-    private static final double THERE_SQR = 0.75 * 0.75;
+    /**
+     * How close (horizontally, squared) to the middle of his spot counts as there: inside his spot's block. Vanilla's
+     * navigation calls a path done up to 0.65 from a node's middle on each axis, so a tiny soldier can stop farther than
+     * that from the middle; the founding center is the block he stands in anyway.
+     */
+    private static final double THERE_SQR = 1.0;
+    /** Closer than this (horizontally, squared) with his path done, he takes the last step directly. */
+    private static final double LAST_STEP_SQR = 2.5 * 2.5;
 
     private final AbstractClaySoldierEntity king;
     private final Set<Long> tried = new HashSet<>();
@@ -64,6 +70,7 @@ public class KingFoundingGoal extends Goal {
                 failed(level, "no good ground for a keep near him");
                 return false;
             }
+            KingFounding.setOff(level, king, spot);
         }
         return true;
     }
@@ -102,7 +109,8 @@ public class KingFoundingGoal extends Goal {
         }
         double dx = king.getX() - (spot.getX() + 0.5);
         double dz = king.getZ() - (spot.getZ() + 0.5);
-        if (dx * dx + dz * dz < THERE_SQR && king.onGround()) {
+        double distanceSqr = dx * dx + dz * dz;
+        if (distanceSqr < THERE_SQR && king.onGround()) {
             king.getNavigation().stop();
             Kingdoms.Result result = KingFounding.found(level, king);
             if (!result.ok()) {
@@ -116,6 +124,12 @@ public class KingFoundingGoal extends Goal {
         }
         if (walked >= Tuning.KINGDOM_FOUND_WALK_TICKS.get()) {
             failed(level, "couldn't get to " + spot.toShortString());
+            return;
+        }
+        if (king.getNavigation().isDone() && distanceSqr < LAST_STEP_SQR) {
+            // The path ended just short of the spot (vanilla stops near a node's middle): step in without a path.
+            walked++;
+            king.getMoveControl().setWantedPosition(spot.getX() + 0.5, spot.getY(), spot.getZ() + 0.5, 1.0);
             return;
         }
         if (walked++ % REPATH_TICKS == 0 || king.getNavigation().isDone()) {

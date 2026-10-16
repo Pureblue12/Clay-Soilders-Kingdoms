@@ -40,12 +40,15 @@ public final class KingFounding {
         inTests = enabled;
     }
 
-    /** Whether {@code king} should go and found his kingdom: a living king in the Overworld whose team has none yet. */
+    /**
+     * Whether {@code king} should go and found his kingdom: a living king in the Overworld whose team has none yet, or only
+     * a RUINED one (D95).
+     */
     public static boolean founding(AbstractClaySoldierEntity king) {
         return king.isAlive() && Kingdoms.isKing(king) && king.level() instanceof ServerLevel level
                 && (inTests || !(level.getServer() instanceof GameTestServer))
                 && Kingdoms.SUPPORTED_DIMENSIONS.contains(level.dimension())
-                && Kingdoms.byTeam(level.getServer(), king.getClayTeamType()).isEmpty();
+                && Kingdoms.canFound(level.getServer(), king.getClayTeamType());
     }
 
     // Picking a spot
@@ -96,6 +99,13 @@ public final class KingFounding {
                     + " at " + at.getX() + ", " + at.getZ() + ". See it with /csr kingdom book.").withStyle(ChatFormatting.GOLD));
         }
         return result;
+    }
+
+    /** {@code king} sets off for {@code spot}; the players nearby are told, so they know he's on his way. */
+    public static void setOff(ServerLevel level, AbstractClaySoldierEntity king, BlockPos spot) {
+        int distance = (int) Math.round(Math.sqrt(king.blockPosition().distSqr(spot)));
+        tell(level, king, Component.literal(kingName(king) + " walks to " + spot.getX() + ", " + spot.getZ() + " (" + distance
+                + " blocks) to found his kingdom.").withStyle(ChatFormatting.YELLOW));
     }
 
     /** {@code king} rests: the spots he tried didn't work out. The players nearby are told why. */

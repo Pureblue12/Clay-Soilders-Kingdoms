@@ -8,6 +8,7 @@ import net.bumblebee.claysoldiers.kingdom.KingFounding;
 import net.bumblebee.claysoldiers.kingdom.Kingdom;
 import net.bumblebee.claysoldiers.kingdom.KingdomBuilding;
 import net.bumblebee.claysoldiers.kingdom.KingdomKeep;
+import net.bumblebee.claysoldiers.kingdom.KingdomStatus;
 import net.bumblebee.claysoldiers.kingdom.Kingdoms;
 import net.bumblebee.claysoldiers.structure.StructureBlueprints;
 import net.bumblebee.claysoldiers.structure.StructureMeta;
@@ -72,6 +73,41 @@ public class KingFoundingGameTests {
 
     @AfterBatch(batch = FOUND_BATCH)
     public static void stopFounding(ServerLevel level) {
+        KingFounding.enableInTestsForTests(false);
+    }
+
+    private static final String RUINS_BATCH = "king_founding_ruins";
+
+    /**
+     * A team whose king died (kingdom RUINED) gets a new kingdom from its next king, found by himself; the ruins don't
+     * keep him standing idle (D95).
+     */
+    @GameTest(template = TERRAIN, batch = RUINS_BATCH, timeoutTicks = 2400)
+    public static void newKingFoundsInPlaceOfARuinedKingdom(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        clear(helper, YELLOW);
+        TerrainScanGameTests.build(helper, TestTerrain.Shape.PLATEAU);
+        ClaySoldierEntity oldKing = KingdomGameTests.DevSoldier.spawnPlain(helper, new BlockPos(16, 13, 16), YELLOW);
+        oldKing.equipItemIfPossible(new ItemStack(Items.GOLD_INGOT));
+        helper.assertTrue(Kingdoms.found(level, oldKing, null, true).ok(), "Setup: founding failed");
+        oldKing.kill();
+        Kingdom ruins = Kingdoms.byTeam(server(helper), YELLOW).orElseThrow();
+        helper.assertTrue(ruins.status() == KingdomStatus.RUINED, "Setup: the kingdom isn't ruined but " + ruins.status());
+        KingFounding.enableInTestsForTests(true);
+        ClaySoldierEntity newKing = KingdomGameTests.DevSoldier.spawnPlain(helper, new BlockPos(14, 13, 14), YELLOW);
+        newKing.equipItemIfPossible(new ItemStack(Items.GOLD_INGOT));
+        helper.assertTrue(KingFounding.founding(newKing), "A new king of a ruined kingdom doesn't go founding");
+        helper.succeedWhen(() -> {
+            Kingdom kingdom = Kingdoms.byTeam(server(helper), YELLOW).orElseThrow();
+            helper.assertTrue(kingdom.status() == KingdomStatus.ACTIVE && kingdom.king().id().equals(newKing.getUUID()),
+                    "No new kingdom around the new king yet; he is at " + newKing.blockPosition().toShortString());
+            KingFounding.enableInTestsForTests(false);
+            clear(helper, YELLOW);
+        });
+    }
+
+    @AfterBatch(batch = RUINS_BATCH)
+    public static void stopFoundingAfterRuins(ServerLevel level) {
         KingFounding.enableInTestsForTests(false);
     }
 

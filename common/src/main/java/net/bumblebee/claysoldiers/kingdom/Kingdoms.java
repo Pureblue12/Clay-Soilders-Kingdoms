@@ -79,12 +79,20 @@ public final class Kingdoms {
         return server != null && byTeam(server, soldier.getClayTeamType()).filter(kingdom -> kingdom.status() == KingdomStatus.ACTIVE).isPresent();
     }
 
+    /**
+     * Whether {@code team} may found a kingdom: it has none, or only a RUINED one (its king died). A new king founds a
+     * new kingdom in place of the ruins (D95).
+     */
+    public static boolean canFound(MinecraftServer server, ResourceLocation team) {
+        return byTeam(server, team).filter(kingdom -> kingdom.status() != KingdomStatus.RUINED).isEmpty();
+    }
+
     /** The nearest living king without a kingdom, within {@code kingdom.found_search_radius} of {@code pos}. */
     public static Optional<AbstractClaySoldierEntity> findNearestKing(ServerLevel level, Vec3 pos) {
         double radius = Tuning.KINGDOM_FOUND_SEARCH_RADIUS.get();
         return level.getEntitiesOfClass(AbstractClaySoldierEntity.class, new AABB(pos, pos).inflate(radius),
                         soldier -> soldier.isAlive() && isKing(soldier) && soldier.distanceToSqr(pos) <= radius * radius
-                                && byTeam(level.getServer(), soldier.getClayTeamType()).isEmpty())
+                                && canFound(level.getServer(), soldier.getClayTeamType()))
                 .stream().min(Comparator.comparingDouble(soldier -> soldier.distanceToSqr(pos)));
     }
 
@@ -108,7 +116,7 @@ public final class Kingdoms {
 
     /**
      * Founds a kingdom for {@code king}'s team around the king. Refused when: the dimension isn't supported, it isn't a
-     * living king, the team already has a kingdom, the claim overlaps
+     * living king, the team already has an active kingdom (a RUINED one is replaced, D95), the claim overlaps
      * another kingdom's, or the ground around the king can't hold a keep (terrain check: cliff, lava, deep water, too
      * steep; soft problems become warnings). When part of the site isn't loaded the terrain check is skipped.
      */
@@ -133,14 +141,15 @@ public final class Kingdoms {
             return refuse(king, team, "That soldier isn't a living king (a king is a clay soldier wearing a gold ingot).");
         }
         Optional<Kingdom> existing = data.byTeam(team);
-        if (existing.isPresent()) {
+        Optional<Kingdom> ruins = existing.filter(kingdom -> kingdom.status() == KingdomStatus.RUINED);
+        if (existing.isPresent() && ruins.isEmpty()) {
             return refuse(king, team, teamName(server, team) + " already has a kingdom (around " + existing.get().center().toShortString()
                     + ", " + existing.get().status().getSerializedName() + "). Disband it first.");
         }
         BlockPos center = king.blockPosition();
         int radius = Tuning.KINGDOM_CLAIM_RADIUS.get();
         for (Kingdom other : data.all()) {
-            if (other.dimension().equals(level.dimension()) && overlaps(center, radius, other)) {
+            if (other.dimension().equals(level.dimension()) && !other.team().equals(team) && overlaps(center, radius, other)) {
                 return refuse(king, team, "The claim (radius " + radius + " around " + center.toShortString() + ") overlaps the kingdom of "
                         + teamName(server, other.team()) + " (radius " + other.claimRadius() + " around " + other.center().toShortString() + ").");
             }
@@ -171,11 +180,18 @@ public final class Kingdoms {
                 }
             }
         }
+        if (ruins.isPresent()) {
+            data.remove(team);
+            KingdomKeep.uncrown(server, ruins.get());
+            DebugLog.event(DebugCategory.KINGDOM, king, "the ruins of %s's kingdom (around %s) give way to a new one", team,
+                    ruins.get().center().toShortString());
+        }
         Kingdom kingdom = Kingdom.found(team, level.dimension(), center, radius, king.getUUID(),
                 king.hasCustomName() ? king.getCustomName().getString() : null, level.getGameTime());
         data.add(kingdom);
         chronicle(server, kingdom, "The kingdom of " + teamName(server, team) + " was founded" + (founder == null ? "" : " by " + founder.getName().getString())
-                + " around " + kingTitle(server, kingdom, false) + " at " + center.toShortString() + ".");
+                + " around " + kingTitle(server, kingdom, false) + " at " + center.toShortString()
+                + (ruins.isPresent() ? ", after the old kingdom fell into ruin" : "") + ".");
         DebugLog.event(DebugCategory.KINGDOM, king, () -> "founded the kingdom of %s at %s, radius %d%s".formatted(team, center.toShortString(), radius,
                 founder == null ? "" : " (by " + founder.getName().getString() + ")"));
         return new Result(kingdom, null, warnings);
