@@ -256,9 +256,16 @@ public class StructureBuildGameTests {
         long[] lastChange = {start};
         String[] lastProgress = {""};
         boolean[] passed = {false};
-        helper.onEachTick(() -> {
+        // EveryTick, not helper.onEachTick / succeedWhen: with a timeout this long those cost most of the server's time.
+        EveryTick.run(helper, () -> {
             setup.supply().tick();
-            if (passed[0] || (helper.getTick() - start) % CHECK_TICKS != 0) {
+            if (passed[0]) {
+                return;
+            }
+            if (helper.getTick() >= timeoutTicks - 2) {
+                fail(helper, name, entry, level, "not built yet: " + describe(easel, ScaffoldSavedData.get(world).job(easel.getBlockPos())));
+            }
+            if ((helper.getTick() - start) % CHECK_TICKS != 0) {
                 return;
             }
             Optional<ScaffoldJob> job = ScaffoldSavedData.get(world).job(easel.getBlockPos());
@@ -268,6 +275,7 @@ public class StructureBuildGameTests {
                     passed[0] = true;
                     ClaySoldiersCommon.LOGGER.info("CSR structure build result: PASS {} | {} | L{} | {} blocks | {} ticks",
                             name, entry.path(), level, fidelity.blocks(), helper.getTick() - start);
+                    helper.runAfterDelay(1, helper::succeed);
                     return;
                 }
                 fail(helper, name, entry, level, "finished, but differs from the file at " + (fidelity.checked() - fidelity.matching())
@@ -292,8 +300,6 @@ public class StructureBuildGameTests {
                         + describe(easel, job) + ", " + (helper.getTick() - start) + " ticks in" + (setup.scaffold() ? " (needs scaffold)" : ""));
             }
         });
-        helper.succeedWhen(() -> helper.assertTrue(passed[0], "not built yet: " + describe(easel,
-                ScaffoldSavedData.get(world).job(easel.getBlockPos()))));
     }
 
     /** Whether {@code CSR_STRUCTURE_BUILD_PROFILE} is set (workflow input "profile"): each finished build writes a profile line. */
