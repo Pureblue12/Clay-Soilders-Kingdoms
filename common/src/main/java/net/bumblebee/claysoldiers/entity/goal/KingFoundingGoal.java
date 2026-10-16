@@ -30,12 +30,11 @@ public class KingFoundingGoal extends Goal {
     /** Ticks between new paths while walking. */
     private static final int REPATH_TICKS = 20;
     /**
-     * How close (horizontally, squared) to the middle of his spot counts as there: inside his spot's block. Vanilla's
-     * navigation calls a path done up to 0.65 from a node's middle on each axis, so a tiny soldier can stop farther than
-     * that from the middle; the founding center is the block he stands in anyway.
+     * Closer than this (horizontally, squared) with his path done, he takes the last step into his spot's block directly:
+     * vanilla's navigation calls a path done up to 0.65 from a node's middle on each axis, so a tiny soldier can stop in
+     * the block next to it. He founds once he stands in the spot's block (the kingdom's center is the block he stands
+     * in, and the spot is the site that was judged).
      */
-    private static final double THERE_SQR = 1.0;
-    /** Closer than this (horizontally, squared) with his path done, he takes the last step directly. */
     private static final double LAST_STEP_SQR = 2.5 * 2.5;
 
     private final AbstractClaySoldierEntity king;
@@ -110,7 +109,7 @@ public class KingFoundingGoal extends Goal {
         double dx = king.getX() - (spot.getX() + 0.5);
         double dz = king.getZ() - (spot.getZ() + 0.5);
         double distanceSqr = dx * dx + dz * dz;
-        if (distanceSqr < THERE_SQR && king.onGround()) {
+        if (king.getBlockX() == spot.getX() && king.getBlockZ() == spot.getZ() && king.onGround()) {
             king.getNavigation().stop();
             Kingdoms.Result result = KingFounding.found(level, king);
             if (!result.ok()) {

@@ -3,6 +3,9 @@ package net.bumblebee.claysoldiers.gametest;
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.blueprint.BlueprintData;
 import net.bumblebee.claysoldiers.blueprint.templates.ServerBlueprintPlan;
+import net.bumblebee.claysoldiers.debug.DebugCategory;
+import net.bumblebee.claysoldiers.debug.DebugEvent;
+import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.entity.soldier.ClaySoldierEntity;
 import net.bumblebee.claysoldiers.kingdom.KingFounding;
 import net.bumblebee.claysoldiers.kingdom.Kingdom;
@@ -74,6 +77,7 @@ public class KingFoundingGameTests {
     @AfterBatch(batch = FOUND_BATCH)
     public static void stopFounding(ServerLevel level) {
         KingFounding.enableInTestsForTests(false);
+        Kingdoms.byTeam(level.getServer(), YELLOW).ifPresent(kingdom -> Kingdoms.disband(level.getServer(), YELLOW, null));
     }
 
     private static final String RUINS_BATCH = "king_founding_ruins";
@@ -93,6 +97,8 @@ public class KingFoundingGameTests {
         oldKing.kill();
         Kingdom ruins = Kingdoms.byTeam(server(helper), YELLOW).orElseThrow();
         helper.assertTrue(ruins.status() == KingdomStatus.RUINED, "Setup: the kingdom isn't ruined but " + ruins.status());
+        DebugLog.reset();
+        DebugLog.setEnabled(DebugCategory.byId("KINGDOM").orElseThrow(), true, server(helper));
         KingFounding.enableInTestsForTests(true);
         ClaySoldierEntity newKing = KingdomGameTests.DevSoldier.spawnPlain(helper, new BlockPos(14, 13, 14), YELLOW);
         newKing.equipItemIfPossible(new ItemStack(Items.GOLD_INGOT));
@@ -100,8 +106,10 @@ public class KingFoundingGameTests {
         helper.succeedWhen(() -> {
             Kingdom kingdom = Kingdoms.byTeam(server(helper), YELLOW).orElseThrow();
             helper.assertTrue(kingdom.status() == KingdomStatus.ACTIVE && kingdom.king().id().equals(newKing.getUUID()),
-                    "No new kingdom around the new king yet; he is at " + newKing.blockPosition().toShortString());
+                    "No new kingdom around the new king yet; he is at " + newKing.blockPosition().toShortString()
+                            + ". Recorded: " + DebugLog.lastEvents(12).stream().map(DebugEvent::toLine).toList());
             KingFounding.enableInTestsForTests(false);
+            DebugLog.reset();
             clear(helper, YELLOW);
         });
     }
@@ -109,6 +117,9 @@ public class KingFoundingGameTests {
     @AfterBatch(batch = RUINS_BATCH)
     public static void stopFoundingAfterRuins(ServerLevel level) {
         KingFounding.enableInTestsForTests(false);
+        DebugLog.reset();
+        // A failed run must not leave its claim (radius 32) in the way of later tests' foundings.
+        Kingdoms.byTeam(level.getServer(), YELLOW).ifPresent(kingdom -> Kingdoms.disband(level.getServer(), YELLOW, null));
     }
 
     /**
