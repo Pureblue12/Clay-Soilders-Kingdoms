@@ -11,7 +11,28 @@
 cd "$(dirname "$0")/.." || exit 2
 mkdir -p build
 rm -rf neoforge/runs/gametest/world
-./gradlew :neoforge:runGameTestServer > build/suite.log 2>&1
+# SUITE_MINUTES (CI sets 30): a test server still running after that long is stuck or crawling. Its threads are dumped
+# (build/threads.log; the server thread is printed) with the log's last lines, then it is stopped, so the run says where.
+./gradlew :neoforge:runGameTestServer > build/suite.log 2>&1 &
+gradle=$!
+if [ -n "$SUITE_MINUTES" ] && [ "$SUITE_MINUTES" -gt 0 ]; then
+    deadline=$(( $(date +%s) + SUITE_MINUTES * 60 ))
+    while kill -0 $gradle 2>/dev/null && [ "$(date +%s)" -lt "$deadline" ]; do sleep 5; done
+    if kill -0 $gradle 2>/dev/null; then
+        echo "SUITE STILL RUNNING AFTER $SUITE_MINUTES MINUTES; thread dumps in build/threads.log"
+        : > build/threads.log
+        for pid in $(pgrep -f java); do
+            echo "=== java $pid: $(tr '\0' ' ' < /proc/$pid/cmdline | cut -c1-200)" >> build/threads.log
+            jcmd "$pid" Thread.print >> build/threads.log 2>&1
+        done
+        awk '/^"Server thread"/{p=1} p&&/^$/{exit} p' build/threads.log | head -n 80
+        echo "--- last lines of build/suite.log:"
+        tail -n 80 build/suite.log | cut -c1-400
+        pkill -P $gradle; kill $gradle; pkill -f runGameTestServer; pkill -f GameTestServer
+        exit 1
+    fi
+fi
+wait $gradle
 failed=$(grep -E "LogTestReporter\]: [a-z0-9_]+ failed at" build/suite.log | sed -E 's/.*LogTestReporter\]: ([a-z0-9_]+) failed at.*/\1/' | sort -u)
 optional=$(grep -E "LogTestReporter\]: \(optional\) [a-z0-9_]+ failed at" build/suite.log | sed -E 's/.*\(optional\) ([a-z0-9_]+) failed at.*/\1/' | sort -u)
 [ -n "$optional" ] && echo "optional failed (not counted): $(echo $optional)"

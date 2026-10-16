@@ -38,6 +38,8 @@ jobs:
 
       - name: GameTests and build
         run: tools/suite.sh
+        env:
+          SUITE_MINUTES: 30
 
       # Builder tests that end a few blocks short write "CSR stall report" lines (BuildStallReport), and recording tests
       # (KeepFallGameTests) write theirs on every run: show them here, so they can be read without downloading the logs,
@@ -55,4 +57,5 @@ jobs:
           path: |
             build/suite.log
             build/build.log
+            build/threads.log
           if-no-files-found: ignore

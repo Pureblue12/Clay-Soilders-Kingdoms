@@ -4,6 +4,7 @@ import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugEvent;
 import net.bumblebee.claysoldiers.debug.DebugLog;
+import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
 import net.bumblebee.claysoldiers.entity.soldier.ClaySoldierEntity;
 import net.bumblebee.claysoldiers.kingdom.KingFounding;
 import net.bumblebee.claysoldiers.kingdom.Kingdom;
@@ -11,6 +12,7 @@ import net.bumblebee.claysoldiers.kingdom.KingdomBuilding;
 import net.bumblebee.claysoldiers.kingdom.KingdomEconomy;
 import net.bumblebee.claysoldiers.kingdom.KingdomKeep;
 import net.bumblebee.claysoldiers.kingdom.Kingdoms;
+import net.bumblebee.claysoldiers.kingdom.Meals;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.AfterBatch;
@@ -25,6 +27,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -107,6 +110,10 @@ public class KingdomStoryGameTests {
 
         int[] ticks = {0};
         boolean[] done = {false};
+        // Whether a cottage builder was seen well fed (Meals). Looked at directly: scanning the recorder's 50,000 events
+        // every 20 ticks made the run crawl once everything else was done.
+        boolean[] fed = {false};
+        AABB area = new AABB(helper.absolutePos(CENTER)).inflate(40);
         // A replanted sapling may grow into a tree again before the story ends: remember each tree once it was felled.
         Set<BlockPos> felled = new HashSet<>();
         perTick = () -> {
@@ -122,8 +129,11 @@ public class KingdomStoryGameTests {
             KingdomEconomy.update(level, found.get());
             List<KingdomBuilding> buildings = found.get().buildings();
             trees.stream().filter(base -> level.getBlockState(base).is(Blocks.OAK_SAPLING)).forEach(felled::add);
+            if (!fed[0]) {
+                fed[0] = !level.getEntitiesOfClass(AbstractClaySoldierEntity.class, area, Meals::isWellFed).isEmpty();
+            }
             if (buildings.size() == 4 && buildings.stream().allMatch(b -> b.state() == KingdomBuilding.State.BUILT) && felled.size() >= 2
-                    && DebugLog.contains(DebugCategory.ECONOMY, "well fed")) {
+                    && fed[0]) {
                 done[0] = true;
                 perTick = null;
                 helper.succeed();
@@ -132,13 +142,13 @@ public class KingdomStoryGameTests {
         helper.runAtTickTime(TIMEOUT - 20, () -> {
             if (!done[0]) {
                 perTick = null;
-                helper.fail(story(level, trees, felled));
+                helper.fail(story(level, trees, felled, fed[0]));
             }
         });
     }
 
     /** Where the story stands, for the failure message. */
-    private static String story(ServerLevel level, List<BlockPos> trees, Set<BlockPos> felled) {
+    private static String story(ServerLevel level, List<BlockPos> trees, Set<BlockPos> felled, boolean fed) {
         MinecraftServer server = level.getServer();
         Optional<Kingdom> kingdom = Kingdoms.byTeam(server, TEAM);
         if (kingdom.isEmpty()) {
@@ -150,7 +160,7 @@ public class KingdomStoryGameTests {
         lines.addAll(KingdomEconomy.describe(server, kingdom.get()).stream().map(line -> "Economy: " + line).toList());
         lines.add("Trees felled and replanted: " + felled.size() + " of " + trees.size());
         lines.add("Stockpile: " + kingdom.get().stockpile());
-        lines.add("Cottage builders fed: " + DebugLog.contains(DebugCategory.ECONOMY, "well fed"));
+        lines.add("Cottage builders fed: " + fed + " (recorded: " + DebugLog.contains(DebugCategory.ECONOMY, "well fed") + ")");
         for (BlockPos tree : trees) {
             lines.add("Tree at " + tree.toShortString() + ": " + name(level, tree.below()) + " / " + name(level, tree) + " / "
                     + name(level, tree.above(3)) + " / " + name(level, tree.above(4)));
