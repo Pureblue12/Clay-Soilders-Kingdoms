@@ -5,6 +5,7 @@
 #   CSR_STRUCTURE_BUILDS=all        every structure level
 #   CSR_STRUCTURE_BUILDS=2/20       shard 2 of 20 (CI splits the work over up to 20 machines)
 #   CSR_STRUCTURE_BUILDS_ONLY=keep,church   optional: only these structure ids (keep:2 = only its level 2)
+#   CSR_STRUCTURE_BUILDS_SKIP=keep:3        optional: leave these out (CI skips keep L3 in automatic runs that cannot affect it)
 #   CSR_STRUCTURE_BUILD_MINUTES=45  optional: real-time budget per build, then it ends as "too slow" (default 45, 0 = none)
 # The test server ticks as fast as it can while these run (StructureBuildSprint); results are in ticks, not affected.
 # Example: CSR_STRUCTURE_BUILDS=all CSR_STRUCTURE_BUILDS_ONLY=keep tools/structure_builds.sh

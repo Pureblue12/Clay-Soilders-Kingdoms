@@ -77,7 +77,8 @@ them in its "Stall reports" step. GitHub's machines are slower: the one wall-clo
 `k/n`; `CSR_STRUCTURE_BUILDS_ONLY=keep,church` limits them, `keep:2` to one level) and are optional. Run `tools/structure_builds.sh`
 (writes `build/structure-results.tsv`) or the GitHub workflow "Structure builds" (`.github/workflows/structure-builds.yml`,
 one machine per build up to 20, a result table per structure in the run summary; runs when structure files or the test
-change, or by hand). While they run, the test server ticks as fast as it can (`StructureBuildSprint`, like `/tick sprint`;
+change, or by hand). Automatic runs skip keep L3 (`CSR_STRUCTURE_BUILDS_SKIP=keep:3`; it alone fills a machine's 45 minutes)
+unless the change touches Java code, tuning or the keep's own files; a run by hand always builds it. While they run, the test server ticks as fast as it can (`StructureBuildSprint`, like `/tick sprint`;
 results are in ticks, so only wall-clock time changes).
 
 Before any game test: `python3 tools/buildability.py [ids]` (standard library, no Gradle, about 2 minutes for all 156 levels
