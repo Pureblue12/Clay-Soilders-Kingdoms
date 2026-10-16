@@ -71,7 +71,7 @@ public class KingdomStoryGameTests {
     @Nullable
     private static volatile Runnable perTick;
 
-    @GameTest(template = StructureBuildGameTests.TEMPLATE, batch = BATCH, timeoutTicks = TIMEOUT)
+    @GameTest(template = "gametest/structure_build", batch = BATCH, timeoutTicks = TIMEOUT)
     public static void kingdomGrowsFromOneGoldIngot(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         MinecraftServer server = level.getServer();
