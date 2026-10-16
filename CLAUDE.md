@@ -190,6 +190,10 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
   straight to the nearest free block of that item in the same layer it can reach (`ServerBlueprintPlan.getFollowUpRequest`:
   no doors, nothing over a spot still to fill); only when there is none does it walk back and put the rest in the chest
   (`followUpIsNearestInTheSameLayer`, `builderPlacesARowWithOneTripToTheChest`).
+- Fixed (kingdom builders far from the easel, 2026-10-16 in-game recording): a builder looks for its easel only within 8
+  blocks of where it stands, so a kingdom's builders picked farther from the keep's easel stood still forever. A builder
+  with no easel near it now walks to its chest (beside the easel) first, BUILD event "no easel within 8, walking to its
+  chest" (`builderFarFromItsEaselWalksThereAndBuilds`).
 - Fixed (door race): doors-last only ordered the list, so a door could be handed out while other blocks were
   still being carried (a glass pane got locked out in the 08:03 recording). Now `ServerBlueprintPlan.getRequest`
   hands out a door only when no other (non-door) block with a free spot remains; doors don't wait for each

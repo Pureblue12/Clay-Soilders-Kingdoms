@@ -111,6 +111,24 @@ public class BuildRequestGameTests {
         });
     }
 
+    /**
+     * BUG TEST (2026-10-16, Carlton's game, recording csr-debug-2026-10-16_16-13-02): a builder looks for its easel only
+     * within its search range (8) of where it stands, so a kingdom's builders picked farther away from the keep's easel
+     * never started. A builder with no easel near it walks to its chest (beside the easel) first.
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 600)
+    public static void builderFarFromItsEaselWalksThereAndBuilds(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "far", 1, 1, 1, new BlockPos(0, 0, 0));
+        BlockPos chestPos = helper.absolutePos(ClaySoldierGameTests.CHEST);
+        DevScenarios.placeChest(level, chestPos, List.of(new ItemStack(Items.COBBLESTONE, 1)));
+        EaselBlockEntity easel = DevScenarios.placeEasel(level, helper.absolutePos(EASEL), Direction.NORTH, blueprint);
+        // 9 blocks east of the easel and 5 north: outside the builder's easel search around itself.
+        DevScenarios.spawnWorker(level, helper.absolutePos(new BlockPos(14, GROUND_Y, 0)), DevScenarios.RED_TEAM,
+                ClaySoldierGameTests.owner(level), BuildBlueprintGoal.class, chestPos);
+        helper.succeedWhen(() -> helper.assertTrue(easel.isFinished(), "The builder far from the easel never built its block"));
+    }
+
     @GameTest(template = PLATFORM)
     public static void placedAtRequestedSpot(GameTestHelper helper) {
         BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "two_spots", 1, 1, 3,

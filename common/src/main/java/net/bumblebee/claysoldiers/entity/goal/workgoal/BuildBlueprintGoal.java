@@ -192,6 +192,13 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         if (easelPos == null) {
             setStatus(REQUIRES_POI_ID);
             easelPos = findNearestBlock().map(this::getBlueprintCache).orElse(null);
+            if (easelPos == null && getPoiPos() != null && soldier.getNavigation().isDone()
+                    && !getPoiPos().closerToCenterThan(soldier.position(), 2f)) {
+                // The easel is only searched for around the builder: one picked far from it (a kingdom's builders) first
+                // walks to its chest, which stands by the easel.
+                DebugLog.event(DebugCategory.BUILD, soldier, "no easel within %s, walking to its chest at %s", searchRange, getPoiPos());
+                moveToPoi();
+            }
             return;
         }
 
