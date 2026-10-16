@@ -100,7 +100,7 @@ public class KingFoundingGameTests {
         DebugLog.reset();
         DebugLog.setEnabled(DebugCategory.byId("KINGDOM").orElseThrow(), true, server(helper));
         KingFounding.enableInTestsForTests(true);
-        ClaySoldierEntity newKing = KingdomGameTests.DevSoldier.spawnPlain(helper, new BlockPos(14, 13, 14), YELLOW);
+        ClaySoldierEntity newKing = KingdomGameTests.DevSoldier.spawnPlain(helper, new BlockPos(16, 13, 16), YELLOW);
         newKing.equipItemIfPossible(new ItemStack(Items.GOLD_INGOT));
         helper.assertTrue(KingFounding.founding(newKing), "A new king of a ruined kingdom doesn't go founding");
         helper.succeedWhen(() -> {
