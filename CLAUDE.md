@@ -193,7 +193,10 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
 - Fixed (kingdom builders far from the easel, 2026-10-16 in-game recording): a builder looks for its easel only within 8
   blocks of where it stands, so a kingdom's builders picked farther from the keep's easel stood still forever. A builder
   with no easel near it now walks to its chest (beside the easel) first, BUILD event "no easel within 8, walking to its
-  chest" (`builderFarFromItsEaselWalksThereAndBuilds`).
+  chest" (`builderFarFromItsEaselWalksThereAndBuilds`). Also, a builder worked for the easel nearest to ITSELF, so the
+  lumber camp's builders, picked while standing at the finished keep, kept asking the keep's easel: a builder now looks
+  for its easel around its chest first, then around itself, and again when its chest changes
+  (`builderWorksForTheEaselBesideItsChest`).
 - Fixed (door race): doors-last only ordered the list, so a door could be handed out while other blocks were
   still being carried (a glass pane got locked out in the 08:03 recording). Now `ServerBlueprintPlan.getRequest`
   hands out a door only when no other (non-door) block with a free spot remains; doors don't wait for each
