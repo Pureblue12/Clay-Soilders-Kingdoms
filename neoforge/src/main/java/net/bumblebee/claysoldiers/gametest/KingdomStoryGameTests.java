@@ -75,7 +75,8 @@ public class KingdomStoryGameTests {
     @Nullable
     private static volatile Runnable perTick;
 
-    @GameTest(template = "gametest/structure_build", batch = BATCH, timeoutTicks = TIMEOUT)
+    /** Open sky: under the framework's barrier roof the site search takes the roof for the ground and the keep goes up there. */
+    @GameTest(template = "gametest/structure_build", batch = BATCH, timeoutTicks = TIMEOUT, skyAccess = true)
     public static void kingdomGrowsFromOneGoldIngot(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         MinecraftServer server = level.getServer();
