@@ -55,7 +55,8 @@ on:
 
 # A newer push to the same branch cancels the older run.
 concurrency:
-  group: structure-builds-${{ github.ref }}
+  # Experiments with different inputs on one branch run side by side.
+  group: structure-builds-${{ github.ref }}-${{ inputs.tuning }}-${{ inputs.jfr }}
   cancel-in-progress: true
 
 env:
