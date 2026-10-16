@@ -95,6 +95,19 @@ public final class KingdomKeep {
     private KingdomKeep() {
     }
 
+    @Nullable
+    private static ResourceLocation keepForTests;
+
+    /** The structure a kingdom builds as its keep: the keep, or a small stand-in a GameTest set. */
+    public static ResourceLocation keepStructure() {
+        return keepForTests != null ? keepForTests : KEEP;
+    }
+
+    /** GameTests only: kingdoms build {@code structure} as their keep ({@code null}: the real keep again). */
+    public static void useKeepForTests(@Nullable ResourceLocation structure) {
+        keepForTests = structure;
+    }
+
     /**
      * Called every server tick: every {@code kingdom.keep.check_ticks}, each active kingdom looks after its keep, then its
      * economy (stage 5, {@link KingdomEconomy}).
@@ -145,9 +158,9 @@ public final class KingdomKeep {
 
     /** Plans the keep with the tuning's level: picks and levels the site, places the easel and chest. */
     public static boolean plan(ServerLevel level, Kingdom kingdom) {
-        Optional<StructureMeta> meta = StructureRegistry.get(level.getServer()).byId(KEEP).filter(StructureMeta::isReady);
+        Optional<StructureMeta> meta = StructureRegistry.get(level.getServer()).byId(keepStructure()).filter(StructureMeta::isReady);
         if (meta.isEmpty()) {
-            return problem(kingdom, "the keep structure " + KEEP + " isn't loaded");
+            return problem(kingdom, "the keep structure " + keepStructure() + " isn't loaded");
         }
         if (!ClaySoldiersCommon.COMMON_HOOKS.isBlueprintEnabled(level.enabledFeatures())) {
             return problem(kingdom, "blueprints are off in this world (the blueprint experiment), so soldiers can't build");
@@ -180,7 +193,7 @@ public final class KingdomKeep {
         DebugLog.event(DebugCategory.TERRAIN, null, () -> "levelled the keep site of %s: %s; filled %d, cleared %d, logs to the stockpile %s"
                 .formatted(kingdom.team(), choice.describe(), levelled.filled(), levelled.cleared(), levelled.logs()));
         BlockPos easel = new BlockPos(choice.easelX(), choice.groundY() + 1, choice.easelZ());
-        if (!start(level, kingdom, KEEP, detail, blueprint, easel, choice.area().facing())) {
+        if (!start(level, kingdom, keepStructure(), detail, blueprint, easel, choice.area().facing())) {
             return false;
         }
         grantMaterials(level, kingdom, detail);
@@ -528,7 +541,7 @@ public final class KingdomKeep {
 
     /** Everything the keep needs at its detail level, with the scaffold stock when it is taller than builders reach. */
     public static List<ItemStack> materials(ServerLevel level, int detail) {
-        Optional<StructureMeta> meta = StructureRegistry.get(level.getServer()).byId(KEEP).filter(StructureMeta::isReady);
+        Optional<StructureMeta> meta = StructureRegistry.get(level.getServer()).byId(keepStructure()).filter(StructureMeta::isReady);
         if (meta.isEmpty()) {
             return List.of();
         }

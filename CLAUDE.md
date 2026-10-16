@@ -37,7 +37,7 @@ Starts a headless test server, runs every test in
 `DoorGameTests`, `TuningGameTests`, `StructureRegistryGameTests`, `StructurePasteGameTests`,
 `LayoutCheckerGameTests`, `KingdomDataGameTests`, `KingdomGameTests`, `KingdomBookGameTests`, `KingdomBookRefreshGameTests`, `TerrainScoreGameTests`, `TerrainScanGameTests`,
 `TerrainGradingGameTests`, `TerrainFoundingGameTests`, `ScaffoldPlannerGameTests`, `ScaffoldBuildGameTests`,
-`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `BuildPlanGameTests`, `KingdomKeepGameTests`, `KingFoundingGameTests`, `KingdomEconomyGameTests`), prints
+`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `BuildPlanGameTests`, `KingdomKeepGameTests`, `KingFoundingGameTests`, `KingdomEconomyGameTests`, `KingdomStoryGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Templates: `data/csr/structure/gametest/platform.nbt` (16x8x16) and `terrain.nbt` (32x16x32, for test terrains);
@@ -298,6 +298,10 @@ around the keep), `WoodCost` (the carpenter: wooden blocks from logs of any kind
 - New jobs are appended to the soldier's job list (saved job numbers of older jobs stay the same).
 - Dev book "Economy": look after it now, finish the current building (pastes it, keep included), supply the next building,
   ripen the fields.
+- `KingdomStoryGameTests.kingdomGrowsFromOneGoldIngot` plays the whole story like a player, no dev shortcuts: scattered
+  plain soldiers, a dropped gold ingot, then founding, keep, camp, field, woodcutters, farmer and a paid cottage, with small
+  stand-in structures (`KingdomKeep.useKeepForTests`, `KingdomEconomy.usePlanForTests`; `test_camp`, `test_field`,
+  `test_cottage`) on the 48x48 grass template; the server sprints through it. A change to any step's hand-over must keep it green.
 
 ### Terrain (stage 2 spike: site checks; soldiers don't grade yet)
 

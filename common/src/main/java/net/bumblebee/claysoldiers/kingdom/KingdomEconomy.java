@@ -112,6 +112,18 @@ public final class KingdomEconomy {
             new Slot(LUMBER_CAMP, 1, true, true, Job.WOODCUTTER),
             new Slot(WHEAT_FIELD, 1, true, true, Job.FARMER),
             new Slot(COTTAGE, 1, false, false, null));
+    @Nullable
+    private static List<Slot> planForTests;
+
+    /** The master plan kingdoms follow: {@link #PLAN}, or small stand-ins a GameTest set. */
+    public static List<Slot> plan() {
+        return planForTests != null ? planForTests : PLAN;
+    }
+
+    /** GameTests only: kingdoms follow {@code plan} after their keep ({@code null}: {@link #PLAN} again). */
+    public static void usePlanForTests(@Nullable List<Slot> plan) {
+        planForTests = plan == null ? null : List.copyOf(plan);
+    }
 
     private static final Map<UUID, MaterialSupply> SUPPLIES = new HashMap<>();
     private static final Map<UUID, Long> NEXT_PLAN = new HashMap<>();
@@ -171,7 +183,7 @@ public final class KingdomEconomy {
 
     /** The master plan's next building the kingdom hasn't started, if any. */
     public static Optional<Slot> next(Kingdom kingdom) {
-        for (Slot slot : PLAN) {
+        for (Slot slot : plan()) {
             if (kingdom.buildings().stream().noneMatch(building -> building.structure().equals(slot.structure()))) {
                 return Optional.of(slot);
             }
@@ -400,7 +412,7 @@ public final class KingdomEconomy {
     /** While nothing is being built, idle soldiers become woodcutters and farmers at the finished buildings with jobs. */
     private static void assignWorkers(ServerLevel level, Kingdom kingdom) {
         Map<Job, Integer> counts = new LinkedHashMap<>();
-        for (Slot slot : PLAN) {
+        for (Slot slot : plan()) {
             if (slot.job() == null) {
                 continue;
             }
@@ -617,7 +629,7 @@ public final class KingdomEconomy {
 
     /** Adds the logs and wheat the next paid building still waits for (dev); returns what was added. */
     public static String supplyNext(ServerLevel level, Kingdom kingdom) {
-        Optional<Slot> next = PLAN.stream().filter(slot -> !slot.starter()
+        Optional<Slot> next = plan().stream().filter(slot -> !slot.starter()
                 && kingdom.buildings().stream().noneMatch(building -> building.structure().equals(slot.structure()))).findFirst();
         Optional<Need> need = next.flatMap(slot -> need(level, slot));
         if (need.isEmpty()) {
@@ -641,7 +653,7 @@ public final class KingdomEconomy {
         for (KingdomBuilding building : kingdom.buildings()) {
             Optional<BoundingBox> bounds = bounds(level, building);
             if (building.state() != KingdomBuilding.State.BUILT || bounds.isEmpty()
-                    || PLAN.stream().noneMatch(slot -> slot.job() == Job.FARMER && slot.structure().equals(building.structure()))) {
+                    || plan().stream().noneMatch(slot -> slot.job() == Job.FARMER && slot.structure().equals(building.structure()))) {
                 continue;
             }
             BoundingBox box = bounds.get();
@@ -671,7 +683,7 @@ public final class KingdomEconomy {
             return lines;
         }
         ServerLevel level = server.getLevel(kingdom.dimension());
-        for (Slot slot : PLAN) {
+        for (Slot slot : plan()) {
             Optional<KingdomBuilding> building = kingdom.buildings().stream().filter(b -> b.structure().equals(slot.structure())).findFirst();
             String state;
             if (building.isEmpty()) {
