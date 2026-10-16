@@ -142,9 +142,17 @@ public class KingdomStoryGameTests {
                     && fed[0]) {
                 done[0] = true;
                 perTick = null;
-                helper.succeed();
             }
         };
+        // The framework only reports a pass made during the test's own tick: succeed() from the server tick event above
+        // marked the test done without telling its batch, and the suite waited forever. So the test's ticks pass it.
+        for (int tick = 100; tick < TIMEOUT - 20; tick += 100) {
+            helper.runAtTickTime(tick, () -> {
+                if (done[0]) {
+                    helper.succeed();
+                }
+            });
+        }
         helper.runAtTickTime(TIMEOUT - 20, () -> {
             if (!done[0]) {
                 perTick = null;

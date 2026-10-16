@@ -42,7 +42,10 @@ Starts a headless test server, runs every test in
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Templates: `data/csr/structure/gametest/platform.nbt` (16x8x16) and `terrain.nbt` (32x16x32, for test terrains);
 regenerate with `tools/make_gametest_platform.py` (size arguments: see the script). `tools/suite.sh` deletes the test
-world first, so every run starts fresh.
+world first, so every run starts fresh. With `SUITE_MINUTES` set (CI: 15) a test server still running after that long is
+stopped, after printing samples of its server thread, batch starts, failures and the story test's progress lines. A test
+must pass or fail inside its own tick (`runAtTickTime`, `onEachTick`): `helper.succeed()` from a server tick event marks it
+done without telling its batch, and the suite never ends.
 
 GitHub Actions (`.github/workflows/ci.yml`) runs `runData` then `tools/suite.sh` on every push to `main` and every pull
 request; the logs (`build/suite.log`, `build/build.log`) are attached to the run as `suite-logs`. Builder tests that
