@@ -17,8 +17,8 @@ import java.util.UUID;
 
 /**
  * One kingdom: a team's claimed land around where its king stood when it was founded. Saved in the world
- * ({@link KingdomSavedData}). No building or economy behavior yet (stage 1): this is data that exists, persists and
- * can be observed. Change it through {@code Kingdoms}, which marks the data for saving and records events.
+ * ({@link KingdomSavedData}). Stage 1 made it data that exists, persists and can be observed; stage 4 adds the keep its
+ * builders build ({@code KingdomKeep}). Change it through {@code Kingdoms}, which marks the data for saving and records events.
  */
 public final class Kingdom {
     private final UUID id;
@@ -208,6 +208,16 @@ public final class Kingdom {
 
     public void addBuilding(KingdomBuilding building) {
         buildings.add(building);
+    }
+
+    /** Replaces {@code old} (the same record) with {@code building}; returns false when {@code old} isn't there. */
+    boolean replaceBuilding(KingdomBuilding old, KingdomBuilding building) {
+        int index = buildings.indexOf(old);
+        if (index < 0) {
+            return false;
+        }
+        buildings.set(index, building);
+        return true;
     }
 
     public Census census() {

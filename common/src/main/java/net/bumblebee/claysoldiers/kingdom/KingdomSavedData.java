@@ -34,7 +34,7 @@ import java.util.Optional;
 public class KingdomSavedData extends SavedData {
     public static final String NAME = "csr_kingdoms";
     /** Version of the saved format. Raise it (and write a migration note) whenever the format changes. */
-    public static final int DATA_VERSION = 1;
+    public static final int DATA_VERSION = 2;
     static final String VERSION_TAG = "csr_data_version";
     static final String KINGDOMS_TAG = "kingdoms";
 

@@ -9,6 +9,7 @@ import net.bumblebee.claysoldiers.kingdom.ChronicleEntry;
 import net.bumblebee.claysoldiers.kingdom.Kingdom;
 import net.bumblebee.claysoldiers.kingdom.KingdomBook;
 import net.bumblebee.claysoldiers.kingdom.KingdomStatus;
+import net.bumblebee.claysoldiers.kingdom.KingdomKeep;
 import net.bumblebee.claysoldiers.kingdom.Kingdoms;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -24,12 +25,14 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
 /**
- * {@code /csr kingdom ...}: found, disband, book, status, list (any player: they only act on teams loyal to you, or
- * just show), and goto_king and found force (operators, permission 2). Registered in every install, not only dev.
+ * {@code /csr kingdom ...}: found, disband, book, status, list (any player), and goto_king and found force (operators,
+ * permission 2). Registered in every install, not only dev. Kingdoms belong to no player (D93): without a team, a
+ * command acts on the kingdom you stand in, else the nearest one.
  */
 public final class KingdomCommand {
     private static final String TEAM = "team";
@@ -88,7 +91,7 @@ public final class KingdomCommand {
     }
 
     /**
-     * Without a team: the kingdom of the team loyal to you. With a team: you must be its loyal player or an operator.
+     * Without a team: the kingdom you stand in, else the nearest one in your dimension. Any player may disband (D93).
      */
     private static int disband(CommandContext<CommandSourceStack> context, @Nullable ResourceLocation team) {
         CommandSourceStack source = context.getSource();
@@ -97,12 +100,7 @@ public final class KingdomCommand {
         Optional<Kingdom> kingdom = team != null ? Kingdoms.byTeam(server, team) : ownKingdom(source);
         if (kingdom.isEmpty()) {
             source.sendFailure(Component.literal(team != null ? Kingdoms.teamName(server, team) + " has no kingdom."
-                    : "None of your teams has a kingdom. (Give the team: /csr kingdom disband <team>)"));
-            return 0;
-        }
-        boolean allowed = source.hasPermission(2) || (player != null && Kingdoms.isLoyalTo(source.getLevel(), kingdom.get().team(), player));
-        if (!allowed) {
-            source.sendFailure(Component.literal("Only the player " + Kingdoms.teamName(server, kingdom.get().team()) + " is loyal to (or an operator) can disband it."));
+                    : "There is no kingdom here. (Give the team: /csr kingdom disband <team>)"));
             return 0;
         }
         Kingdoms.Result result = Kingdoms.disband(server, kingdom.get().team(), player);
@@ -147,6 +145,7 @@ public final class KingdomCommand {
                 "Stockpile: " + (kingdom.stockpile().isEmpty() ? "empty" : kingdom.stockpile().toString()),
                 "Buildings: " + kingdom.buildings().size() + ", chronicle lines: " + kingdom.chronicle().size());
         lines.forEach(line -> context.getSource().sendSuccess(() -> Component.literal(line), false));
+        KingdomKeep.describe(server, kingdom).forEach(line -> context.getSource().sendSuccess(() -> Component.literal("Keep: " + line), false));
         return 1;
     }
 
@@ -184,7 +183,7 @@ public final class KingdomCommand {
     }
 
     /**
-     * The kingdom named by {@code team}; without a team the one you stand in, else the one of a team loyal to you.
+     * The kingdom named by {@code team}; without a team the one you stand in, else the nearest one in your dimension.
      * Sends a failure message when there is none.
      */
     public static Optional<Kingdom> pick(CommandSourceStack source, @Nullable ResourceLocation team) {
@@ -193,16 +192,17 @@ public final class KingdomCommand {
                 : Kingdoms.at(server, source.getLevel().dimension(), BlockPos.containing(source.getPosition())).or(() -> ownKingdom(source));
         if (kingdom.isEmpty()) {
             source.sendFailure(Component.literal(team != null ? Kingdoms.teamName(server, team) + " has no kingdom."
-                    : "You're not in a kingdom and none of your teams has one. (/csr kingdom list shows them all.)"));
+                    : "There is no kingdom in this dimension. (/csr kingdom list shows them all.)"));
         }
         return kingdom;
     }
 
+    /** The kingdom you stand in, else the nearest active one in your dimension. */
     private static Optional<Kingdom> ownKingdom(CommandSourceStack source) {
-        ServerPlayer player = source.getPlayer();
-        if (player == null) {
-            return Optional.empty();
-        }
-        return Kingdoms.all(source.getServer()).stream().filter(kingdom -> Kingdoms.isLoyalTo(source.getLevel(), kingdom.team(), player)).findFirst();
+        MinecraftServer server = source.getServer();
+        BlockPos at = BlockPos.containing(source.getPosition());
+        return Kingdoms.at(server, source.getLevel().dimension(), at).or(() -> Kingdoms.all(server).stream()
+                .filter(kingdom -> kingdom.dimension().equals(source.getLevel().dimension()))
+                .min(Comparator.comparingDouble(kingdom -> kingdom.center().distSqr(at))));
     }
 }

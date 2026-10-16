@@ -5,6 +5,7 @@ import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
 import net.bumblebee.claysoldiers.entity.soldier.status.SoldierStatusHolder;
+import net.bumblebee.claysoldiers.kingdom.Kingdoms;
 import net.bumblebee.claysoldiers.util.ErrorHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -139,7 +140,8 @@ public class WorkSelectorGoal extends Goal implements SoldierStatusHolder {
         if (soldier.isOrderedToSit()) {
             return false;
         }
-        if (soldier.getClayTeamOwnerUUID() == null) {
+        // Upstream: only soldiers of a team loyal to a player work. A kingdom's soldiers work for their kingdom (D93).
+        if (soldier.getClayTeamOwnerUUID() == null && !Kingdoms.hasActiveKingdom(soldier)) {
             return false;
         }
         if (workIndex >= 0 && soldier.getAttackType().canWork() && checkGoal(predicate)) {

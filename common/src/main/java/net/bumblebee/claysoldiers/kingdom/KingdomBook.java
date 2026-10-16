@@ -145,6 +145,9 @@ public final class KingdomBook {
         }
         pages.addAll(listPages("Buildings", buildings, MAX_LIST_PAGES));
 
+        List<Component> keep = KingdomKeep.describe(server, kingdom).stream().map(line -> (Component) Component.literal(line)).toList();
+        pages.addAll(listPages("Keep", keep, MAX_LIST_PAGES));
+
         pages.addAll(chroniclePages(kingdom, BookFormat.MAX_PAGES - pages.size()));
         return pages;
     }
