@@ -71,7 +71,7 @@ final class BuildStallReport {
             }
         }
         boolean[] done = {false};
-        helper.onEachTick(() -> {
+        EveryTick.run(helper, () -> {
             if (done[0]) {
                 return;
             }

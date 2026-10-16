@@ -58,6 +58,7 @@
   "build.plan_spots_first": 0,
   "build.pause_ticks": 6,
   "build.walk_speed_spread_percent": 10,
+  "build.walk_speed_percent": 100,
   "build.carry_count": 16,
   "build.carry_max_ticks": 2000,
   "work.fall_damage_percent": 100,

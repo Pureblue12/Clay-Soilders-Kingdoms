@@ -84,6 +84,11 @@ public abstract class AbstractWorkGoal extends Goal implements IWorkGoal {
         return false;
     }
 
+    /** The speed (a multiplier of the soldier's own) at which it walks to its poi. */
+    protected double poiSpeed() {
+        return 1.2;
+    }
+
     /**
      * Move this soldier to the poi, if there is one.
      * @return whether it has reached the poi.
@@ -95,7 +100,7 @@ public abstract class AbstractWorkGoal extends Goal implements IWorkGoal {
                 this.soldier.getNavigation().stop();
                 return true;
             } else {
-                this.soldier.getNavigation().moveTo(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 1.2);
+                this.soldier.getNavigation().moveTo(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, poiSpeed());
                 return false;
             }
         }
