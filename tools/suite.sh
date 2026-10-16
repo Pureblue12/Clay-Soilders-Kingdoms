@@ -11,7 +11,7 @@
 cd "$(dirname "$0")/.." || exit 2
 mkdir -p build
 rm -rf neoforge/runs/gametest/world
-# SUITE_MINUTES (CI sets 30): a test server still running after that long is stuck or crawling. Its threads are dumped
+# SUITE_MINUTES (CI sets 15): a test server still running after that long is stuck or crawling. Its threads are dumped
 # (build/threads.log; the server thread is printed) with the log's last lines, then it is stopped, so the run says where.
 ./gradlew :neoforge:runGameTestServer > build/suite.log 2>&1 &
 gradle=$!
@@ -26,8 +26,17 @@ if [ -n "$SUITE_MINUTES" ] && [ "$SUITE_MINUTES" -gt 0 ]; then
             jcmd "$pid" Thread.print >> build/threads.log 2>&1
         done
         awk '/^"Server thread"/{p=1} p&&/^$/{exit} p' build/threads.log | head -n 80
+        # Ten more samples of the server thread, two seconds apart: where a crawling server spends its time.
+        for i in 1 2 3 4 5 6 7 8 9 10; do
+            for pid in $(pgrep -f java); do
+                jcmd "$pid" Thread.print 2>/dev/null | awk '/^"Server thread"/{p=1} p&&/^$/{exit} p' | grep -m 14 "at " | sed "s/^/sample $i: /"
+            done
+            sleep 2
+        done
+        echo "--- story progress and failures so far:"
+        grep -E "CSR story|failed at|Running test batch" build/suite.log | sed -E 's/^\[[^]]*\] \[[^]]*\] \[[^]]*\]: //' | cut -c1-1500 | tail -n 60
         echo "--- last lines of build/suite.log:"
-        tail -n 80 build/suite.log | cut -c1-400
+        grep -v "GameTestServer\]: \[" build/suite.log | tail -n 60 | cut -c1-400
         pkill -P $gradle; kill $gradle; pkill -f runGameTestServer; pkill -f GameTestServer
         exit 1
     fi

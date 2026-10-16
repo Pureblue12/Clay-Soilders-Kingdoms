@@ -21,6 +21,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -116,9 +117,14 @@ public class KingdomStoryGameTests {
         AABB area = new AABB(helper.absolutePos(CENTER)).inflate(40);
         // A replanted sapling may grow into a tree again before the story ends: remember each tree once it was felled.
         Set<BlockPos> felled = new HashSet<>();
+        long[] lastLog = {System.currentTimeMillis()};
         perTick = () -> {
             if (done[0] || ++ticks[0] % 20 != 0) {
                 return;
+            }
+            if (ticks[0] % 1000 == 0) {
+                progress(level, area, ticks[0], System.currentTimeMillis() - lastLog[0], felled, fed[0]);
+                lastLog[0] = System.currentTimeMillis();
             }
             Optional<Kingdom> found = Kingdoms.byTeam(server, TEAM);
             if (found.isEmpty()) {
@@ -145,6 +151,20 @@ public class KingdomStoryGameTests {
                 helper.fail(story(level, trees, felled, fed[0]));
             }
         });
+    }
+
+    /** A line in the server log every 1,000 ticks: how far the story is and how long the last 1,000 ticks took in real time. */
+    private static void progress(ServerLevel level, AABB area, int tick, long millis, Set<BlockPos> felled, boolean fed) {
+        Optional<Kingdom> kingdom = Kingdoms.byTeam(level.getServer(), TEAM);
+        List<DebugEvent> events = DebugLog.events();
+        ClaySoldiersCommon.LOGGER.info("CSR story t={}: {} ms; buildings {}; felled {}; fed {}; soldiers {}; items {}; entities {}; events {}, last: {}",
+                tick, millis,
+                kingdom.map(k -> k.buildings().stream().map(b -> b.structure().getPath() + " " + b.state()).toList().toString()).orElse("no kingdom"),
+                felled.size(), fed,
+                level.getEntitiesOfClass(AbstractClaySoldierEntity.class, area).size(),
+                level.getEntitiesOfClass(ItemEntity.class, area).size(),
+                level.getEntities((Entity) null, area, entity -> true).size(),
+                events.size(), events.isEmpty() ? "-" : events.get(events.size() - 1).toLine());
     }
 
     /** Where the story stands, for the failure message. */
