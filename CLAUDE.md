@@ -37,7 +37,7 @@ Starts a headless test server, runs every test in
 `DoorGameTests`, `TuningGameTests`, `StructureRegistryGameTests`, `StructurePasteGameTests`,
 `LayoutCheckerGameTests`, `KingdomDataGameTests`, `KingdomGameTests`, `KingdomBookGameTests`, `KingdomBookRefreshGameTests`, `TerrainScoreGameTests`, `TerrainScanGameTests`,
 `TerrainGradingGameTests`, `TerrainFoundingGameTests`, `ScaffoldPlannerGameTests`, `ScaffoldBuildGameTests`,
-`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `BuildPlanGameTests`), prints
+`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `BuildPlanGameTests`, `KingdomKeepGameTests`, `KingFoundingGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Templates: `data/csr/structure/gametest/platform.nbt` (16x8x16) and `terrain.nbt` (32x16x32, for test terrains);
@@ -77,7 +77,8 @@ them in its "Stall reports" step. GitHub's machines are slower: the one wall-clo
 `k/n`; `CSR_STRUCTURE_BUILDS_ONLY=keep,church` limits them, `keep:2` to one level) and are optional. Run `tools/structure_builds.sh`
 (writes `build/structure-results.tsv`) or the GitHub workflow "Structure builds" (`.github/workflows/structure-builds.yml`,
 one machine per build up to 20, a result table per structure in the run summary; runs when structure files or the test
-change, or by hand). While they run, the test server ticks as fast as it can (`StructureBuildSprint`, like `/tick sprint`;
+change, or by hand). Automatic runs skip keep L3 (`CSR_STRUCTURE_BUILDS_SKIP=keep:3`; it alone fills a machine's 45 minutes)
+unless the change touches Java code, tuning or the keep's own files; a run by hand always builds it. While they run, the test server ticks as fast as it can (`StructureBuildSprint`, like `/tick sprint`;
 results are in ticks, so only wall-clock time changes). Their per-tick checks run through `gametest/EveryTick`, never `helper.onEachTick` or `succeedWhen`: with timeouts
 this long those two took 85% of the server's time (keep L3: 73 min, now 6).
 
@@ -229,24 +230,51 @@ Code: `common/.../kingdom/` (`Kingdom`, `KingdomSavedData`, `Kingdoms` service, 
 `common/.../commands/KingdomCommand`, game hooks `neoforge/.../event/KingdomEvents`. Decisions D16–D23.
 - **Saved:** `<world>/data/csr_kingdoms.dat`, format version `KingdomSavedData.DATA_VERSION` (1); see the migration
   notes in `docs/DECISIONS.md`. Any format change raises the version and adds a migration.
-- **At most one kingdom per team**, ACTIVE or RUINED. Change kingdoms only through `Kingdoms` (it marks the data
+- **At most one kingdom per team**, ACTIVE or RUINED; a new king of a team with a RUINED kingdom founds a new one in its place (D95). Change kingdoms only through `Kingdoms` (it marks the data
   dirty, writes the chronicle, records KINGDOM events).
-- **Founding** is explicit and reversible, never automatic:
-  - in game: sneak + right-click your own king (a clay soldier wearing a gold ingot, its team loyal to you) holding
-    a gold block;
-  - or `/csr kingdom found` (nearest loyal king within `kingdom.found_search_radius`).
+- **Founding** (D93, the owner's call 2026-10-16: "simply dropping a single gold piece to a soldier and the rest will take
+  care of itself"): a soldier who picks up a gold ingot is a king, and a king whose team has no kingdom founds one by
+  himself. He picks a spot at random among the good keep sites near him (`kingdom.found_pick_tolerance`), walks there and
+  founds the kingdom around himself (`KingFounding`, `KingFoundingGoal`); players near him are told. A spot he can't reach
+  (`kingdom.found_walk_ticks`) or where founding is refused is left out; after `kingdom.found_tries` in a row he rests
+  `kingdom.found_retry_ticks`. No team loyalty is involved anywhere in kingdoms: a kingdom's soldiers work without a loyal
+  player (`WorkSelectorGoal`). Kings in a GameTest server stay put unless a test calls `KingFounding.enableInTestsForTests`.
+  `/csr kingdom found` founds at once around the nearest king without a kingdom (within `kingdom.found_search_radius`).
 
-  Refused: unsupported dimension (Overworld only), not a living king, team not loyal to you, team already has a
-  kingdom, claim overlaps another kingdom, or the ground can't hold a keep (terrain check, below).
+  Refused: unsupported dimension (Overworld only), not a living king, team already has a kingdom, claim overlaps another
+  kingdom, or the ground can't hold a keep (terrain check, below).
+- **Bosses from eggs** (an original-mod feature: a soldier picking up an egg became a random clay boss that attacks
+  everyone; one killed the king in the owner's test) are off: `soldier.boss_from_eggs` 0 (`soldierpoi/BossEggs`, D94).
 - **The claim** is a circle of `kingdom.claim_radius` around the king, fixed at founding.
 - **The king's death** (NeoForge death event, lowest priority) sets RUINED and writes a chronicle line.
 - **Population** is counted every `kingdom.census_interval_ticks`, but only while the whole claim is loaded;
   otherwise the last count stays, with its time.
 - **Stockpile:** `Kingdoms.addResource` / `removeResource` (all or nothing, shortfall reported).
-- **Commands** (any player, every install): `/csr kingdom found | disband [team] | book [team] | status [team] | list`.
+- **Commands** (any player, every install): `/csr kingdom found | disband [team] | book [team] | status [team] | list`;
+  without a team they act on the kingdom you stand in, else the nearest one.
   `goto_king <team>` needs operators. The book (status page with "Go to the king", stockpile, buildings, chronicle)
   rewrites itself whenever it's opened, in the hand or on a lectern (D24).
 - **Dev only:** `/csr dev kingdom stock_add|stock_remove <resource> [amount]`, `stock_show` (book: Kingdom).
+
+### The kingdom builds its keep (stage 4)
+
+Code: `common/.../kingdom/KingdomKeep` (planner and server tick), `KeepSite` (pure site search), `KingdomStore`
+(stockpile as the builders' chest store, through `dev/MaterialSupply.Store`), `KeepThrone` (throne spot per structure level),
+`entity/goal/KingThroneGoal`. Decisions D88–D91, D93; numbers `kingdom.keep.*`, `kingdom.king_bonus_health`,
+`kingdom.throne_walk_ticks`.
+- Every `kingdom.keep.check_ticks` an active kingdom without a building plans its keep (master plan v0: the first
+  building is the keep): nearest flat ground to its center, levelled at once, easel + chest like `/csr build`. No site:
+  retried after `kingdom.keep.plan_retry_ticks`; the book's Keep page says why.
+- Builders: up to `kingdom.keep.builders` soldiers of the team in the claim with no job and no POI, not the king; wheat
+  holders first, the others are handed wheat (D93). Materials: when the keep starts, everything it needs goes into the
+  stockpile (`kingdom.keep.free_materials`, until stage 5's gathering); the chest is stocked from the stockpile; items
+  put in the chest that aren't needed soon go to the stockpile.
+- Finished (easel finished): BUILT, chronicle line, the kingdom puts a gold block (the throne) in its spot (keep L1: the
+  middle of the king's chamber; L2/L3: in place of the great hall's wooden throne), the king gets
+  +`kingdom.king_bonus_health` and stands on the gold block. Disbanding takes the health back.
+- The server tick does nothing in a GameTest server (other tests' kingdoms stay untouched): tests call
+  `KingdomKeep.update` themselves.
+- Saved: `KingdomBuilding.level` (kingdom data version 2). Supplies, crews and planning problems are memory only.
 
 ### Terrain (stage 2 spike: site checks; soldiers don't grade yet)
 
@@ -383,6 +411,7 @@ the time it was made; a different hash means the registry changed.
 | `/csr dev structure build <id> [level]` | 3 builders build a Studio structure (default: top level) ahead of you; the chest is refilled as it empties (book: Structures, "Builders build") |
 | `/csr dev structure undo` / `reload` / `list` | undo the last paste / re-read structures from disk / list all |
 | `/csr dev kingdom stock_add` / `stock_remove <resource> [amount]`, `stock_show` | test the stockpile of the kingdom you stand in (book: Kingdom, which also links `/csr kingdom found/book/status/disband`) |
+| `/csr dev kingdom keep_materials` / `keep_now` | put everything the keep needs in the stockpile / let the kingdom look after its keep at once (book: Kingdom) |
 | `/csr dev terrain scan` / `site` | scan the ground around you / score the keep site where you stand and show the best nearby (book: Terrain) |
 | `/csr dev terrain make <shape>` | build a test terrain 16 blocks ahead: slope, hill, cliff, lake_edge, forest, lava_pool, plateau |
 | `/csr dev scaffold build <shape> [height]` | test tower, wall or wall_tower (default 20 high) ahead of you: easel, stocked chest (cobblestone + 128 scaffolding), 3 builders (book: Scaffolding) |
@@ -572,4 +601,4 @@ Optional integrations (JEI, Jade, Accessories, Curios, Create, SmartBrainLib) ar
 - **Stage 3 (Tall construction spike) — done (2026-10-04, waiting for the in-game checklist):** research, scaffold
   planner (5 approaches), climbed scaffolding columns in game, saved jobs with cleanup, Scaffolding dev book category,
   SCAFFOLD recorder category. Recommendation and height rules in `docs/SCAFFOLDING.md`.
-- **Stage 4 (Tier-1 keep built autonomously) — next.**
+- **Stage 4 (Tier-1 keep built autonomously) — done (2026-10-16, passed the owner's in-game test):** see "The kingdom builds its keep".

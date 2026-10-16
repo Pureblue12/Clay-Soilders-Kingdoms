@@ -71,15 +71,41 @@ env:
 
 jobs:
   # How many machines: one per build, at most 20 (GitHub runs up to 20 jobs at once on a free account).
+  # Automatic runs (push, pull request) skip keep L3 unless the change can affect it: it alone takes the whole 45-minute
+  # budget on one machine, about 50 minutes of run time, while every other machine is done after about 20. A run by hand
+  # always builds it (if "only" picks it).
   plan:
     runs-on: ubuntu-latest
     outputs:
       count: ${{ steps.shards.outputs.count }}
       shards: ${{ steps.shards.outputs.shards }}
+      skip: ${{ steps.skip.outputs.skip }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: skip
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          # Keep L3 is built when the change touches code (builders, pathing, the build test), tuning, or the keep's own files.
+          affects='^(common/src/main/java/|neoforge/src/main/java/|common/src/main/resources/data/csr/tuning/|common/src/main/resources/data/csr/(structure/kingdom/studio|build_plan/kingdom/studio)/keep_|common/src/main/resources/data/csr/csr/structures/keep\.json)'
+          skip=""
+          if [ "$EVENT" != "workflow_dispatch" ]; then
+            if changed=$(git diff --name-only "$BASE...$HEAD" 2>/dev/null); then
+              if ! echo "$changed" | grep -qE "$affects"; then
+                skip="keep:3"
+              fi
+            fi
+          fi
+          echo "skip=$skip" >> "$GITHUB_OUTPUT"
+          if [ -n "$skip" ]; then
+            echo "Keep L3 skipped: nothing in this change can affect it (run the workflow by hand to build it)." | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
       - id: shards
-        run: python3 tools/structure_results.py shards "$CSR_STRUCTURE_BUILDS_ONLY" 20 >> "$GITHUB_OUTPUT"
+        run: python3 tools/structure_results.py shards "$CSR_STRUCTURE_BUILDS_ONLY" 20 "${{ steps.skip.outputs.skip }}" >> "$GITHUB_OUTPUT"
 
   # The static "can this be built" check (seconds per level, no game): which levels it expects to fail and why, in the
   # run summary next to the real results. Never fails the run; its verdicts are a model, the builds are the truth.
@@ -108,6 +134,7 @@ jobs:
         shard: ${{ fromJSON(needs.plan.outputs.shards) }}
     env:
       CSR_STRUCTURE_BUILDS: "${{ matrix.shard }}/${{ needs.plan.outputs.count }}"
+      CSR_STRUCTURE_BUILDS_SKIP: ${{ needs.plan.outputs.skip }}
     steps:
       - uses: actions/checkout@v4
 

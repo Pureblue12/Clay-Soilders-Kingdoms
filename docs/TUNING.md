@@ -46,6 +46,20 @@ All balancing numbers (costs, radii, rates, caps, unlock thresholds) live in ONE
 | `kingdom.zone.inner_radius` | 16, 20, 24, 28, 32, 36, 40, 44, 48, 52 | 10 × 1–256 | Outer edge of the inner zone per tier. **Placeholder.** |
 | `kingdom.zone.wall_radius` | 20, 24, 28, 32, 36, 40, 44, 48, 52, 56 | 10 × 1–256 | Distance of the wall ring from the keep per tier. **Placeholder.** |
 | `kingdom.zone.outer_radius` | 32, 38, 44, 50, 56, 62, 68, 74, 80, 86 | 10 × 1–512 | Outer edge of the outer zone (fields, camps) per tier. **Placeholder.** |
+| `kingdom.keep.level` | 1 | 1–3 | Which detail level of the keep (`csr:keep`) a new kingdom builds: 1 = the keep tower (the throne stands in the king's chamber), 2 = with the great hall and its throne, 3 = the whole castle. Read when the keep is planned (stage 4). |
+| `kingdom.keep.search_radius` | 12 | 0–64 | How far from where the kingdom was founded the middle of its keep may be; the nearest flat ground wins. |
+| `kingdom.keep.max_height_range` | 3 | 0–16 | The most the ground under a keep site (with the easel, chest and a margin of 1) may rise and fall; the kingdom levels it when it starts the keep. |
+| `kingdom.keep.builders` | 3 | 1–16 | How many of the kingdom's soldiers build its keep: soldiers of the team in the claim with no job, not the king, nearest to the keep's chest first (wheat holders first); the kingdom hands the others wheat so they can work. |
+| `kingdom.keep.scaffold_stock` | 128 | 0–1024 | Scaffold material the kingdom asks for when its keep is taller than builders reach (carried back when the scaffolding comes down). |
+| `kingdom.keep.check_ticks` | 20 | 1–1200 | How often a kingdom looks after its keep: stocks the builders' chest from the stockpile, picks builders, notices it is finished. |
+| `kingdom.keep.plan_retry_ticks` | 600 | 20–72000 | How long a kingdom waits before trying again to place its keep when it found no site. |
+| `kingdom.king_bonus_health` | 80 | 0–1000 | Extra health a king gets once his keep is built (a clay soldier has 20). |
+| `kingdom.throne_walk_ticks` | 1200 | 0–72000 | How long a king walks toward his throne before his soldiers carry him there; 0 = never. |
+| `kingdom.found_pick_tolerance` | 10 | 0–100 | A new king (a soldier who picked up a gold ingot) picks his kingdom's spot at random among the usable keep sites near him scoring at most this many points below the best (0 = always the best). |
+| `kingdom.found_walk_ticks` | 1200 | 100–72000 | How long a new king walks toward the spot he picked before he picks another. |
+| `kingdom.found_tries` | 5 | 1–100 | Spots a new king tries in a row (out of reach, founding refused, no site) before he rests. |
+| `kingdom.found_retry_ticks` | 1200 | 20–72000 | How long a new king rests after `kingdom.found_tries` spots didn't work out before he looks again. |
+| `kingdom.keep.free_materials` | 1 | 0–1 | 1 = when a kingdom starts its keep, everything the keep needs goes into its stockpile (until soldiers gather materials, stage 5); 0 = the materials must be supplied. |
 | `performance.soldier_cap_per_tier` | 8, 12, 16, 20, 26, 32, 40, 48, 56, 64 | 10 × 1–1000 | Most clay soldiers a kingdom may have per tier. **Placeholder** until the stage 7 performance checkpoint. |
 | `events.warning_time_ticks` | 1200 | 0–72000 | How long before a raid or event the kingdom is warned, in ticks (20 ticks = 1 s). |
 | `terrain.scan_radius` | 24 | 1–64 | How far `/csr dev terrain scan` looks around you (a square of 2r+1 columns). |
@@ -86,6 +100,7 @@ All balancing numbers (costs, radii, rates, caps, unlock thresholds) live in ONE
 | `build.carry_max_ticks` | 2000 | 400–100,000 | A builder keeps its block while it keeps getting a block closer to where it is going (its chest, then the block's spot) and gives it up after 400 ticks without getting closer; this is the most it keeps one block in all ([D87](DECISIONS.md)). |
 | `work.fall_damage_percent` | 100 | 0–10,000 | Fall damage to a soldier that is working (building, digging, farming), in percent of vanilla's (a 4-block fall costs half a heart). Upstream multiplies every environmental damage by 100, so a 4-block drop kills a soldier; builders fell off upper floors and died on every tall build ([D63](DECISIONS.md)). 10,000 restores upstream's behavior. |
 | `work.plant_damage_percent` | 100 | 0–10,000 | Damage to a soldier that is working from touching a sweet berry bush or a cactus, in percent of vanilla's (half a heart a touch). Upstream multiplies every environmental damage by 100, so brushing a bush killed a builder at once; hospital L3 lost all three builders in its garden ([D81](DECISIONS.md)). 10,000 restores upstream's behavior. |
+| `soldier.boss_from_eggs` | 0 | 0–1 | 1 = a clay soldier that picks up an egg turns into a random clay boss that attacks everyone (the original mod's feature); 0 = eggs are left alone. Off because chickens lay eggs anywhere and a boss killed the king in the owner's stage 4 test ([D94](DECISIONS.md)). |
 | `scaffold.columns_first` | 1 | 0–1 | 1: once builders start putting up the scaffolding, they put all of it up before working above reach (no stall at every level); 0: one level at a time whenever nothing else is in reach ([D42](DECISIONS.md)). |
 | `scaffold.start_after_stuck_ticks` | 100 | 0–6,000 | Builders start putting up scaffolding only after finding nothing in reach for this long with no block placed in between (one builder boxed in for a moment doesn't start it). |
 | `scaffold.climb_speed_hundredths` | 30 | 5–100 | How fast builders climb up and down scaffolding columns, in hundredths of a block per tick. |

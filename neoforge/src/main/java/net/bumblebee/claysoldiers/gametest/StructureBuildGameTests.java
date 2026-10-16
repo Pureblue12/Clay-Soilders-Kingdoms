@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
  * <p>
  * About 156 builds, far too slow for the normal suite: the tests only exist when the environment variable
  * {@code CSR_STRUCTURE_BUILDS} is set ({@code all}, or a shard {@code k/n}; {@code CSR_STRUCTURE_BUILDS_ONLY} limits
- * them to a comma-separated list of structure ids). They are optional, so they never decide the suite. Run them with
+ * them to a comma-separated list of structure ids, {@code CSR_STRUCTURE_BUILDS_SKIP} leaves some out). They are optional, so they never decide the suite. Run them with
  * {@code tools/structure_builds.sh} or the "Structure builds" GitHub workflow, which prints a table per structure.
  * Each build logs "CSR structure build result: PASS|FAIL ..." lines for that table.
  * <p>
@@ -164,7 +164,7 @@ public class StructureBuildGameTests {
         if (setting == null || setting.isBlank()) {
             return List.of();
         }
-        List<Build> builds = selected(setting.trim(), System.getenv("CSR_STRUCTURE_BUILDS_ONLY"));
+        List<Build> builds = selected(setting.trim(), System.getenv("CSR_STRUCTURE_BUILDS_ONLY"), System.getenv("CSR_STRUCTURE_BUILDS_SKIP"));
         List<TestFunction> tests = new ArrayList<>();
         for (Build build : builds) {
             Entry entry = build.entry();
@@ -181,18 +181,22 @@ public class StructureBuildGameTests {
 
     /**
      * The builds of a shard ({@code k/n}, or {@code all}), optionally only for the given structure ids ({@code keep}: every
-     * level, {@code keep:2}: only level 2). Shards are
+     * level, {@code keep:2}: only level 2), leaving out the ones in {@code skip} (same form; the workflow skips keep L3 in
+     * automatic runs that change nothing it depends on). Shards are
      * balanced by the estimated build time (largest first, each to the least loaded shard).
      */
     static List<Build> selected(String setting, String only) {
-        Set<String> ids = only == null || only.isBlank() ? Set.of()
-                : Arrays.stream(only.split(",")).map(String::trim).filter(id -> !id.isEmpty())
-                .map(id -> id.startsWith(ClaySoldiersCommon.MOD_ID + ":") ? id.substring(ClaySoldiersCommon.MOD_ID.length() + 1) : id)
-                .collect(Collectors.toSet());
+        return selected(setting, only, null);
+    }
+
+    static List<Build> selected(String setting, String only, String skip) {
+        Set<String> ids = idSet(only);
+        Set<String> skipped = idSet(skip);
         List<Build> all = new ArrayList<>();
         for (Entry entry : STRUCTURES) {
             for (int level = 1; level <= entry.levels(); level++) {
-                if (ids.isEmpty() || ids.contains(entry.path()) || ids.contains(entry.path() + ":" + level)) {
+                boolean picked = ids.isEmpty() || ids.contains(entry.path()) || ids.contains(entry.path() + ":" + level);
+                if (picked && !skipped.contains(entry.path()) && !skipped.contains(entry.path() + ":" + level)) {
                     all.add(new Build(entry, level));
                 }
             }
@@ -220,6 +224,14 @@ public class StructureBuildGameTests {
         }
         mine.sort(Comparator.comparing(build -> build.entry().testName(build.level())));
         return mine;
+    }
+
+    /** Comma-separated structure ids ({@code keep}, {@code csr:keep}, {@code keep:2}) as a set without the mod id. */
+    static Set<String> idSet(String list) {
+        return list == null || list.isBlank() ? Set.of()
+                : Arrays.stream(list.split(",")).map(String::trim).filter(id -> !id.isEmpty())
+                .map(id -> id.startsWith(ClaySoldiersCommon.MOD_ID + ":") ? id.substring(ClaySoldiersCommon.MOD_ID.length() + 1) : id)
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -402,6 +414,10 @@ public class StructureBuildGameTests {
         }
         helper.assertTrue(selected("all", "csr:keep, hovel").size() == STRUCTURES.stream()
                 .filter(entry -> Set.of("keep", "hovel").contains(entry.path())).mapToInt(Entry::levels).sum(), "the id filter is wrong");
+        // The workflow's automatic runs skip keep L3 (CSR_STRUCTURE_BUILDS_SKIP=keep:3): exactly that one build goes.
+        List<Build> skipped = selected("all", null, "keep:3");
+        helper.assertTrue(skipped.size() == all - 1 && skipped.stream().noneMatch(build -> build.entry().path().equals("keep") && build.level() == 3),
+                "the skip filter is wrong");
         helper.succeed();
     }
 }

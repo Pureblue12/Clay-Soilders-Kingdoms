@@ -304,32 +304,6 @@ public class KingdomGameTests {
     }
 
     /**
-     * The in-game trigger: a player sneaking and right-clicking their own king with a gold block founds the kingdom,
-     * and the gold block is not used up. Without sneaking nothing is founded.
-     */
-    @GameTest(template = PLATFORM, batch = "kingdom_gold_block")
-    public static void goldBlockOnKingFoundsKingdom(GameTestHelper helper) {
-        clear(helper);
-        FakePlayer player = player(helper);
-        ClaySoldierEntity king = spawnKing(helper, KING_AT, RED, player);
-        try {
-            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(Items.GOLD_BLOCK, 2));
-            player.setShiftKeyDown(false);
-            player.interactOn(king, net.minecraft.world.InteractionHand.MAIN_HAND);
-            helper.assertTrue(Kingdoms.byTeam(server(helper), RED).isEmpty(), "Founded without sneaking");
-            player.setShiftKeyDown(true);
-            player.interactOn(king, net.minecraft.world.InteractionHand.MAIN_HAND);
-            helper.assertTrue(Kingdoms.byTeam(server(helper), RED).isPresent(), "Sneak + right-click with a gold block did not found the kingdom");
-            helper.assertTrue(player.getMainHandItem().is(Items.GOLD_BLOCK) && player.getMainHandItem().getCount() == 2, "The gold block was used up");
-        } finally {
-            player.setShiftKeyDown(false);
-            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-            clear(helper);
-        }
-        helper.succeed();
-    }
-
-    /**
      * The census counts the team's living soldiers inside the claim (not other teams, not outside), records when, and
      * updates the king's last position.
      */
