@@ -63,7 +63,7 @@ public class TendFieldGoal extends AbstractWorkGoal {
     private final Map<BlockPos, Long> skipped = new HashMap<>();
     @Nullable
     private KingdomEconomy.Workplace workplace;
-    private int workplaceChecked = Integer.MIN_VALUE;
+    private int workplaceChecked = -WORKPLACE_TICKS;
 
     public TendFieldGoal(AbstractClaySoldierEntity soldier, Supplier<WorkSelectorGoal> workSelector) {
         super(soldier, workSelector);

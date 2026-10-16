@@ -60,7 +60,7 @@ public class FellTreesGoal extends AbstractWorkGoal {
     private final Map<BlockPos, Long> skipped = new HashMap<>();
     @Nullable
     private KingdomEconomy.Workplace workplace;
-    private int workplaceChecked = Integer.MIN_VALUE;
+    private int workplaceChecked = -WORKPLACE_TICKS;
 
     public FellTreesGoal(AbstractClaySoldierEntity soldier, Supplier<WorkSelectorGoal> workSelector) {
         super(soldier, workSelector);
@@ -191,7 +191,8 @@ public class FellTreesGoal extends AbstractWorkGoal {
             return;
         }
         chopTimer = 0;
-        int height = trunkHeight(level, tree);
+        // Once chopping has started the leaves may decay, so only the logs left in the column count.
+        int height = logColumn(level, tree);
         if (height <= 0) {
             step = Step.DELIVER;
             return;
@@ -331,6 +332,15 @@ public class FellTreesGoal extends AbstractWorkGoal {
             }
         }
         return leaves ? height : 0;
+    }
+
+    /** How many logs stand in a column from {@code base} up (no other checks), for a tree already being chopped. */
+    private static int logColumn(ServerLevel level, BlockPos base) {
+        int height = 0;
+        while (height <= Tuning.ECONOMY_LUMBER_MAX_TRUNK.get() && level.getBlockState(base.above(height)).is(BlockTags.LOGS)) {
+            height++;
+        }
+        return height;
     }
 
     private static boolean naturalLeaves(BlockState state) {
