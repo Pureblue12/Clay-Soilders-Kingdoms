@@ -1,6 +1,9 @@
 package net.bumblebee.claysoldiers.gametest;
 
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
+import net.bumblebee.claysoldiers.debug.DebugCategory;
+import net.bumblebee.claysoldiers.debug.DebugEvent;
+import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.entity.soldier.ClaySoldierEntity;
 import net.bumblebee.claysoldiers.kingdom.KingFounding;
 import net.bumblebee.claysoldiers.kingdom.Kingdom;
@@ -9,6 +12,7 @@ import net.bumblebee.claysoldiers.kingdom.KingdomEconomy;
 import net.bumblebee.claysoldiers.kingdom.KingdomKeep;
 import net.bumblebee.claysoldiers.kingdom.Kingdoms;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.AfterBatch;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -83,6 +87,10 @@ public class KingdomStoryGameTests {
                 new KingdomEconomy.Slot(FIELD, 1, true, true, KingdomEconomy.Job.FARMER),
                 new KingdomEconomy.Slot(COTTAGE, 1, false, false, null)));
         KingFounding.enableInTestsForTests(true);
+        // The economy's events go into the failure message, so a broken hand-over says why.
+        DebugLog.reset();
+        DebugLog.setCapacity(50000);
+        DebugLog.setEnabled(DebugCategory.ECONOMY, true, server);
 
         List<BlockPos> trees = new ArrayList<>();
         for (BlockPos tree : TREES) {
@@ -140,7 +148,18 @@ public class KingdomStoryGameTests {
         lines.addAll(KingdomEconomy.describe(server, kingdom.get()).stream().map(line -> "Economy: " + line).toList());
         lines.add("Trees felled and replanted: " + felled.size() + " of " + trees.size());
         lines.add("Stockpile: " + kingdom.get().stockpile());
+        for (BlockPos tree : trees) {
+            lines.add("Tree at " + tree.toShortString() + ": " + name(level, tree.below()) + " / " + name(level, tree) + " / "
+                    + name(level, tree.above(3)) + " / " + name(level, tree.above(4)));
+        }
+        List<String> woodcutters = DebugLog.events().stream().filter(event -> event.toLine().contains("woodcutter"))
+                .map(DebugEvent::toLine).toList();
+        lines.add(woodcutters.size() + " woodcutter events, last: " + woodcutters.subList(Math.max(0, woodcutters.size() - 12), woodcutters.size()));
         return String.join("; ", lines);
+    }
+
+    private static String name(ServerLevel level, BlockPos pos) {
+        return BuiltInRegistries.BLOCK.getKey(level.getBlockState(pos).getBlock()).getPath();
     }
 
     /** A 4-log oak with natural leaves, as woodcutters fell them; returns where its trunk stands. */
@@ -176,6 +195,7 @@ public class KingdomStoryGameTests {
         MinecraftServer server = level.getServer();
         server.tickRateManager().stopSprinting();
         KingFounding.enableInTestsForTests(false);
+        DebugLog.reset();
         KingdomKeep.useKeepForTests(null);
         KingdomEconomy.usePlanForTests(null);
         GameTestTuning.restore(server);

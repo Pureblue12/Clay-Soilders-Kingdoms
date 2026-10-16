@@ -28,7 +28,7 @@ if [ "$failed" != "$expected" ]; then
     echo "SUITE NOT AS EXPECTED."
     echo "  failed:   $(echo $failed)"
     echo "  expected: $(echo $expected)"
-    grep -E "failed at" build/suite.log | sed -E 's/.*LogTestReporter\]: //' | cut -c1-2000
+    grep -E "failed at" build/suite.log | sed -E 's/.*LogTestReporter\]: //' | cut -c1-6000
     exit 1
 fi
 if ! ./gradlew :neoforge:build -q > build/build.log 2>&1; then
