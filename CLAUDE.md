@@ -254,7 +254,7 @@ Code: `common/.../kingdom/` (`Kingdom`, `KingdomSavedData`, `Kingdoms` service, 
   rewrites itself whenever it's opened, in the hand or on a lectern (D24).
 - **Dev only:** `/csr dev kingdom stock_add|stock_remove <resource> [amount]`, `stock_show` (book: Kingdom).
 
-### The kingdom builds its keep (stage 4, draft)
+### The kingdom builds its keep (stage 4)
 
 Code: `common/.../kingdom/KingdomKeep` (planner and server tick), `KeepSite` (pure site search), `KingdomStore`
 (stockpile as the builders' chest store, through `dev/MaterialSupply.Store`), `KeepThrone` (throne spot per structure level),
@@ -599,4 +599,4 @@ Optional integrations (JEI, Jade, Accessories, Curios, Create, SmartBrainLib) ar
 - **Stage 3 (Tall construction spike) — done (2026-10-04, waiting for the in-game checklist):** research, scaffold
   planner (5 approaches), climbed scaffolding columns in game, saved jobs with cleanup, Scaffolding dev book category,
   SCAFFOLD recorder category. Recommendation and height rules in `docs/SCAFFOLDING.md`.
-- **Stage 4 (Tier-1 keep built autonomously) — in progress (2026-10-13, draft PR):** see "The kingdom builds its keep".
+- **Stage 4 (Tier-1 keep built autonomously) — done (2026-10-16, passed the owner's in-game test):** see "The kingdom builds its keep".

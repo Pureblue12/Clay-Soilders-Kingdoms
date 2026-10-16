@@ -11,7 +11,7 @@ Earlier work (M0–M2: testing, bug fixes, `/csr build`, builder fixes, doors) i
 | 1 | Kingdom core | M | **done** (in-game checklist pending) |
 | 2 | Terrain spike | L | **done** (in-game checklist pending) |
 | 3 | Tall construction spike | L | **done** (in-game checklist pending) |
-| 4 | Tier-1 keep built autonomously | L | **in progress** (draft, not in the real mod yet) |
+| 4 | Tier-1 keep built autonomously | L | **done** (2026-10-16, passed the owner's in-game test) |
 | 5 | Economy loop v1 | L | not started |
 | 5a | Decoration step | M | not started |
 | 6 | Layout and growth | XL | not started |
@@ -130,7 +130,7 @@ Stages are ordered by dependency and risk. Every stage ends playable.
 - **Acceptance test:** one gold ingot dropped by a soldier yields a kingdom, a finished keep and the king on the throne, with nothing else to do (D93). First real playable.
 - **Depends on:** 1, 2, 3 · **Size:** L
 - **Risks:** keep size versus terrain.
-- **Decisions:** [D3](DECISIONS.md), [D4](DECISIONS.md), D88–D94 · **Status:** in progress (2026-10-16, draft; the owner's first in-game test failed on the setup, reworked) · **Results:**
+- **Decisions:** [D3](DECISIONS.md), [D4](DECISIONS.md), D88–D95 · **Status:** done (2026-10-16: in the owner's second in-game test the kingdom built its keep and the king stood on his gold throne; the king's walk to his founding spot was fixed after it, D95) · **Results:**
   - **Founding with one gold ingot (`KingFounding`, D93, replaces D92):** drop a gold ingot by a soldier; he picks it up,
     is king, picks a spot himself among the good sites near him, walks there and founds the kingdom. No team claim, no
     gold block, no commands. The owner's first test (2026-10-16) failed on the old setup (loyalty claim, gold block).
