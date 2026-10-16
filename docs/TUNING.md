@@ -72,6 +72,9 @@ All balancing numbers (costs, radii, rates, caps, unlock thresholds) live in ONE
 | `economy.farm.tend_ticks` | 40 | 0–2400 | How long a farmer tends a growing crop to make it grow one stage, in ticks (0 = never tends: crops grow at vanilla speed only). |
 | `economy.farm.carry` | 8 | 1–64 | How much of its harvest a farmer carries before it brings it to the field's chest. |
 | `economy.food_per_building` | 9 | 0–640 | Wheat a building the kingdom pays for (the cottage) costs: the builders' meals, taken when it starts; it waits until the stockpile has it. |
+| `economy.meal.ticks` | 6000 | 0–72000 | How long a meal keeps the builders of a building the kingdom paid food for well fed, in ticks; eaten again when it wears off while they still build it (0 = no meals). |
+| `economy.meal.speed_level` | 1 | 0–3 | Speed level a meal gives (1 = Speed I, 20% faster walking; 0 = none). |
+| `economy.meal.health_level` | 1 | 0–5 | Health Boost level a meal gives (each level adds 4 health, 2 hearts; 0 = none). |
 | `economy.free_starter_buildings` | 1 | 0–1 | 1 = the kingdom's starter buildings after the keep (lumber camp, field) get all their materials, like the keep; 0 = they must be supplied. |
 | `economy.free_other_materials` | 1 | 0–1 | 1 = a building the kingdom pays for with its wood and food gets its other materials (stone, bricks, glass) for free, as no job makes them before stage 9; 0 = a player supplies them through the chest. |
 | `economy.renown_per_building` | 25 | 0–1000 | Renown a kingdom earns for every building it finishes after the keep. |

@@ -122,7 +122,8 @@ public class KingdomStoryGameTests {
             KingdomEconomy.update(level, found.get());
             List<KingdomBuilding> buildings = found.get().buildings();
             trees.stream().filter(base -> level.getBlockState(base).is(Blocks.OAK_SAPLING)).forEach(felled::add);
-            if (buildings.size() == 4 && buildings.stream().allMatch(b -> b.state() == KingdomBuilding.State.BUILT) && felled.size() >= 2) {
+            if (buildings.size() == 4 && buildings.stream().allMatch(b -> b.state() == KingdomBuilding.State.BUILT) && felled.size() >= 2
+                    && DebugLog.contains(DebugCategory.ECONOMY, "well fed")) {
                 done[0] = true;
                 perTick = null;
                 helper.succeed();
@@ -149,6 +150,7 @@ public class KingdomStoryGameTests {
         lines.addAll(KingdomEconomy.describe(server, kingdom.get()).stream().map(line -> "Economy: " + line).toList());
         lines.add("Trees felled and replanted: " + felled.size() + " of " + trees.size());
         lines.add("Stockpile: " + kingdom.get().stockpile());
+        lines.add("Cottage builders fed: " + DebugLog.contains(DebugCategory.ECONOMY, "well fed"));
         for (BlockPos tree : trees) {
             lines.add("Tree at " + tree.toShortString() + ": " + name(level, tree.below()) + " / " + name(level, tree) + " / "
                     + name(level, tree.above(3)) + " / " + name(level, tree.above(4)));

@@ -110,6 +110,12 @@ public final class Tuning {
             "How much of its harvest a farmer carries before it brings it to the field's chest.", 8, 1, 64));
     public static final TuningKey.IntKey ECONOMY_FOOD_PER_BUILDING = register(new TuningKey.IntKey("economy.food_per_building",
             "Wheat a building the kingdom pays for (the cottage) costs: the builders' meals, taken when it starts; it waits until the stockpile has it.", 9, 0, 640));
+    public static final TuningKey.IntKey ECONOMY_MEAL_TICKS = register(new TuningKey.IntKey("economy.meal.ticks",
+            "How long a meal keeps the builders of a building the kingdom paid food for well fed, in ticks; eaten again when it wears off while they still build it (0 = no meals).", 6000, 0, 72000));
+    public static final TuningKey.IntKey ECONOMY_MEAL_SPEED_LEVEL = register(new TuningKey.IntKey("economy.meal.speed_level",
+            "Speed level a meal gives (1 = Speed I, 20% faster walking; 0 = none).", 1, 0, 3));
+    public static final TuningKey.IntKey ECONOMY_MEAL_HEALTH_LEVEL = register(new TuningKey.IntKey("economy.meal.health_level",
+            "Health Boost level a meal gives (each level adds 4 health, 2 hearts; 0 = none).", 1, 0, 5));
     public static final TuningKey.IntKey ECONOMY_FREE_STARTER_BUILDINGS = register(new TuningKey.IntKey("economy.free_starter_buildings",
             "1 = the kingdom's starter buildings after the keep (lumber camp, field) get all their materials, like the keep; 0 = they must be supplied.", 1, 0, 1));
     public static final TuningKey.IntKey ECONOMY_FREE_OTHER_MATERIALS = register(new TuningKey.IntKey("economy.free_other_materials",

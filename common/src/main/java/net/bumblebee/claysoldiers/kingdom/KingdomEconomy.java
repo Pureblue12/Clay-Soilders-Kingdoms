@@ -372,6 +372,13 @@ public final class KingdomEconomy {
         }
         supply.restock();
         assign(level, kingdom, chest, Tuning.KINGDOM_KEEP_BUILDERS.get(), BuildBlueprintGoal.class, "builder of the " + what.toLowerCase());
+        boolean paid = plan().stream().anyMatch(slot -> slot.structure().equals(building.structure()) && !slot.starter());
+        if (paid) {
+            // The wheat it paid for is the builders' meals.
+            soldiers(level, kingdom).stream()
+                    .filter(soldier -> chest.equals(soldier.getPoiPos()) && soldier.getWorkSelector().isDoing(BuildBlueprintGoal.class))
+                    .forEach(soldier -> Meals.feed(soldier, kingdom));
+        }
     }
 
     // Soldiers

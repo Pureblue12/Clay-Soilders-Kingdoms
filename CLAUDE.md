@@ -295,6 +295,8 @@ around the keep), `WoodCost` (the carpenter: wooden blocks from logs of any kind
 - Builders of a finished building (keep included) are let go once its scaffolding is down. While nothing is being built, idle
   soldiers become woodcutters (`economy.woodcutters`) and farmers (`economy.farmers`): job = the goal, POI = their building's
   chest. They deliver there; the chests of finished buildings are the storehouse (swept into the stockpile).
+- Builders of a paid building (the cottage) eat its wheat and are well fed while they build: Speed and Health Boost for
+  `economy.meal.ticks` (`Meals`, D102; `mealMakesABuilderFasterAndTougher`).
 - The carpenter uses the stockpile's spare planks before cutting logs (a log cut for planks leaves some over; without this a
   cottage's door waited forever, found by the story test; `sparePlanksAreUsedBeforeLogs`). A paid building's logs count spare
   planks as logs (4 to a log).

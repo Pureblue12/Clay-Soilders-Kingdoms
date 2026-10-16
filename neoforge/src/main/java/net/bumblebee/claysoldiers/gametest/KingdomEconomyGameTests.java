@@ -10,6 +10,7 @@ import net.bumblebee.claysoldiers.kingdom.Kingdom;
 import net.bumblebee.claysoldiers.kingdom.KingdomBuilding;
 import net.bumblebee.claysoldiers.kingdom.KingdomEconomy;
 import net.bumblebee.claysoldiers.kingdom.KingdomKeep;
+import net.bumblebee.claysoldiers.kingdom.Meals;
 import net.bumblebee.claysoldiers.kingdom.Kingdoms;
 import net.bumblebee.claysoldiers.kingdom.PlotPicker;
 import net.bumblebee.claysoldiers.kingdom.WoodCost;
@@ -22,6 +23,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -95,6 +97,22 @@ public class KingdomEconomyGameTests {
         int stairs = WoodCost.make(server, kingdom, Items.OAK_STAIRS, 64);
         helper.assertTrue(stairs == 6, "5 spare planks and a log (9 planks) should make 6 stairs, made " + stairs);
         helper.assertTrue(WoodCost.wood(kingdom) == 0, "All the wood should be used, left " + WoodCost.wood(kingdom) + " planks' worth");
+        KingdomGameTests.clear(helper);
+        helper.succeed();
+    }
+
+    /** A meal makes a builder faster and tougher for a while (the owner's call 2026-10-16); it doesn't eat again while well fed. */
+    @GameTest(template = PLATFORM, batch = "economy_meals")
+    public static void mealMakesABuilderFasterAndTougher(GameTestHelper helper) {
+        Kingdom kingdom = found(helper);
+        ClaySoldierEntity builder = KingdomGameTests.DevSoldier.spawnPlain(helper, new BlockPos(4, GROUND_Y, 4), RED);
+        double speed = builder.getAttributeValue(Attributes.MOVEMENT_SPEED);
+        float health = builder.getMaxHealth();
+        helper.assertTrue(Meals.feed(builder, kingdom), "A hungry builder should eat");
+        helper.assertTrue(builder.getAttributeValue(Attributes.MOVEMENT_SPEED) > speed, "A meal should make the builder faster");
+        helper.assertTrue(builder.getMaxHealth() > health && builder.getHealth() == builder.getMaxHealth(),
+                "A meal should give more health, got " + builder.getHealth() + " of " + builder.getMaxHealth() + " (was " + health + ")");
+        helper.assertFalse(Meals.feed(builder, kingdom), "A well fed builder shouldn't eat again");
         KingdomGameTests.clear(helper);
         helper.succeed();
     }
