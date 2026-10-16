@@ -45,7 +45,7 @@ final class KingdomStore implements MaterialSupply.Store {
             return true;
         }
         OptionalDouble planks = WoodCost.planks(server, item);
-        return planks.isPresent() && WoodCost.logs(kingdom) * (double) WoodCost.PLANKS_PER_LOG >= planks.getAsDouble() - 1e-9;
+        return planks.isPresent() && WoodCost.wood(kingdom) >= planks.getAsDouble() - 1e-9;
     }
 
     @Override
@@ -56,7 +56,7 @@ final class KingdomStore implements MaterialSupply.Store {
         if (count <= 0) {
             int made = WoodCost.make(server, kingdom, item, stack.getMaxStackSize());
             if (made > 0) {
-                DebugLog.event(DebugCategory.ECONOMY, null, () -> "%s made %d %s from logs".formatted(kingdom.team(), made, id(item)));
+                DebugLog.event(DebugCategory.ECONOMY, null, () -> "%s made %d %s from its wood".formatted(kingdom.team(), made, id(item)));
                 return stack.copyWithCount(made);
             }
             return null;

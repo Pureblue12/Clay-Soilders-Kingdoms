@@ -79,6 +79,26 @@ public class KingdomEconomyGameTests {
         helper.succeed();
     }
 
+    /**
+     * Spare planks are wood too (found by the whole-story test): the carpenter cut 8 logs into 32 planks for a hut's floor,
+     * the builders brought back 7, and the hut's door then waited forever for logs the kingdom no longer had.
+     */
+    @GameTest(template = PLATFORM, batch = "economy_spare_planks")
+    public static void sparePlanksAreUsedBeforeLogs(GameTestHelper helper) {
+        MinecraftServer server = helper.getLevel().getServer();
+        Kingdom kingdom = found(helper);
+        Kingdoms.addResource(server, kingdom, BuiltInRegistries.ITEM.getKey(Items.OAK_PLANKS), 7);
+        int doors = WoodCost.make(server, kingdom, Items.SPRUCE_DOOR, 1);
+        helper.assertTrue(doors == 1, "7 spare oak planks should make a spruce door, made " + doors);
+        helper.assertTrue(WoodCost.sparePlanks(kingdom) == 5, "The door costs 2 planks, 5 should be left, left " + WoodCost.sparePlanks(kingdom));
+        Kingdoms.addResource(server, kingdom, BuiltInRegistries.ITEM.getKey(Items.OAK_LOG), 1);
+        int stairs = WoodCost.make(server, kingdom, Items.OAK_STAIRS, 64);
+        helper.assertTrue(stairs == 6, "5 spare planks and a log (9 planks) should make 6 stairs, made " + stairs);
+        helper.assertTrue(WoodCost.wood(kingdom) == 0, "All the wood should be used, left " + WoodCost.wood(kingdom) + " planks' worth");
+        KingdomGameTests.clear(helper);
+        helper.succeed();
+    }
+
     private static void assertCost(GameTestHelper helper, MinecraftServer server, Item item, double expected) {
         OptionalDouble cost = WoodCost.planks(server, item);
         helper.assertTrue(cost.isPresent() && Math.abs(cost.getAsDouble() - expected) < 1e-6, item + " should cost " + expected + " planks, got " + cost);

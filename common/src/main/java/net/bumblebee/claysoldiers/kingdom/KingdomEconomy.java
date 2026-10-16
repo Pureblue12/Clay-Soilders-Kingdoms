@@ -226,7 +226,7 @@ public final class KingdomEconomy {
         if (need.isEmpty()) {
             return Optional.of("the structure " + slot.structure() + " isn't loaded");
         }
-        int logs = WoodCost.logs(kingdom);
+        int logs = WoodCost.logsWorth(kingdom);
         int food = kingdom.resource(KingdomStore.id(FOOD));
         List<String> missing = new ArrayList<>();
         if (logs < need.get().logs()) {
@@ -636,7 +636,7 @@ public final class KingdomEconomy {
             return "No building the kingdom pays for is waiting.";
         }
         MinecraftServer server = level.getServer();
-        int logs = Math.max(0, need.get().logs() - WoodCost.logs(kingdom));
+        int logs = Math.max(0, need.get().logs() - WoodCost.logsWorth(kingdom));
         int food = Math.max(0, need.get().food() - kingdom.resource(KingdomStore.id(FOOD)));
         if (logs > 0) {
             Kingdoms.addResource(server, kingdom, KingdomStore.id(Items.OAK_LOG), logs);
@@ -702,7 +702,7 @@ public final class KingdomEconomy {
         }
         Map<Job, Integer> workers = WORKERS.getOrDefault(kingdom.id(), Map.of());
         lines.add("Woodcutters: " + workers.getOrDefault(Job.WOODCUTTER, 0) + ", farmers: " + workers.getOrDefault(Job.FARMER, 0) + ".");
-        lines.add("Logs: " + WoodCost.logs(kingdom) + ", wheat: " + kingdom.resource(KingdomStore.id(FOOD)) + ".");
+        lines.add("Logs: " + WoodCost.logs(kingdom) + ", spare planks: " + WoodCost.sparePlanks(kingdom) + ", wheat: " + kingdom.resource(KingdomStore.id(FOOD)) + ".");
         Optional<Slot> next = next(kingdom);
         String problem = PROBLEMS.get(kingdom.id());
         if (problem != null) {

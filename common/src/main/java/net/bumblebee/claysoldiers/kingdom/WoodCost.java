@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.OptionalDouble;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * The kingdom's carpenter (stage 5, D98): it turns logs from the stockpile into any wooden block a build asks for, at
@@ -28,7 +29,8 @@ import java.util.Set;
  * wooden when some recipe makes it from wood alone. Species don't matter: a birch forest builds a spruce cottage, and every
  * log stands for any log (stripped logs included).
  * <p>
- * Taking logs rounds up per take, so up to 3 planks' worth is lost each time (the carpenter's offcuts).
+ * Spare planks in the stockpile are used before logs. Taking logs rounds up per take, so up to 3 planks' worth can be
+ * left over each time; they go back to the stockpile as spare planks when the builders return them.
  */
 public final class WoodCost {
     /** Planks per log. */
@@ -126,13 +128,38 @@ public final class WoodCost {
 
     /** Logs (of any kind) in the kingdom's stockpile. */
     public static int logs(Kingdom kingdom) {
-        int logs = 0;
+        return count(kingdom, WoodCost::isLog);
+    }
+
+    /** Whether the stockpile entry {@code resource} is planks. */
+    public static boolean isPlanks(ResourceLocation resource) {
+        Item item = BuiltInRegistries.ITEM.get(resource);
+        return item != Items.AIR && item.getDefaultInstance().is(ItemTags.PLANKS);
+    }
+
+    /** Planks (of any kind) in the kingdom's stockpile: the carpenter's spare planks, used before any log is cut. */
+    public static int sparePlanks(Kingdom kingdom) {
+        return count(kingdom, WoodCost::isPlanks);
+    }
+
+    /** All the wood in the stockpile, in planks: spare planks plus 4 for every log. */
+    public static int wood(Kingdom kingdom) {
+        return sparePlanks(kingdom) + logs(kingdom) * PLANKS_PER_LOG;
+    }
+
+    /** The stockpile's wood counted in logs (spare planks rounded down to whole logs), for what a building costs. */
+    public static int logsWorth(Kingdom kingdom) {
+        return wood(kingdom) / PLANKS_PER_LOG;
+    }
+
+    private static int count(Kingdom kingdom, Predicate<ResourceLocation> kind) {
+        int count = 0;
         for (Entry<ResourceLocation, Integer> entry : kingdom.stockpile().entrySet()) {
-            if (isLog(entry.getKey())) {
-                logs += entry.getValue();
+            if (kind.test(entry.getKey())) {
+                count += entry.getValue();
             }
         }
-        return logs;
+        return count;
     }
 
     /** Logs needed for {@code planks} planks (rounded up). */
@@ -146,23 +173,28 @@ public final class WoodCost {
      * @return whether they were taken
      */
     public static boolean takeLogs(MinecraftServer server, Kingdom kingdom, int count) {
+        return take(server, kingdom, WoodCost::isLog, count);
+    }
+
+    /** Takes {@code count} of the stockpile entries of {@code kind}, the ones it has most of first; all or nothing. */
+    private static boolean take(MinecraftServer server, Kingdom kingdom, Predicate<ResourceLocation> kind, int count) {
         if (count <= 0) {
             return true;
         }
-        if (logs(kingdom) < count) {
+        if (count(kingdom, kind) < count) {
             return false;
         }
         List<Entry<ResourceLocation, Integer>> kinds = new ArrayList<>();
         for (Entry<ResourceLocation, Integer> entry : kingdom.stockpile().entrySet()) {
-            if (isLog(entry.getKey())) {
+            if (kind.test(entry.getKey())) {
                 kinds.add(Map.entry(entry.getKey(), entry.getValue()));
             }
         }
         kinds.sort(Entry.<ResourceLocation, Integer>comparingByValue().reversed());
         int left = count;
-        for (Entry<ResourceLocation, Integer> kind : kinds) {
-            int take = Math.min(left, kind.getValue());
-            if (take > 0 && Kingdoms.removeResource(server, kingdom, kind.getKey(), take).done()) {
+        for (Entry<ResourceLocation, Integer> entry : kinds) {
+            int take = Math.min(left, entry.getValue());
+            if (take > 0 && Kingdoms.removeResource(server, kingdom, entry.getKey(), take).done()) {
                 left -= take;
             }
             if (left == 0) {
@@ -173,17 +205,24 @@ public final class WoodCost {
     }
 
     /**
-     * Makes up to {@code max} of {@code item} from the stockpile's logs; returns how many were made (0 when it isn't
-     * wooden or there aren't enough logs for one).
+     * Makes up to {@code max} of {@code item} from the stockpile's wood, spare planks first, then logs; returns how many were
+     * made (0 when it isn't wooden or there isn't enough wood for one). A log cut for it leaves its spare planks in the chest
+     * the builders put back, so they are used for the next wooden block (a cottage's door after its floor of planks).
      */
     public static int make(MinecraftServer server, Kingdom kingdom, Item item, int max) {
         OptionalDouble each = planks(server, item);
         if (each.isEmpty() || max <= 0) {
             return 0;
         }
-        int logs = logs(kingdom);
-        int count = (int) Math.min(max, Math.floor(logs * (double) PLANKS_PER_LOG / each.getAsDouble() + 1e-9));
-        if (count <= 0 || !takeLogs(server, kingdom, logsFor(count * each.getAsDouble()))) {
+        int spare = sparePlanks(kingdom);
+        int count = (int) Math.min(max, Math.floor(wood(kingdom) / each.getAsDouble() + 1e-9));
+        if (count <= 0) {
+            return 0;
+        }
+        int needed = (int) Math.ceil(count * each.getAsDouble() - 1e-9);
+        int fromPlanks = Math.min(spare, needed);
+        int fromLogs = logsFor(needed - fromPlanks);
+        if (logs(kingdom) < fromLogs || !take(server, kingdom, WoodCost::isPlanks, fromPlanks) || !takeLogs(server, kingdom, fromLogs)) {
             return 0;
         }
         return count;
