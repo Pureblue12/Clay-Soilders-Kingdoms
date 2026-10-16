@@ -60,6 +60,21 @@ All balancing numbers (costs, radii, rates, caps, unlock thresholds) live in ONE
 | `kingdom.found_tries` | 5 | 1–100 | Spots a new king tries in a row (out of reach, founding refused, no site) before he rests. |
 | `kingdom.found_retry_ticks` | 1200 | 20–72000 | How long a new king rests after `kingdom.found_tries` spots didn't work out before he looks again. |
 | `kingdom.keep.free_materials` | 1 | 0–1 | 1 = when a kingdom starts its keep, everything the keep needs goes into its stockpile (until soldiers gather materials, stage 5); 0 = the materials must be supplied. |
+| `economy.plot.outer_reach` | 16 | 0–64 | How far beyond its claim a kingdom may put its outer buildings (lumber camp, fields), in blocks: they stand in a ring just outside where the wall will be; houses stay inside the claim. |
+| `economy.plot.gap` | 3 | 0–16 | Free blocks between a new building's plot (with its easel and chest) and every building already there (room for a path). |
+| `economy.plot.max_height_range` | 3 | 0–16 | The most the ground under a plot after the keep may rise and fall, in blocks; the kingdom levels it when it starts the building. |
+| `economy.woodcutters` | 2 | 0–16 | How many idle soldiers become woodcutters at a finished lumber camp (picked while nothing is being built, so builders come first). |
+| `economy.farmers` | 1 | 0–16 | How many idle soldiers become farmers at a finished field (picked while nothing is being built). |
+| `economy.lumber.radius` | 24 | 4–64 | How far from its lumber camp's easel a woodcutter looks for trees, in blocks. |
+| `economy.lumber.max_trunk` | 9 | 1–16 | The tallest trunk a woodcutter fells, in logs (its top must be within a builder's reach of the ground); taller trees are left alone. |
+| `economy.lumber.chop_ticks` | 20 | 1–400 | How long a woodcutter chops each log, in ticks. |
+| `economy.lumber.walk_ticks` | 600 | 40–12000 | How long a woodcutter or farmer walks toward a tree or field cell before leaving it alone for a while, in ticks. |
+| `economy.farm.tend_ticks` | 40 | 0–2400 | How long a farmer tends a growing crop to make it grow one stage, in ticks (0 = never tends: crops grow at vanilla speed only). |
+| `economy.farm.carry` | 8 | 1–64 | How much of its harvest a farmer carries before it brings it to the field's chest. |
+| `economy.food_per_building` | 9 | 0–640 | Wheat a building the kingdom pays for (the cottage) costs: the builders' meals, taken when it starts; it waits until the stockpile has it. |
+| `economy.free_starter_buildings` | 1 | 0–1 | 1 = the kingdom's starter buildings after the keep (lumber camp, field) get all their materials, like the keep; 0 = they must be supplied. |
+| `economy.free_other_materials` | 1 | 0–1 | 1 = a building the kingdom pays for with its wood and food gets its other materials (stone, bricks, glass) for free, as no job makes them before stage 9; 0 = a player supplies them through the chest. |
+| `economy.renown_per_building` | 25 | 0–1000 | Renown a kingdom earns for every building it finishes after the keep. |
 | `performance.soldier_cap_per_tier` | 8, 12, 16, 20, 26, 32, 40, 48, 56, 64 | 10 × 1–1000 | Most clay soldiers a kingdom may have per tier. **Placeholder** until the stage 7 performance checkpoint. |
 | `events.warning_time_ticks` | 1200 | 0–72000 | How long before a raid or event the kingdom is warned, in ticks (20 ticks = 1 s). |
 | `terrain.scan_radius` | 24 | 1–64 | How far `/csr dev terrain scan` looks around you (a square of 2r+1 columns). |

@@ -134,6 +134,8 @@ public class ModLangProvider extends LanguageProvider {
         add(PlaceSeedsGoal.PLACING_SEEDS_LANG, "Replanting");
         add(PickUpItemsGoal.PICK_UP_ITEM_LANG, "Pick up Items");
         add(BuildBlueprintGoal.BUILDING_LANG, "Building");
+        add(FellTreesGoal.FELLING_LANG, "Felling trees");
+        add(TendFieldGoal.FARMING_LANG, "Farming");
         add(WorkSelectorGoal.WORK_STATUS_PAIR_LANG, "%s: %s");
         add(WorkSelectorGoal.WORK_STATUS_SOMETHING_LANG, "Does Something");
         add(WorkSelectorGoal.WORK_STATUS_RESTING_LANG, "Resting");

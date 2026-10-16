@@ -37,7 +37,7 @@ Starts a headless test server, runs every test in
 `DoorGameTests`, `TuningGameTests`, `StructureRegistryGameTests`, `StructurePasteGameTests`,
 `LayoutCheckerGameTests`, `KingdomDataGameTests`, `KingdomGameTests`, `KingdomBookGameTests`, `KingdomBookRefreshGameTests`, `TerrainScoreGameTests`, `TerrainScanGameTests`,
 `TerrainGradingGameTests`, `TerrainFoundingGameTests`, `ScaffoldPlannerGameTests`, `ScaffoldBuildGameTests`,
-`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `BuildPlanGameTests`, `KingdomKeepGameTests`, `KingFoundingGameTests`), prints
+`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `BuildPlanGameTests`, `KingdomKeepGameTests`, `KingFoundingGameTests`, `KingdomEconomyGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Templates: `data/csr/structure/gametest/platform.nbt` (16x8x16) and `terrain.nbt` (32x16x32, for test terrains);
@@ -274,6 +274,23 @@ Code: `common/.../kingdom/KingdomKeep` (planner and server tick), `KeepSite` (pu
 - The server tick does nothing in a GameTest server (other tests' kingdoms stay untouched): tests call
   `KingdomKeep.update` themselves.
 - Saved: `KingdomBuilding.level` (kingdom data version 2). Supplies, crews and planning problems are memory only.
+
+### The kingdom's economy (stage 5)
+
+Code: `common/.../kingdom/KingdomEconomy` (master plan v1, buildings after the keep, workers), `PlotPicker` (pure: plots
+around the keep), `WoodCost` (the carpenter: wooden blocks from logs of any kind), `entity/goal/workgoal/FellTreesGoal`
+(woodcutter), `TendFieldGoal` (farmer). Decisions D96–D101; numbers `economy.*`.
+- After the keep is BUILT, `KingdomEconomy.update` (with the keep's, every `kingdom.keep.check_ticks`) builds `PLAN` in order:
+  lumber camp, wheat field (starter buildings, materials given with `economy.free_starter_buildings`), cottage (paid: waits
+  for the logs of its wooden blocks and `economy.food_per_building` wheat; non-wooden materials given with
+  `economy.free_other_materials`). Plots: free ground around the keep facing it, away from water and other claims, outer
+  buildings up to `economy.plot.outer_reach` beyond the claim, levelled at once like the keep's site.
+- Builders of a finished building (keep included) are let go once its scaffolding is down. While nothing is being built, idle
+  soldiers become woodcutters (`economy.woodcutters`) and farmers (`economy.farmers`): job = the goal, POI = their building's
+  chest. They deliver there; the chests of finished buildings are the storehouse (swept into the stockpile).
+- New jobs are appended to the soldier's job list (saved job numbers of older jobs stay the same).
+- Dev book "Economy": look after it now, finish the current building (pastes it, keep included), supply the next building,
+  ripen the fields.
 
 ### Terrain (stage 2 spike: site checks; soldiers don't grade yet)
 

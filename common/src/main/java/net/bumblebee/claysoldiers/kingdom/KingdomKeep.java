@@ -95,7 +95,10 @@ public final class KingdomKeep {
     private KingdomKeep() {
     }
 
-    /** Called every server tick: every {@code kingdom.keep.check_ticks}, each active kingdom looks after its keep. */
+    /**
+     * Called every server tick: every {@code kingdom.keep.check_ticks}, each active kingdom looks after its keep, then its
+     * economy (stage 5, {@link KingdomEconomy}).
+     */
     public static void tick(MinecraftServer server) {
         if (server instanceof GameTestServer || server.getTickCount() % Tuning.KINGDOM_KEEP_CHECK_TICKS.get() != 0) {
             return;
@@ -109,6 +112,7 @@ public final class KingdomKeep {
                 ServerLevel level = server.getLevel(kingdom.dimension());
                 if (level != null) {
                     update(level, kingdom);
+                    KingdomEconomy.update(level, kingdom);
                 }
             }
         }
@@ -411,7 +415,7 @@ public final class KingdomKeep {
      * Puts the throne, a gold block, in its spot in the finished keep (replacing what the structure has there: a carpet,
      * the wooden throne). The kingdom adds it; it doesn't come from the stockpile.
      */
-    private static void placeThrone(ServerLevel level, Kingdom kingdom, KingdomBuilding keep) {
+    static void placeThrone(ServerLevel level, Kingdom kingdom, KingdomBuilding keep) {
         throne(level, keep).ifPresent(pos -> {
             if (!level.getBlockState(pos).is(Blocks.GOLD_BLOCK)) {
                 level.setBlock(pos, Blocks.GOLD_BLOCK.defaultBlockState(), Block.UPDATE_ALL);
@@ -421,7 +425,7 @@ public final class KingdomKeep {
     }
 
     /** Gives the king of a kingdom with a finished keep his extra health (once; it is saved with him). */
-    private static void crown(ServerLevel level, Kingdom kingdom) {
+    static void crown(ServerLevel level, Kingdom kingdom) {
         if (level.getEntity(kingdom.king().id()) instanceof AbstractClaySoldierEntity king && king.isAlive()) {
             AttributeInstance health = king.getAttribute(Attributes.MAX_HEALTH);
             int bonus = Tuning.KINGDOM_KING_BONUS_HEALTH.get();

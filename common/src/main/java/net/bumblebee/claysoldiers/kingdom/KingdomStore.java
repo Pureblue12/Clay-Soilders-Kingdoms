@@ -1,5 +1,7 @@
 package net.bumblebee.claysoldiers.kingdom;
 
+import net.bumblebee.claysoldiers.debug.DebugCategory;
+import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.dev.MaterialSupply;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -9,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.OptionalDouble;
 
 /**
  * A kingdom's stockpile as the store of its builders' chest (stage 4): the chest is stocked from the stockpile with what
@@ -16,6 +19,8 @@ import java.util.List;
  * the owner supplies the keep by filling its chest; the book shows what is still missing. Nothing comes from nothing: an
  * item lost with a builder has to be supplied again. Items are kept by id (stockpile resources are item ids), so a stack
  * with components (a named or enchanted item) stays in the chest.
+ * <p>
+ * Stage 5: a wooden block the stockpile doesn't hold is made from its logs ({@link WoodCost}, D98).
  */
 final class KingdomStore implements MaterialSupply.Store {
     private final MinecraftServer server;
@@ -36,7 +41,11 @@ final class KingdomStore implements MaterialSupply.Store {
 
     @Override
     public boolean has(Item item) {
-        return kingdom.resource(id(item)) > 0;
+        if (kingdom.resource(id(item)) > 0) {
+            return true;
+        }
+        OptionalDouble planks = WoodCost.planks(server, item);
+        return planks.isPresent() && WoodCost.logs(kingdom) * (double) WoodCost.PLANKS_PER_LOG >= planks.getAsDouble() - 1e-9;
     }
 
     @Override
@@ -44,7 +53,15 @@ final class KingdomStore implements MaterialSupply.Store {
     public ItemStack take(Item item) {
         ItemStack stack = new ItemStack(item);
         int count = Math.min(stack.getMaxStackSize(), kingdom.resource(id(item)));
-        if (count <= 0 || !Kingdoms.removeResource(server, kingdom, id(item), count).done()) {
+        if (count <= 0) {
+            int made = WoodCost.make(server, kingdom, item, stack.getMaxStackSize());
+            if (made > 0) {
+                DebugLog.event(DebugCategory.ECONOMY, null, () -> "%s made %d %s from logs".formatted(kingdom.team(), made, id(item)));
+                return stack.copyWithCount(made);
+            }
+            return null;
+        }
+        if (!Kingdoms.removeResource(server, kingdom, id(item), count).done()) {
             return null;
         }
         return stack.copyWithCount(count);

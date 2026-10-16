@@ -107,6 +107,22 @@ public class WorkSelectorGoal extends Goal implements SoldierStatusHolder {
     }
 
     /**
+     * Stops the soldier's job (it rests), e.g. when the kingdom's building it worked on is finished.
+     */
+    public void stopWork() {
+        resetGoal();
+        setWorkMode(RESTING_INDEX);
+        onWorkStatusChange();
+    }
+
+    /**
+     * Returns whether the soldier's job is a work goal of the given type.
+     */
+    public boolean isDoing(Class<? extends Goal> workType) {
+        return workType.isInstance(activeGoal);
+    }
+
+    /**
      * Returns the display name of the currently active goal
      */
     public Component getWorkDisplayName() {

@@ -12,7 +12,7 @@ Earlier work (M0–M2: testing, bug fixes, `/csr build`, builder fixes, doors) i
 | 2 | Terrain spike | L | **done** (in-game checklist pending) |
 | 3 | Tall construction spike | L | **done** (in-game checklist pending) |
 | 4 | Tier-1 keep built autonomously | L | **done** (2026-10-16, passed the owner's in-game test) |
-| 5 | Economy loop v1 | L | not started |
+| 5 | Economy loop v1 | L | **in progress** (2026-10-16: built, waiting for CI and the owner's in-game test) |
 | 5a | Decoration step | M | not started |
 | 6 | Layout and growth | XL | not started |
 | 7 | Performance checkpoint | M | not started |
@@ -155,7 +155,13 @@ Stages are ordered by dependency and risk. Every stage ends playable.
 - **Acceptance test:** the kingdom gathers wood and food unaided and spends them on a cottage.
 - **Depends on:** 4 · **Size:** L
 - **Risks:** carrier traffic and pathing load.
-- **Decisions:** [D5](DECISIONS.md) · **Status:** not started · **Results:** —
+- **Decisions:** [D5](DECISIONS.md), D96–D101 · **Status:** in progress · **Results:** after the keep, a kingdom plans a lumber camp,
+  a wheat field and a cottage on plots around the keep (`PlotPicker`); woodcutters fell and replant trees, farmers till, sow,
+  tend and harvest; both carry their harvest to their building's chest (the storehouse, counted as the stockpile); the
+  carpenter makes wooden blocks from logs of any kind; the cottage waits for its logs and the builders' wheat; every finished
+  building earns renown. Book page "Economy", recorder category ECONOMY, dev book category "Economy".
+  Flow audit: wood: woodcutter → camp chest → stockpile → carpenter → builders' chest. Food: farmer → field chest → stockpile →
+  builders' meals. Saplings: from each felled tree, planted at once. Seeds: from each harvest, replanted at once.
 
 ### 5a Decoration step
 - **Goal:** a code step that adds what builders can't carry once a structure (or a flourish level) is finished:
