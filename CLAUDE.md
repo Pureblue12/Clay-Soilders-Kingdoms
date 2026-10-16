@@ -37,7 +37,7 @@ Starts a headless test server, runs every test in
 `DoorGameTests`, `TuningGameTests`, `StructureRegistryGameTests`, `StructurePasteGameTests`,
 `LayoutCheckerGameTests`, `KingdomDataGameTests`, `KingdomGameTests`, `KingdomBookGameTests`, `KingdomBookRefreshGameTests`, `TerrainScoreGameTests`, `TerrainScanGameTests`,
 `TerrainGradingGameTests`, `TerrainFoundingGameTests`, `ScaffoldPlannerGameTests`, `ScaffoldBuildGameTests`,
-`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `BuildPlanGameTests`, `KingdomKeepGameTests`, `KingStoneGameTests`), prints
+`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `BuildPlanGameTests`, `KingdomKeepGameTests`, `KingFoundingGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Templates: `data/csr/structure/gametest/platform.nbt` (16x8x16) and `terrain.nbt` (32x16x32, for test terrains);
@@ -230,23 +230,26 @@ Code: `common/.../kingdom/` (`Kingdom`, `KingdomSavedData`, `Kingdoms` service, 
   notes in `docs/DECISIONS.md`. Any format change raises the version and adds a migration.
 - **At most one kingdom per team**, ACTIVE or RUINED. Change kingdoms only through `Kingdoms` (it marks the data
   dirty, writes the chronicle, records KINGDOM events).
-- **Founding** is explicit and reversible, never automatic:
-  - in game (D92): sneak + right-click your own king (a clay soldier wearing a gold ingot, its team loyal to you) holding
-    a gold block. He takes one block (carried in his off hand, saved with him), picks a spot himself at random among the
-    good keep sites near him (`kingdom.stone_pick_tolerance`), walks there and sets the block down beside him: that
-    founds the kingdom around him (`KingStone`, `KingStoneGoal`). A spot he can't reach (`kingdom.stone_walk_ticks`) or
-    where founding is refused is left out; after `kingdom.stone_tries` he drops the block. The block is taken up when
-    the keep starts and comes back as the throne;
-  - or `/csr kingdom found` (nearest loyal king within `kingdom.found_search_radius`).
+- **Founding** (D93, the owner's call 2026-10-16: "simply dropping a single gold piece to a soldier and the rest will take
+  care of itself"): a soldier who picks up a gold ingot is a king, and a king whose team has no kingdom founds one by
+  himself. He picks a spot at random among the good keep sites near him (`kingdom.found_pick_tolerance`), walks there and
+  founds the kingdom around himself (`KingFounding`, `KingFoundingGoal`); players near him are told. A spot he can't reach
+  (`kingdom.found_walk_ticks`) or where founding is refused is left out; after `kingdom.found_tries` in a row he rests
+  `kingdom.found_retry_ticks`. No team loyalty is involved anywhere in kingdoms: a kingdom's soldiers work without a loyal
+  player (`WorkSelectorGoal`). Kings in a GameTest server stay put unless a test calls `KingFounding.enableInTestsForTests`.
+  `/csr kingdom found` founds at once around the nearest king without a kingdom (within `kingdom.found_search_radius`).
 
-  Refused: unsupported dimension (Overworld only), not a living king, team not loyal to you, team already has a
-  kingdom, claim overlaps another kingdom, or the ground can't hold a keep (terrain check, below).
+  Refused: unsupported dimension (Overworld only), not a living king, team already has a kingdom, claim overlaps another
+  kingdom, or the ground can't hold a keep (terrain check, below).
+- **Bosses from eggs** (an original-mod feature: a soldier picking up an egg became a random clay boss that attacks
+  everyone; one killed the king in the owner's test) are off: `soldier.boss_from_eggs` 0 (`soldierpoi/BossEggs`, D94).
 - **The claim** is a circle of `kingdom.claim_radius` around the king, fixed at founding.
 - **The king's death** (NeoForge death event, lowest priority) sets RUINED and writes a chronicle line.
 - **Population** is counted every `kingdom.census_interval_ticks`, but only while the whole claim is loaded;
   otherwise the last count stays, with its time.
 - **Stockpile:** `Kingdoms.addResource` / `removeResource` (all or nothing, shortfall reported).
-- **Commands** (any player, every install): `/csr kingdom found | disband [team] | book [team] | status [team] | list`.
+- **Commands** (any player, every install): `/csr kingdom found | disband [team] | book [team] | status [team] | list`;
+  without a team they act on the kingdom you stand in, else the nearest one.
   `goto_king <team>` needs operators. The book (status page with "Go to the king", stockpile, buildings, chronicle)
   rewrites itself whenever it's opened, in the hand or on a lectern (D24).
 - **Dev only:** `/csr dev kingdom stock_add|stock_remove <resource> [amount]`, `stock_show` (book: Kingdom).
@@ -255,14 +258,15 @@ Code: `common/.../kingdom/` (`Kingdom`, `KingdomSavedData`, `Kingdoms` service, 
 
 Code: `common/.../kingdom/KingdomKeep` (planner and server tick), `KeepSite` (pure site search), `KingdomStore`
 (stockpile as the builders' chest store, through `dev/MaterialSupply.Store`), `KeepThrone` (throne spot per structure level),
-`entity/goal/KingThroneGoal`. Decisions D88–D91; numbers `kingdom.keep.*`, `kingdom.king_bonus_health`,
+`entity/goal/KingThroneGoal`. Decisions D88–D91, D93; numbers `kingdom.keep.*`, `kingdom.king_bonus_health`,
 `kingdom.throne_walk_ticks`.
 - Every `kingdom.keep.check_ticks` an active kingdom without a building plans its keep (master plan v0: the first
   building is the keep): nearest flat ground to its center, levelled at once, easel + chest like `/csr build`. No site:
   retried after `kingdom.keep.plan_retry_ticks`; the book's Keep page says why.
-- Builders: up to `kingdom.keep.builders` soldiers of the team in the claim that can work (wheat), have no job and no POI,
-  not the king. Materials: the chest is stocked from the stockpile; items put in the chest that aren't needed soon go to
-  the stockpile; nothing is replaced from nothing.
+- Builders: up to `kingdom.keep.builders` soldiers of the team in the claim with no job and no POI, not the king; wheat
+  holders first, the others are handed wheat (D93). Materials: when the keep starts, everything it needs goes into the
+  stockpile (`kingdom.keep.free_materials`, until stage 5's gathering); the chest is stocked from the stockpile; items
+  put in the chest that aren't needed soon go to the stockpile.
 - Finished (easel finished): BUILT, chronicle line, the kingdom puts a gold block (the throne) in its spot (keep L1: the
   middle of the king's chamber; L2/L3: in place of the great hall's wooden throne), the king gets
   +`kingdom.king_bonus_health` and stands on the gold block. Disbanding takes the health back.

@@ -12,7 +12,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 
 public class SoldierPoiWithItem extends SoldierPoiWithSource<ItemEntity> {
     public SoldierPoiWithItem(ItemEntity source) {
-        super(ClaySoldiersCommon.DATA_MAP.getItemPoi(source.getItem()), source);
+        super(BossEggs.filter(source.getItem(), ClaySoldiersCommon.DATA_MAP.getItemPoi(source.getItem())), source);
     }
 
     @Override

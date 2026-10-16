@@ -65,7 +65,7 @@ public final class Tuning {
     public static final TuningKey.IntKey KINGDOM_KEEP_MAX_HEIGHT_RANGE = register(new TuningKey.IntKey("kingdom.keep.max_height_range",
             "The most the ground under a keep site (with the easel, the chest and a margin of 1) may rise and fall, in blocks; the kingdom levels it when it starts the keep.", 3, 0, 16));
     public static final TuningKey.IntKey KINGDOM_KEEP_BUILDERS = register(new TuningKey.IntKey("kingdom.keep.builders",
-            "How many of the kingdom's soldiers build its keep. Only soldiers that can work (holding wheat) and have no job yet are picked, nearest to the keep's chest first.", 3, 1, 16));
+            "How many of the kingdom's soldiers build its keep: soldiers of the team in the claim with no job yet, not the king, nearest to the keep's chest first (wheat holders first); the kingdom hands the others wheat so they can work.", 3, 1, 16));
     public static final TuningKey.IntKey KINGDOM_KEEP_SCAFFOLD_STOCK = register(new TuningKey.IntKey("kingdom.keep.scaffold_stock",
             "How much scaffold material (scaffold.material) the kingdom asks for when its keep is taller than builders reach; builders carry it back when they take the scaffolding down.", 128, 0, 1024));
     public static final TuningKey.IntKey KINGDOM_KEEP_CHECK_TICKS = register(new TuningKey.IntKey("kingdom.keep.check_ticks",
@@ -76,12 +76,16 @@ public final class Tuning {
             "Extra health a king gets once his keep is built (a clay soldier has 20).", 80, 0, 1000));
     public static final TuningKey.IntKey KINGDOM_THRONE_WALK_TICKS = register(new TuningKey.IntKey("kingdom.throne_walk_ticks",
             "How long a king walks toward his throne before his soldiers carry him there (vanilla paths are short and the throne may be up a winding stair), in ticks; 0 = never.", 1200, 0, 72_000));
-    public static final TuningKey.IntKey KINGDOM_STONE_PICK_TOLERANCE = register(new TuningKey.IntKey("kingdom.stone_pick_tolerance",
-            "A king handed a gold block picks the spot for his kingdom at random among the usable keep sites near him that score at most this many points below the best (0 = always the best).", 10, 0, 100));
-    public static final TuningKey.IntKey KINGDOM_STONE_WALK_TICKS = register(new TuningKey.IntKey("kingdom.stone_walk_ticks",
-            "How long a king carrying his gold block walks toward the spot he picked before he picks another, in ticks.", 1200, 100, 72_000));
-    public static final TuningKey.IntKey KINGDOM_STONE_TRIES = register(new TuningKey.IntKey("kingdom.stone_tries",
-            "How many spots a king carrying his gold block tries (out of reach, founding refused, or no site found) before he drops it and gives up.", 5, 1, 100));
+    public static final TuningKey.IntKey KINGDOM_FOUND_PICK_TOLERANCE = register(new TuningKey.IntKey("kingdom.found_pick_tolerance",
+            "A new king (a soldier who picked up a gold ingot) picks the spot for his kingdom at random among the usable keep sites near him that score at most this many points below the best (0 = always the best).", 10, 0, 100));
+    public static final TuningKey.IntKey KINGDOM_FOUND_WALK_TICKS = register(new TuningKey.IntKey("kingdom.found_walk_ticks",
+            "How long a new king walks toward the spot he picked for his kingdom before he picks another, in ticks.", 1200, 100, 72_000));
+    public static final TuningKey.IntKey KINGDOM_FOUND_TRIES = register(new TuningKey.IntKey("kingdom.found_tries",
+            "How many spots a new king tries in a row (out of reach, founding refused, or no site found) before he rests (kingdom.found_retry_ticks).", 5, 1, 100));
+    public static final TuningKey.IntKey KINGDOM_FOUND_RETRY_TICKS = register(new TuningKey.IntKey("kingdom.found_retry_ticks",
+            "How long a new king rests after kingdom.found_tries spots didn't work out before he looks again, in ticks.", 1200, 20, 72_000));
+    public static final TuningKey.IntKey KINGDOM_KEEP_FREE_MATERIALS = register(new TuningKey.IntKey("kingdom.keep.free_materials",
+            "1 = when a kingdom starts its keep, everything the keep needs is added to its stockpile (until soldiers gather materials, stage 5); 0 = the materials must be supplied.", 1, 0, 1));
     public static final TuningKey.IntListKey PERFORMANCE_SOLDIER_CAP = register(new TuningKey.IntListKey("performance.soldier_cap_per_tier",
             "Most clay soldiers a kingdom may have per tier (placeholder until the stage 7 performance checkpoint).",
             List.of(8, 12, 16, 20, 26, 32, 40, 48, 56, 64), 1, 1000));
@@ -161,6 +165,8 @@ public final class Tuning {
             "Fall damage to a soldier that is working (building, digging, farming), in percent of vanilla's (a fall of 4 blocks costs half a heart). Upstream multiplies every environmental damage by 100, so a 4-block drop kills; builders working on upper floors fell off and died on every tall build. 10000 restores that.", 100, 0, 10000));
     public static final TuningKey.IntKey WORK_PLANT_DAMAGE_PERCENT = register(new TuningKey.IntKey("work.plant_damage_percent",
             "Damage to a soldier that is working from touching a sweet berry bush or a cactus, in percent of vanilla's (half a heart a touch). Upstream multiplies every environmental damage by 100, so brushing a bush killed a builder at once (hospital L3, D81). 10000 restores that.", 100, 0, 10000));
+    public static final TuningKey.IntKey SOLDIER_BOSS_FROM_EGGS = register(new TuningKey.IntKey("soldier.boss_from_eggs",
+            "1 = a clay soldier that picks up an egg turns into a random clay boss that attacks everyone (the original mod's feature); 0 = eggs are left alone. Off: chickens lay eggs anywhere, and a boss killed the king in the owner's stage 4 test (D94).", 0, 0, 1));
     public static final TuningKey.IntKey SCAFFOLD_COLUMNS_FIRST = register(new TuningKey.IntKey("scaffold.columns_first",
             "1: once builders start putting up a build's scaffolding (nothing else in reach), they put all of it up before working above reach; 0: they raise it a level at a time, whenever nothing else is in reach.", 1, 0, 1));
     public static final TuningKey.BlockKey SCAFFOLD_MATERIAL = register(new TuningKey.BlockKey("scaffold.material",

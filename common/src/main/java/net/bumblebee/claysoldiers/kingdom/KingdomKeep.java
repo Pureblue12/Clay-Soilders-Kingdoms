@@ -61,10 +61,12 @@ import java.util.UUID;
  *     <li><b>Plan:</b> an active kingdom without a keep picks the site ({@link KeepSite}: the nearest flat ground to where
  *     it was founded), levels it at once (cuts and fills earth, clears plants and trees; logs go to the stockpile), and
  *     places the easel with the keep's blueprint and the builders' chest (the {@code /csr dev structure build} layout).
- *     When there is no site (ground not loaded, too uneven, water) it tries again after {@code kingdom.keep.plan_retry_ticks}.</li>
- *     <li><b>Build:</b> the kingdom picks {@code kingdom.keep.builders} of its own soldiers (only ones that can work, i.e.
- *     hold wheat, and have no job) and makes them builders of the keep. The chest is stocked from the stockpile
- *     ({@link KingdomStore}); the owner supplies materials by putting them in the chest.</li>
+ *     Until soldiers gather materials, everything the keep needs goes into the stockpile then
+ *     ({@code kingdom.keep.free_materials}, D93). When there is no site (ground not loaded, too uneven, water) it tries
+ *     again after {@code kingdom.keep.plan_retry_ticks}.</li>
+ *     <li><b>Build:</b> the kingdom picks {@code kingdom.keep.builders} of its own soldiers with no job (wheat holders
+ *     first; the others are handed wheat so they can work) and makes them builders of the keep. The chest is stocked
+ *     from the stockpile ({@link KingdomStore}); a player can also put materials in the chest.</li>
  *     <li><b>Built:</b> the keep is finished when its easel is; the kingdom puts a gold block, the throne, in its spot
  *     ({@link KeepThrone}), the king gets {@code kingdom.king_bonus_health} more health and goes to stand on the throne
  *     ({@code KingThroneGoal}).</li>
@@ -167,8 +169,6 @@ public final class KingdomKeep {
                     + " (" + result.summary().substring("no site: ".length()) + "); trying again later");
         }
         KeepSite.Choice choice = result.best().get();
-        // The gold block the king set down to found the kingdom goes into the keep: it comes back as the throne (D92).
-        KingStone.takeUp(level, kingdom);
         int height = plan.get().getSize().getY();
         Levelled levelled = levelGround(level, choice.minX(MARGIN), choice.maxX(MARGIN), choice.minZ(MARGIN), choice.maxZ(MARGIN),
                 choice.groundY(), choice.groundY() + height + CLEAR_ABOVE);
@@ -176,7 +176,30 @@ public final class KingdomKeep {
         DebugLog.event(DebugCategory.TERRAIN, null, () -> "levelled the keep site of %s: %s; filled %d, cleared %d, logs to the stockpile %s"
                 .formatted(kingdom.team(), choice.describe(), levelled.filled(), levelled.cleared(), levelled.logs()));
         BlockPos easel = new BlockPos(choice.easelX(), choice.groundY() + 1, choice.easelZ());
-        return start(level, kingdom, KEEP, detail, blueprint, easel, choice.area().facing());
+        if (!start(level, kingdom, KEEP, detail, blueprint, easel, choice.area().facing())) {
+            return false;
+        }
+        grantMaterials(level, kingdom, detail);
+        return true;
+    }
+
+    /**
+     * Until soldiers gather materials (stage 5), a kingdom that starts its keep gets everything the keep needs in its
+     * stockpile ({@code kingdom.keep.free_materials}, D93): nothing else supplies it in a normal game.
+     */
+    private static void grantMaterials(ServerLevel level, Kingdom kingdom, int detail) {
+        if (Tuning.KINGDOM_KEEP_FREE_MATERIALS.get() == 0) {
+            return;
+        }
+        MinecraftServer server = level.getServer();
+        int count = 0;
+        for (ItemStack stack : materials(level, detail)) {
+            Kingdoms.addResource(server, kingdom, KingdomStore.id(stack.getItem()), stack.getCount());
+            count += stack.getCount();
+        }
+        int total = count;
+        Kingdoms.chronicle(server, kingdom, "The kingdom gathered what its keep needs (" + total + " items).");
+        DebugLog.event(DebugCategory.KINGDOM, null, () -> "granted %s the keep's %d items (kingdom.keep.free_materials)".formatted(kingdom.team(), total));
     }
 
     /**
@@ -336,8 +359,9 @@ public final class KingdomKeep {
 
     /**
      * Makes soldiers of the kingdom's team inside its claim builders of the keep until it has
-     * {@code kingdom.keep.builders}: only soldiers that can work (hold wheat), have no job and aren't the king, nearest to
-     * the chest first. Returns the crew's size.
+     * {@code kingdom.keep.builders}: soldiers with no job and no POI that aren't the king, the ones that can already work
+     * (holding wheat) first, then the nearest to the chest. A soldier that can't work yet is handed wheat (D93: nobody
+     * has to give the builders anything). Returns the crew's size.
      */
     static int assignBuilders(ServerLevel level, Kingdom kingdom, BlockPos chest) {
         int radius = kingdom.claimRadius();
@@ -353,13 +377,22 @@ public final class KingdomKeep {
             return crew;
         }
         List<AbstractClaySoldierEntity> idle = new ArrayList<>(soldiers.stream()
-                .filter(soldier -> soldier.getAttackType().canWork() && !soldier.getWorkSelector().isWorking()
-                        && soldier.getPoiPos() == null && !soldier.isPassenger() && !Kingdoms.isKing(soldier))
+                .filter(soldier -> !soldier.getWorkSelector().isWorking() && soldier.getPoiPos() == null && !soldier.isPassenger()
+                        && !Kingdoms.isKing(soldier))
                 .toList());
-        idle.sort(Comparator.comparingDouble(soldier -> soldier.distanceToSqr(chest.getX() + 0.5, chest.getY(), chest.getZ() + 0.5)));
+        idle.sort(Comparator.<AbstractClaySoldierEntity>comparingInt(soldier -> soldier.getAttackType().canWork() ? 0 : 1)
+                .thenComparingDouble(soldier -> soldier.distanceToSqr(chest.getX() + 0.5, chest.getY(), chest.getZ() + 0.5)));
         for (AbstractClaySoldierEntity soldier : idle) {
             if (crew >= wanted) {
                 break;
+            }
+            if (!soldier.getAttackType().canWork()) {
+                soldier.equipItemIfPossible(new ItemStack(Items.WHEAT));
+                if (!soldier.getAttackType().canWork()) {
+                    DebugLog.event(DebugCategory.KINGDOM, soldier, "couldn't hand wheat to a soldier of %s (no free slot)", kingdom.team());
+                    continue;
+                }
+                DebugLog.event(DebugCategory.KINGDOM, soldier, "%s handed a soldier wheat to make him a builder", kingdom.team());
             }
             // The job before the POI: a soldier without a job treats a POI as a one-time gear pickup (DevScenarios.spawnWorker).
             if (soldier.getWorkSelector().selectWork(BuildBlueprintGoal.class)) {
@@ -526,7 +559,7 @@ public final class KingdomKeep {
         Integer crew = CREWS.get(kingdom.id());
         if (crew != null) {
             int wanted = Tuning.KINGDOM_KEEP_BUILDERS.get();
-            lines.add("Builders: " + crew + " of " + wanted + (crew < wanted ? " (give soldiers of the team wheat to make workers)" : "") + ".");
+            lines.add("Builders: " + crew + " of " + wanted + (crew < wanted ? " (more soldiers of the team without a job are needed in the claim)" : "") + ".");
         }
         if (problem != null) {
             lines.add("Problem: " + problem + ".");

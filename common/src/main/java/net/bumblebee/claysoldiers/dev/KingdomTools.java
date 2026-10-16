@@ -25,7 +25,7 @@ import java.util.Optional;
  * The "Kingdom" dev book category: links to the real {@code /csr kingdom} commands (found, disband, book, status) and
  * dev-only stockpile tools for testing ({@code /csr dev kingdom stock_add|stock_remove|stock_show}), plus the keep's
  * (stage 4: {@code keep_materials} supplies it, {@code keep_now} looks after it at once). The stockpile
- * tools act on the kingdom you stand in, else the one of a team loyal to you.
+ * tools act on the kingdom you stand in, else the nearest one.
  */
 final class KingdomTools {
     static final String KINGDOM = "kingdom";
@@ -37,9 +37,9 @@ final class KingdomTools {
 
     static void register(DevToolRegistry registry) {
         registry.addCategory(new DevCategory(KINGDOM, "Kingdom",
-                "Found at once where your king stands (or sneak + right-click him with a gold block: he picks a spot and founds it there).", false));
+                "A soldier who picks up a gold ingot is a king and founds his kingdom by himself; these force it at once where he stands.", false));
         registry.addTool(DevTool.link("kingdom_found", KINGDOM, Component.literal("Found kingdom"),
-                "Founds a kingdom around the nearest king of a team loyal to you.", "/csr kingdom found", null));
+                "Founds a kingdom at once around the nearest king without one.", "/csr kingdom found", null));
         registry.addTool(DevTool.link("kingdom_book", KINGDOM, Component.literal("Kingdom book"),
                 "Gives the book of the kingdom you stand in (or your team's): status, stockpile, buildings, chronicle.", "/csr kingdom book", null));
         registry.addTool(DevTool.link("kingdom_status", KINGDOM, Component.literal("Status in chat"),

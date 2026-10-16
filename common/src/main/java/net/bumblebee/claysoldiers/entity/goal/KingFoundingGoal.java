@@ -4,7 +4,7 @@ import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.entity.door.DoorPathing;
 import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
-import net.bumblebee.claysoldiers.kingdom.KingStone;
+import net.bumblebee.claysoldiers.kingdom.KingFounding;
 import net.bumblebee.claysoldiers.kingdom.Kingdoms;
 import net.bumblebee.claysoldiers.tuning.Tuning;
 import net.minecraft.core.BlockPos;
@@ -17,12 +17,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Stage 4 (D92): a king carrying a gold block for a kingdom his team doesn't have yet ({@link KingStone#founding}) picks
- * a spot himself, walks there and sets the block down, which founds the kingdom. A spot he can't reach within
- * {@code kingdom.stone_walk_ticks}, or where founding is refused, is left out and he picks another; after
- * {@code kingdom.stone_tries} of them he drops the block and gives up. Fighting interrupts him (as {@link KingThroneGoal}).
+ * Stage 4 (D93): a king whose team has no kingdom yet ({@link KingFounding#founding}) picks a spot himself, walks there
+ * and founds the kingdom around himself. A spot he can't reach within {@code kingdom.found_walk_ticks}, or where
+ * founding is refused, is left out and he picks another; after {@code kingdom.found_tries} of them in a row he rests for
+ * {@code kingdom.found_retry_ticks} and starts over. Fighting interrupts him (as {@link KingThroneGoal}).
  */
-public class KingStoneGoal extends Goal {
+public class KingFoundingGoal extends Goal {
     /** Ticks between looks while he isn't walking to a spot. */
     private static final int CHECK_TICKS = 40;
     /** Ticks after being hurt before he goes on. */
@@ -40,7 +40,7 @@ public class KingStoneGoal extends Goal {
     private int nextCheck;
     private int walked;
 
-    public KingStoneGoal(AbstractClaySoldierEntity king) {
+    public KingFoundingGoal(AbstractClaySoldierEntity king) {
         this.king = king;
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.JUMP));
     }
@@ -51,17 +51,17 @@ public class KingStoneGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (!(king.level() instanceof ServerLevel level) || king.tickCount < nextCheck || !Kingdoms.isKing(king) || !KingStone.carries(king)) {
+        if (!(king.level() instanceof ServerLevel level) || king.tickCount < nextCheck || !Kingdoms.isKing(king)) {
             return false;
         }
         nextCheck = king.tickCount + CHECK_TICKS;
-        if (!KingStone.founding(king) || fighting() || king.isPassenger() || king.isInWaterOrBubble()) {
+        if (!KingFounding.founding(king) || fighting() || king.isPassenger() || king.isInWaterOrBubble()) {
             return false;
         }
         if (spot == null) {
-            spot = KingStone.pick(level, king, tried, king.getRandom()).orElse(null);
+            spot = KingFounding.pick(level, king, tried, king.getRandom()).orElse(null);
             if (spot == null) {
-                failed(level, "found no good ground for a keep near him");
+                failed(level, "no good ground for a keep near him");
                 return false;
             }
         }
@@ -70,7 +70,7 @@ public class KingStoneGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return spot != null && KingStone.founding(king) && !fighting() && !king.isPassenger();
+        return spot != null && KingFounding.founding(king) && !fighting() && !king.isPassenger();
     }
 
     @Override
@@ -87,7 +87,7 @@ public class KingStoneGoal extends Goal {
         if (king.getNavigation() instanceof DoorPathing.Ground ground) {
             ground.setRangeBonus(0);
         }
-        nextCheck = king.tickCount + CHECK_TICKS;
+        nextCheck = Math.max(nextCheck, king.tickCount + CHECK_TICKS);
     }
 
     @Override
@@ -104,15 +104,17 @@ public class KingStoneGoal extends Goal {
         double dz = king.getZ() - (spot.getZ() + 0.5);
         if (dx * dx + dz * dz < THERE_SQR && king.onGround()) {
             king.getNavigation().stop();
-            Kingdoms.Result result = KingStone.setDown(level, king);
+            Kingdoms.Result result = KingFounding.found(level, king);
             if (!result.ok()) {
-                failed(level, "couldn't found the kingdom at " + spot.toShortString() + ": " + result.refusal());
+                failed(level, "founding at " + spot.toShortString() + " was refused: " + result.refusal());
             } else {
                 spot = null;
+                tries = 0;
+                tried.clear();
             }
             return;
         }
-        if (walked >= Tuning.KINGDOM_STONE_WALK_TICKS.get()) {
+        if (walked >= Tuning.KINGDOM_FOUND_WALK_TICKS.get()) {
             failed(level, "couldn't get to " + spot.toShortString());
             return;
         }
@@ -121,18 +123,19 @@ public class KingStoneGoal extends Goal {
         }
     }
 
-    /** One spot didn't work out: leave it out and pick again, or give up after {@code kingdom.stone_tries}. */
+    /** One spot didn't work out: leave it out and pick again, or rest after {@code kingdom.found_tries} in a row. */
     private void failed(ServerLevel level, String why) {
         if (spot != null) {
-            tried.add(KingStone.column(spot.getX(), spot.getZ()));
+            tried.add(KingFounding.column(spot.getX(), spot.getZ()));
         }
         spot = null;
         tries++;
         DebugLog.event(DebugCategory.KINGDOM, king, "spot %d for the kingdom didn't work out: %s", tries, why);
-        if (tries >= Tuning.KINGDOM_STONE_TRIES.get()) {
-            KingStone.giveUp(level, king, why);
+        if (tries >= Tuning.KINGDOM_FOUND_TRIES.get()) {
+            KingFounding.rest(level, king, why);
             tries = 0;
             tried.clear();
+            nextCheck = king.tickCount + Tuning.KINGDOM_FOUND_RETRY_TICKS.get();
         }
     }
 }

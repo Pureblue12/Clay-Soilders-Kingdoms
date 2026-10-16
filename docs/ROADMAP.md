@@ -125,25 +125,28 @@ Stages are ordered by dependency and risk. Every stage ends playable.
 ### 4 Tier-1 keep built autonomously
 - **Goal:**
   - master plan v0 (keep slot only), and a kingdom-level planner (replaces the old M3);
-  - builders assigned by the kingdom, using materials from the stockpile (the owner supplies them);
+  - builders assigned by the kingdom, using materials from the stockpile (granted when the keep starts until stage 5, D93);
   - a throne room; the king sits on the throne and has high health.
-- **Acceptance test:** a gold-hat king plus the supplied items yields a finished keep with the king on the throne. First real playable.
+- **Acceptance test:** one gold ingot dropped by a soldier yields a kingdom, a finished keep and the king on the throne, with nothing else to do (D93). First real playable.
 - **Depends on:** 1, 2, 3 · **Size:** L
 - **Risks:** keep size versus terrain.
-- **Decisions:** [D3](DECISIONS.md), [D4](DECISIONS.md), D88–D92 · **Status:** in progress (2026-10-13, draft) · **Results:**
-  - **Founding by gold block (`KingStone`, D92):** hand your crowned king a gold block (sneak + right-click); he picks a
-    spot himself among the good sites near him, walks there and sets it down, which founds the kingdom. The block goes
-    into the keep when it starts and comes back as the throne.
+- **Decisions:** [D3](DECISIONS.md), [D4](DECISIONS.md), D88–D94 · **Status:** in progress (2026-10-16, draft; the owner's first in-game test failed on the setup, reworked) · **Results:**
+  - **Founding with one gold ingot (`KingFounding`, D93, replaces D92):** drop a gold ingot by a soldier; he picks it up,
+    is king, picks a spot himself among the good sites near him, walks there and founds the kingdom. No team claim, no
+    gold block, no commands. The owner's first test (2026-10-16) failed on the old setup (loyalty claim, gold block).
   - **Master plan v0 and planner (`KingdomKeep`, `KeepSite`):** an active kingdom without a keep picks the nearest flat
     ground to where it was founded (all four directions), levels it at once (logs to the stockpile) and places the
     keep's easel and chest. Keep level from `kingdom.keep.level` (1).
-  - **Builders:** 3 of the kingdom's own wheat-holding soldiers without a job (never the king, never fighters).
-  - **Materials:** from the stockpile; the owner fills the keep's chest, unneeded items go to the stockpile; the book
-    and `/csr kingdom status` list what is missing. Dev: `/csr dev kingdom keep_materials`, `keep_now`.
+  - **Builders:** 3 of the kingdom's own soldiers without a job (never the king; wheat holders first, the others are
+    handed wheat). They work without a player loyal to the team (D93).
+  - **Materials:** when the keep starts, everything it needs goes into the stockpile (`kingdom.keep.free_materials`,
+    until stage 5); the chest is stocked from it, unneeded items go back; the book and `/csr kingdom status` list what
+    is missing. Dev: `/csr dev kingdom keep_materials`, `keep_now`.
+  - **Bosses from eggs off (D94):** the original mod's egg-to-boss swap killed the king in the owner's test.
   - **Throne:** a gold block the kingdom puts in the finished keep, and the king stands on it (the owner's call). Keep L1
     has no throne room, so it goes in the middle of the king's chamber (L2/L3: in place of the great hall's wooden
     throne); +80 health once the keep is built; carried to the throne if he can't walk there in time.
-  - **Tests:** `KingStoneGameTests` (the king founds where he likes, refusals, block taken up), `KingdomKeepGameTests` (the whole loop with the test hut, chest to stockpile, site search, levelling,
+  - **Tests:** `KingFoundingGameTests` (a dropped gold ingot founds a kingdom with no loyal player; a kingdom without a loyal player builds and hands out wheat), `KingdomKeepGameTests` (the whole loop with the test hut, chest to stockpile, site search, levelling,
     saved level). The full keep L1 build in game takes about 132,000 ticks (about 2 hours with 3 builders).
   - **Open:** the owner's in-game checklist; whether the king's chamber is the right room for the L1 throne.
 

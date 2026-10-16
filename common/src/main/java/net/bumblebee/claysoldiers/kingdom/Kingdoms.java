@@ -5,8 +5,6 @@ import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
 import net.bumblebee.claysoldiers.soldierproperties.customproperties.AttackTypeProperty;
 import net.bumblebee.claysoldiers.team.ClayMobTeamManger;
-import net.bumblebee.claysoldiers.team.TeamLoyaltyManger;
-import net.bumblebee.claysoldiers.team.TeamPlayerData;
 import net.bumblebee.claysoldiers.terrain.SiteScore;
 import net.bumblebee.claysoldiers.terrain.SiteSearch;
 import net.bumblebee.claysoldiers.terrain.Terrain;
@@ -35,8 +33,8 @@ import java.util.stream.Collectors;
 
 /**
  * Everything that changes kingdoms goes through here: it keeps the saved data dirty, writes the chronicle and records
- * KINGDOM events. Founding is explicit (a command, the book, or sneak + right-click your king with a gold block, and he founds it where he likes),
- * never automatic, and always reversible ({@link #disband}).
+ * KINGDOM events. A kingdom is founded by its king: a soldier who picks up a gold ingot founds one by himself where
+ * he likes ({@link KingFounding}, D93), or a command founds it at once. Always reversible ({@link #disband}).
  */
 public final class Kingdoms {
     /** Dimensions a kingdom can be founded in. */
@@ -75,22 +73,22 @@ public final class Kingdoms {
         return soldier.getAttackType() == AttackTypeProperty.KING;
     }
 
-    /** Whether {@code player} is the player {@code team} is loyal to. */
-    public static boolean isLoyalTo(ServerLevel level, ResourceLocation team, Player player) {
-        TeamPlayerData.PlayerData owner = TeamLoyaltyManger.getTeamPlayerData(level).getPlayerForTeam(team);
-        return owner != null && owner.getUUID().equals(player.getUUID());
+    /** Whether {@code soldier}'s team has an active kingdom (its soldiers work for it, D93). */
+    public static boolean hasActiveKingdom(AbstractClaySoldierEntity soldier) {
+        MinecraftServer server = soldier.getServer();
+        return server != null && byTeam(server, soldier.getClayTeamType()).filter(kingdom -> kingdom.status() == KingdomStatus.ACTIVE).isPresent();
     }
 
-    /** The nearest living king of a team loyal to {@code player}, within {@code kingdom.found_search_radius}. */
-    public static Optional<AbstractClaySoldierEntity> findNearestKing(ServerLevel level, Vec3 pos, Player player) {
+    /** The nearest living king without a kingdom, within {@code kingdom.found_search_radius} of {@code pos}. */
+    public static Optional<AbstractClaySoldierEntity> findNearestKing(ServerLevel level, Vec3 pos) {
         double radius = Tuning.KINGDOM_FOUND_SEARCH_RADIUS.get();
         return level.getEntitiesOfClass(AbstractClaySoldierEntity.class, new AABB(pos, pos).inflate(radius),
                         soldier -> soldier.isAlive() && isKing(soldier) && soldier.distanceToSqr(pos) <= radius * radius
-                                && isLoyalTo(level, soldier.getClayTeamType(), player))
+                                && byTeam(level.getServer(), soldier.getClayTeamType()).isEmpty())
                 .stream().min(Comparator.comparingDouble(soldier -> soldier.distanceToSqr(pos)));
     }
 
-    /** Founds a kingdom around the nearest king loyal to {@code player} (see {@link #findNearestKing}). */
+    /** Founds a kingdom around the nearest king without one (see {@link #findNearestKing}). */
     public static Result foundNear(ServerPlayer player) {
         return foundNear(player, false);
     }
@@ -100,17 +98,17 @@ public final class Kingdoms {
      * checks the permission).
      */
     public static Result foundNear(ServerPlayer player, boolean force) {
-        Optional<AbstractClaySoldierEntity> king = findNearestKing(player.serverLevel(), player.position(), player);
+        Optional<AbstractClaySoldierEntity> king = findNearestKing(player.serverLevel(), player.position());
         if (king.isEmpty()) {
-            return refuse(null, null, "There is no king of a team loyal to you within " + Tuning.KINGDOM_FOUND_SEARCH_RADIUS.get()
-                    + " blocks. (A king is a clay soldier wearing a gold ingot; feed it to make its team loyal to you.)");
+            return refuse(null, null, "There is no king without a kingdom within " + Tuning.KINGDOM_FOUND_SEARCH_RADIUS.get()
+                    + " blocks. (A king is a clay soldier wearing a gold ingot: drop one by a soldier.)");
         }
         return found(player.serverLevel(), king.get(), player, force);
     }
 
     /**
      * Founds a kingdom for {@code king}'s team around the king. Refused when: the dimension isn't supported, it isn't a
-     * living king, {@code founder} isn't loyal to its team, the team already has a kingdom, the claim overlaps
+     * living king, the team already has a kingdom, the claim overlaps
      * another kingdom's, or the ground around the king can't hold a keep (terrain check: cliff, lava, deep water, too
      * steep; soft problems become warnings). When part of the site isn't loaded the terrain check is skipped.
      */
@@ -133,9 +131,6 @@ public final class Kingdoms {
         }
         if (!king.isAlive() || !isKing(king)) {
             return refuse(king, team, "That soldier isn't a living king (a king is a clay soldier wearing a gold ingot).");
-        }
-        if (founder != null && !isLoyalTo(level, team, founder)) {
-            return refuse(king, team, "The team " + teamName(server, team) + " isn't loyal to you.");
         }
         Optional<Kingdom> existing = data.byTeam(team);
         if (existing.isPresent()) {
