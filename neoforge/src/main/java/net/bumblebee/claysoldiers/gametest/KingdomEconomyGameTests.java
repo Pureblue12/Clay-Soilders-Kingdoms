@@ -10,6 +10,7 @@ import net.bumblebee.claysoldiers.kingdom.Kingdom;
 import net.bumblebee.claysoldiers.kingdom.KingdomBuilding;
 import net.bumblebee.claysoldiers.kingdom.KingdomEconomy;
 import net.bumblebee.claysoldiers.kingdom.KingdomKeep;
+import net.bumblebee.claysoldiers.kingdom.KingdomStore;
 import net.bumblebee.claysoldiers.kingdom.Meals;
 import net.bumblebee.claysoldiers.kingdom.Kingdoms;
 import net.bumblebee.claysoldiers.kingdom.PlotPicker;
@@ -36,7 +37,10 @@ import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.OptionalDouble;
 
 import static net.bumblebee.claysoldiers.gametest.ClaySoldierGameTests.GROUND_Y;
@@ -73,10 +77,10 @@ public class KingdomEconomyGameTests {
 
         Kingdom kingdom = found(helper);
         Kingdoms.addResource(server, kingdom, BuiltInRegistries.ITEM.getKey(Items.BIRCH_LOG), 3);
-        int made = WoodCost.make(server, kingdom, Items.SPRUCE_STAIRS, 64);
+        int made = WoodCost.make(server, kingdom, Items.SPRUCE_STAIRS, 64, Map.of());
         helper.assertTrue(made == 8, "3 birch logs (12 planks) should make 8 spruce stairs, made " + made);
         helper.assertTrue(WoodCost.logs(kingdom) == 0, "All 3 logs should be used, left " + WoodCost.logs(kingdom));
-        helper.assertTrue(WoodCost.make(server, kingdom, Items.SPRUCE_STAIRS, 64) == 0, "Nothing should be made without logs");
+        helper.assertTrue(WoodCost.make(server, kingdom, Items.SPRUCE_STAIRS, 64, Map.of()) == 0, "Nothing should be made without logs");
         KingdomGameTests.clear(helper);
         helper.succeed();
     }
@@ -90,13 +94,42 @@ public class KingdomEconomyGameTests {
         MinecraftServer server = helper.getLevel().getServer();
         Kingdom kingdom = found(helper);
         Kingdoms.addResource(server, kingdom, BuiltInRegistries.ITEM.getKey(Items.OAK_PLANKS), 7);
-        int doors = WoodCost.make(server, kingdom, Items.SPRUCE_DOOR, 1);
+        int doors = WoodCost.make(server, kingdom, Items.SPRUCE_DOOR, 1, Map.of());
         helper.assertTrue(doors == 1, "7 spare oak planks should make a spruce door, made " + doors);
         helper.assertTrue(WoodCost.sparePlanks(kingdom) == 5, "The door costs 2 planks, 5 should be left, left " + WoodCost.sparePlanks(kingdom));
         Kingdoms.addResource(server, kingdom, BuiltInRegistries.ITEM.getKey(Items.OAK_LOG), 1);
-        int stairs = WoodCost.make(server, kingdom, Items.OAK_STAIRS, 64);
+        int stairs = WoodCost.make(server, kingdom, Items.OAK_STAIRS, 64, Map.of());
         helper.assertTrue(stairs == 6, "5 spare planks and a log (9 planks) should make 6 stairs, made " + stairs);
         helper.assertTrue(WoodCost.wood(kingdom) == 0, "All the wood should be used, left " + WoodCost.wood(kingdom) + " planks' worth");
+        KingdomGameTests.clear(helper);
+        helper.succeed();
+    }
+
+    /**
+     * The carpenter never cuts up planks or logs the build still needs as they are (the owner's game, 2026-10-17): it made
+     * the keep's spruce planks into dark oak logs and spruce stairs, and the keep stopped 13 spruce planks short.
+     */
+    @GameTest(template = PLATFORM, batch = "economy_reserved_wood")
+    public static void carpenterLeavesTheBuildsOwnPlanks(GameTestHelper helper) {
+        MinecraftServer server = helper.getLevel().getServer();
+        Kingdom kingdom = found(helper);
+        ResourceLocation spruce = BuiltInRegistries.ITEM.getKey(Items.SPRUCE_PLANKS);
+        Kingdoms.addResource(server, kingdom, spruce, 13);
+        List<Item> remaining = new ArrayList<>(Collections.nCopies(13, Items.SPRUCE_PLANKS));
+        remaining.addAll(Collections.nCopies(3, Items.DARK_OAK_LOG));
+        int[] inChest = {0};
+        KingdomStore store = new KingdomStore(server, kingdom, null, () -> remaining,
+                item -> item == Items.SPRUCE_PLANKS ? inChest[0] : 0);
+        helper.assertTrue(!store.has(Items.DARK_OAK_LOG) && store.take(Items.DARK_OAK_LOG) == null,
+                "No dark oak log should be made from the build's own spruce planks");
+        helper.assertTrue(store.take(Items.SPRUCE_STAIRS) == null, "No stairs should be made from the build's own spruce planks");
+        helper.assertTrue(kingdom.resource(spruce) == 13, "All 13 spruce planks should still be there, left " + kingdom.resource(spruce));
+
+        // Planks already in the chest cover the build: what the stockpile has beyond that is spare.
+        inChest[0] = 9;
+        ItemStack stairs = store.take(Items.SPRUCE_STAIRS);
+        helper.assertTrue(stairs != null && stairs.getCount() == 6, "9 spare planks should make 6 stairs, got " + stairs);
+        helper.assertTrue(kingdom.resource(spruce) == 4, "The 4 planks still needed should be left, left " + kingdom.resource(spruce));
         KingdomGameTests.clear(helper);
         helper.succeed();
     }

@@ -302,7 +302,9 @@ around the keep), `WoodCost` (the carpenter: wooden blocks from logs of any kind
   `economy.meal.ticks` (`Meals`, D102; `mealMakesABuilderFasterAndTougher`).
 - The carpenter uses the stockpile's spare planks before cutting logs (a log cut for planks leaves some over; without this a
   cottage's door waited forever, found by the story test; `sparePlanksAreUsedBeforeLogs`). A paid building's logs count spare
-  planks as logs (4 to a log).
+  planks as logs (4 to a log). It never touches planks or logs the build still needs as they are (its remaining blocks of
+  that item less what its chest holds): it once cut the keep's own spruce planks into dark oak logs and stairs, and the keep
+  stopped 13 planks short in the owner's game (`carpenterLeavesTheBuildsOwnPlanks`).
 - New jobs are appended to the soldier's job list (saved job numbers of older jobs stay the same).
 - Dev book "Economy": look after it now, finish the current building (pastes it, keep included), supply the next building,
   ripen the fields.

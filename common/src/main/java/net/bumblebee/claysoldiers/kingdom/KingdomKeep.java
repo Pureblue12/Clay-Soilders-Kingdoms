@@ -366,7 +366,7 @@ public final class KingdomKeep {
         MaterialSupply supply = SUPPLIES.get(kingdom.id());
         if (supply == null || supply.isFinished() || !supply.chestPos().equals(chest)) {
             Item scaffold = BuiltInRegistries.BLOCK.get(Tuning.SCAFFOLD_MATERIAL.get()).asItem();
-            supply = new MaterialSupply(level, chest, new KingdomStore(server, kingdom, scaffold == Items.AIR ? null : scaffold),
+            supply = new MaterialSupply(level, chest, KingdomStore.of(level, kingdom, scaffold == Items.AIR ? null : scaffold, plan::remainingItems, chest),
                     plan::remainingItems, () -> easel.isRemoved() || easel.isFinished());
             SUPPLIES.put(kingdom.id(), supply);
         }

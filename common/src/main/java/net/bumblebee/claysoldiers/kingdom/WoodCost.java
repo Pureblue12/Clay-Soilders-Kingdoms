@@ -31,6 +31,10 @@ import java.util.function.Predicate;
  * <p>
  * Spare planks in the stockpile are used before logs. Taking logs rounds up per take, so up to 3 planks' worth can be
  * left over each time; they go back to the stockpile as spare planks when the builders return them.
+ * <p>
+ * Planks and logs the build still needs as they are (the keep's spruce floors, a cottage's log pillars) are reserved:
+ * the carpenter never cuts them up for another block. Without this, the keep's own spruce planks went into dark oak logs
+ * and spruce stairs, and the keep stopped 13 planks short (the owner's game, 2026-10-17).
  */
 public final class WoodCost {
     /** Planks per log. */
@@ -153,13 +157,27 @@ public final class WoodCost {
     }
 
     private static int count(Kingdom kingdom, Predicate<ResourceLocation> kind) {
+        return count(kingdom, kind, Map.of());
+    }
+
+    /** Stockpile entries of {@code kind}, leaving out what is {@code reserved} of each. */
+    private static int count(Kingdom kingdom, Predicate<ResourceLocation> kind, Map<ResourceLocation, Integer> reserved) {
         int count = 0;
         for (Entry<ResourceLocation, Integer> entry : kingdom.stockpile().entrySet()) {
             if (kind.test(entry.getKey())) {
-                count += entry.getValue();
+                count += free(entry, reserved);
             }
         }
         return count;
+    }
+
+    private static int free(Entry<ResourceLocation, Integer> entry, Map<ResourceLocation, Integer> reserved) {
+        return Math.max(0, entry.getValue() - reserved.getOrDefault(entry.getKey(), 0));
+    }
+
+    /** The wood the carpenter may use, in planks: spare planks and logs, leaving out what is {@code reserved}. */
+    public static int wood(Kingdom kingdom, Map<ResourceLocation, Integer> reserved) {
+        return count(kingdom, WoodCost::isPlanks, reserved) + count(kingdom, WoodCost::isLog, reserved) * PLANKS_PER_LOG;
     }
 
     /** Logs needed for {@code planks} planks (rounded up). */
@@ -173,21 +191,25 @@ public final class WoodCost {
      * @return whether they were taken
      */
     public static boolean takeLogs(MinecraftServer server, Kingdom kingdom, int count) {
-        return take(server, kingdom, WoodCost::isLog, count);
+        return take(server, kingdom, WoodCost::isLog, count, Map.of());
     }
 
-    /** Takes {@code count} of the stockpile entries of {@code kind}, the ones it has most of first; all or nothing. */
-    private static boolean take(MinecraftServer server, Kingdom kingdom, Predicate<ResourceLocation> kind, int count) {
+    /**
+     * Takes {@code count} of the stockpile entries of {@code kind}, leaving what is {@code reserved}, the ones it has most of
+     * first; all or nothing.
+     */
+    private static boolean take(MinecraftServer server, Kingdom kingdom, Predicate<ResourceLocation> kind, int count,
+                                Map<ResourceLocation, Integer> reserved) {
         if (count <= 0) {
             return true;
         }
-        if (count(kingdom, kind) < count) {
+        if (count(kingdom, kind, reserved) < count) {
             return false;
         }
         List<Entry<ResourceLocation, Integer>> kinds = new ArrayList<>();
         for (Entry<ResourceLocation, Integer> entry : kingdom.stockpile().entrySet()) {
             if (kind.test(entry.getKey())) {
-                kinds.add(Map.entry(entry.getKey(), entry.getValue()));
+                kinds.add(Map.entry(entry.getKey(), free(entry, reserved)));
             }
         }
         kinds.sort(Entry.<ResourceLocation, Integer>comparingByValue().reversed());
@@ -208,21 +230,23 @@ public final class WoodCost {
      * Makes up to {@code max} of {@code item} from the stockpile's wood, spare planks first, then logs; returns how many were
      * made (0 when it isn't wooden or there isn't enough wood for one). A log cut for it leaves its spare planks in the chest
      * the builders put back, so they are used for the next wooden block (a cottage's door after its floor of planks).
+     * Planks and logs in {@code reserved} (by stockpile entry: what the build still needs as they are) are left alone.
      */
-    public static int make(MinecraftServer server, Kingdom kingdom, Item item, int max) {
+    public static int make(MinecraftServer server, Kingdom kingdom, Item item, int max, Map<ResourceLocation, Integer> reserved) {
         OptionalDouble each = planks(server, item);
         if (each.isEmpty() || max <= 0) {
             return 0;
         }
-        int spare = sparePlanks(kingdom);
-        int count = (int) Math.min(max, Math.floor(wood(kingdom) / each.getAsDouble() + 1e-9));
+        int spare = count(kingdom, WoodCost::isPlanks, reserved);
+        int count = (int) Math.min(max, Math.floor(wood(kingdom, reserved) / each.getAsDouble() + 1e-9));
         if (count <= 0) {
             return 0;
         }
         int needed = (int) Math.ceil(count * each.getAsDouble() - 1e-9);
         int fromPlanks = Math.min(spare, needed);
         int fromLogs = logsFor(needed - fromPlanks);
-        if (logs(kingdom) < fromLogs || !take(server, kingdom, WoodCost::isPlanks, fromPlanks) || !takeLogs(server, kingdom, fromLogs)) {
+        if (count(kingdom, WoodCost::isLog, reserved) < fromLogs || !take(server, kingdom, WoodCost::isPlanks, fromPlanks, reserved)
+                || !take(server, kingdom, WoodCost::isLog, fromLogs, reserved)) {
             return 0;
         }
         return count;
