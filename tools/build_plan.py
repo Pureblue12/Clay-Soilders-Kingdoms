@@ -123,7 +123,7 @@ class Structure:
         order = []
         for block in root["blocks"]:
             name, props = states[block["state"]]
-            if name in ("air", "cave_air", "void_air", "structure_void", "jigsaw"):
+            if name in ("air", "cave_air", "void_air", "structure_void", "jigsaw") or B.decoration(name):
                 continue
             x, y, z = block["pos"]
             pos = (self.base[0] + x, self.base[1] + y, self.base[2] + z)

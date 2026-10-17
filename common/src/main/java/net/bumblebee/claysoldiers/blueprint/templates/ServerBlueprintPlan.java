@@ -14,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.Registries;
+import net.bumblebee.claysoldiers.structure.StructureDecoration;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
@@ -59,9 +60,13 @@ import java.util.stream.Collectors;
 public class ServerBlueprintPlan extends BlueprintPlan {
     private final List<BlueprintBlockInfo> blockInfoList;
     private static final String BUILD_PLAN_TAG = "build_plan";
+    private static final String DECORATION_TAG = "decoration";
     /** The structure's pre-baked build plan (D82), or {@code null} (blocks are handed out in list order, as before). */
     @Nullable
     private final BuildPlan buildPlan;
+    /** What code adds once the last block is placed (stage 5a), or {@code null}: none, or already added. Saved. */
+    @Nullable
+    private StructureDecoration decoration;
     /** Whether the last request search that handed out nothing skipped blocks out of reach (for scaffolding). */
     private boolean lastSearchFoundUnreachable;
     /**
@@ -86,9 +91,36 @@ public class ServerBlueprintPlan extends BlueprintPlan {
      *                  order ({@link ImmutableTemplate#withPlan})
      */
     public ServerBlueprintPlan(Vec3i size, List<StructureTemplate.StructureBlockInfo> blockInfoList, @Nullable BuildPlan buildPlan) {
+        this(size, blockInfoList, buildPlan, null);
+    }
+
+    /** @param decoration what code adds once the last block is placed (stage 5a), or {@code null} */
+    public ServerBlueprintPlan(Vec3i size, List<StructureTemplate.StructureBlockInfo> blockInfoList, @Nullable BuildPlan buildPlan,
+                               @Nullable StructureDecoration decoration) {
         super(BlueprintUtil.getNeededItemsFromInfo(blockInfoList, StructureTemplate.StructureBlockInfo::state), size);
         this.blockInfoList = fromBlockInfoList(blockInfoList);
         this.buildPlan = buildPlan;
+        this.decoration = decoration;
+    }
+
+    /** The decoration still to add (stage 5a), or {@code null}. */
+    @Nullable
+    public StructureDecoration decoration() {
+        return decoration;
+    }
+
+    /**
+     * Once the last block is placed: the decoration, handed out exactly once ({@code null} afterwards, also after a
+     * reload, and before the build is finished).
+     */
+    @Nullable
+    public StructureDecoration takeDecoration() {
+        if (!isFinished()) {
+            return null;
+        }
+        StructureDecoration taken = decoration;
+        decoration = null;
+        return taken;
     }
 
     public static ServerBlueprintPlan load(CompoundTag tag, HolderLookup.Provider registries) {
@@ -98,7 +130,8 @@ public class ServerBlueprintPlan extends BlueprintPlan {
         if (buildPlan != null) {
             blocks = buildPlan.order(blocks, StructureTemplate.StructureBlockInfo::pos);
         }
-        ServerBlueprintPlan serverBlueprintPlan = new ServerBlueprintPlan(BlueprintUtil.getSizeFromTag(tag), blocks, buildPlan);
+        StructureDecoration decoration = tag.contains(DECORATION_TAG, Tag.TAG_COMPOUND) ? StructureDecoration.load(tag.getCompound(DECORATION_TAG)) : null;
+        ServerBlueprintPlan serverBlueprintPlan = new ServerBlueprintPlan(BlueprintUtil.getSizeFromTag(tag), blocks, buildPlan, decoration);
         serverBlueprintPlan.loadHasStarted(tag);
         return serverBlueprintPlan;
     }
@@ -142,6 +175,9 @@ public class ServerBlueprintPlan extends BlueprintPlan {
 
         if (buildPlan != null) {
             pTag.put(BUILD_PLAN_TAG, buildPlan.save());
+        }
+        if (decoration != null) {
+            pTag.put(DECORATION_TAG, decoration.save());
         }
         saveSize(pTag);
         saveHasStarted(pTag);

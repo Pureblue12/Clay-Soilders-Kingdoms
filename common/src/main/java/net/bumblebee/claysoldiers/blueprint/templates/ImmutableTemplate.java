@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
+import net.bumblebee.claysoldiers.structure.StructureDecoration;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
@@ -39,15 +40,26 @@ public class ImmutableTemplate extends BaseImmutableTemplate {
     /** The structure's pre-baked build plan (D82), or {@code null}: the blocks are then handed out in their normal order. */
     @Nullable
     private final BuildPlan buildPlan;
+    /** What code adds once the build is finished (stage 5a), or {@code null}. */
+    @Nullable
+    private final StructureDecoration decoration;
 
     protected ImmutableTemplate(List<StructureTemplate.StructureBlockInfo> blockInfoList, Map<Item, Integer> itemCountMap, Vec3i size, VoxelShape shape) {
-        this(blockInfoList, itemCountMap, size, shape, null);
+        this(blockInfoList, itemCountMap, size, shape, null, null);
     }
 
-    private ImmutableTemplate(List<StructureTemplate.StructureBlockInfo> blockInfoList, Map<Item, Integer> itemCountMap, Vec3i size, VoxelShape shape, @Nullable BuildPlan buildPlan) {
+    private ImmutableTemplate(List<StructureTemplate.StructureBlockInfo> blockInfoList, Map<Item, Integer> itemCountMap, Vec3i size, VoxelShape shape,
+                              @Nullable BuildPlan buildPlan, @Nullable StructureDecoration decoration) {
         super(itemCountMap, size, shape);
         this.blockInfoList = blockInfoList;
         this.buildPlan = buildPlan;
+        this.decoration = decoration;
+    }
+
+    /** This template with a structure's decoration (stage 5a), handed to every server plan made from it. */
+    public ImmutableTemplate withDecoration(@Nullable StructureDecoration decoration) {
+        return new ImmutableTemplate(blockInfoList, BlueprintUtil.getNeededItemsFromInfo(blockInfoList, StructureTemplate.StructureBlockInfo::state),
+                size, getShape(), buildPlan, decoration);
     }
 
     /**
@@ -56,7 +68,7 @@ public class ImmutableTemplate extends BaseImmutableTemplate {
      */
     public ImmutableTemplate withPlan(BuildPlan plan) {
         return new ImmutableTemplate(List.copyOf(plan.order(blockInfoList, StructureTemplate.StructureBlockInfo::pos)),
-                BlueprintUtil.getNeededItemsFromInfo(blockInfoList, StructureTemplate.StructureBlockInfo::state), size, getShape(), plan);
+                BlueprintUtil.getNeededItemsFromInfo(blockInfoList, StructureTemplate.StructureBlockInfo::state), size, getShape(), plan, decoration);
     }
 
     @Nullable
@@ -79,7 +91,7 @@ public class ImmutableTemplate extends BaseImmutableTemplate {
      */
     @Override
     public Optional<ServerBlueprintPlan> createServer() {
-        return Optional.of(new ServerBlueprintPlan(size, blockInfoList, buildPlan));
+        return Optional.of(new ServerBlueprintPlan(size, blockInfoList, buildPlan, decoration));
     }
 
     @Override

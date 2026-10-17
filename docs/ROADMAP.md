@@ -13,7 +13,7 @@ Earlier work (M0–M2: testing, bug fixes, `/csr build`, builder fixes, doors) i
 | 3 | Tall construction spike | L | **done** (in-game checklist pending) |
 | 4 | Tier-1 keep built autonomously | L | **done** (2026-10-16, passed the owner's in-game test) |
 | 5 | Economy loop v1 | L | **in progress** (2026-10-16: built, waiting for CI and the owner's in-game test) |
-| 5a | Decoration step | M | not started |
+| 5a | Decoration step | M | **in progress** (2026-10-17: built, waiting for CI and the owner's in-game test) |
 | 6 | Layout and growth | XL | **in progress** (2026-10-17: the kingdom planner is built, waiting for CI and the owner's in-game test) |
 | 7 | Performance checkpoint | M | not started |
 | 8 | Content tiers 2–5 | XL | not started |
@@ -176,7 +176,15 @@ Stages are ordered by dependency and risk. Every stage ends playable.
   - Where the decoration data lives: the structure file's own entities and block data, or a separate list.
   - Water flowing out of open structures.
   - Entities in unloaded chunks.
-- **Decisions:** [D46](DECISIONS.md), [D54](DECISIONS.md), [D56](DECISIONS.md) · **Status:** not started · **Results:** —
+- **Decisions:** [D46](DECISIONS.md), [D54](DECISIONS.md), [D56](DECISIONS.md), [D103](DECISIONS.md) · **Status:** in progress · **Results:**
+  - The decoration lives in the structure file itself (D103): blocks without an item, sign text and banner patterns,
+    item frames and armor stands. Builders build the rest; `StructureDecoration` adds the decoration the moment the
+    last block is placed, exactly once, saved with the easel's plan until then. `tools/buildability.py` and
+    `tools/build_plan.py` leave blocks without an item out the same way.
+  - Test structure `csr:test_garden` (water basin, potted poppy, sign, banner, item frame, armor stand);
+    `DecorationGameTests` builds it with builders end to end.
+  - **Open:** no Studio structure has decoration yet (the Studio and generator add it next); ruin stages don't exist yet,
+    so "the ruin stages remove it" waits for them.
 
 ### 6 Layout and growth
 - **Goal:** zones, radial roads, scored slots, cottages and farms, visitors joining, a palisade and tier 2, the layout checker enforced.
