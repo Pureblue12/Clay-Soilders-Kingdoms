@@ -68,7 +68,7 @@ public class KingdomTownGameTests {
             {"kingdom.claim_radius": 14, "economy.plot.outer_reach": 2, "terrain.search.radius": 4,
              "economy.lumber.radius": 60, "economy.farm.tend_ticks": 1, "economy.food_per_building": 3,
              "layout.scan_radius": 32, "layout.road_width": 1, "layout.square_depth": 3, "layout.square_width": 3,
-             "layout.plot_gap": 1, "layout.wall_setback": 2, "layout.wall_shift": 2, "layout.outer_band": 16, "layout.later_plots": 1}""";
+             "layout.plot_gap": 1, "layout.wall_setback": 2, "layout.wall_shift": 2, "layout.outer_band": 16, "layout.later_plots": 1, "layout.roster": 0}""";
     /** The earth's top (relative y) away from the slope and the plateau. */
     private static final int GROUND = 6;
     /** The plateau (3 higher) and the cave under it: 2 blocks of air, 2 under the plateau's top. */

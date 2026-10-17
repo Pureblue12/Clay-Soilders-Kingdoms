@@ -15,6 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -22,6 +23,7 @@ import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,8 +33,8 @@ import static net.bumblebee.claysoldiers.gametest.ClaySoldierGameTests.PLATFORM;
 /**
  * The kingdom planner (stage 6): its cases on made-up land ({@link KingdomPlannerCases}: flat land and every front, a
  * cave under the best spot, a river, rough land, land not loaded, cramped land), the plan surviving a save, the land scan
- * finding a cave and the kingdom filling it, and roads laid as dirt paths. Each asserts the CORRECT behavior. The whole
- * story in a world is {@link KingdomTownGameTests}.
+ * finding a cave and the kingdom filling it, roads laid as dirt paths, and the roster of buildings still to come. Each
+ * asserts the CORRECT behavior. The whole story in a world is {@link KingdomTownGameTests}.
  */
 @GameTestHolder(ClaySoldiersCommon.MOD_ID)
 @PrefixGameTestTemplate(false)
@@ -72,8 +74,39 @@ public class KingdomPlannerGameTests {
         check(helper, KingdomPlannerCases.crampedLandLeavesOutWhatDoesntFit());
     }
 
+    @GameTest(template = PLATFORM)
+    public static void fullTownFitsEveryBuilding(GameTestHelper helper) {
+        check(helper, KingdomPlannerCases.fullTownFitsEveryBuilding());
+    }
+
     private static void check(GameTestHelper helper, @Nullable String problem) {
         helper.assertTrue(problem == null, String.valueOf(problem));
+        helper.succeed();
+    }
+
+    /**
+     * The buildings the plan keeps plots for (D111): the registry's inner and outer buildings, not the kingdom's own list,
+     * not street decoration or test copies; outer ones marked outer, every one at its top level's size.
+     */
+    @GameTest(template = PLATFORM)
+    public static void rosterHoldsTheBuildingsStillToCome(GameTestHelper helper) {
+        ResourceLocation keep = ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, "keep");
+        Map<String, KingdomPlanner.Item> roster = new LinkedHashMap<>();
+        KingdomLayout.roster(helper.getLevel(), keep).forEach(item -> roster.put(item.key(), item));
+        for (String id : List.of("csr:church", "csr:town_hall", "csr:market", "csr:inn")) {
+            helper.assertTrue(roster.containsKey(id) && !roster.get(id).outer(), id + " should be kept a plot inside the wall: " + roster.keySet());
+        }
+        for (String id : List.of("csr:quarry", "csr:mine", "csr:farm_field_carrots")) {
+            helper.assertTrue(roster.containsKey(id) && roster.get(id).outer(), id + " should be kept a plot outside the wall: " + roster.keySet());
+        }
+        for (String id : List.of("csr:keep", "csr:cottage", "csr:lumber_camp", "csr:farm_field_wheat", "csr:fishing_dock", "csr:bench",
+                "csr:lamp_post", "csr:road", "csr:stone_wall", "csr:batch1_cottage", "csr:test_hut")) {
+            helper.assertFalse(roster.containsKey(id), id + " shouldn't be in the roster: " + roster.keySet());
+        }
+        // The church at its top level: 17 wide and 24 deep (its easel rows add 4 more along its depth).
+        KingdomPlanner.Shape church = roster.get("csr:church").shapes().get(0);
+        int across = Math.min(church.maxX() - church.minX(), church.maxZ() - church.minZ()) + 1;
+        helper.assertTrue(across >= 17, "The church's plot is sized from a smaller level: " + church);
         helper.succeed();
     }
 

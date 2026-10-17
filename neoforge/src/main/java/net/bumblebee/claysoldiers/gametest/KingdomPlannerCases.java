@@ -18,12 +18,12 @@ import java.util.Optional;
  * its easel rows), the lumber camp 16 by 11, the wheat field 13 by 9, the cottage 9 by 11, the fishing dock 7 by 9.
  */
 final class KingdomPlannerCases {
-    static final int SIZE = 240;
+    static final int SIZE = 400;
     /** Land runs from -OFFSET to SIZE - OFFSET - 1 on both axes. */
-    static final int OFFSET = 120;
+    static final int OFFSET = 200;
     /** Where the river starts (7 wide), east of town. */
     static final int RIVER = 50;
-    static final KingdomPlanner.Rules RULES = new KingdomPlanner.Rules(1, 2, 3, 5, 7, 3, 3, 6, 24, 4, 4, 8);
+    static final KingdomPlanner.Rules RULES = new KingdomPlanner.Rules(1, 2, 3, 5, 7, 3, 3, 6, 24, 4, 8);
 
     private KingdomPlannerCases() {
     }
@@ -113,6 +113,34 @@ final class KingdomPlannerCases {
     static final KingdomPlanner.Item FIELD = item("csr:farm_field_wheat", true, false, 13, 9);
     static final KingdomPlanner.Item COTTAGE = item("csr:cottage", false, false, 9, 11);
     static final KingdomPlanner.Item DOCK = item("csr:fishing_dock", true, false, 7, 9);
+    /** Plots kept for later: 4 more cottages ({@code layout.later_plots}). */
+    static final List<KingdomPlanner.Item> LATER = List.of(COTTAGE, COTTAGE, COTTAGE, COTTAGE);
+
+    /**
+     * Every Studio building a kingdom adds later (the registry's inner and outer buildings that aren't decoration, by
+     * tier, at their largest footprint as of 2026-10-17), then 4 more cottages: what {@code layout.roster} keeps plots for.
+     */
+    static List<KingdomPlanner.Item> roster() {
+        List<KingdomPlanner.Item> items = new ArrayList<>(List.of(
+                item("csr:farm", true, false, 24, 10), item("csr:farm_field_carrots", true, false, 14, 9),
+                item("csr:farm_field_potatoes", true, false, 16, 9), item("csr:hovel", false, false, 5, 5),
+                item("csr:visitors_camp", false, false, 21, 14), item("csr:carpenter", false, false, 9, 9),
+                item("csr:commons", false, false, 15, 15), item("csr:garden", false, false, 17, 17),
+                item("csr:stables", true, false, 9, 11), item("csr:bakery", false, false, 10, 11),
+                item("csr:butcher", false, false, 10, 10), item("csr:market_stall", false, false, 7, 6),
+                item("csr:mine", true, false, 11, 11), item("csr:quarry", true, false, 18, 17),
+                item("csr:smithy", false, false, 9, 11), item("csr:tannery", true, false, 12, 10),
+                item("csr:training_yard", false, false, 11, 11), item("csr:chapel", false, false, 11, 20),
+                item("csr:food_hall", false, false, 13, 15), item("csr:graveyard", true, false, 9, 12),
+                item("csr:infirmary", false, false, 11, 13), item("csr:inn", false, false, 12, 15),
+                item("csr:market", false, false, 15, 15), item("csr:stonemason", false, false, 11, 10),
+                item("csr:townhouse", false, false, 9, 12), item("csr:church", false, false, 17, 24),
+                item("csr:library", false, false, 11, 11), item("csr:noble_house", false, false, 16, 13),
+                item("csr:armory", false, false, 13, 13), item("csr:hospital", false, false, 17, 19),
+                item("csr:town_hall", false, false, 13, 18), item("csr:tree_farm", true, false, 19, 14)));
+        items.addAll(LATER);
+        return items;
+    }
 
     /** The keep's ground, its easel at 0, 0, its front facing {@code front}. */
     static Rect keep(Side front) {
@@ -121,7 +149,11 @@ final class KingdomPlannerCases {
     }
 
     static KingdomPlanner.Result plan(Land land, Side front) {
-        return KingdomPlanner.plan(land, new Cell(0, 0), keep(front), new Cell(0, 0), front, List.of(CAMP, FIELD, COTTAGE), COTTAGE, DOCK, RULES);
+        return plan(land, front, LATER);
+    }
+
+    static KingdomPlanner.Result plan(Land land, Side front, List<KingdomPlanner.Item> later) {
+        return KingdomPlanner.plan(land, new Cell(0, 0), keep(front), new Cell(0, 0), front, List.of(CAMP, FIELD, COTTAGE), later, DOCK, RULES);
     }
 
     /** What every plan must be: valid, every building planned, a straight wall, houses inside, outer buildings outside, on known dry even ground. */
@@ -351,6 +383,40 @@ final class KingdomPlannerCases {
         return wrong.isEmpty() ? null : String.join("; ", wrong);
     }
 
+    /**
+     * The owner's note on part 1 (2026-10-17: "a little small for the amount of buildings we're going to add"): with a plot
+     * kept for every building still to come, on flat land and every front, the plan is sound, every one of them has a
+     * plot (inner ones inside the wall, outer ones outside), and the next cottage takes a cottage plot kept for later.
+     */
+    static String fullTownFitsEveryBuilding() {
+        Land land = new Land();
+        List<KingdomPlanner.Item> roster = roster();
+        List<String> wrong = new ArrayList<>();
+        for (Side front : Side.values()) {
+            KingdomPlanner.Result result = plan(land, front, roster);
+            String problem = sound(land, result, front);
+            if (problem != null) {
+                wrong.add(problem);
+                continue;
+            }
+            MasterPlan plan = result.plan().get();
+            List<MasterPlan.Plot> kept = new ArrayList<>(plan.plots().stream().filter(plot -> plot.kind() == MasterPlan.Kind.LATER).toList());
+            for (KingdomPlanner.Item item : roster) {
+                Optional<MasterPlan.Plot> plot = kept.stream().filter(candidate -> candidate.key().equals(item.key())).findFirst();
+                if (plot.isEmpty()) {
+                    wrong.add("facing " + front + ": no plot kept for " + item.key() + " (" + result.notes() + ")");
+                } else {
+                    kept.remove(plot.get());
+                }
+            }
+            Optional<MasterPlan.Plot> second = plan.plotFor(COTTAGE.key(), 1);
+            if (second.isEmpty() || second.get().kind() != MasterPlan.Kind.LATER) {
+                wrong.add("facing " + front + ": the second cottage has no plot kept for later: " + second);
+            }
+        }
+        return wrong.isEmpty() ? null : String.join(" | ", wrong);
+    }
+
     /** Every case by name, for a quick run outside the game. */
     static List<String> all() {
         List<String> results = new ArrayList<>();
@@ -361,6 +427,7 @@ final class KingdomPlannerCases {
         results.add("roughLandIsRespected: " + roughLandIsRespected());
         results.add("unknownLandIsLeftAlone: " + unknownLandIsLeftAlone());
         results.add("crampedLandLeavesOutWhatDoesntFit: " + crampedLandLeavesOutWhatDoesntFit());
+        results.add("fullTownFitsEveryBuilding: " + fullTownFitsEveryBuilding());
         return results;
     }
 }

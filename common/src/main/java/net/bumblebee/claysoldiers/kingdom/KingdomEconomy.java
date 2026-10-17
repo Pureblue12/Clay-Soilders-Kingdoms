@@ -280,8 +280,8 @@ public final class KingdomEconomy {
         KingdomKeep.Levelled levelled = KingdomKeep.levelGround(level, choice.minX(KingdomKeep.MARGIN), choice.maxX(KingdomKeep.MARGIN),
                 choice.minZ(KingdomKeep.MARGIN), choice.maxZ(KingdomKeep.MARGIN), choice.groundY(), choice.groundY() + height + KingdomKeep.CLEAR_ABOVE);
         levelled.logs().forEach((item, count) -> Kingdoms.addResource(server, kingdom, KingdomStore.id(item), count));
-        int sealed = KingdomLayout.sealHollows(level, new Rect(choice.minX(KingdomKeep.MARGIN), choice.maxX(KingdomKeep.MARGIN),
-                choice.minZ(KingdomKeep.MARGIN), choice.maxZ(KingdomKeep.MARGIN)), choice.groundY(), Tuning.TERRAIN_CAVE_PROBE_DEPTH.get());
+        Rect plotRect = new Rect(choice.minX(KingdomKeep.MARGIN), choice.maxX(KingdomKeep.MARGIN), choice.minZ(KingdomKeep.MARGIN), choice.maxZ(KingdomKeep.MARGIN));
+        int sealed = KingdomLayout.sealHollows(level, plotRect, choice.groundY(), Tuning.TERRAIN_CAVE_PROBE_DEPTH.get());
         DebugLog.event(DebugCategory.TERRAIN, null, () -> "levelled the %s plot of %s (%s): %s; filled %d, cleared %d, sealed %d cave blocks, logs to the stockpile %s"
                 .formatted(what, kingdom.team(), onPlan ? "the master plan's plot" : "picked the stage 5 way", choice.describe(),
                         levelled.filled(), levelled.cleared(), sealed, levelled.logs()));
@@ -295,6 +295,7 @@ public final class KingdomEconomy {
             return problem(kingdom, "not enough wheat for the builders' meals");
         }
         BuildSitePlanner.placeEasel(level, easel, choice.area().facing().getOpposite(), blueprint.get());
+        kingdom.plan().ifPresent(masterPlan -> KingdomLayout.showNearby(level, kingdom, masterPlan, plotRect, easel));
         BlockPos chest = KingdomKeep.chestPos(easel, choice.area().facing());
         level.setBlockAndUpdate(chest, Blocks.CHEST.defaultBlockState());
         int detail = Math.min(slot.level(), StructureRegistry.get(server).byId(slot.structure()).map(StructureMeta::levelCount).orElse(1));

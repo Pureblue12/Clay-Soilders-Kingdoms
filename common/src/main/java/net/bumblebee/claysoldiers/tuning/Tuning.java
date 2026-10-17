@@ -95,7 +95,7 @@ public final class Tuning {
     public static final TuningKey.IntKey LAYOUT_ENABLED = register(new TuningKey.IntKey("layout.enabled",
             "1 = when its keep is finished a kingdom draws up its master plan (streets, house plots, a straight wall with gates, outer plots) and builds on it; 0 = buildings go on the nearest free ground (stage 5).", 1, 0, 1));
     public static final TuningKey.IntKey LAYOUT_SCAN_RADIUS = register(new TuningKey.IntKey("layout.scan_radius",
-            "How far around its keep a kingdom looks at the land when it draws up its master plan, in blocks (only loaded ground counts).", 96, 32, 160));
+            "How far around its keep a kingdom looks at the land when it draws up its master plan, in blocks (only loaded ground counts).", 192, 32, 256));
     public static final TuningKey.IntKey LAYOUT_ROAD_WIDTH = register(new TuningKey.IntKey("layout.road_width",
             "How wide the main street and the cross street are, in blocks (an even number is rounded up to the next odd one).", 3, 1, 7));
     public static final TuningKey.IntKey LAYOUT_SQUARE_DEPTH = register(new TuningKey.IntKey("layout.square_depth",
@@ -111,7 +111,11 @@ public final class Tuning {
     public static final TuningKey.IntKey LAYOUT_OUTER_BAND = register(new TuningKey.IntKey("layout.outer_band",
             "How far outside the wall the outer buildings (lumber camp, fields, the fishing plot) may stand, in blocks.", 24, 4, 64));
     public static final TuningKey.IntKey LAYOUT_LATER_PLOTS = register(new TuningKey.IntKey("layout.later_plots",
-            "House plots along the streets the master plan keeps free for houses built later.", 4, 0, 16));
+            "Extra house plots (the kingdom's first house again) along the streets the master plan keeps free for houses built later.", 4, 0, 16));
+    public static final TuningKey.IntKey LAYOUT_ROSTER = register(new TuningKey.IntKey("layout.roster",
+            "1 = the master plan keeps a plot for every Studio building the kingdom will add later (the wall is sized for the whole town); 0 = only for its own list and the extra house plots.", 1, 0, 1));
+    public static final TuningKey.IntKey LAYOUT_SHOW_SECONDS = register(new TuningKey.IntKey("layout.show_seconds",
+            "How long players near a kingdom see its plan in particles when it draws the plan up, and a building's plot when it starts the building, in seconds; 0 = never shown by itself.", 30, 0, 300));
     public static final TuningKey.IntKey LAYOUT_LAY_ROADS = register(new TuningKey.IntKey("layout.lay_roads",
             "1 = the kingdom lays its planned roads at once as dirt paths when it draws up its plan (soldiers don't lay roads yet); 0 = the roads are only planned.", 1, 0, 1));
     public static final TuningKey.IntKey ECONOMY_WOODCUTTERS = register(new TuningKey.IntKey("economy.woodcutters",

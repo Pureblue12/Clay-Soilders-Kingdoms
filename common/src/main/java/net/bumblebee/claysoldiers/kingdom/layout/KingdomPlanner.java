@@ -15,7 +15,7 @@ import java.util.Set;
  * <ol>
  *     <li><b>Square and streets:</b> an open square in front of the keep's door, a main street from the square straight
  *     out, and a cross street through the far side of the square.</li>
- *     <li><b>Houses:</b> inner buildings (and {@link Rules#laterPlots} plots kept free for later houses) line the streets
+ *     <li><b>Houses:</b> inner buildings (and the plots kept free for the buildings a kingdom adds later) line the streets
  *     with their fronts on the road, nearest the square first; the two sides of a street fill in turn, so they face each
  *     other. A plot needs known, dry ground that rises and falls at most {@link Rules#maxRange}; levelling, trees and caves
  *     under it cost points.</li>
@@ -24,7 +24,8 @@ import java.util.Set;
  *     up to {@link Rules#wallShift} blocks where that keeps it off water, cliffs and caves. A gate stands wherever a street
  *     crosses it; the streets run on out of the gates.</li>
  *     <li><b>Outer buildings</b> (fields, the lumber camp) go in a band just outside the wall, fronts toward the town, each
- *     with a path to the nearest gate road; they keep away from water and a lumber camp likes trees around it. One plot by
+ *     with a path to the nearest gate road (outer buildings for later get theirs too); they keep away from water and a
+ *     lumber camp likes trees around it. One plot by
  *     the water is kept free for a fishing village when there is water nearby.</li>
  * </ol>
  * Everything is placed in a frame turned with the keep's front, so a town looks the same whichever way its keep faces.
@@ -109,12 +110,11 @@ public final class KingdomPlanner {
      * @param wallShift    the most a wall side moves out to stay on good ground
      * @param outerBand    how far outside the wall outer buildings may stand
      * @param outerStep    distance between candidate outer plots
-     * @param laterPlots   house plots kept free for later
      * @param easelSpacing how far apart easels must be (an easel isn't placed with another within this many blocks either
      *                     way, {@code BuildSitePlanner.EASEL_SPACING})
      */
     public record Rules(int margin, int gap, int roadWidth, int squareDepth, int squareWidth, int maxRange, int wallSetback,
-                        int wallShift, int outerBand, int outerStep, int laterPlots, int easelSpacing) {
+                        int wallShift, int outerBand, int outerStep, int easelSpacing) {
     }
 
     /**
@@ -135,10 +135,11 @@ public final class KingdomPlanner {
      * @param keepEasel   the keep's easel (no plot's easel may stand near it)
      * @param front       the side the keep's front faces
      * @param items       the buildings to plan, in the kingdom's order
-     * @param later       the house kept-free plots are sized for (none when null)
+     * @param later       the buildings plots are kept free for, in order (inner ones along the streets after the kingdom's
+     *                    own, outer ones outside the wall after its own); one that doesn't fit is left out with a note
      * @param waterside   the plot kept free by the water (none when null)
      */
-    public static Result plan(Ground ground, Cell claimCenter, Rect keep, Cell keepEasel, Side front, List<Item> items, @Nullable Item later,
+    public static Result plan(Ground ground, Cell claimCenter, Rect keep, Cell keepEasel, Side front, List<Item> items, List<Item> later,
                               @Nullable Item waterside, Rules rules) {
         return new Planner(ground, keep, keepEasel, front, rules).run(claimCenter, items, later, waterside);
     }
@@ -259,7 +260,7 @@ public final class KingdomPlanner {
             };
         }
 
-        Result run(Cell claimCenter, List<Item> items, @Nullable Item later, @Nullable Item waterside) {
+        Result run(Cell claimCenter, List<Item> items, List<Item> later, @Nullable Item waterside) {
             int far = 1000;
             // The square and the streets (the cross street's ends and the main street's length come with the wall).
             blocked.add(world(-squareHalf, 0, squareHalf, crossV - 1));
@@ -271,9 +272,9 @@ public final class KingdomPlanner {
                     placeHouse(streets, item, MasterPlan.Kind.BUILDING);
                 }
             }
-            if (later != null) {
-                for (int i = 0; i < rules.laterPlots(); i++) {
-                    placeHouse(streets, later, MasterPlan.Kind.LATER);
+            for (Item item : later) {
+                if (!item.outer()) {
+                    placeHouse(streets, item, MasterPlan.Kind.LATER);
                 }
             }
             int[] wall = wall();
@@ -306,6 +307,11 @@ public final class KingdomPlanner {
             for (Item item : items) {
                 if (item.outer()) {
                     placeOuter(item, MasterPlan.Kind.BUILDING, wallRect, roadEnds);
+                }
+            }
+            for (Item item : later) {
+                if (item.outer()) {
+                    placeOuter(item, MasterPlan.Kind.LATER, wallRect, roadEnds);
                 }
             }
             if (waterside != null) {
@@ -372,7 +378,7 @@ public final class KingdomPlanner {
                 }
             }
             if (best == null) {
-                notes.add("no plot along the streets for " + (kind == MasterPlan.Kind.LATER ? "a later house" : item.key()));
+                notes.add("no plot along the streets for " + item.key() + (kind == MasterPlan.Kind.LATER ? " (kept for later)" : ""));
                 return;
             }
             plots.add(new MasterPlan.Plot(item.key(), kind, false, best.facing(), best.easelX(), best.easelZ(), best.rect()));
@@ -573,27 +579,30 @@ public final class KingdomPlanner {
 
         private void placeOuter(Item item, MasterPlan.Kind kind, Rect wallRect, List<Cell> roadEnds) {
             Rect inner = wallRect.grow(clearance());
-            Rect band = wallRect.grow(Math.max(clearance() + 1, rules.outerBand()));
             Set<Cell> roadCells = new HashSet<>();
             roads.forEach(road -> roadCells.addAll(road.cells()));
             int step = Math.max(1, rules.outerStep());
             int townX = wallRect.centerX();
             int townZ = wallRect.centerZ();
             OuterCandidate best = null;
-            for (int x = band.minX(); x <= band.maxX(); x += step) {
-                for (int z = band.minZ(); z <= band.maxZ(); z += step) {
-                    if (inner.contains(x, z)) {
-                        continue;
-                    }
-                    OuterCandidate candidate = outerAt(item, kind, x, z, townX, townZ, inner, band, roadCells, roadEnds);
-                    if (candidate != null && (best == null || candidate.score() < best.score())) {
-                        best = candidate;
+            // The band just outside the wall first; when it is full, a band twice as wide (a big town's later buildings).
+            for (int reach = rules.outerBand(); best == null && reach <= 2 * rules.outerBand(); reach += rules.outerBand()) {
+                Rect band = wallRect.grow(Math.max(clearance() + 1, reach));
+                for (int x = band.minX(); x <= band.maxX(); x += step) {
+                    for (int z = band.minZ(); z <= band.maxZ(); z += step) {
+                        if (inner.contains(x, z)) {
+                            continue;
+                        }
+                        OuterCandidate candidate = outerAt(item, kind, x, z, townX, townZ, inner, band, roadCells, roadEnds);
+                        if (candidate != null && (best == null || candidate.score() < best.score())) {
+                            best = candidate;
+                        }
                     }
                 }
             }
             if (best == null) {
                 notes.add(kind == MasterPlan.Kind.WATERSIDE ? "no plot by the water to keep for a fishing village"
-                        : "no plot outside the wall for " + item.key());
+                        : "no plot outside the wall for " + item.key() + (kind == MasterPlan.Kind.LATER ? " (kept for later)" : ""));
                 return;
             }
             plots.add(new MasterPlan.Plot(item.key(), kind, true, best.facing(), best.easelX(), best.easelZ(), best.rect()));

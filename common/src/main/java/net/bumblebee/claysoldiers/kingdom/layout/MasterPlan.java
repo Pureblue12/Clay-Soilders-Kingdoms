@@ -33,7 +33,7 @@ public record MasterPlan(Cell center, Rect keep, Side front, List<Plot> plots, L
     public enum Kind {
         /** A building of the kingdom's list of buildings. */
         BUILDING,
-        /** Kept free for a building that comes later (a house). */
+        /** Kept free for a building that comes later. */
         LATER,
         /** Kept free by the water for a fishing village (the owner's planner notes). */
         WATERSIDE;
@@ -97,9 +97,10 @@ public record MasterPlan(Cell center, Rect keep, Side front, List<Plot> plots, L
         return plots.stream().filter(plot -> plot.kind() == Kind.BUILDING && plot.key().equals(key)).toList();
     }
 
-    /** The n-th plot of {@code key} (from 0), if the plan has one. */
+    /** The n-th plot of {@code key} (from 0), if the plan has one: its building plots first, then the ones kept for later. */
     public Optional<Plot> plotFor(String key, int n) {
-        List<Plot> list = plotsFor(key);
+        List<Plot> list = new ArrayList<>(plotsFor(key));
+        plots.stream().filter(plot -> plot.kind() == Kind.LATER && plot.key().equals(key)).forEach(list::add);
         return n >= 0 && n < list.size() ? Optional.of(list.get(n)) : Optional.empty();
     }
 

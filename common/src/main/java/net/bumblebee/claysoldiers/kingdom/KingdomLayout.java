@@ -36,7 +36,9 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -60,6 +62,8 @@ public final class KingdomLayout {
     public static final ResourceLocation FISHING_DOCK = ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, "fishing_dock");
     /** How long the dev view of a plan shows, in ticks. */
     static final int SHOW_TICKS = 600;
+    /** Players this close (blocks) to a plan being drawn up or a plot being started see it; particles farther away aren't sent. */
+    static final int SHOW_RANGE = 128;
 
     private static final Map<UUID, Long> NEXT_TRY = new HashMap<>();
     private static final Map<UUID, String> PROBLEMS = new HashMap<>();
@@ -147,6 +151,31 @@ public final class KingdomLayout {
         return blueprint.createServerPlan();
     }
 
+    /** Roles of small things that stand in the streets and squares, not on plots of their own. */
+    private static final Set<String> STREET_ROLES = Set.of("decoration", "utility");
+
+    /**
+     * A plot kept for every ready building of the inner town and outside the wall that the kingdom doesn't build yet (not on
+     * its list, not the keep or the fishing dock, not street decoration, not a test structure), lowest tier first, at its
+     * top level's size so it can grow in place: the town is sized for everything still to come (the owner's note on part
+     * 1, 2026-10-17: "a little small for the amount of buildings we're going to add").
+     */
+    public static List<KingdomPlanner.Item> roster(ServerLevel level, ResourceLocation keep) {
+        Set<ResourceLocation> own = new HashSet<>(Set.of(keep, FISHING_DOCK));
+        KingdomEconomy.plan().forEach(slot -> own.add(slot.structure()));
+        List<StructureMeta> metas = new ArrayList<>(StructureRegistry.get(level.getServer()).ready().stream()
+                .filter(meta -> meta.zone().equals("inner") || meta.zone().equals("outer"))
+                .filter(meta -> !STREET_ROLES.contains(meta.role()) && !own.contains(meta.id()))
+                .filter(meta -> !meta.id().getPath().startsWith("batch1_") && !meta.id().getPath().startsWith("test_"))
+                .toList());
+        metas.sort(Comparator.comparingInt(StructureMeta::tier).thenComparing(meta -> meta.id().toString()));
+        List<KingdomPlanner.Item> items = new ArrayList<>();
+        for (StructureMeta meta : metas) {
+            item(level, meta.id(), meta.levelCount(), meta.zone().equals("outer"), false).ifPresent(items::add);
+        }
+        return items;
+    }
+
     /**
      * Called with the economy while the keep is finished: draws up the master plan if the kingdom has none yet (retrying
      * every {@code kingdom.keep.plan_retry_ticks} while it can't).
@@ -192,16 +221,20 @@ public final class KingdomLayout {
         Rect keepRect = new Rect(easel.getX() + keepShape.minX() - margin, easel.getX() + keepShape.maxX() + margin,
                 easel.getZ() + keepShape.minZ() - margin, easel.getZ() + keepShape.maxZ() + margin);
         List<KingdomPlanner.Item> items = new ArrayList<>();
-        KingdomPlanner.Item later = null;
+        KingdomPlanner.Item house = null;
         for (KingdomEconomy.Slot slot : KingdomEconomy.plan()) {
             Optional<KingdomPlanner.Item> item = item(level, slot.structure(), slot.level(), slot.outer(), slot.job() == KingdomEconomy.Job.WOODCUTTER);
             if (item.isEmpty()) {
                 return problem(kingdom, "the structure " + slot.structure() + " isn't loaded");
             }
             items.add(item.get());
-            if (later == null && !slot.outer()) {
-                later = item.get();
+            if (house == null && !slot.outer()) {
+                house = item.get();
             }
+        }
+        List<KingdomPlanner.Item> later = new ArrayList<>(Tuning.LAYOUT_ROSTER.get() == 1 ? roster(level, keep.get().structure()) : List.of());
+        for (int i = 0; house != null && i < Tuning.LAYOUT_LATER_PLOTS.get(); i++) {
+            later.add(house);
         }
         KingdomPlanner.Item waterside = item(level, FISHING_DOCK, 1, true, false).orElse(null);
         BlockPos middle = new BlockPos(keepRect.centerX(), easel.getY(), keepRect.centerZ());
@@ -219,6 +252,7 @@ public final class KingdomLayout {
         MasterPlan plan = result.plan().get();
         Kingdoms.setPlan(server, kingdom, plan);
         PROBLEMS.remove(kingdom.id());
+        showNearby(level, kingdom, plan, null, middle);
         long houses = plan.plots().stream().filter(plot -> !plot.outer()).count();
         Kingdoms.chronicle(server, kingdom, "The kingdom of " + Kingdoms.teamName(server, kingdom.team()) + " drew up its plan: a square, "
                 + houses + " house plots along its streets and a wall of " + plan.wallLength() + " blocks with " + plan.gates().size() + " gates.");
@@ -380,14 +414,40 @@ public final class KingdomLayout {
         PROBLEMS.remove(kingdom.id());
     }
 
-    // Seeing the plan (dev)
+    // Seeing the plan
 
-    private record Show(ServerPlayer player, MasterPlan plan, long until) {
+    /** A plan shown to a player: the whole plan, or only the plot {@code only}. */
+    private record Show(ServerPlayer player, MasterPlan plan, @Nullable Rect only, long until) {
     }
 
     /** Shows {@code plan} to {@code player} for {@link #SHOW_TICKS} with particles: the wall, the plots, the gates. */
     public static void show(ServerPlayer player, MasterPlan plan) {
-        SHOWS.put(player.getUUID(), new Show(player, plan, player.serverLevel().getGameTime() + SHOW_TICKS));
+        SHOWS.put(player.getUUID(), new Show(player, plan, null, player.serverLevel().getGameTime() + SHOW_TICKS));
+    }
+
+    /**
+     * Shows the plan (or only the plot {@code only}, a building being started) to every player within {@link #SHOW_RANGE}
+     * of {@code at} for {@code layout.show_seconds}: the owner liked seeing the plan (2026-10-17, "use that more often").
+     */
+    public static void showNearby(ServerLevel level, Kingdom kingdom, MasterPlan plan, @Nullable Rect only, BlockPos at) {
+        int seconds = Tuning.LAYOUT_SHOW_SECONDS.get();
+        if (seconds <= 0) {
+            return;
+        }
+        int shown = 0;
+        for (ServerPlayer player : level.players()) {
+            Show showing = SHOWS.get(player.getUUID());
+            if (only != null && showing != null && showing.only() == null && level.getGameTime() <= showing.until()) {
+                continue; // the whole plan is still showing, this plot included
+            }
+            if (player.distanceToSqr(at.getX() + 0.5, player.getY(), at.getZ() + 0.5) <= (double) SHOW_RANGE * SHOW_RANGE) {
+                SHOWS.put(player.getUUID(), new Show(player, plan, only, level.getGameTime() + seconds * 20L));
+                shown++;
+            }
+        }
+        int players = shown;
+        DebugLog.event(DebugCategory.KINGDOM, null, () -> "showed %s of %s to %d player(s) near %s".formatted(only == null ? "the plan" : "the plot " + only,
+                kingdom.team(), players, at.toShortString()));
     }
 
     /** Called every server tick: draws the plans being shown every 10 ticks. */
@@ -402,11 +462,15 @@ public final class KingdomLayout {
                 it.remove();
                 continue;
             }
-            draw(level, show.player(), show.plan());
+            draw(level, show.player(), show.plan(), show.only());
         }
     }
 
-    private static void draw(ServerLevel level, ServerPlayer player, MasterPlan plan) {
+    private static void draw(ServerLevel level, ServerPlayer player, MasterPlan plan, @Nullable Rect only) {
+        if (only != null) {
+            outline(level, player, ParticleTypes.HAPPY_VILLAGER, only);
+            return;
+        }
         for (Cell cell : plan.wall().cells()) {
             particle(level, player, ParticleTypes.END_ROD, cell, 1.2);
         }
@@ -416,21 +480,25 @@ public final class KingdomLayout {
             }
         }
         for (MasterPlan.Plot plot : plan.plots()) {
-            ParticleOptions type = plot.kind() == MasterPlan.Kind.BUILDING ? ParticleTypes.HAPPY_VILLAGER : ParticleTypes.WAX_ON;
-            Rect rect = plot.rect();
-            for (int x = rect.minX(); x <= rect.maxX(); x++) {
-                particle(level, player, type, new Cell(x, rect.minZ()), 0.6);
-                particle(level, player, type, new Cell(x, rect.maxZ()), 0.6);
-            }
-            for (int z = rect.minZ() + 1; z < rect.maxZ(); z++) {
-                particle(level, player, type, new Cell(rect.minX(), z), 0.6);
-                particle(level, player, type, new Cell(rect.maxX(), z), 0.6);
-            }
+            outline(level, player, plot.kind() == MasterPlan.Kind.BUILDING ? ParticleTypes.HAPPY_VILLAGER : ParticleTypes.WAX_ON, plot.rect());
+        }
+    }
+
+    private static void outline(ServerLevel level, ServerPlayer player, ParticleOptions type, Rect rect) {
+        for (int x = rect.minX(); x <= rect.maxX(); x++) {
+            particle(level, player, type, new Cell(x, rect.minZ()), 0.6);
+            particle(level, player, type, new Cell(x, rect.maxZ()), 0.6);
+        }
+        for (int z = rect.minZ() + 1; z < rect.maxZ(); z++) {
+            particle(level, player, type, new Cell(rect.minX(), z), 0.6);
+            particle(level, player, type, new Cell(rect.maxX(), z), 0.6);
         }
     }
 
     private static void particle(ServerLevel level, ServerPlayer player, ParticleOptions type, Cell cell, double up) {
-        if (!level.hasChunk(cell.x() >> 4, cell.z() >> 4)) {
+        double dx = cell.x() + 0.5 - player.getX();
+        double dz = cell.z() + 0.5 - player.getZ();
+        if (dx * dx + dz * dz > (double) SHOW_RANGE * SHOW_RANGE || !level.hasChunk(cell.x() >> 4, cell.z() >> 4)) {
             return;
         }
         int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, cell.x(), cell.z());
