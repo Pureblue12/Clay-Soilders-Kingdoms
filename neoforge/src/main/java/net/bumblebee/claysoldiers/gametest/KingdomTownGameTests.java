@@ -81,6 +81,8 @@ public class KingdomTownGameTests {
 
     @Nullable
     private static volatile Runnable perTick;
+    /** The game time the story started at, for the failure message. */
+    private static long startedAt;
 
     /** The earth's top at a relative column. */
     static int height(int x, int z) {
@@ -125,6 +127,7 @@ public class KingdomTownGameTests {
             KingdomGameTests.DevSoldier.spawnPlain(helper, at.atY(height(at.getX(), at.getZ()) + 1), TEAM);
         }
         level.addFreshEntity(new ItemEntity(level, first.getX(), first.getY() + 0.2, first.getZ(), new ItemStack(Items.GOLD_INGOT)));
+        startedAt = level.getGameTime();
         server.tickRateManager().requestGameToSprint(TIMEOUT + 200);
 
         int[] ticks = {0};
@@ -314,6 +317,10 @@ public class KingdomTownGameTests {
         List<String> planner = DebugLog.events().stream().map(DebugEvent::toLine)
                 .filter(line -> line.contains("plan") || line.contains("levelled") || line.contains("laid the roads")).toList();
         lines.add("Planner events: " + planner.subList(Math.max(0, planner.size() - 20), planner.size()));
+        List<String> workers = DebugLog.events().stream().map(DebugEvent::toLine)
+                .filter(line -> line.contains("woodcutter:") || line.contains("farmer:")).toList();
+        lines.add("Story started at t=" + startedAt + ", now t=" + level.getGameTime());
+        lines.add("Worker events (" + workers.size() + "): " + workers.subList(Math.max(0, workers.size() - 15), workers.size()));
         return String.join("; ", lines);
     }
 
