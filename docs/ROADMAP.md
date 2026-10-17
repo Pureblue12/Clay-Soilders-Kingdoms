@@ -15,10 +15,11 @@ Earlier work (M0–M2: testing, bug fixes, `/csr build`, builder fixes, doors) i
 | 5 | Economy loop v1 | L | **in progress** (2026-10-16: built, waiting for CI and the owner's in-game test) |
 | 5a | Decoration step | M | **in progress** (2026-10-17: built, waiting for CI and the owner's in-game test) |
 | 6 | Layout and growth | XL | **in progress** (2026-10-17: the kingdom planner is built, waiting for CI and the owner's in-game test) |
+| 6b | Workshop, quarry and mining | XL | not started (moved up by the owner, 2026-10-17) |
 | 7 | Performance checkpoint | M | not started |
 | 8 | Content tiers 2–5 | XL | not started |
 | T | Organic wall and layout testing | L | not started |
-| 9 | Mining, staged | XL | not started |
+| 9 | Mining, staged | XL | moved into 6b (2026-10-17) |
 | 10 | Life layer | XL | not started |
 | 11 | Events and defense | L | not started |
 | 12 | Rivals and war | XL | not started |
@@ -200,6 +201,19 @@ Stages are ordered by dependency and risk. Every stage ends playable.
   Economy, "Show the town plan". After the owner's first look: the plan keeps a plot for every building still to come, so the
   wall fits the whole town (D111), and players nearby see the plan when it is drawn up and each new plot when it starts (D112); where the wall line runs over water the sea guards the town and no wall goes there (D113); roads bridge streams and ponds with planks (D114). Still to do: visitors joining, a palisade built by soldiers, tier 2, soldiers laying roads.
 
+### 6b Workshop, quarry and mining
+- **Goal:** the kingdom makes its own non-wooden blocks. A quarry and miners gather stone, sand, clay, coal and iron; a
+  new workshop building (levels 1–3) crafts them into what queued buildings need. When a building is queued, its
+  non-wooden pieces are queued at the workshop. L1 stone bench (stone bricks, stairs, slabs, walls), L2 furnace and kiln
+  (glass, bricks, smooth stone, charcoal), L3 forge (lanterns, chains, iron bars). Wooden pieces stay with the carpenter
+  (D98). Includes the quarry of stage 8 and the mining of stage 9 ([D115](DECISIONS.md)).
+- **Acceptance test:** a kingdom with a quarry, miners and a workshop builds a building with stone, glass and iron
+  pieces it crafted itself, with nothing given free.
+- **Depends on:** 6 · **Size:** XL
+- **Risks:** soldiers dying in mining hazards; terrain damage; a new Workshop structure to design and approve.
+- **Plan page:** https://claude.ai/artifact/3eAUuqT2jYDbK5dhoNkyw5
+- **Decisions:** [D115](DECISIONS.md) · **Status:** not started · **Results:** —
+
 ### 7 Performance checkpoint
 - **Goal:** many soldiers, loaded chunks, a tick budget, caps per tier in the tuning file.
 - **Acceptance test:** a measured report of soldier count, tick cost and the loaded-chunk limit.
@@ -208,7 +222,7 @@ Stages are ordered by dependency and risk. Every stage ends playable.
 - **Decisions:** [D1](DECISIONS.md) · **Status:** not started · **Results:** —
 
 ### 8 Content tiers 2–5
-- **Goal:** stone wall and towers, gates, barracks, smithy, market, chapel, infirmary, quarry, wall rings.
+- **Goal:** stone wall and towers, gates, barracks, smithy, market, chapel, infirmary, wall rings (the quarry moved to 6b).
 - **Acceptance test:** a tier 5 castle stands with a stone wall, and every building's flow audit is complete.
 - **Depends on:** 6, 7 · **Size:** XL
 - **Risks:** structure review time.
@@ -230,6 +244,7 @@ Stages are ordered by dependency and risk. Every stage ends playable.
 ### 9 Mining, staged
 - **Goal:** (a) scanned shaft and strip mine, (b) hazard rules for lava and water, (c) caves, (d) mobs.
 - **Acceptance test:** each sub-stage passes its own lava, water and cave tests.
+- **Moved:** into stage 6b, with the workshop and quarry (the owner, 2026-10-17, D115).
 - **Depends on:** 5; may run in parallel with 8 · **Size:** XL
 - **Risks:** soldiers dying in hazards; terrain damage.
 - **Decisions:** [D6](DECISIONS.md) · **Status:** not started · **Results:** —
