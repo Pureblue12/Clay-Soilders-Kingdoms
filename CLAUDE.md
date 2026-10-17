@@ -166,7 +166,10 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
     38165377544): they hopped off a stair's low step at the top of a planned 3-block drop (vanilla hops whenever the feet
     are below the top of their block), and drops onto a half-height block measure 3.5. Soldiers no longer hop where a
     step does (`ClaySoldierMoveControl`), and a working soldier's fall up to `EdgeGuard.SAFE_DROP` costs nothing (D74;
-    `soldierDoesNotHopOffAStairAtADrop`, `workingBuilderIsNotHurtByAPlannedDrop`). Still open (not confirmed why): keep L2 builders also die at one spot in the
+    `soldierDoesNotHopOffAStairAtADrop`, `workingBuilderIsNotHurtByAPlannedDrop`). Keep builders went back and forth under the
+    benches' top slabs (the owner's game, 2026-10-17): a tiny soldier fits under a top slab, and vanilla hopped it toward
+    the slab's top from right underneath, into the slab. Under a ceiling a soldier never hops, and to climb it first steps
+    out to a free cell with room to hop (`ClaySoldierMoveControl`, PATHING "stepping out"; `soldierClimbsOutFromUnderASlab`). Still open (not confirmed why): keep L2 builders also die at one spot in the
     forecourt, 2.0 per fall, after placing on the upper floor, with no trapdoor placed yet; needs a PATHING recording.
   - A cottage builder stood inside a fence post (the lantern post) for 9,200 ticks (suite run 38128880972): a tiny
     soldier fits beside the post, so the fence was placed around it, and vanilla then starts every path in a cell the

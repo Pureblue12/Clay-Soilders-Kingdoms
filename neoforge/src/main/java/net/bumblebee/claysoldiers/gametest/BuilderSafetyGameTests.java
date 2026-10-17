@@ -17,11 +17,13 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Half;
+import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
@@ -567,6 +569,35 @@ public class BuilderSafetyGameTests {
                             + (path == null || path.getEndNode() == null ? "-" : path.getEndNode().asBlockPos()));
             helper.succeed();
         });
+    }
+
+    /**
+     * A tiny soldier fits under a top slab (a keep bench's seat). Told to climb onto the slab from under it, it hopped
+     * into the slab, walked back under, and went back and forth for good (the owner's game 2026-10-17, keep builders under
+     * the benches). It steps out from under the slab first, then hops up.
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 300)
+    public static void soldierClimbsOutFromUnderASlab(GameTestHelper helper) {
+        int y = ClaySoldierGameTests.GROUND_Y;
+        BlockPos seat = new BlockPos(6, y, 8);
+        helper.setBlock(seat, Blocks.SPRUCE_SLAB.defaultBlockState().setValue(SlabBlock.TYPE, SlabType.TOP));
+        helper.setBlock(seat.west(), Blocks.SPRUCE_STAIRS.defaultBlockState().setValue(StairBlock.FACING, Direction.WEST));
+        ClaySoldierEntity soldier = walker(helper, seat);
+        BlockPos top = helper.absolutePos(seat).above();
+        helper.onEachTick(() -> {
+            if (helper.getTick() < 5) {
+                return;
+            }
+            if (helper.getTick() % 10 == 0) {
+                soldier.getNavigation().moveTo(top.getX() + 0.5, top.getY(), top.getZ() + 0.5, 1.0);
+            }
+            if (soldier.onGround() && soldier.getY() >= top.getY() - 0.01 && soldier.blockPosition().getX() == top.getX()
+                    && soldier.blockPosition().getZ() == top.getZ()) {
+                helper.succeed();
+            }
+        });
+        helper.runAfterDelay(280, () -> helper.fail("BUG (stuck under a slab): the soldier never got onto the slab, it is at "
+                + soldier.position() + ", the slab's top at " + top));
     }
 
     /** Cobblestone {@code height} high on the 8 cells around {@code center}, so {@code center} becomes a pit. */
