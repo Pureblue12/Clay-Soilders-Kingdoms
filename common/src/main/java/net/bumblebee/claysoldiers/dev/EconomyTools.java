@@ -6,10 +6,13 @@ import net.bumblebee.claysoldiers.commands.KingdomCommand;
 import net.bumblebee.claysoldiers.kingdom.Kingdom;
 import net.bumblebee.claysoldiers.kingdom.KingdomEconomy;
 import net.bumblebee.claysoldiers.kingdom.KingdomKeep;
+import net.bumblebee.claysoldiers.kingdom.KingdomLayout;
+import net.bumblebee.claysoldiers.kingdom.layout.MasterPlan;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +42,10 @@ final class EconomyTools {
         registry.addTool(new DevTool("economy_ripen", ECONOMY, Component.literal("Ripen the fields"),
                 "Makes every crop in the kingdom's fields ripe (dev).",
                 List.of("economy", "ripen"), false, null, EconomyTools::ripen));
+        registry.addTool(new DevTool("economy_plan", ECONOMY, Component.literal("Show the town plan"),
+                "Shows the kingdom's master plan for 30 seconds: the wall (white sparks), its gates (flames), the building plots "
+                        + "(green) and the plots kept free (orange), and prints it in chat (stage 6, dev).",
+                List.of("economy", "plan"), false, null, EconomyTools::showPlan));
     }
 
     private static int now(CommandContext<CommandSourceStack> context) {
@@ -60,6 +67,28 @@ final class EconomyTools {
 
     private static int ripen(CommandContext<CommandSourceStack> context) {
         return withKingdom(context, (level, kingdom) -> report(context, "Ripened " + KingdomEconomy.ripen(level, kingdom) + " crops.", false));
+    }
+
+    private static int showPlan(CommandContext<CommandSourceStack> context) {
+        return withKingdom(context, (level, kingdom) -> {
+            if (kingdom.plan().isEmpty()) {
+                KingdomLayout.describe(kingdom).forEach(line -> report(context, line, true));
+                if (KingdomLayout.describe(kingdom).isEmpty()) {
+                    report(context, "The kingdom has no plan: the planner is off (layout.enabled 0).", true);
+                }
+                return;
+            }
+            MasterPlan plan = kingdom.plan().get();
+            report(context, "Plan: " + plan.summary() + ".", false);
+            for (MasterPlan.Plot plot : plan.plots()) {
+                report(context, "  " + plot.key() + " (" + plot.kind().lowerName() + (plot.outer() ? ", outside the wall" : "") + "): easel at "
+                        + plot.easelX() + ", " + plot.easelZ() + ", facing " + plot.facing().opposite().lowerName(), false);
+            }
+            ServerPlayer player = context.getSource().getPlayer();
+            if (player != null) {
+                KingdomLayout.show(player, plan);
+            }
+        });
     }
 
     private interface KingdomAction {

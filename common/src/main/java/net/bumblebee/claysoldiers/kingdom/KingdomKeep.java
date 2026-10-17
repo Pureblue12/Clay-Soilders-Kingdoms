@@ -113,6 +113,7 @@ public final class KingdomKeep {
      * economy (stage 5, {@link KingdomEconomy}).
      */
     public static void tick(MinecraftServer server) {
+        KingdomLayout.tick(server);
         if (server instanceof GameTestServer || server.getTickCount() % Tuning.KINGDOM_KEEP_CHECK_TICKS.get() != 0) {
             return;
         }

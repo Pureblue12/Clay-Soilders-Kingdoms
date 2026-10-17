@@ -1,0 +1,165 @@
+package net.bumblebee.claysoldiers.gametest;
+
+import net.bumblebee.claysoldiers.ClaySoldiersCommon;
+import net.bumblebee.claysoldiers.kingdom.Kingdom;
+import net.bumblebee.claysoldiers.kingdom.KingdomLayout;
+import net.bumblebee.claysoldiers.kingdom.KingdomSavedData;
+import net.bumblebee.claysoldiers.kingdom.layout.Cell;
+import net.bumblebee.claysoldiers.kingdom.layout.KingdomPlanner;
+import net.bumblebee.claysoldiers.kingdom.layout.MasterPlan;
+import net.bumblebee.claysoldiers.kingdom.layout.Rect;
+import net.bumblebee.claysoldiers.kingdom.layout.Side;
+import net.bumblebee.claysoldiers.terrain.TerrainScan;
+import net.bumblebee.claysoldiers.terrain.TerrainScanner;
+import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.neoforged.neoforge.gametest.GameTestHolder;
+import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static net.bumblebee.claysoldiers.gametest.ClaySoldierGameTests.PLATFORM;
+
+/**
+ * The kingdom planner (stage 6): its cases on made-up land ({@link KingdomPlannerCases}: flat land and every front, a
+ * cave under the best spot, a river, rough land, land not loaded, cramped land), the plan surviving a save, the land scan
+ * finding a cave and the kingdom filling it, and roads laid as dirt paths. Each asserts the CORRECT behavior. The whole
+ * story in a world is {@link KingdomTownGameTests}.
+ */
+@GameTestHolder(ClaySoldiersCommon.MOD_ID)
+@PrefixGameTestTemplate(false)
+public class KingdomPlannerGameTests {
+    @GameTest(template = PLATFORM)
+    public static void flatPlanIsSound(GameTestHelper helper) {
+        check(helper, KingdomPlannerCases.flatPlanIsSound());
+    }
+
+    @GameTest(template = PLATFORM)
+    public static void caveIsAvoided(GameTestHelper helper) {
+        check(helper, KingdomPlannerCases.caveIsAvoided());
+    }
+
+    @GameTest(template = PLATFORM)
+    public static void riverGetsAFishingPlot(GameTestHelper helper) {
+        check(helper, KingdomPlannerCases.riverGetsAFishingPlot());
+    }
+
+    @GameTest(template = PLATFORM)
+    public static void noWaterNoFishingPlot(GameTestHelper helper) {
+        check(helper, KingdomPlannerCases.noWaterNoFishingPlot());
+    }
+
+    @GameTest(template = PLATFORM)
+    public static void roughLandIsRespected(GameTestHelper helper) {
+        check(helper, KingdomPlannerCases.roughLandIsRespected());
+    }
+
+    @GameTest(template = PLATFORM)
+    public static void unknownLandIsLeftAlone(GameTestHelper helper) {
+        check(helper, KingdomPlannerCases.unknownLandIsLeftAlone());
+    }
+
+    @GameTest(template = PLATFORM)
+    public static void crampedLandLeavesOutWhatDoesntFit(GameTestHelper helper) {
+        check(helper, KingdomPlannerCases.crampedLandLeavesOutWhatDoesntFit());
+    }
+
+    private static void check(GameTestHelper helper, @Nullable String problem) {
+        helper.assertTrue(problem == null, String.valueOf(problem));
+        helper.succeed();
+    }
+
+    /** A kingdom's plan is saved with it (kingdoms data version 3) and reads back the same. */
+    @GameTest(template = PLATFORM)
+    public static void planSurvivesSaving(GameTestHelper helper) {
+        KingdomPlanner.Result result = KingdomPlannerCases.plan(new KingdomPlannerCases.Land(), Side.EAST);
+        helper.assertTrue(result.plan().isPresent(), "No plan: " + result.notes());
+        MasterPlan plan = result.plan().get();
+        Kingdom base = KingdomDataGameTests.fullKingdom();
+        Kingdom kingdom = new Kingdom(base.id(), base.team(), base.dimension(), base.center(), base.claimRadius(), base.king(), base.status(),
+                base.tier(), base.stockpile(), base.buildings(), base.census(), base.renown(), base.foundedTick(), base.chronicle(), Optional.of(plan));
+        Tag encoded = KingdomSavedData.encode(kingdom);
+        Kingdom decoded = KingdomSavedData.decode(encoded);
+        helper.assertTrue(decoded.plan().equals(Optional.of(plan)), "The plan changed when saved: " + decoded.plan().map(MasterPlan::summary));
+        helper.assertTrue(decoded.equals(kingdom), "The kingdom changed when saved");
+        // A kingdom saved before stage 6 has no plan.
+        helper.assertTrue(KingdomSavedData.decode(KingdomSavedData.encode(base)).plan().isEmpty(), "A kingdom without a plan read back with one");
+        helper.succeed();
+    }
+
+    /**
+     * A stone pad 4 high with a 3 by 3 pocket of air 2 under its top: the land scan marks the pocket's columns hollow (2
+     * down) and the solid ones not; filling the plot over it ({@link KingdomLayout#sealHollows}) leaves no hollow.
+     */
+    @GameTest(template = PLATFORM, skyAccess = true)
+    public static void scanFindsACaveAndLevellingFillsIt(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        for (int x = 4; x <= 10; x++) {
+            for (int z = 4; z <= 10; z++) {
+                for (int y = 2; y <= 5; y++) {
+                    boolean pocket = y == 3 && x >= 6 && x <= 8 && z >= 6 && z <= 8;
+                    level.setBlockAndUpdate(helper.absolutePos(new BlockPos(x, y, z)), pocket ? Blocks.AIR.defaultBlockState() : Blocks.STONE.defaultBlockState());
+                }
+            }
+        }
+        BlockPos center = helper.absolutePos(new BlockPos(7, 5, 7));
+        BlockPos corner = helper.absolutePos(new BlockPos(4, 5, 4));
+        TerrainScan scan = TerrainScanner.scan(level, center, 4);
+        helper.assertTrue(scan.ground(center.getX(), center.getZ()) == center.getY(), "Ground over the pocket: " + scan.ground(center.getX(), center.getZ()));
+        helper.assertTrue(scan.hollow(center.getX(), center.getZ()) == 2, "Over the pocket the scan should see a hollow 2 down, saw " + scan.hollow(center.getX(), center.getZ()));
+        helper.assertTrue(scan.hollow(corner.getX(), corner.getZ()) == 0, "Solid stone seen as hollow: " + scan.hollow(corner.getX(), corner.getZ()));
+
+        BlockPos a = helper.absolutePos(new BlockPos(5, 5, 5));
+        BlockPos b = helper.absolutePos(new BlockPos(9, 5, 9));
+        Rect plot = new Rect(Math.min(a.getX(), b.getX()), Math.max(a.getX(), b.getX()), Math.min(a.getZ(), b.getZ()), Math.max(a.getZ(), b.getZ()));
+        int filled = KingdomLayout.sealHollows(level, plot, center.getY(), 4);
+        helper.assertTrue(filled == 9, "Filled " + filled + " blocks, the pocket has 9");
+        helper.assertTrue(level.getBlockState(helper.absolutePos(new BlockPos(7, 3, 7))).is(Blocks.DIRT), "The pocket wasn't filled with dirt");
+        TerrainScan again = TerrainScanner.scan(level, center, 4);
+        helper.assertTrue(again.hollow(center.getX(), center.getZ()) == 0, "Still hollow after filling: " + again.hollow(center.getX(), center.getZ()));
+        helper.succeed();
+    }
+
+    /**
+     * A road over grass becomes dirt path: a flower on it is cleared, a tree trunk on it is cut (its logs go to the
+     * stockpile), and stone isn't earth, so it stays.
+     */
+    @GameTest(template = PLATFORM, skyAccess = true)
+    public static void roadsAreLaidAsDirtPaths(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        for (int x = 3; x <= 10; x++) {
+            level.setBlockAndUpdate(helper.absolutePos(new BlockPos(x, 1, 8)), Blocks.GRASS_BLOCK.defaultBlockState());
+        }
+        level.setBlockAndUpdate(helper.absolutePos(new BlockPos(5, 2, 8)), Blocks.POPPY.defaultBlockState());
+        level.setBlockAndUpdate(helper.absolutePos(new BlockPos(7, 2, 8)), Blocks.OAK_LOG.defaultBlockState());
+        level.setBlockAndUpdate(helper.absolutePos(new BlockPos(7, 3, 8)), Blocks.OAK_LOG.defaultBlockState());
+        BlockPos from = helper.absolutePos(new BlockPos(3, 1, 8));
+        BlockPos to = helper.absolutePos(new BlockPos(12, 1, 8));
+        Cell start = new Cell(from.getX(), from.getZ());
+        Cell end = new Cell(to.getX(), to.getZ());
+        Rect nowhere = new Rect(start.x() - 40, start.x() - 30, start.z() - 40, start.z() - 30);
+        MasterPlan plan = new MasterPlan(start, nowhere, Side.SOUTH, List.of(), List.of(new MasterPlan.Road(start, end, 1)),
+                List.of(new Cell(nowhere.minX(), nowhere.minZ()), new Cell(nowhere.maxX(), nowhere.minZ()), new Cell(nowhere.maxX(), nowhere.maxZ()),
+                        new Cell(nowhere.minX(), nowhere.maxZ())), List.of(), 20);
+        KingdomLayout.Roads roads = KingdomLayout.layRoads(level, plan);
+        helper.assertTrue(roads.laid() == 8 && roads.cleared() == 3 && roads.skipped() == 2,
+                "Expected 8 laid, 3 cleared (a poppy and 2 logs), 2 skipped (stone): " + roads);
+        helper.assertTrue(roads.logs().equals(Map.of(Items.OAK_LOG, 2)), "Logs: " + roads.logs());
+        for (int x = 3; x <= 10; x++) {
+            BlockPos pos = helper.absolutePos(new BlockPos(x, 1, 8));
+            helper.assertTrue(level.getBlockState(pos).is(Blocks.DIRT_PATH), "No dirt path at " + x + ": " + level.getBlockState(pos));
+        }
+        helper.assertTrue(level.getBlockState(helper.absolutePos(new BlockPos(11, 1, 8))).is(Blocks.SMOOTH_STONE), "Stone was changed");
+        helper.assertTrue(level.getBlockState(helper.absolutePos(new BlockPos(7, 2, 8))).isAir() && level.getBlockState(helper.absolutePos(new BlockPos(5, 2, 8))).isAir(),
+                "The road wasn't cleared");
+        helper.succeed();
+    }
+}

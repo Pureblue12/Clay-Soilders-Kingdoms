@@ -37,7 +37,7 @@ Starts a headless test server, runs every test in
 `DoorGameTests`, `TuningGameTests`, `StructureRegistryGameTests`, `StructurePasteGameTests`,
 `LayoutCheckerGameTests`, `KingdomDataGameTests`, `KingdomGameTests`, `KingdomBookGameTests`, `KingdomBookRefreshGameTests`, `TerrainScoreGameTests`, `TerrainScanGameTests`,
 `TerrainGradingGameTests`, `TerrainFoundingGameTests`, `ScaffoldPlannerGameTests`, `ScaffoldBuildGameTests`,
-`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `BuildPlanGameTests`, `KingdomKeepGameTests`, `KingFoundingGameTests`, `KingdomEconomyGameTests`, `KingdomStoryGameTests`), prints
+`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `BuildPlanGameTests`, `KingdomKeepGameTests`, `KingFoundingGameTests`, `KingdomEconomyGameTests`, `KingdomStoryGameTests`, `KingdomPlannerGameTests`, `KingdomTownGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Templates: `data/csr/structure/gametest/platform.nbt` (16x8x16) and `terrain.nbt` (32x16x32, for test terrains);
@@ -315,6 +315,31 @@ around the keep), `WoodCost` (the carpenter: wooden blocks from logs of any kind
   plain soldiers, a dropped gold ingot, then founding, keep, camp, field, woodcutters, farmer and a paid cottage, with small
   stand-in structures (`KingdomKeep.useKeepForTests`, `KingdomEconomy.usePlanForTests`; `test_camp`, `test_field`,
   `test_cottage`) on the 48x48 grass template; the server sprints through it. A change to any step's hand-over must keep it green.
+
+### The kingdom planner (stage 6, part 1)
+
+Code: `common/.../kingdom/layout/KingdomPlanner` (pure: the master plan), `MasterPlan` (plain data: plots, roads, wall
+corners, gates), `Rect`, `Side`, `Ground`; world side `kingdom/KingdomLayout` (draws the plan, lays roads, fills caves, the
+dev view), saved by `MasterPlanCodec`. Decisions D105–D110; numbers `layout.*` and `terrain.cave_probe_depth`.
+- Once the keep is BUILT and the kingdom has no other building, `KingdomEconomy.update` calls `KingdomLayout.update`: it scans
+  `layout.scan_radius` around the keep and plans, from the blueprints' real footprints in all 4 directions: a square in front
+  of the keep, a main street out of its front, a cross street, house plots along them (fronts on the road), a straight-sided
+  wall rectangle with 3 gates, the outer buildings in a band outside it (paths to the street ends, never in front of a gate),
+  a plot by water for a fishing village when there is water. `LayoutChecker` must find no problem (now also: nothing on a road
+  or the wall), or there is no plan (retried every `kingdom.keep.plan_retry_ticks`). The claim grows to hold the plan.
+- Saved in the kingdom (data version 3, optional `plan`). Roads are laid at once as dirt paths on earth (`layout.lay_roads`).
+- `KingdomEconomy.plan` puts the n-th building of a structure on the plan's n-th plot of it, re-judged as it is now; when it
+  can't be used, the stage 5 `PlotPicker` picks a plot off every planned one. Every levelled plot gets its caves filled
+  (`KingdomLayout.sealHollows`).
+- Caves: `TerrainScanner` notes the first open block within `terrain.cave_probe_depth` under the ground (`TerrainScan.hollow`).
+  Only the planner weighs it; keep sites and stage 5 plots just report it (a GameTest floor stands on a layer of air, D106).
+- Off in a GameTest server unless a test calls `KingdomLayout.enableInTestsForTests(true)` (the stage 5 tests stay as they were).
+- Dev book "Economy": "Show the town plan" (`/csr dev economy plan`): particles for 30 s (white sparks: the wall, flames: gates,
+  green: building plots, orange: plots kept free) and the plan in chat.
+- Tests: `KingdomPlannerGameTests` (pure cases in `KingdomPlannerCases`, run them outside the game by compiling that file with
+  the `kingdom/layout` classes; a save round trip; the scan finding a cave; roads as dirt paths) and
+  `KingdomTownGameTests.kingdomPlansItsTownOnRoughLand` (the whole story on stepped land with a cave, an 84x84 template
+  `gametest/kingdom_town`).
 
 ### Terrain (stage 2 spike: site checks; soldiers don't grade yet)
 
@@ -650,3 +675,5 @@ Optional integrations (JEI, Jade, Accessories, Curios, Create, SmartBrainLib) ar
   planner (5 approaches), climbed scaffolding columns in game, saved jobs with cleanup, Scaffolding dev book category,
   SCAFFOLD recorder category. Recommendation and height rules in `docs/SCAFFOLDING.md`.
 - **Stage 4 (Tier-1 keep built autonomously) — done (2026-10-16, passed the owner's in-game test):** see "The kingdom builds its keep".
+- **Stage 6 (Layout and growth) — part 1 built (2026-10-17, waiting for CI and the owner's in-game test):** the kingdom
+  planner, see "The kingdom planner".

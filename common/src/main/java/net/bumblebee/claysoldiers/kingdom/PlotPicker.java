@@ -162,7 +162,7 @@ public final class PlotPicker {
                         int score = judgement.earth() + TREE_COLUMN_COST * judgement.trees() + DISTANCE_COST * (distance - rules.minRadius())
                                 + WATER_COST * waterNear + (faces ? 0 : FACING_COST) - (rules.likesTrees() ? TREE_NEAR_BONUS * treesNear : 0);
                         KeepSite.Choice choice = new KeepSite.Choice(area, easelX, easelZ, judgement.groundY(), judgement.range(),
-                                judgement.earth(), judgement.trees(), distance);
+                                judgement.earth(), judgement.trees(), distance, judgement.hollow());
                         Plot plot = new Plot(choice, score, waterNear, treesNear, faces);
                         if (best == null || plot.score() < best.score()) {
                             best = plot;

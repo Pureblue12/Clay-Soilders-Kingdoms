@@ -63,6 +63,17 @@ All balancing numbers (costs, radii, rates, caps, unlock thresholds) live in ONE
 | `economy.plot.outer_reach` | 16 | 0–64 | How far beyond its claim a kingdom may put its outer buildings (lumber camp, fields), in blocks: they stand in a ring just outside where the wall will be; houses stay inside the claim. |
 | `economy.plot.gap` | 3 | 0–16 | Free blocks between a new building's plot (with its easel and chest) and every building already there (room for a path). |
 | `economy.plot.max_height_range` | 3 | 0–16 | The most the ground under a plot after the keep may rise and fall, in blocks; the kingdom levels it when it starts the building. |
+| `layout.enabled` | 1 | 0–1 | 1 = when its keep is finished a kingdom draws up its master plan (stage 6: streets, house plots, a straight wall with gates, outer plots) and builds on it; 0 = buildings go on the nearest free ground (stage 5). |
+| `layout.scan_radius` | 96 | 32–160 | How far around its keep a kingdom looks at the land for its master plan, in blocks (only loaded ground counts). |
+| `layout.road_width` | 3 | 1–7 | Width of the main street and the cross street (odd; an even number is rounded up). |
+| `layout.square_depth` | 5 | 1–16 | Depth of the open square in front of the keep's door. |
+| `layout.square_width` | 7 | 1–31 | Width of that square. |
+| `layout.plot_gap` | 2 | 0–16 | Free blocks between two plots of the master plan (and between a plot and the keep). |
+| `layout.wall_setback` | 3 | 1–16 | Free blocks between the wall and the plots inside it. |
+| `layout.wall_shift` | 6 | 0–16 | The most a wall side moves out from the town to stay off water, cliffs and caves. |
+| `layout.outer_band` | 24 | 4–64 | How far outside the wall outer buildings (lumber camp, fields, the fishing plot) may stand. |
+| `layout.later_plots` | 4 | 0–16 | House plots along the streets kept free for houses built later. |
+| `layout.lay_roads` | 1 | 0–1 | 1 = the planned roads are laid at once as dirt paths when the plan is drawn up (soldiers don't lay roads yet); 0 = only planned. |
 | `economy.woodcutters` | 2 | 0–16 | How many idle soldiers become woodcutters at a finished lumber camp (picked while nothing is being built, so builders come first). |
 | `economy.farmers` | 1 | 0–16 | How many idle soldiers become farmers at a finished field (picked while nothing is being built). |
 | `economy.lumber.radius` | 24 | 4–64 | How far from its lumber camp's easel a woodcutter looks for trees, in blocks. |
@@ -96,6 +107,7 @@ All balancing numbers (costs, radii, rates, caps, unlock thresholds) live in ONE
 | `terrain.penalty.biome` | 10 | 0–100 | Score points lost on a wet (ocean, river, beach) or mountain biome. |
 | `terrain.search.radius` | 16 | 0–64 | How far the site search looks around the wanted point. |
 | `terrain.search.step` | 4 | 1–16 | Distance between candidate sites. |
+| `terrain.cave_probe_depth` | 4 | 0–32 | How far under the ground the land scan looks for caves and holes (0 = not at all): plots are levelled up to 3 down, so a cave deeper than 4 doesn't matter. The kingdom planner keeps plots off them (D106) and the kingdom fills any under a plot it levels; keep sites and stage 5 plots only report them. |
 | `terrain.search.max_candidates` | 81 | 1–1000 | Most candidates one search judges, nearest first (81 = every candidate of the default radius and step). |
 | `terrain.grade.cut_fill_budget` | 250 | 0–100,000 | Most ground blocks cut and fill may move (cut + filled). |
 | `terrain.grade.foundation_budget` | 300 | 0–100,000 | Most blocks a foundation platform (floor + pillars) may use. |

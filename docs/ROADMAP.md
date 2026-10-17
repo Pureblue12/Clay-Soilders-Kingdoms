@@ -14,7 +14,7 @@ Earlier work (M0–M2: testing, bug fixes, `/csr build`, builder fixes, doors) i
 | 4 | Tier-1 keep built autonomously | L | **done** (2026-10-16, passed the owner's in-game test) |
 | 5 | Economy loop v1 | L | **in progress** (2026-10-16: built, waiting for CI and the owner's in-game test) |
 | 5a | Decoration step | M | not started |
-| 6 | Layout and growth | XL | not started |
+| 6 | Layout and growth | XL | **in progress** (2026-10-17: the kingdom planner is built, waiting for CI and the owner's in-game test) |
 | 7 | Performance checkpoint | M | not started |
 | 8 | Content tiers 2–5 | XL | not started |
 | T | Organic wall and layout testing | L | not started |
@@ -183,7 +183,13 @@ Stages are ordered by dependency and risk. Every stage ends playable.
 - **Acceptance test:** a small village forms with no overlaps and a closed wall.
 - **Depends on:** 5 · **Size:** XL
 - **Risks:** layout on real terrain.
-- **Decisions:** [D3](DECISIONS.md), [D7](DECISIONS.md) · **Status:** not started · **Results:** —
+- **Decisions:** [D3](DECISIONS.md), [D7](DECISIONS.md), D105–D110 · **Status:** in progress · **Results:** part 1, the kingdom
+  planner: once its keep is finished, a kingdom reads the land around it (slope, water, trees, caves under the ground) and
+  draws up one master plan, saved with it: a square, a main street and a cross street, house plots along them, a straight
+  wall with 3 gates, the camp and field just outside the wall (away from water), a plot by water kept for a fishing village.
+  Its roads are laid at once as dirt paths; every building goes on its planned plot, and caves under a plot are filled.
+  The layout checker checks every plan (overlaps, road access, nothing on a road or the wall, a closed wall). Dev book:
+  Economy, "Show the town plan". Still to do: visitors joining, a palisade built by soldiers, tier 2, soldiers laying roads.
 
 ### 7 Performance checkpoint
 - **Goal:** many soldiers, loaded chunks, a tick budget, caps per tier in the tuning file.
