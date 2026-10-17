@@ -262,6 +262,11 @@ public final class KingdomLayout {
             roads.logs().forEach((item, count) -> Kingdoms.addResource(server, kingdom, KingdomStore.id(item), count));
             DebugLog.event(DebugCategory.TERRAIN, null, () -> "laid the roads of %s: %d dirt path blocks, %d plants cleared, %d logs to the stockpile, %d cells skipped (not loaded, water or not earth)"
                     .formatted(kingdom.team(), roads.laid(), roads.cleared(), roads.logs().values().stream().mapToInt(Integer::intValue).sum(), roads.skipped()));
+            List<Bridge> bridges = bridgeRoads(level, plan, Tuning.LAYOUT_BRIDGE_MAX_LENGTH.get());
+            for (Bridge bridge : bridges) {
+                DebugLog.event(DebugCategory.TERRAIN, null, () -> "bridged the road of %s over water: %d long from %s to %s, %d planks"
+                        .formatted(kingdom.team(), bridge.length(), bridge.from(), bridge.to(), bridge.planks()));
+            }
         }
         return Optional.of(plan);
     }
@@ -319,6 +324,85 @@ public final class KingdomLayout {
             }
         }
         return new Roads(laid, cleared, skipped, logs);
+    }
+
+    /**
+     * A bridge laid over water on a road.
+     *
+     * @param from   the first water cell on the road's middle line
+     * @param to     the last one
+     * @param length water cells crossed
+     * @param planks plank blocks placed (across the road's width)
+     */
+    public record Bridge(Cell from, Cell to, int length, int planks) {
+    }
+
+    /**
+     * Bridges each stretch of water a road crosses, up to {@code maxLength} long and with land at both ends (a stream, a
+     * pond; not a road running into the sea): the water's top block becomes spruce planks across the road's width
+     * (D114, the owner's island game: "a gap in the road ... a small bridge should go there").
+     */
+    public static List<Bridge> bridgeRoads(ServerLevel level, MasterPlan plan, int maxLength) {
+        List<Bridge> bridges = new ArrayList<>();
+        if (maxLength <= 0) {
+            return bridges;
+        }
+        for (MasterPlan.Road road : plan.roads()) {
+            boolean alongX = road.from().z() == road.to().z();
+            int line = alongX ? road.from().z() : road.from().x();
+            int start = alongX ? Math.min(road.from().x(), road.to().x()) : Math.min(road.from().z(), road.to().z());
+            int end = alongX ? Math.max(road.from().x(), road.to().x()) : Math.max(road.from().z(), road.to().z());
+            int runStart = Integer.MIN_VALUE; // first water cell of the stretch, MIN_VALUE when not after land
+            boolean afterLand = false;
+            for (int t = start; t <= end; t++) {
+                Cell cell = alongX ? new Cell(t, line) : new Cell(line, t);
+                Boolean wet = wetTop(level, cell);
+                if (wet == null) { // not loaded: unknown, no bridge across it
+                    afterLand = false;
+                    runStart = Integer.MIN_VALUE;
+                } else if (wet) {
+                    if (runStart == Integer.MIN_VALUE && afterLand) {
+                        runStart = t;
+                    }
+                    afterLand = false;
+                } else {
+                    if (runStart != Integer.MIN_VALUE && t - runStart <= maxLength) {
+                        bridges.add(bridge(level, road, alongX, line, runStart, t - 1));
+                    }
+                    runStart = Integer.MIN_VALUE;
+                    afterLand = true;
+                }
+            }
+        }
+        return bridges;
+    }
+
+    private static Bridge bridge(ServerLevel level, MasterPlan.Road road, boolean alongX, int line, int first, int last) {
+        int half = road.width() / 2;
+        int planks = 0;
+        for (int t = first; t <= last; t++) {
+            for (int offset = -half; offset <= half; offset++) {
+                Cell cell = alongX ? new Cell(t, line + offset) : new Cell(line + offset, t);
+                if (Boolean.TRUE.equals(wetTop(level, cell))) {
+                    int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, cell.x(), cell.z()) - 1;
+                    level.setBlock(new BlockPos(cell.x(), y, cell.z()), Blocks.SPRUCE_PLANKS.defaultBlockState(), Block.UPDATE_ALL);
+                    planks++;
+                }
+            }
+        }
+        Cell from = alongX ? new Cell(first, line) : new Cell(line, first);
+        Cell to = alongX ? new Cell(last, line) : new Cell(line, last);
+        return new Bridge(from, to, last - first + 1, planks);
+    }
+
+    /** Whether the top block at {@code cell} is water; null when it isn't loaded. */
+    @Nullable
+    private static Boolean wetTop(ServerLevel level, Cell cell) {
+        if (!level.hasChunk(cell.x() >> 4, cell.z() >> 4)) {
+            return null;
+        }
+        int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, cell.x(), cell.z()) - 1;
+        return level.getFluidState(new BlockPos(cell.x(), y, cell.z())).is(FluidTags.WATER);
     }
 
     /**
@@ -514,11 +598,7 @@ public final class KingdomLayout {
      * the water.
      */
     public static boolean seaGuarded(ServerLevel level, Cell cell) {
-        if (!level.hasChunk(cell.x() >> 4, cell.z() >> 4)) {
-            return false;
-        }
-        int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, cell.x(), cell.z()) - 1;
-        return level.getFluidState(new BlockPos(cell.x(), y, cell.z())).is(FluidTags.WATER);
+        return Boolean.TRUE.equals(wetTop(level, cell));
     }
 
     /** The cells of a plan's roads (for tests). */

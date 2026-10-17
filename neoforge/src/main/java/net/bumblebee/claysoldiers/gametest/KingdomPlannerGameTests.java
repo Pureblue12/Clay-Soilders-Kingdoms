@@ -195,4 +195,51 @@ public class KingdomPlannerGameTests {
                 "The road wasn't cleared");
         helper.succeed();
     }
+
+    /**
+     * A road over a stream gets a plank bridge when the stream is short enough, with land at both ends; a road running
+     * out into open water gets none (D114).
+     */
+    @GameTest(template = PLATFORM, skyAccess = true)
+    public static void roadsBridgeAStreamButNotTheSea(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        // A stream (x 6..8) across a road along z 8, and water from x 6 to the end of a road along z 12.
+        for (int x = 2; x <= 14; x++) {
+            for (int z : new int[]{7, 9, 11, 13}) {
+                level.setBlockAndUpdate(helper.absolutePos(new BlockPos(x, 2, z)), Blocks.STONE.defaultBlockState());
+            }
+            boolean stream = x >= 6 && x <= 8;
+            level.setBlockAndUpdate(helper.absolutePos(new BlockPos(x, 2, 8)), x == 14 ? Blocks.STONE.defaultBlockState()
+                    : stream ? Blocks.WATER.defaultBlockState() : Blocks.GRASS_BLOCK.defaultBlockState());
+            level.setBlockAndUpdate(helper.absolutePos(new BlockPos(x, 2, 12)), x == 14 ? Blocks.STONE.defaultBlockState()
+                    : x >= 6 ? Blocks.WATER.defaultBlockState() : Blocks.GRASS_BLOCK.defaultBlockState());
+        }
+        Cell[] ends = new Cell[4];
+        int[][] at = {{2, 8}, {13, 8}, {2, 12}, {13, 12}};
+        for (int i = 0; i < 4; i++) {
+            BlockPos pos = helper.absolutePos(new BlockPos(at[i][0], 2, at[i][1]));
+            ends[i] = new Cell(pos.getX(), pos.getZ());
+        }
+        Rect nowhere = new Rect(ends[0].x() - 40, ends[0].x() - 30, ends[0].z() - 40, ends[0].z() - 30);
+        MasterPlan plan = new MasterPlan(ends[0], nowhere, Side.SOUTH, List.of(),
+                List.of(new MasterPlan.Road(ends[0], ends[1], 1), new MasterPlan.Road(ends[2], ends[3], 1)),
+                List.of(new Cell(nowhere.minX(), nowhere.minZ()), new Cell(nowhere.maxX(), nowhere.minZ()), new Cell(nowhere.maxX(), nowhere.maxZ()),
+                        new Cell(nowhere.minX(), nowhere.maxZ())), List.of(), 20);
+
+        List<KingdomLayout.Bridge> tooShort = KingdomLayout.bridgeRoads(level, plan, 2);
+        helper.assertTrue(tooShort.isEmpty(), "A 3-long stream was bridged with a longest bridge of 2: " + tooShort);
+        helper.assertTrue(level.getBlockState(helper.absolutePos(new BlockPos(7, 2, 8))).is(Blocks.WATER), "The stream was changed");
+
+        List<KingdomLayout.Bridge> bridges = KingdomLayout.bridgeRoads(level, plan, 8);
+        helper.assertTrue(bridges.size() == 1 && bridges.get(0).length() == 3 && bridges.get(0).planks() == 3,
+                "Expected one bridge 3 long with 3 planks (none toward the open water): " + bridges);
+        for (int x = 6; x <= 8; x++) {
+            BlockPos pos = helper.absolutePos(new BlockPos(x, 2, 8));
+            helper.assertTrue(level.getBlockState(pos).is(Blocks.SPRUCE_PLANKS), "No plank at " + x + ": " + level.getBlockState(pos));
+        }
+        for (int x = 6; x <= 13; x++) {
+            helper.assertTrue(level.getBlockState(helper.absolutePos(new BlockPos(x, 2, 12))).is(Blocks.WATER), "The open water got a bridge at " + x);
+        }
+        helper.succeed();
+    }
 }

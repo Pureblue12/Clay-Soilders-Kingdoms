@@ -118,6 +118,8 @@ public final class Tuning {
             "How long players near a kingdom see its plan in particles when it draws the plan up, and a building's plot when it starts the building, in seconds; 0 = never shown by itself.", 30, 0, 300));
     public static final TuningKey.IntKey LAYOUT_LAY_ROADS = register(new TuningKey.IntKey("layout.lay_roads",
             "1 = the kingdom lays its planned roads at once as dirt paths when it draws up its plan (soldiers don't lay roads yet); 0 = the roads are only planned.", 1, 0, 1));
+    public static final TuningKey.IntKey LAYOUT_BRIDGE_MAX_LENGTH = register(new TuningKey.IntKey("layout.bridge_max_length",
+            "The longest stretch of water (blocks) a laid road bridges with planks, with land at both ends (a stream, a pond); 0 = no bridges.", 8, 0, 32));
     public static final TuningKey.IntKey ECONOMY_WOODCUTTERS = register(new TuningKey.IntKey("economy.woodcutters",
             "How many idle soldiers become woodcutters at a finished lumber camp (picked while nothing is being built, so builders come first).", 2, 0, 16));
     public static final TuningKey.IntKey ECONOMY_FARMERS = register(new TuningKey.IntKey("economy.farmers",

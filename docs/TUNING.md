@@ -76,6 +76,7 @@ All balancing numbers (costs, radii, rates, caps, unlock thresholds) live in ONE
 | `layout.roster` | 1 | 0–1 | 1 = the master plan keeps a plot for every Studio building the kingdom adds later (inner and outer, not street decoration, at its top level's size), so the wall is sized for the whole town; 0 = only its own list and the extra house plots. |
 | `layout.show_seconds` | 30 | 0–300 | How long players within 128 blocks see a kingdom's plan in particles when it is drawn up (white sparks: wall, flames: gates, green: building plots, orange: kept for later), and a building's plot (green) when the kingdom starts it; 0 = only through the dev book. |
 | `layout.lay_roads` | 1 | 0–1 | 1 = the planned roads are laid at once as dirt paths when the plan is drawn up (soldiers don't lay roads yet); 0 = only planned. |
+| `layout.bridge_max_length` | 8 | 0–32 | The longest stretch of water a laid road bridges with spruce planks, with land at both ends (a stream, a pond, not the sea); 0 = no bridges (D114). |
 | `economy.woodcutters` | 2 | 0–16 | How many idle soldiers become woodcutters at a finished lumber camp (picked while nothing is being built, so builders come first). |
 | `economy.farmers` | 1 | 0–16 | How many idle soldiers become farmers at a finished field (picked while nothing is being built). |
 | `economy.lumber.radius` | 24 | 4–64 | How far from its lumber camp's easel a woodcutter looks for trees, in blocks. |

@@ -332,14 +332,14 @@ around the keep), `WoodCost` (the carpenter: wooden blocks from logs of any kind
 
 Code: `common/.../kingdom/layout/KingdomPlanner` (pure: the master plan), `MasterPlan` (plain data: plots, roads, wall
 corners, gates), `Rect`, `Side`, `Ground`; world side `kingdom/KingdomLayout` (draws the plan, lays roads, fills caves, the
-dev view), saved by `MasterPlanCodec`. Decisions D105–D113; numbers `layout.*` and `terrain.cave_probe_depth`.
+dev view), saved by `MasterPlanCodec`. Decisions D105–D114; numbers `layout.*` and `terrain.cave_probe_depth`.
 - Once the keep is BUILT and the kingdom has no other building, `KingdomEconomy.update` calls `KingdomLayout.update`: it scans
   `layout.scan_radius` around the keep and plans, from the blueprints' real footprints in all 4 directions: a square in front
   of the keep, a main street out of its front, a cross street, house plots along them (fronts on the road), a straight-sided
   wall rectangle with 3 gates, the outer buildings in a band outside it (paths to the street ends, never in front of a gate),
   a plot by water for a fishing village when there is water. It also keeps a plot for every ready Studio building the kingdom adds later (`KingdomLayout.roster`, `layout.roster`, D111: inner and outer, not street decoration, at the top level's size; outer ones try a band twice as wide when the first is full), so the wall fits the whole town (about 190 by 140); the n-th building of a structure takes its plan plots first, then those kept for later. Every plot's easel stands more than `BuildSitePlanner.EASEL_SPACING` (8) from the keep's and every other plot's easel (the easel check refuses closer ones). `LayoutChecker` must find no problem (now also: nothing on a road
   or the wall), or there is no plan (retried every `kingdom.keep.plan_retry_ticks`). The claim grows to hold the plan.
-- Saved in the kingdom (data version 3, optional `plan`). Roads are laid at once as dirt paths on earth (`layout.lay_roads`).
+- Saved in the kingdom (data version 3, optional `plan`). Roads are laid at once as dirt paths on earth (`layout.lay_roads`), with a spruce plank bridge over water up to `layout.bridge_max_length` long with land at both ends (D114).
 - `KingdomEconomy.plan` puts the n-th building of a structure on the plan's n-th plot of it, re-judged as it is now; when it
   can't be used, the stage 5 `PlotPicker` picks a plot off every planned one. Every levelled plot gets its caves filled
   (`KingdomLayout.sealHollows`).

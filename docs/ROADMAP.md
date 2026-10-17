@@ -191,14 +191,14 @@ Stages are ordered by dependency and risk. Every stage ends playable.
 - **Acceptance test:** a small village forms with no overlaps and a closed wall.
 - **Depends on:** 5 · **Size:** XL
 - **Risks:** layout on real terrain.
-- **Decisions:** [D3](DECISIONS.md), [D7](DECISIONS.md), D105–D113 · **Status:** in progress · **Results:** part 1, the kingdom
+- **Decisions:** [D3](DECISIONS.md), [D7](DECISIONS.md), D105–D114 · **Status:** in progress · **Results:** part 1, the kingdom
   planner: once its keep is finished, a kingdom reads the land around it (slope, water, trees, caves under the ground) and
   draws up one master plan, saved with it: a square, a main street and a cross street, house plots along them, a straight
   wall with 3 gates, the camp and field just outside the wall (away from water), a plot by water kept for a fishing village.
   Its roads are laid at once as dirt paths; every building goes on its planned plot, and caves under a plot are filled.
   The layout checker checks every plan (overlaps, road access, nothing on a road or the wall, a closed wall). Dev book:
   Economy, "Show the town plan". After the owner's first look: the plan keeps a plot for every building still to come, so the
-  wall fits the whole town (D111), and players nearby see the plan when it is drawn up and each new plot when it starts (D112); where the wall line runs over water the sea guards the town and no wall goes there (D113). Still to do: visitors joining, a palisade built by soldiers, tier 2, soldiers laying roads.
+  wall fits the whole town (D111), and players nearby see the plan when it is drawn up and each new plot when it starts (D112); where the wall line runs over water the sea guards the town and no wall goes there (D113); roads bridge streams and ponds with planks (D114). Still to do: visitors joining, a palisade built by soldiers, tier 2, soldiers laying roads.
 
 ### 7 Performance checkpoint
 - **Goal:** many soldiers, loaded chunks, a tick budget, caps per tier in the tuning file.
