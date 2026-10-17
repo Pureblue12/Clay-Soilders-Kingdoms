@@ -1499,6 +1499,7 @@ Made by `tools/make_test_structures.py`.
 | `csr:test_hut` | 5×3×5 | inner | house | Cobblestone walls, oak door in the front, plank roof. |
 | `csr:test_well` | 3×2×3 | inner | utility | Cobblestone ring with water, fence posts. |
 | `csr:test_wall` | 5×3×1 | wall | defense | Stone brick wall segment. |
+| `csr:test_garden` | 5×3×5 | inner | utility | Decoration test (stage 5a): water basin, potted poppy, sign with text, banner with patterns, item frame, armor stand. |
 
 ### Placeholders (design: TBD, no geometry)
 

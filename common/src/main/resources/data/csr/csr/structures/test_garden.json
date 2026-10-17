@@ -1,0 +1,17 @@
+{
+  "id": "csr:test_garden",
+  "name": "Test garden with decoration (5x5)",
+  "design": "ready",
+  "tier": 1,
+  "zone": "inner",
+  "role": "utility",
+  "footprint": [
+    5,
+    3,
+    5
+  ],
+  "cost": "auto",
+  "variant_group": "test_garden",
+  "palette": "cobblestone",
+  "structure": "csr:kingdom/test_garden"
+}

@@ -37,7 +37,7 @@ Starts a headless test server, runs every test in
 `DoorGameTests`, `TuningGameTests`, `StructureRegistryGameTests`, `StructurePasteGameTests`,
 `LayoutCheckerGameTests`, `KingdomDataGameTests`, `KingdomGameTests`, `KingdomBookGameTests`, `KingdomBookRefreshGameTests`, `TerrainScoreGameTests`, `TerrainScanGameTests`,
 `TerrainGradingGameTests`, `TerrainFoundingGameTests`, `ScaffoldPlannerGameTests`, `ScaffoldBuildGameTests`,
-`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `BuildPlanGameTests`, `KingdomKeepGameTests`, `KingFoundingGameTests`), prints
+`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `BuildPlanGameTests`, `KingdomKeepGameTests`, `KingFoundingGameTests`, `DecorationGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Templates: `data/csr/structure/gametest/platform.nbt` (16x8x16) and `terrain.nbt` (32x16x32, for test terrains);
@@ -275,6 +275,17 @@ Code: `common/.../kingdom/KingdomKeep` (planner and server tick), `KeepSite` (pu
 - The server tick does nothing in a GameTest server (other tests' kingdoms stay untouched): tests call
   `KingdomKeep.update` themselves.
 - Saved: `KingdomBuilding.level` (kingdom data version 2). Supplies, crews and planning problems are memory only.
+
+### Decoration (stage 5a, D103)
+
+Code: `common/.../structure/StructureDecoration`. What builders can't place comes from the structure file itself: blocks
+without an item (water, lava, fire, potted plants, farmland, dirt paths, filled cauldrons), block entity data (sign text,
+banner patterns) and entities (item frames, armor stands, paintings). `StructureBlueprints` splits the file: builders get
+the rest (signs and banners placed blank), and the decoration is placed with vanilla's structure placement (the easel's
+rotation and mirror) when the last block is placed, exactly once; until then it is saved with the easel's plan (BUILD event
+"decoration: ..."). Water flows like any water, so a structure must hold it in. `tools/buildability.py` and
+`tools/build_plan.py` leave blocks without an item out the same way (`buildability.decoration`). Test structure
+`csr:test_garden` (`tools/make_test_structures.py`); tests `DecorationGameTests`. Ruin stages that remove it don't exist yet.
 
 ### Terrain (stage 2 spike: site checks; soldiers don't grade yet)
 

@@ -76,6 +76,17 @@ NO_COLLISION = ("air", "cave_air", "void_air", "structure_void", "torch", "wall_
                 "tripwire", "wheat", "carrots", "potatoes", "beetroots", "sugar_cane", "seagrass", "glow_lichen",
                 "water", "lava", "snow")
 CLIMBABLE = ("scaffolding", "ladder", "vine")
+# Blocks without an item: builders never place them; the decoration step adds them once the build is finished (stage 5a,
+# StructureDecoration, which asks the game: Block.asItem() is air). Left out of the simulated build.
+NO_ITEM = ("water", "lava", "fire", "soul_fire", "farmland", "dirt_path", "water_cauldron", "lava_cauldron",
+           "powder_snow_cauldron", "bubble_column", "frosted_ice", "tall_seagrass", "piston_head", "cave_vines_plant",
+           "kelp_plant", "weeping_vines_plant", "twisting_vines_plant", "big_dripleaf_stem", "candle_cake",
+           "nether_portal", "end_portal", "end_gateway")
+
+
+def decoration(name):
+    """Whether a block (minecraft: prefix removed) is added by the decoration step instead of builders."""
+    return name in NO_ITEM or name.startswith(("potted_", "attached_")) or name.endswith("_candle_cake")
 THIN = ("_fence", "_wall", "_pane", "iron_bars", "_leaves", "_fence_gate")
 
 
@@ -140,7 +151,7 @@ class Level:
         self.props = {}    # (x, y, z) -> block state properties
         for block in root["blocks"]:
             name, props = states[block["state"]]
-            if name in ("air", "cave_air", "void_air", "structure_void", "jigsaw"):
+            if name in ("air", "cave_air", "void_air", "structure_void", "jigsaw") or decoration(name):
                 continue
             x, y, z = block["pos"]
             pos = (self.base[0] + x, self.base[1] + y, self.base[2] + z)
