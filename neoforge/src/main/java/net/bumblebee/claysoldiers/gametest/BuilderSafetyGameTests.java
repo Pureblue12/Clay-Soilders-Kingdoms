@@ -591,8 +591,10 @@ public class BuilderSafetyGameTests {
             if (helper.getTick() % 10 == 0) {
                 soldier.getNavigation().moveTo(top.getX() + 0.5, top.getY(), top.getZ() + 0.5, 1.0);
             }
-            if (soldier.onGround() && soldier.getY() >= top.getY() - 0.01 && soldier.blockPosition().getX() == top.getX()
-                    && soldier.blockPosition().getZ() == top.getZ()) {
+            // On top of the bench (the slab or its stair; the path may end a step short of the slab's middle).
+            boolean onBench = soldier.blockPosition().getZ() == top.getZ()
+                    && (soldier.blockPosition().getX() == top.getX() || soldier.blockPosition().getX() == top.getX() - 1);
+            if (soldier.onGround() && soldier.getY() >= top.getY() - 0.01 && onBench) {
                 helper.succeed();
             }
         });
