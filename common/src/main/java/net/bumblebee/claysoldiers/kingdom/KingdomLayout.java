@@ -107,7 +107,7 @@ public final class KingdomLayout {
         return new KingdomPlanner.Rules(KingdomKeep.MARGIN, Tuning.LAYOUT_PLOT_GAP.get(), Tuning.LAYOUT_ROAD_WIDTH.get() | 1,
                 Tuning.LAYOUT_SQUARE_DEPTH.get(), Tuning.LAYOUT_SQUARE_WIDTH.get() | 1, Tuning.ECONOMY_PLOT_MAX_HEIGHT_RANGE.get(),
                 Tuning.LAYOUT_WALL_SETBACK.get(), Tuning.LAYOUT_WALL_SHIFT.get(), Tuning.LAYOUT_OUTER_BAND.get(),
-                Tuning.TERRAIN_SEARCH_STEP.get(), Tuning.LAYOUT_LATER_PLOTS.get(), BuildSitePlanner.EASEL_SPACING);
+                Tuning.TERRAIN_SEARCH_STEP.get(), BuildSitePlanner.EASEL_SPACING);
     }
 
     public static Side side(Direction direction) {
