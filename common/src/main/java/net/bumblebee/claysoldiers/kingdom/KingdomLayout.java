@@ -28,6 +28,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -472,7 +473,9 @@ public final class KingdomLayout {
             return;
         }
         for (Cell cell : plan.wall().cells()) {
-            particle(level, player, ParticleTypes.END_ROD, cell, 1.2);
+            if (!seaGuarded(level, cell)) {
+                particle(level, player, ParticleTypes.END_ROD, cell, 1.2);
+            }
         }
         for (MasterPlan.Gate gate : plan.gates()) {
             for (int dy = 0; dy < 4; dy++) {
@@ -503,6 +506,19 @@ public final class KingdomLayout {
         }
         int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, cell.x(), cell.z());
         level.sendParticles(player, type, true, cell.x() + 0.5, y + up, cell.z() + 0.5, 1, 0, 0, 0, 0);
+    }
+
+    /**
+     * Whether the wall line at {@code cell} runs over water: the sea (or a lake) guards that stretch, so no wall goes there
+     * and the plan view leaves it out (D113). The wall is a rectangle around every plot, so on a coast it runs out over
+     * the water.
+     */
+    public static boolean seaGuarded(ServerLevel level, Cell cell) {
+        if (!level.hasChunk(cell.x() >> 4, cell.z() >> 4)) {
+            return false;
+        }
+        int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, cell.x(), cell.z()) - 1;
+        return level.getFluidState(new BlockPos(cell.x(), y, cell.z())).is(FluidTags.WATER);
     }
 
     /** The cells of a plan's roads (for tests). */

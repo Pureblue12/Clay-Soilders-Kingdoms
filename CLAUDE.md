@@ -332,7 +332,7 @@ around the keep), `WoodCost` (the carpenter: wooden blocks from logs of any kind
 
 Code: `common/.../kingdom/layout/KingdomPlanner` (pure: the master plan), `MasterPlan` (plain data: plots, roads, wall
 corners, gates), `Rect`, `Side`, `Ground`; world side `kingdom/KingdomLayout` (draws the plan, lays roads, fills caves, the
-dev view), saved by `MasterPlanCodec`. Decisions D105–D112; numbers `layout.*` and `terrain.cave_probe_depth`.
+dev view), saved by `MasterPlanCodec`. Decisions D105–D113; numbers `layout.*` and `terrain.cave_probe_depth`.
 - Once the keep is BUILT and the kingdom has no other building, `KingdomEconomy.update` calls `KingdomLayout.update`: it scans
   `layout.scan_radius` around the keep and plans, from the blueprints' real footprints in all 4 directions: a square in front
   of the keep, a main street out of its front, a cross street, house plots along them (fronts on the road), a straight-sided
@@ -346,7 +346,7 @@ dev view), saved by `MasterPlanCodec`. Decisions D105–D112; numbers `layout.*`
 - Caves: `TerrainScanner` notes the first open block within `terrain.cave_probe_depth` under the ground (`TerrainScan.hollow`).
   Only the planner weighs it; keep sites and stage 5 plots just report it (a GameTest floor stands on a layer of air, D106).
 - Off in a GameTest server unless a test calls `KingdomLayout.enableInTestsForTests(true)` (the stage 5 tests stay as they were).
-- Players within 128 blocks see the plan for `layout.show_seconds` when it is drawn up, and a new building's plot (green) when it starts (D112).
+- Players within 128 blocks see the plan for `layout.show_seconds` when it is drawn up, and a new building's plot (green) when it starts (D112). Where the wall line runs over water the sea guards the town: no wall there, and the view leaves it out (D113).
 - Dev book "Economy": "Show the town plan" (`/csr dev economy plan`): particles for 30 s (white sparks: the wall, flames: gates,
   green: building plots, orange: plots kept free) and the plan in chat.
 - Tests: `KingdomPlannerGameTests` (pure cases in `KingdomPlannerCases`, run them outside the game by compiling that file with
