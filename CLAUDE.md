@@ -37,7 +37,7 @@ Starts a headless test server, runs every test in
 `DoorGameTests`, `TuningGameTests`, `StructureRegistryGameTests`, `StructurePasteGameTests`,
 `LayoutCheckerGameTests`, `KingdomDataGameTests`, `KingdomGameTests`, `KingdomBookGameTests`, `KingdomBookRefreshGameTests`, `TerrainScoreGameTests`, `TerrainScanGameTests`,
 `TerrainGradingGameTests`, `TerrainFoundingGameTests`, `ScaffoldPlannerGameTests`, `ScaffoldBuildGameTests`,
-`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `BuildPlanGameTests`, `KingdomKeepGameTests`, `KingFoundingGameTests`, `KingdomEconomyGameTests`, `KingdomStoryGameTests`, `DecorationGameTests`, `KingdomPlannerGameTests`, `KingdomTownGameTests`), prints
+`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `BuildPlanGameTests`, `KingdomKeepGameTests`, `KingFoundingGameTests`, `KingdomEconomyGameTests`, `KingdomStoryGameTests`, `DecorationGameTests`, `KingdomPlannerGameTests`, `KingdomTownGameTests`, `WorkshopGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Templates: `data/csr/structure/gametest/platform.nbt` (16x8x16) and `terrain.nbt` (32x16x32, for test terrains);
@@ -353,6 +353,30 @@ dev view), saved by `MasterPlanCodec`. Decisions D105–D114; numbers `layout.*`
   the `kingdom/layout` classes; a save round trip; the scan finding a cave; roads as dirt paths) and
   `KingdomTownGameTests.kingdomPlansItsTownOnRoughLand` (the whole story on stepped land with a cave, an 84x84 template
   `gametest/kingdom_town`).
+
+### The workshop and the quarry (stage 6b, part 1)
+
+Code: `common/.../kingdom/KingdomWorkshop` (levels, recipe costs, order board, crafting), `QuarryPit` (pure: the stepped pit),
+`entity/goal/workgoal/QuarryGoal` (quarryman), `CraftGoal` (crafter). Decisions D115-D119; numbers `economy.quarry*`, `economy.workshop.*`.
+- After the cottage the plan builds a quarry, the workshop (the Stonemason building stands in until the Workshop structure is
+  approved in the Studio, D116) and a smithy. All three are paid (logs, wheat).
+- The carpenter (`WoodCost`) keeps making wooden blocks. The workshop makes the other blocks a building needs from raw materials
+  at vanilla's crafting, stonecutting and smelting ratios, through the cheapest chain whose raw materials are all its level's
+  (`KingdomWorkshop.RAW_BY_LEVEL`): L1 cobblestone, L2 sand and clay, L3 iron, gold, copper, coal (nothing wooden in the chain).
+  Smelting needs no fuel yet. Only L1 exists in game (the plan builds level 1).
+- Order board: while a building is built, every remaining block the workshop can make, less what the stockpile and the builders'
+  chest hold, in build order (memory only, rewritten every check). A crafter (`economy.workshop.crafters_per_level` per level)
+  walks to the workshop's chest, works `economy.workshop.craft_ticks` / level, makes up to `economy.workshop.batch` of the first
+  order the stockpile has the raw materials for. Crafters and quarrymen are picked like woodcutters (only while nothing is built).
+- Quarry (D117): the pit is a square of `economy.quarry.pit_size` behind the quarry (away from its easel), 2 blocks from it, dug
+  in steps (each layer one block lower and one smaller per side), so no wall is higher than 1. Quarrymen dig the nearest block of
+  the highest layer left, never next to water or lava, never a block entity, never in or beside a building, on a planned plot,
+  road, the wall line or another claim; dirt is left behind, the rest goes to the quarry's chest.
+- Paid buildings (D118): once the quarry is finished, cobblestone is gathered, not given: a paid building waits for the
+  cobblestone it needs (directly and for what the workshop makes) like it waits for logs; once the workshop is finished, what it
+  can make isn't given. A pit with no stone left (superflat without stone layers) makes cobblestone free again (book: Quarry line).
+- Book (Economy page): quarrymen and crafters, the workshop's orders and what it waits for, the quarry line; "supply the next
+  building" also adds its cobblestone.
 
 ### Terrain (stage 2 spike: site checks; soldiers don't grade yet)
 

@@ -11,7 +11,9 @@ import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.dev.MaterialSupply;
 import net.bumblebee.claysoldiers.entity.goal.workgoal.BuildBlueprintGoal;
+import net.bumblebee.claysoldiers.entity.goal.workgoal.CraftGoal;
 import net.bumblebee.claysoldiers.entity.goal.workgoal.FellTreesGoal;
+import net.bumblebee.claysoldiers.entity.goal.workgoal.QuarryGoal;
 import net.bumblebee.claysoldiers.entity.goal.workgoal.TendFieldGoal;
 import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
 import net.bumblebee.claysoldiers.kingdom.layout.MasterPlan;
@@ -66,6 +68,10 @@ import java.util.UUID;
  *     is paid for: it starts only when the stockpile has the logs for all its wooden blocks and {@code economy.food_per_building}
  *     wheat (the builders' meals, taken when it starts); its other materials (stone, bricks, glass) are given with
  *     {@code economy.free_other_materials}, as no job makes them before stage 9.</li>
+ *     <li><b>Stage 6b:</b> then a quarry (quarrymen dig its pit, {@link QuarryGoal}), the workshop (crafters make the
+ *     non-wooden blocks of the building being built, {@link CraftGoal}, {@link KingdomWorkshop}) and a smithy, the first
+ *     building the workshop supplies. Once the quarry is finished a paid building also waits for its cobblestone, and once
+ *     the workshop is finished the blocks it can make aren't given any more.</li>
  *     <li><b>Finished:</b> the builders go back to being idle, the kingdom earns {@code economy.renown_per_building}.</li>
  *     <li><b>Workers:</b> while nothing is being built, idle soldiers become woodcutters at the lumber camp
  *     ({@link FellTreesGoal}) and farmers at the field ({@link TendFieldGoal}); they bring what they gather to their
@@ -84,7 +90,9 @@ public final class KingdomEconomy {
     /** A job a building gives soldiers. */
     public enum Job {
         WOODCUTTER(FellTreesGoal.class, "woodcutter"),
-        FARMER(TendFieldGoal.class, "farmer");
+        FARMER(TendFieldGoal.class, "farmer"),
+        QUARRYMAN(QuarryGoal.class, "quarryman"),
+        CRAFTER(CraftGoal.class, "crafter");
 
         final Class<? extends Goal> goal;
         final String name;
@@ -94,8 +102,13 @@ public final class KingdomEconomy {
             this.name = name;
         }
 
-        int wanted() {
-            return this == WOODCUTTER ? Tuning.ECONOMY_WOODCUTTERS.get() : Tuning.ECONOMY_FARMERS.get();
+        int wanted(Kingdom kingdom) {
+            return switch (this) {
+                case WOODCUTTER -> Tuning.ECONOMY_WOODCUTTERS.get();
+                case FARMER -> Tuning.ECONOMY_FARMERS.get();
+                case QUARRYMAN -> Tuning.ECONOMY_QUARRYMEN.get();
+                case CRAFTER -> Tuning.ECONOMY_WORKSHOP_CRAFTERS_PER_LEVEL.get() * KingdomWorkshop.level(kingdom);
+            };
         }
     }
 
@@ -109,11 +122,14 @@ public final class KingdomEconomy {
     public record Slot(ResourceLocation structure, int level, boolean outer, boolean starter, @Nullable Job job) {
     }
 
-    /** Master plan v1: after the keep (stage 4), in this order. */
+    /** Master plan v1: after the keep (stage 4), in this order; the quarry, workshop and smithy are stage 6b's. */
     public static final List<Slot> PLAN = List.of(
             new Slot(LUMBER_CAMP, 1, true, true, Job.WOODCUTTER),
             new Slot(WHEAT_FIELD, 1, true, true, Job.FARMER),
-            new Slot(COTTAGE, 1, false, false, null));
+            new Slot(COTTAGE, 1, false, false, null),
+            new Slot(KingdomWorkshop.QUARRY, 1, true, false, Job.QUARRYMAN),
+            new Slot(KingdomWorkshop.WORKSHOP, 1, false, false, Job.CRAFTER),
+            new Slot(KingdomWorkshop.SMITHY, 1, false, false, null));
     @Nullable
     private static List<Slot> planForTests;
 
@@ -134,6 +150,8 @@ public final class KingdomEconomy {
     private static final Map<KingdomBuilding, Optional<BoundingBox>> BOUNDS = new HashMap<>();
     /** Logs for every wooden block of a slot's building. */
     private static final Map<Slot, Optional<Integer>> LOGS = new HashMap<>();
+    /** Every block of a slot's building, as stacks. */
+    private static final Map<Slot, Optional<List<ItemStack>>> ITEMS = new HashMap<>();
     @Nullable
     private static MinecraftServer cachedFor;
 
@@ -148,6 +166,7 @@ public final class KingdomEconomy {
         if (cachedFor != level.getServer()) {
             BOUNDS.clear();
             LOGS.clear();
+            ITEMS.clear();
             cachedFor = level.getServer();
         }
         Optional<KingdomBuilding> keep = KingdomKeep.keep(kingdom);
@@ -163,6 +182,7 @@ public final class KingdomEconomy {
             build(level, kingdom, running.get());
             return;
         }
+        KingdomWorkshop.updateOrders(level.getServer(), kingdom, List.of(), item -> 0);
         assignWorkers(level, kingdom);
         Optional<Slot> next = next(kingdom);
         if (next.isEmpty()) {
@@ -223,7 +243,21 @@ public final class KingdomEconomy {
         }).map(logs -> new Need(logs, Tuning.ECONOMY_FOOD_PER_BUILDING.get()));
     }
 
-    /** Why a paid building can't start yet (not enough logs or food), or empty when the kingdom can pay for it. */
+    /** Every block {@code slot}'s building needs, as stacks, or empty when its structure isn't loaded. */
+    private static Optional<List<ItemStack>> items(ServerLevel level, Slot slot) {
+        return ITEMS.computeIfAbsent(slot, key -> blueprint(level, key).flatMap(BlueprintData::createServerPlan)
+                .map(plan -> List.copyOf(plan.getNeededItems())));
+    }
+
+    /**
+     * The raw materials the kingdom gathers or its workshop works with that {@code slot}'s building needs (stage 6b): its
+     * cobblestone once the quarry is finished, and the cobblestone for the blocks the workshop makes.
+     */
+    public static Map<Item, Integer> rawNeed(ServerLevel level, Kingdom kingdom, Slot slot) {
+        return items(level, slot).map(items -> KingdomWorkshop.rawNeeds(level.getServer(), kingdom, items)).orElse(Map.of());
+    }
+
+    /** Why a paid building can't start yet (not enough logs, food or raw materials), or empty when the kingdom can pay for it. */
     public static Optional<String> waitingFor(ServerLevel level, Kingdom kingdom, Slot slot) {
         Optional<Need> need = need(level, slot);
         if (need.isEmpty()) {
@@ -238,6 +272,12 @@ public final class KingdomEconomy {
         if (food < need.get().food()) {
             missing.add((need.get().food() - food) + " more wheat for the builders' meals (needs " + need.get().food() + ", has " + food + ")");
         }
+        rawNeed(level, kingdom, slot).forEach((item, count) -> {
+            int has = kingdom.resource(KingdomStore.id(item));
+            if (has < count) {
+                missing.add((count - has) + " more " + item.getDescription().getString().toLowerCase() + " (needs " + count + ", has " + has + ")");
+            }
+        });
         return missing.isEmpty() ? Optional.empty() : Optional.of("the " + name(level.getServer(), slot.structure()).toLowerCase()
                 + " waits for " + String.join(" and ", missing));
     }
@@ -342,7 +382,8 @@ public final class KingdomEconomy {
 
     /**
      * A starter building gets all its materials ({@code economy.free_starter_buildings}); a paid one gets everything
-     * that isn't wooden ({@code economy.free_other_materials}): no job makes stone, bricks or glass yet.
+     * that isn't wooden ({@code economy.free_other_materials}), except what the kingdom gathers itself or its workshop
+     * makes (stage 6b).
      */
     private static void grantMaterials(MinecraftServer server, Kingdom kingdom, Slot slot, ServerBlueprintPlan plan) {
         boolean all = slot.starter() && Tuning.ECONOMY_FREE_STARTER_BUILDINGS.get() == 1;
@@ -352,7 +393,8 @@ public final class KingdomEconomy {
         }
         int total = 0;
         for (ItemStack stack : plan.getNeededItems()) {
-            if (all || !WoodCost.isWooden(server, stack.getItem())) {
+            Item item = stack.getItem();
+            if (all || !WoodCost.isWooden(server, item) && !KingdomWorkshop.gathered(kingdom, item) && !KingdomWorkshop.canMake(server, kingdom, item)) {
                 Kingdoms.addResource(server, kingdom, KingdomStore.id(stack.getItem()), stack.getCount());
                 total += stack.getCount();
             }
@@ -395,6 +437,8 @@ public final class KingdomEconomy {
             SUPPLIES.put(kingdom.id(), supply);
         }
         supply.restock();
+        KingdomWorkshop.updateOrders(server, kingdom, plan.remainingItems(),
+                item -> level.getBlockEntity(chest) instanceof ChestBlockEntity box ? box.countItem(item) : 0);
         assign(level, kingdom, chest, Tuning.KINGDOM_KEEP_BUILDERS.get(), BuildBlueprintGoal.class, "builder of the " + what.toLowerCase());
         boolean paid = plan().stream().anyMatch(slot -> slot.structure().equals(building.structure()) && !slot.starter());
         if (paid) {
@@ -451,7 +495,7 @@ public final class KingdomEconomy {
                 if (building.structure().equals(slot.structure()) && building.state() == KingdomBuilding.State.BUILT
                         && !Scaffolds.hasJob(level, building.pos())) {
                     BlockPos chest = KingdomKeep.chestPos(building.pos(), building.facing());
-                    counts.merge(slot.job(), assign(level, kingdom, chest, slot.job().wanted(), slot.job().goal, slot.job().name), Integer::sum);
+                    counts.merge(slot.job(), assign(level, kingdom, chest, slot.job().wanted(kingdom), slot.job().goal, slot.job().name), Integer::sum);
                 }
             }
         }
@@ -675,7 +719,16 @@ public final class KingdomEconomy {
         if (food > 0) {
             Kingdoms.addResource(server, kingdom, KingdomStore.id(FOOD), food);
         }
-        return "Added " + logs + " oak logs and " + food + " wheat for the " + name(server, next.get().structure()).toLowerCase() + ".";
+        List<String> raw = new ArrayList<>();
+        rawNeed(level, kingdom, next.get()).forEach((item, count) -> {
+            int add = count - kingdom.resource(KingdomStore.id(item));
+            if (add > 0) {
+                Kingdoms.addResource(server, kingdom, KingdomStore.id(item), add);
+                raw.add(add + " " + item.getDescription().getString().toLowerCase());
+            }
+        });
+        return "Added " + logs + " oak logs and " + food + " wheat" + (raw.isEmpty() ? "" : ", " + String.join(", ", raw))
+                + " for the " + name(server, next.get().structure()).toLowerCase() + ".";
     }
 
     /** Makes every crop in the kingdom's finished fields ripe (dev); returns how many. */
@@ -732,7 +785,9 @@ public final class KingdomEconomy {
             lines.add(name(server, slot.structure()) + ": " + state + ".");
         }
         Map<Job, Integer> workers = WORKERS.getOrDefault(kingdom.id(), Map.of());
-        lines.add("Woodcutters: " + workers.getOrDefault(Job.WOODCUTTER, 0) + ", farmers: " + workers.getOrDefault(Job.FARMER, 0) + ".");
+        lines.add("Woodcutters: " + workers.getOrDefault(Job.WOODCUTTER, 0) + ", farmers: " + workers.getOrDefault(Job.FARMER, 0)
+                + ", quarrymen: " + workers.getOrDefault(Job.QUARRYMAN, 0) + ", crafters: " + workers.getOrDefault(Job.CRAFTER, 0) + ".");
+        lines.addAll(KingdomWorkshop.describe(server, kingdom));
         lines.addAll(KingdomLayout.describe(kingdom));
         lines.add("Logs: " + WoodCost.logs(kingdom) + ", spare planks: " + WoodCost.sparePlanks(kingdom) + ", wheat: " + kingdom.resource(KingdomStore.id(FOOD)) + ".");
         Optional<Slot> next = next(kingdom);
@@ -740,8 +795,12 @@ public final class KingdomEconomy {
         if (problem != null) {
             lines.add("Waiting: " + problem + ".");
         } else if (next.isPresent() && level != null && !next.get().starter()) {
-            need(level, next.get()).ifPresent(need -> lines.add("Next: the " + name(server, next.get().structure()).toLowerCase() + ", for "
-                    + need.logs() + " logs and " + need.food() + " wheat."));
+            need(level, next.get()).ifPresent(need -> {
+                List<String> raw = new ArrayList<>();
+                rawNeed(level, kingdom, next.get()).forEach((item, count) -> raw.add(count + " " + item.getDescription().getString().toLowerCase()));
+                lines.add("Next: the " + name(server, next.get().structure()).toLowerCase() + ", for " + need.logs() + " logs and "
+                        + need.food() + " wheat" + (raw.isEmpty() ? "" : ", " + String.join(", ", raw)) + ".");
+            });
         }
         return lines;
     }
@@ -761,5 +820,6 @@ public final class KingdomEconomy {
         PROBLEMS.remove(kingdom.id());
         WORKERS.remove(kingdom.id());
         KingdomLayout.forget(kingdom);
+        KingdomWorkshop.forget(kingdom);
     }
 }

@@ -82,7 +82,7 @@ All balancing numbers (costs, radii, rates, caps, unlock thresholds) live in ONE
 | `economy.lumber.radius` | 24 | 4–64 | How far from its lumber camp's easel a woodcutter looks for trees, in blocks. |
 | `economy.lumber.max_trunk` | 9 | 1–16 | The tallest trunk a woodcutter fells, in logs (its top must be within a builder's reach of the ground); taller trees are left alone. |
 | `economy.lumber.chop_ticks` | 20 | 1–400 | How long a woodcutter chops each log, in ticks. |
-| `economy.lumber.walk_ticks` | 600 | 40–12000 | How long a woodcutter or farmer walks toward a tree or field cell before leaving it alone for a while, in ticks. |
+| `economy.lumber.walk_ticks` | 600 | 40–12000 | How long a woodcutter, farmer or quarryman walks toward a tree, field cell or block to dig before leaving it alone for a while, in ticks. |
 | `economy.farm.tend_ticks` | 40 | 0–2400 | How long a farmer tends a growing crop to make it grow one stage, in ticks (0 = never tends: crops grow at vanilla speed only). |
 | `economy.farm.carry` | 8 | 1–64 | How much of its harvest a farmer carries before it brings it to the field's chest. |
 | `economy.food_per_building` | 9 | 0–640 | Wheat a building the kingdom pays for (the cottage) costs: the builders' meals, taken when it starts; it waits until the stockpile has it. |
@@ -92,6 +92,14 @@ All balancing numbers (costs, radii, rates, caps, unlock thresholds) live in ONE
 | `economy.free_starter_buildings` | 1 | 0–1 | 1 = the kingdom's starter buildings after the keep (lumber camp, field) get all their materials, like the keep; 0 = they must be supplied. |
 | `economy.free_other_materials` | 1 | 0–1 | 1 = a building the kingdom pays for with its wood and food gets its other materials (stone, bricks, glass) for free, as no job makes them before stage 9; 0 = a player supplies them through the chest. |
 | `economy.renown_per_building` | 25 | 0–1000 | Renown a kingdom earns for every building it finishes after the keep. |
+| `economy.quarrymen` | 2 | 0–16 | How many idle soldiers become quarrymen at a finished quarry (picked while nothing is being built). |
+| `economy.quarry.pit_size` | 16 | 4–48 | The width of a quarry's pit behind the quarry, in blocks; it is dug in steps, one block smaller per layer, so a pit reaches half its width deep. |
+| `economy.quarry.max_depth` | 8 | 1–32 | The deepest a quarry's pit goes below the ground, in layers. |
+| `economy.quarry.dig_ticks` | 30 | 1–400 | How long a quarryman digs each block, in ticks. |
+| `economy.quarry.carry` | 16 | 1–64 | How much a quarryman carries before it brings it to the quarry's chest. |
+| `economy.workshop.crafters_per_level` | 1 | 0–8 | How many idle soldiers become crafters at a finished workshop, for each workshop level. |
+| `economy.workshop.craft_ticks` | 100 | 1–2400 | How long a crafter works on one batch at a level 1 workshop, in ticks (divided by the workshop's level). |
+| `economy.workshop.batch` | 8 | 1–64 | The most of one item a crafter makes in one batch. |
 | `performance.soldier_cap_per_tier` | 8, 12, 16, 20, 26, 32, 40, 48, 56, 64 | 10 × 1–1000 | Most clay soldiers a kingdom may have per tier. **Placeholder** until the stage 7 performance checkpoint. |
 | `events.warning_time_ticks` | 1200 | 0–72000 | How long before a raid or event the kingdom is warned, in ticks (20 ticks = 1 s). |
 | `terrain.scan_radius` | 24 | 1–64 | How far `/csr dev terrain scan` looks around you (a square of 2r+1 columns). |

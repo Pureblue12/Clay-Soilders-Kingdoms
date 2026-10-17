@@ -131,7 +131,7 @@ public final class Tuning {
     public static final TuningKey.IntKey ECONOMY_LUMBER_CHOP_TICKS = register(new TuningKey.IntKey("economy.lumber.chop_ticks",
             "How long a woodcutter chops each log, in ticks.", 20, 1, 400));
     public static final TuningKey.IntKey ECONOMY_LUMBER_WALK_TICKS = register(new TuningKey.IntKey("economy.lumber.walk_ticks",
-            "How long a woodcutter or farmer walks toward a tree or field cell before leaving it alone for a while, in ticks.", 600, 40, 12000));
+            "How long a woodcutter, farmer or quarryman walks toward a tree, field cell or block to dig before leaving it alone for a while, in ticks.", 600, 40, 12000));
     public static final TuningKey.IntKey ECONOMY_FARM_TEND_TICKS = register(new TuningKey.IntKey("economy.farm.tend_ticks",
             "How long a farmer tends a growing crop to make it grow one stage, in ticks (0 = never tends: crops grow at vanilla speed only).", 40, 0, 2400));
     public static final TuningKey.IntKey ECONOMY_FARM_CARRY = register(new TuningKey.IntKey("economy.farm.carry",
@@ -150,6 +150,22 @@ public final class Tuning {
             "1 = a building the kingdom pays for with its wood and food gets its other materials (stone, bricks, glass) for free, as no job makes them before stage 9; 0 = a player supplies them through the chest.", 1, 0, 1));
     public static final TuningKey.IntKey ECONOMY_RENOWN_PER_BUILDING = register(new TuningKey.IntKey("economy.renown_per_building",
             "Renown a kingdom earns for every building it finishes after the keep.", 25, 0, 1000));
+    public static final TuningKey.IntKey ECONOMY_QUARRYMEN = register(new TuningKey.IntKey("economy.quarrymen",
+            "How many idle soldiers become quarrymen at a finished quarry (picked while nothing is being built).", 2, 0, 16));
+    public static final TuningKey.IntKey ECONOMY_QUARRY_PIT_SIZE = register(new TuningKey.IntKey("economy.quarry.pit_size",
+            "The width of a quarry's pit behind the quarry, in blocks; it is dug in steps, one block smaller per layer, so a pit reaches half its width deep.", 16, 4, 48));
+    public static final TuningKey.IntKey ECONOMY_QUARRY_MAX_DEPTH = register(new TuningKey.IntKey("economy.quarry.max_depth",
+            "The deepest a quarry's pit goes below the ground, in layers.", 8, 1, 32));
+    public static final TuningKey.IntKey ECONOMY_QUARRY_DIG_TICKS = register(new TuningKey.IntKey("economy.quarry.dig_ticks",
+            "How long a quarryman digs each block, in ticks.", 30, 1, 400));
+    public static final TuningKey.IntKey ECONOMY_QUARRY_CARRY = register(new TuningKey.IntKey("economy.quarry.carry",
+            "How much a quarryman carries before it brings it to the quarry's chest.", 16, 1, 64));
+    public static final TuningKey.IntKey ECONOMY_WORKSHOP_CRAFTERS_PER_LEVEL = register(new TuningKey.IntKey("economy.workshop.crafters_per_level",
+            "How many idle soldiers become crafters at a finished workshop, for each workshop level.", 1, 0, 8));
+    public static final TuningKey.IntKey ECONOMY_WORKSHOP_CRAFT_TICKS = register(new TuningKey.IntKey("economy.workshop.craft_ticks",
+            "How long a crafter works on one batch at a level 1 workshop, in ticks (divided by the workshop's level).", 100, 1, 2400));
+    public static final TuningKey.IntKey ECONOMY_WORKSHOP_BATCH = register(new TuningKey.IntKey("economy.workshop.batch",
+            "The most of one item a crafter makes in one batch.", 8, 1, 64));
     public static final TuningKey.IntListKey PERFORMANCE_SOLDIER_CAP = register(new TuningKey.IntListKey("performance.soldier_cap_per_tier",
             "Most clay soldiers a kingdom may have per tier (placeholder until the stage 7 performance checkpoint).",
             List.of(8, 12, 16, 20, 26, 32, 40, 48, 56, 64), 1, 1000));

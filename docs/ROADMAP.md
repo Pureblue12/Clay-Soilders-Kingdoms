@@ -15,7 +15,7 @@ Earlier work (M0–M2: testing, bug fixes, `/csr build`, builder fixes, doors) i
 | 5 | Economy loop v1 | L | **in progress** (2026-10-16: built, waiting for CI and the owner's in-game test) |
 | 5a | Decoration step | M | **in progress** (2026-10-17: built, waiting for CI and the owner's in-game test) |
 | 6 | Layout and growth | XL | **in progress** (2026-10-17: the kingdom planner is built, waiting for CI and the owner's in-game test) |
-| 6b | Workshop, quarry and mining | XL | not started (moved up by the owner, 2026-10-17) |
+| 6b | Workshop, quarry and mining | XL | **in progress** (2026-10-17: part 1, quarry and workshop L1, built on top of stage 6; waiting for CI) |
 | 7 | Performance checkpoint | M | not started |
 | 8 | Content tiers 2–5 | XL | not started |
 | T | Organic wall and layout testing | L | not started |
@@ -212,7 +212,11 @@ Stages are ordered by dependency and risk. Every stage ends playable.
 - **Depends on:** 6 · **Size:** XL
 - **Risks:** soldiers dying in mining hazards; terrain damage; a new Workshop structure to design and approve.
 - **Plan page:** https://claude.ai/artifact/3eAUuqT2jYDbK5dhoNkyw5
-- **Decisions:** [D115](DECISIONS.md) · **Status:** not started · **Results:** —
+- **Decisions:** [D115](DECISIONS.md), D116–D119 · **Status:** in progress · **Results:** part 1: after the cottage the kingdom
+  builds a quarry (quarrymen dig a stepped pit behind it and bring cobblestone), the workshop (Stonemason stand-in, level 1:
+  crafters make stone blocks from cobblestone for the building being built, from an order board) and a smithy, the first
+  building it supplies. Once the quarry stands, paid buildings wait for their cobblestone instead of getting it.
+  Still to do: the Workshop structure (3 levels, Studio), sand and clay and workshop L2, mining and workshop L3, fuel.
 
 ### 7 Performance checkpoint
 - **Goal:** many soldiers, loaded chunks, a tick budget, caps per tier in the tuning file.
