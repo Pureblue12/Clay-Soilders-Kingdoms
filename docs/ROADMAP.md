@@ -206,7 +206,7 @@ Stages are ordered by dependency and risk. Every stage ends playable.
 - **Acceptance test:** by a lake the dock goes with its house on the bank and its jetty over the water, pilings down to the
   bed; a pond or puddle gets no dock and says why; a fisher brings fish to the stockpile (`FishingDockGameTests`).
 - **Depends on:** 5, 6 · **Size:** M
-- **Decisions:** D115 · **Status:** draft · **Results:** dock v1–v3 in the Studio (house and jetty, T-head, side landing);
+- **Decisions:** D117 · **Status:** draft · **Results:** dock v1–v3 in the Studio (house and jetty, T-head, side landing);
   lake check, dock site search, site prep with pilings, particle preview, fisher job, fish as food; dev book: Economy,
   "Find the dock's lake". Waits for the owner's Studio approval of the dock v2 before it can go into the real mod.
 

@@ -354,7 +354,7 @@ dev view), saved by `MasterPlanCodec`. Decisions D105–D114; numbers `layout.*`
   `KingdomTownGameTests.kingdomPlansItsTownOnRoughLand` (the whole story on stepped land with a cave, an 84x84 template
   `gametest/kingdom_town`).
 
-### The fishing dock (stage 6c, D115)
+### The fishing dock (stage 6c, D117)
 
 Code: `common/.../kingdom/KingdomDock` (site, preparing it, the particle view), `kingdom/layout/Lake` and `DockSite` (pure),
 `entity/goal/workgoal/FishGoal`; numbers `fishing.*`. The dock is the plan's building after the cottage. Its first
