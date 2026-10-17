@@ -92,6 +92,18 @@ All balancing numbers (costs, radii, rates, caps, unlock thresholds) live in ONE
 | `economy.free_starter_buildings` | 1 | 0–1 | 1 = the kingdom's starter buildings after the keep (lumber camp, field) get all their materials, like the keep; 0 = they must be supplied. |
 | `economy.free_other_materials` | 1 | 0–1 | 1 = a building the kingdom pays for with its wood and food gets its other materials (stone, bricks, glass) for free, as no job makes them before stage 9; 0 = a player supplies them through the chest. |
 | `economy.renown_per_building` | 25 | 0–1000 | Renown a kingdom earns for every building it finishes after the keep. |
+| `fishing.lake_min_size` | 120 | 10–4000 | Still water columns a lake needs at least for a fishing dock (a 3 x 3 pond has 9, an 11 x 11 lake 121); smaller water is a puddle or pond. |
+| `fishing.dock_min_depth` | 2 | 1–8 | How deep the water under a fishing dock's jetty must be at least, in blocks. |
+| `fishing.dock_max_depth` | 6 | 1–16 | How deep the water under a fishing dock's jetty may be at most, in blocks (its pilings go down to the lake bed). |
+| `fishing.dock_open_water` | 5 | 0–16 | Rows of open water wanted past the end of a fishing dock's jetty (room for the later levels, and fishers face open water). |
+| `fishing.dock_bank_range` | 2 | 0–4 | How far the bank under a fishing dock's house may be above or below the water's surface, in blocks (it is levelled to the water's height). |
+| `fishing.dock_retry_ticks` | 12000 | 200–240000 | How long a kingdom that found no lake for its fishing dock waits before looking again, in ticks (it builds the rest of its plan meanwhile). |
+| `fishing.fishers` | 2 | 0–8 | How many idle soldiers become fishers at a finished fishing dock (picked while nothing is being built). |
+| `fishing.wait_min_ticks` | 300 | 20–12000 | The shortest wait for a bite after a fisher casts, in ticks. |
+| `fishing.wait_max_ticks` | 900 | 20–12000 | The longest wait for a bite after a fisher casts, in ticks. |
+| `fishing.carry` | 4 | 1–64 | How many fish a fisher catches before it brings them to the dock's chest. |
+| `fishing.salmon_percent` | 25 | 0–100 | Chance a catch is a salmon instead of a cod, in percent. |
+| `fishing.fish_is_food` | 1 | 0–1 | 1 = cod and salmon in the stockpile count as food like wheat (the builders' meals of a paid building; wheat is eaten first); 0 = only wheat. |
 | `performance.soldier_cap_per_tier` | 8, 12, 16, 20, 26, 32, 40, 48, 56, 64 | 10 × 1–1000 | Most clay soldiers a kingdom may have per tier. **Placeholder** until the stage 7 performance checkpoint. |
 | `events.warning_time_ticks` | 1200 | 0–72000 | How long before a raid or event the kingdom is warned, in ticks (20 ticks = 1 s). |
 | `terrain.scan_radius` | 24 | 1–64 | How far `/csr dev terrain scan` looks around you (a square of 2r+1 columns). |

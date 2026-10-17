@@ -37,7 +37,7 @@ Starts a headless test server, runs every test in
 `DoorGameTests`, `TuningGameTests`, `StructureRegistryGameTests`, `StructurePasteGameTests`,
 `LayoutCheckerGameTests`, `KingdomDataGameTests`, `KingdomGameTests`, `KingdomBookGameTests`, `KingdomBookRefreshGameTests`, `TerrainScoreGameTests`, `TerrainScanGameTests`,
 `TerrainGradingGameTests`, `TerrainFoundingGameTests`, `ScaffoldPlannerGameTests`, `ScaffoldBuildGameTests`,
-`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `BuildPlanGameTests`, `KingdomKeepGameTests`, `KingFoundingGameTests`, `KingdomEconomyGameTests`, `KingdomStoryGameTests`, `DecorationGameTests`, `KingdomPlannerGameTests`, `KingdomTownGameTests`), prints
+`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `BuildPlanGameTests`, `KingdomKeepGameTests`, `KingFoundingGameTests`, `KingdomEconomyGameTests`, `KingdomStoryGameTests`, `DecorationGameTests`, `KingdomPlannerGameTests`, `KingdomTownGameTests`, `FishingDockGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Templates: `data/csr/structure/gametest/platform.nbt` (16x8x16) and `terrain.nbt` (32x16x32, for test terrains);
@@ -353,6 +353,18 @@ dev view), saved by `MasterPlanCodec`. Decisions D105–D114; numbers `layout.*`
   the `kingdom/layout` classes; a save round trip; the scan finding a cave; roads as dirt paths) and
   `KingdomTownGameTests.kingdomPlansItsTownOnRoughLand` (the whole story on stepped land with a cave, an 84x84 template
   `gametest/kingdom_town`).
+
+### The fishing dock (stage 6c, D115)
+
+Code: `common/.../kingdom/KingdomDock` (site, preparing it, the particle view), `kingdom/layout/Lake` and `DockSite` (pure),
+`entity/goal/workgoal/FishGoal`; numbers `fishing.*`. The dock is the plan's building after the cottage. Its first
+`KingdomDock.LAND_ROWS` (7) rows from the front are the house on the bank, the next 2 the shore, the rest the jetty over a
+lake; a lake has at least `fishing.lake_min_size` still water columns. Getting the site ready levels the bank to the water's
+height and drives a piling under every jetty log down to the bed; `BuildSitePlanner.check(..., overWater)` accepts the water
+under the jetty. No lake: the kingdom builds the rest and looks again later (book: "Fishing dock: ..."). Fishers stand on the
+jetty, catch cod and salmon and bring them to the dock's chest; fish count as food. Dev book: Economy, "Find the dock's
+lake". Tests: `FishingDockGameTests` (stand-in `csr:test_dock`, `KingdomDock.useDockForTests`). Needs the dock v2 (house and
+jetty) promoted from the Studio: v1's shape doesn't match `LAND_ROWS`.
 
 ### Terrain (stage 2 spike: site checks; soldiers don't grade yet)
 

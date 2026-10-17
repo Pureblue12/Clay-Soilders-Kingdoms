@@ -12,6 +12,7 @@ import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.dev.MaterialSupply;
 import net.bumblebee.claysoldiers.entity.goal.workgoal.BuildBlueprintGoal;
 import net.bumblebee.claysoldiers.entity.goal.workgoal.FellTreesGoal;
+import net.bumblebee.claysoldiers.entity.goal.workgoal.FishGoal;
 import net.bumblebee.claysoldiers.entity.goal.workgoal.TendFieldGoal;
 import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
 import net.bumblebee.claysoldiers.kingdom.layout.MasterPlan;
@@ -84,7 +85,8 @@ public final class KingdomEconomy {
     /** A job a building gives soldiers. */
     public enum Job {
         WOODCUTTER(FellTreesGoal.class, "woodcutter"),
-        FARMER(TendFieldGoal.class, "farmer");
+        FARMER(TendFieldGoal.class, "farmer"),
+        FISHER(FishGoal.class, "fisher");
 
         final Class<? extends Goal> goal;
         final String name;
@@ -95,7 +97,11 @@ public final class KingdomEconomy {
         }
 
         int wanted() {
-            return this == WOODCUTTER ? Tuning.ECONOMY_WOODCUTTERS.get() : Tuning.ECONOMY_FARMERS.get();
+            return switch (this) {
+                case WOODCUTTER -> Tuning.ECONOMY_WOODCUTTERS.get();
+                case FARMER -> Tuning.ECONOMY_FARMERS.get();
+                case FISHER -> Tuning.FISHING_FISHERS.get();
+            };
         }
     }
 
@@ -113,7 +119,9 @@ public final class KingdomEconomy {
     public static final List<Slot> PLAN = List.of(
             new Slot(LUMBER_CAMP, 1, true, true, Job.WOODCUTTER),
             new Slot(WHEAT_FIELD, 1, true, true, Job.FARMER),
-            new Slot(COTTAGE, 1, false, false, null));
+            new Slot(COTTAGE, 1, false, false, null),
+            // The fishing dock (the owner's ask, 2026-10-17): only where there is a real lake (KingdomDock).
+            new Slot(KingdomDock.FISHING_DOCK, 1, true, false, Job.FISHER));
     @Nullable
     private static List<Slot> planForTests;
 
@@ -164,7 +172,7 @@ public final class KingdomEconomy {
             return;
         }
         assignWorkers(level, kingdom);
-        Optional<Slot> next = next(kingdom);
+        Optional<Slot> next = next(kingdom, level.getGameTime());
         if (next.isEmpty()) {
             PROBLEMS.remove(kingdom.id());
             return;
@@ -186,8 +194,17 @@ public final class KingdomEconomy {
 
     /** The master plan's next building the kingdom hasn't started, if any. */
     public static Optional<Slot> next(Kingdom kingdom) {
+        return next(kingdom, Long.MIN_VALUE);
+    }
+
+    /**
+     * The master plan's next building the kingdom hasn't started, if any, leaving out a dock that found no lake lately
+     * ({@link KingdomDock#resting}): the kingdom builds the rest meanwhile.
+     */
+    public static Optional<Slot> next(Kingdom kingdom, long gameTime) {
         for (Slot slot : plan()) {
-            if (kingdom.buildings().stream().noneMatch(building -> building.structure().equals(slot.structure()))) {
+            if (kingdom.buildings().stream().noneMatch(building -> building.structure().equals(slot.structure()))
+                    && !(KingdomDock.isDock(slot.structure()) && KingdomDock.resting(kingdom, gameTime))) {
                 return Optional.of(slot);
             }
         }
@@ -230,13 +247,13 @@ public final class KingdomEconomy {
             return Optional.of("the structure " + slot.structure() + " isn't loaded");
         }
         int logs = WoodCost.logsWorth(kingdom);
-        int food = kingdom.resource(KingdomStore.id(FOOD));
+        int food = food(kingdom);
         List<String> missing = new ArrayList<>();
         if (logs < need.get().logs()) {
             missing.add((need.get().logs() - logs) + " more logs (needs " + need.get().logs() + ", has " + logs + ")");
         }
         if (food < need.get().food()) {
-            missing.add((need.get().food() - food) + " more wheat for the builders' meals (needs " + need.get().food() + ", has " + food + ")");
+            missing.add((need.get().food() - food) + " more " + foodName() + " for the builders' meals (needs " + need.get().food() + ", has " + food + ")");
         }
         return missing.isEmpty() ? Optional.empty() : Optional.of("the " + name(level.getServer(), slot.structure()).toLowerCase()
                 + " waits for " + String.join(" and ", missing));
@@ -265,9 +282,14 @@ public final class KingdomEconomy {
             areas.add(KingdomKeep.area(plan.get(), facing));
         }
         String what = name(server, slot.structure());
-        Optional<MasterPlan.Plot> planned = KingdomLayout.plotFor(kingdom, slot.structure());
-        Optional<KeepSite.Choice> site = planned.flatMap(plot -> KingdomLayout.site(level, kingdom, plot, areas));
+        boolean dock = KingdomDock.isDock(slot.structure());
+        Optional<MasterPlan.Plot> planned = dock ? Optional.empty() : KingdomLayout.plotFor(kingdom, slot.structure());
+        Optional<KeepSite.Choice> site = dock ? KingdomDock.site(level, kingdom, slot.structure(), plan.get(), areas)
+                : planned.flatMap(plot -> KingdomLayout.site(level, kingdom, plot, areas));
         if (site.isEmpty()) {
+            if (dock) {
+                return problem(kingdom, java.util.Objects.requireNonNullElse(KingdomDock.problemFor(kingdom), "no lake for the fishing dock"));
+            }
             site = pick(level, kingdom, slot, areas, what);
             if (site.isEmpty()) {
                 return false;
@@ -277,15 +299,19 @@ public final class KingdomEconomy {
         boolean onPlan = planned.isPresent() && planned.get().easelX() == choice.easelX() && planned.get().easelZ() == choice.easelZ();
         BlockPos easel = new BlockPos(choice.easelX(), choice.groundY() + 1, choice.easelZ());
         int height = plan.get().getSize().getY();
-        KingdomKeep.Levelled levelled = KingdomKeep.levelGround(level, choice.minX(KingdomKeep.MARGIN), choice.maxX(KingdomKeep.MARGIN),
-                choice.minZ(KingdomKeep.MARGIN), choice.maxZ(KingdomKeep.MARGIN), choice.groundY(), choice.groundY() + height + KingdomKeep.CLEAR_ABOVE);
-        levelled.logs().forEach((item, count) -> Kingdoms.addResource(server, kingdom, KingdomStore.id(item), count));
         Rect plotRect = new Rect(choice.minX(KingdomKeep.MARGIN), choice.maxX(KingdomKeep.MARGIN), choice.minZ(KingdomKeep.MARGIN), choice.maxZ(KingdomKeep.MARGIN));
-        int sealed = KingdomLayout.sealHollows(level, plotRect, choice.groundY(), Tuning.TERRAIN_CAVE_PROBE_DEPTH.get());
-        DebugLog.event(DebugCategory.TERRAIN, null, () -> "levelled the %s plot of %s (%s): %s; filled %d, cleared %d, sealed %d cave blocks, logs to the stockpile %s"
-                .formatted(what, kingdom.team(), onPlan ? "the master plan's plot" : "picked the stage 5 way", choice.describe(),
-                        levelled.filled(), levelled.cleared(), sealed, levelled.logs()));
-        SiteCheck check = BuildSitePlanner.check(level, blueprint.get(), slot.structure(), easel, choice.area().facing());
+        if (dock) {
+            KingdomDock.prepare(level, kingdom, slot.structure(), choice, plan.get());
+        } else {
+            KingdomKeep.Levelled levelled = KingdomKeep.levelGround(level, choice.minX(KingdomKeep.MARGIN), choice.maxX(KingdomKeep.MARGIN),
+                    choice.minZ(KingdomKeep.MARGIN), choice.maxZ(KingdomKeep.MARGIN), choice.groundY(), choice.groundY() + height + KingdomKeep.CLEAR_ABOVE);
+            levelled.logs().forEach((item, count) -> Kingdoms.addResource(server, kingdom, KingdomStore.id(item), count));
+            int sealed = KingdomLayout.sealHollows(level, plotRect, choice.groundY(), Tuning.TERRAIN_CAVE_PROBE_DEPTH.get());
+            DebugLog.event(DebugCategory.TERRAIN, null, () -> "levelled the %s plot of %s (%s): %s; filled %d, cleared %d, sealed %d cave blocks, logs to the stockpile %s"
+                    .formatted(what, kingdom.team(), onPlan ? "the master plan's plot" : "picked the stage 5 way", choice.describe(),
+                            levelled.filled(), levelled.cleared(), sealed, levelled.logs()));
+        }
+        SiteCheck check = BuildSitePlanner.check(level, blueprint.get(), slot.structure(), easel, choice.area().facing(), dock);
         if (!check.isValid()) {
             String why = check.message();
             DebugLog.event(DebugCategory.ECONOMY, null, () -> "%s of %s not started at %s: %s".formatted(what, kingdom.team(), easel.toShortString(), why));
@@ -295,7 +321,9 @@ public final class KingdomEconomy {
             return problem(kingdom, "not enough wheat for the builders' meals");
         }
         BuildSitePlanner.placeEasel(level, easel, choice.area().facing().getOpposite(), blueprint.get());
-        kingdom.plan().ifPresent(masterPlan -> KingdomLayout.showNearby(level, kingdom, masterPlan, plotRect, easel));
+        if (!dock) {
+            kingdom.plan().ifPresent(masterPlan -> KingdomLayout.showNearby(level, kingdom, masterPlan, plotRect, easel));
+        }
         BlockPos chest = KingdomKeep.chestPos(easel, choice.area().facing());
         level.setBlockAndUpdate(chest, Blocks.CHEST.defaultBlockState());
         int detail = Math.min(slot.level(), StructureRegistry.get(server).byId(slot.structure()).map(StructureMeta::levelCount).orElse(1));
@@ -337,7 +365,34 @@ public final class KingdomEconomy {
 
     private static boolean payFood(MinecraftServer server, Kingdom kingdom) {
         int food = Tuning.ECONOMY_FOOD_PER_BUILDING.get();
-        return food <= 0 || Kingdoms.removeResource(server, kingdom, KingdomStore.id(FOOD), food).done();
+        if (food <= 0) {
+            return true;
+        }
+        if (food(kingdom) < food) {
+            return false;
+        }
+        // Wheat first, then fish.
+        for (Item item : foods()) {
+            int take = Math.min(food, kingdom.resource(KingdomStore.id(item)));
+            if (take > 0 && Kingdoms.removeResource(server, kingdom, KingdomStore.id(item), take).done()) {
+                food -= take;
+            }
+        }
+        return food <= 0;
+    }
+
+    /** What counts as food in the stockpile: wheat, and cod and salmon from the fishing dock ({@code fishing.fish_is_food}). */
+    public static List<Item> foods() {
+        return Tuning.FISHING_FISH_IS_FOOD.get() == 1 ? List.of(FOOD, Items.COD, Items.SALMON) : List.of(FOOD);
+    }
+
+    /** The kingdom's food in its stockpile ({@link #foods()}). */
+    public static int food(Kingdom kingdom) {
+        return foods().stream().mapToInt(item -> kingdom.resource(KingdomStore.id(item))).sum();
+    }
+
+    private static String foodName() {
+        return Tuning.FISHING_FISH_IS_FOOD.get() == 1 ? "food (wheat or fish)" : "wheat";
     }
 
     /**
@@ -598,7 +653,7 @@ public final class KingdomEconomy {
     }
 
     /** The ground a building takes: its structure plus its easel and chest. */
-    private static PlotPicker.Taken taken(ServerLevel level, KingdomBuilding building) {
+    static PlotPicker.Taken taken(ServerLevel level, KingdomBuilding building) {
         BlockPos easel = building.pos();
         int minX = easel.getX() - 3;
         int maxX = easel.getX() + 3;
@@ -732,16 +787,22 @@ public final class KingdomEconomy {
             lines.add(name(server, slot.structure()) + ": " + state + ".");
         }
         Map<Job, Integer> workers = WORKERS.getOrDefault(kingdom.id(), Map.of());
-        lines.add("Woodcutters: " + workers.getOrDefault(Job.WOODCUTTER, 0) + ", farmers: " + workers.getOrDefault(Job.FARMER, 0) + ".");
+        lines.add("Woodcutters: " + workers.getOrDefault(Job.WOODCUTTER, 0) + ", farmers: " + workers.getOrDefault(Job.FARMER, 0)
+                + ", fishers: " + workers.getOrDefault(Job.FISHER, 0) + ".");
+        String dockProblem = KingdomDock.problemFor(kingdom);
+        if (dockProblem != null) {
+            lines.add("Fishing dock: " + dockProblem + ".");
+        }
         lines.addAll(KingdomLayout.describe(kingdom));
-        lines.add("Logs: " + WoodCost.logs(kingdom) + ", spare planks: " + WoodCost.sparePlanks(kingdom) + ", wheat: " + kingdom.resource(KingdomStore.id(FOOD)) + ".");
+        lines.add("Logs: " + WoodCost.logs(kingdom) + ", spare planks: " + WoodCost.sparePlanks(kingdom) + ", wheat: " + kingdom.resource(KingdomStore.id(FOOD))
+                + ", fish: " + (kingdom.resource(KingdomStore.id(Items.COD)) + kingdom.resource(KingdomStore.id(Items.SALMON))) + ".");
         Optional<Slot> next = next(kingdom);
         String problem = PROBLEMS.get(kingdom.id());
         if (problem != null) {
             lines.add("Waiting: " + problem + ".");
         } else if (next.isPresent() && level != null && !next.get().starter()) {
             need(level, next.get()).ifPresent(need -> lines.add("Next: the " + name(server, next.get().structure()).toLowerCase() + ", for "
-                    + need.logs() + " logs and " + need.food() + " wheat."));
+                    + need.logs() + " logs and " + need.food() + " " + foodName() + "."));
         }
         return lines;
     }
@@ -761,5 +822,6 @@ public final class KingdomEconomy {
         PROBLEMS.remove(kingdom.id());
         WORKERS.remove(kingdom.id());
         KingdomLayout.forget(kingdom);
+        KingdomDock.forget(kingdom);
     }
 }

@@ -4,6 +4,7 @@ import com.mojang.brigadier.context.CommandContext;
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.commands.KingdomCommand;
 import net.bumblebee.claysoldiers.kingdom.Kingdom;
+import net.bumblebee.claysoldiers.kingdom.KingdomDock;
 import net.bumblebee.claysoldiers.kingdom.KingdomEconomy;
 import net.bumblebee.claysoldiers.kingdom.KingdomKeep;
 import net.bumblebee.claysoldiers.kingdom.KingdomLayout;
@@ -46,6 +47,14 @@ final class EconomyTools {
                 "Shows the kingdom's master plan for 30 seconds: the wall (white sparks), its gates (flames), the building plots "
                         + "(green) and the plots kept free (orange), and prints it in chat (stage 6, dev).",
                 List.of("economy", "plan"), false, null, EconomyTools::showPlan));
+        registry.addTool(new DevTool("economy_dock", ECONOMY, Component.literal("Find the dock's lake"),
+                "Looks for the fishing dock's site now (a real lake: big enough, deep enough under the jetty, dry bank for the house), "
+                        + "shows it for 30 seconds: the lake's edge (blue flames), the jetty (flames), the house (green), and says why when there is none (dev).",
+                List.of("economy", "dock"), false, null, EconomyTools::dock));
+    }
+
+    private static int dock(CommandContext<CommandSourceStack> context) {
+        return withKingdom(context, (level, kingdom) -> report(context, KingdomDock.preview(level, kingdom), false));
     }
 
     private static int now(CommandContext<CommandSourceStack> context) {

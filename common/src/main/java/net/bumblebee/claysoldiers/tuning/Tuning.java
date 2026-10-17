@@ -150,6 +150,30 @@ public final class Tuning {
             "1 = a building the kingdom pays for with its wood and food gets its other materials (stone, bricks, glass) for free, as no job makes them before stage 9; 0 = a player supplies them through the chest.", 1, 0, 1));
     public static final TuningKey.IntKey ECONOMY_RENOWN_PER_BUILDING = register(new TuningKey.IntKey("economy.renown_per_building",
             "Renown a kingdom earns for every building it finishes after the keep.", 25, 0, 1000));
+    public static final TuningKey.IntKey FISHING_LAKE_MIN_SIZE = register(new TuningKey.IntKey("fishing.lake_min_size",
+            "Still water columns a lake needs at least for a fishing dock (a 3 x 3 pond has 9, an 11 x 11 lake 121); smaller water is a puddle or pond.", 120, 10, 4000));
+    public static final TuningKey.IntKey FISHING_DOCK_MIN_DEPTH = register(new TuningKey.IntKey("fishing.dock_min_depth",
+            "How deep the water under a fishing dock's jetty must be at least, in blocks.", 2, 1, 8));
+    public static final TuningKey.IntKey FISHING_DOCK_MAX_DEPTH = register(new TuningKey.IntKey("fishing.dock_max_depth",
+            "How deep the water under a fishing dock's jetty may be at most, in blocks (its pilings go down to the lake bed).", 6, 1, 16));
+    public static final TuningKey.IntKey FISHING_DOCK_OPEN_WATER = register(new TuningKey.IntKey("fishing.dock_open_water",
+            "Rows of open water wanted past the end of a fishing dock's jetty (room for the later levels, and fishers face open water).", 5, 0, 16));
+    public static final TuningKey.IntKey FISHING_DOCK_BANK_RANGE = register(new TuningKey.IntKey("fishing.dock_bank_range",
+            "How far the bank under a fishing dock's house may be above or below the water's surface, in blocks (it is levelled to the water's height).", 2, 0, 4));
+    public static final TuningKey.IntKey FISHING_DOCK_RETRY_TICKS = register(new TuningKey.IntKey("fishing.dock_retry_ticks",
+            "How long a kingdom that found no lake for its fishing dock waits before looking again, in ticks (it builds the rest of its plan meanwhile).", 12000, 200, 240000));
+    public static final TuningKey.IntKey FISHING_FISHERS = register(new TuningKey.IntKey("fishing.fishers",
+            "How many idle soldiers become fishers at a finished fishing dock (picked while nothing is being built).", 2, 0, 8));
+    public static final TuningKey.IntKey FISHING_WAIT_MIN_TICKS = register(new TuningKey.IntKey("fishing.wait_min_ticks",
+            "The shortest wait for a bite after a fisher casts, in ticks.", 300, 20, 12000));
+    public static final TuningKey.IntKey FISHING_WAIT_MAX_TICKS = register(new TuningKey.IntKey("fishing.wait_max_ticks",
+            "The longest wait for a bite after a fisher casts, in ticks.", 900, 20, 12000));
+    public static final TuningKey.IntKey FISHING_CARRY = register(new TuningKey.IntKey("fishing.carry",
+            "How many fish a fisher catches before it brings them to the dock's chest.", 4, 1, 64));
+    public static final TuningKey.IntKey FISHING_SALMON_PERCENT = register(new TuningKey.IntKey("fishing.salmon_percent",
+            "Chance a catch is a salmon instead of a cod, in percent.", 25, 0, 100));
+    public static final TuningKey.IntKey FISHING_FISH_IS_FOOD = register(new TuningKey.IntKey("fishing.fish_is_food",
+            "1 = cod and salmon in the stockpile count as food like wheat (the builders' meals of a paid building; wheat is eaten first); 0 = only wheat.", 1, 0, 1));
     public static final TuningKey.IntListKey PERFORMANCE_SOLDIER_CAP = register(new TuningKey.IntListKey("performance.soldier_cap_per_tier",
             "Most clay soldiers a kingdom may have per tier (placeholder until the stage 7 performance checkpoint).",
             List.of(8, 12, 16, 20, 26, 32, 40, 48, 56, 64), 1, 1000));

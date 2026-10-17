@@ -1,0 +1,17 @@
+{
+  "id": "csr:test_dock",
+  "name": "Test dock (hut and jetty)",
+  "design": "ready",
+  "tier": 1,
+  "zone": "outer",
+  "role": "food",
+  "footprint": [
+    5,
+    3,
+    12
+  ],
+  "cost": "auto",
+  "variant_group": "test_dock",
+  "palette": "cobblestone",
+  "structure": "csr:kingdom/test_dock"
+}

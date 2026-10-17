@@ -224,6 +224,9 @@ public final class KingdomLayout {
         List<KingdomPlanner.Item> items = new ArrayList<>();
         KingdomPlanner.Item house = null;
         for (KingdomEconomy.Slot slot : KingdomEconomy.plan()) {
+            if (KingdomDock.isDock(slot.structure())) {
+                continue; // it goes out over a lake, found when its turn comes (KingdomDock); the waterside plot keeps room for it
+            }
             Optional<KingdomPlanner.Item> item = item(level, slot.structure(), slot.level(), slot.outer(), slot.job() == KingdomEconomy.Job.WOODCUTTER);
             if (item.isEmpty()) {
                 return problem(kingdom, "the structure " + slot.structure() + " isn't loaded");
