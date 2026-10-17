@@ -463,6 +463,14 @@ How it is built (`common/.../dev/`):
 Registered only when `PLATFORM.isDevEnv()` (NeoForge: `!FMLLoader.isProduction()`), so never in a
 normal install. To add a dev command: add a `DevTool` in `DevTools` (new category: add a `DevCategory`).
 
+### Session log (always on, the owner's call 2026-10-17)
+
+Every development game is logged in full with nothing to press: from world open to close, every recorder category is on
+and every event goes straight to `neoforge/run/debuglogs/csr-session-<time>.txt` (`debug/SessionLog`, started by
+`neoforge/.../event/SessionLogEvents`; never in a GameTest server). Every 30 s of real time it adds a snapshot of every
+kingdom (keep, economy, buildings, stockpile) and every loaded clay soldier. Flushed every second, so it can be read while
+the game runs. When the owner reports something from a game, read the newest session file first; don't ask him to record.
+
 ### Debug recorder (`/csr dev log`, book pages "Recorder" and "Recorder (advanced)")
 
 Records what soldiers and build plans do, to find out WHY something goes wrong.

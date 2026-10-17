@@ -5,6 +5,7 @@ import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugEvent;
 import net.bumblebee.claysoldiers.debug.DebugLog;
+import net.bumblebee.claysoldiers.debug.SessionLog;
 import net.bumblebee.claysoldiers.dev.DevTool;
 import net.bumblebee.claysoldiers.dev.DevToolRegistry;
 import net.minecraft.commands.CommandSourceStack;
@@ -91,6 +92,37 @@ public class DebugLogGameTests {
         helper.assertTrue(events.getFirst().message().equals("event 15"), "Oldest kept should be event 15, got " + events.getFirst().message());
         helper.assertTrue(events.getLast().message().equals("event 24"), "Newest should be event 24, got " + events.getLast().message());
         DebugLog.reset();
+        helper.succeed();
+    }
+
+    /**
+     * The always-on session log (the owner's call 2026-10-17) writes every event, also the ones the ring buffer has
+     * dropped, shows a message repeating forever at 10 repeats, and writes snapshots.
+     */
+    @GameTest(template = PLATFORM, batch = "debuglog_session")
+    public static void sessionLogWritesEveryEvent(GameTestHelper helper) throws IOException {
+        MinecraftServer server = helper.getLevel().getServer();
+        DebugLog.reset();
+        Path file = SessionLog.start(server);
+        try {
+            DebugLog.setCapacity(10);
+            for (int i = 0; i < 25; i++) {
+                DebugLog.event(DebugCategory.BUILD, null, "session event %s", i);
+            }
+            for (int i = 0; i < 10; i++) {
+                DebugLog.event(DebugCategory.ECONOMY, null, "the same line");
+            }
+            SessionLog.stop(server);
+            String text = Files.readString(file);
+            helper.assertTrue(text.contains("session event 0") && text.contains("session event 24"),
+                    "Every event should be in the file, also those the ring buffer dropped");
+            helper.assertTrue(text.contains("the same line (x10"), "A repeating message should show at 10 repeats");
+            helper.assertTrue(text.contains("## snapshot"), "The file should have a snapshot");
+        } finally {
+            SessionLog.stop(server);
+            DebugLog.reset();
+            Files.deleteIfExists(file);
+        }
         helper.succeed();
     }
 
