@@ -37,12 +37,15 @@ Starts a headless test server, runs every test in
 `DoorGameTests`, `TuningGameTests`, `StructureRegistryGameTests`, `StructurePasteGameTests`,
 `LayoutCheckerGameTests`, `KingdomDataGameTests`, `KingdomGameTests`, `KingdomBookGameTests`, `KingdomBookRefreshGameTests`, `TerrainScoreGameTests`, `TerrainScanGameTests`,
 `TerrainGradingGameTests`, `TerrainFoundingGameTests`, `ScaffoldPlannerGameTests`, `ScaffoldBuildGameTests`,
-`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `BuildPlanGameTests`, `KingdomKeepGameTests`, `KingFoundingGameTests`, `DecorationGameTests`), prints
+`ScaffoldCleanupGameTests`, `StructureBuildGameTests`, `BuilderSafetyGameTests`, `KeepFallGameTests`, `BuildPlanGameTests`, `KingdomKeepGameTests`, `KingFoundingGameTests`, `KingdomEconomyGameTests`, `KingdomStoryGameTests`, `DecorationGameTests`), prints
 `All N required tests passed` or the list of failures, then exits (about 10 s). Gradle reports
 BUILD FAILED when any test fails. The test world lives in `neoforge/runs/gametest` (gitignored).
 Templates: `data/csr/structure/gametest/platform.nbt` (16x8x16) and `terrain.nbt` (32x16x32, for test terrains);
 regenerate with `tools/make_gametest_platform.py` (size arguments: see the script). `tools/suite.sh` deletes the test
-world first, so every run starts fresh.
+world first, so every run starts fresh. With `SUITE_MINUTES` set (CI: 15) a test server still running after that long is
+stopped, after printing samples of its server thread, batch starts, failures and the story test's progress lines. A test
+must pass or fail inside its own tick (`runAtTickTime`, `onEachTick`): `helper.succeed()` from a server tick event marks it
+done without telling its batch, and the suite never ends.
 
 GitHub Actions (`.github/workflows/ci.yml`) runs `runData` then `tools/suite.sh` on every push to `main` and every pull
 request; the logs (`build/suite.log`, `build/build.log`) are attached to the run as `suite-logs`. Builder tests that
@@ -164,7 +167,10 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
     38165377544): they hopped off a stair's low step at the top of a planned 3-block drop (vanilla hops whenever the feet
     are below the top of their block), and drops onto a half-height block measure 3.5. Soldiers no longer hop where a
     step does (`ClaySoldierMoveControl`), and a working soldier's fall up to `EdgeGuard.SAFE_DROP` costs nothing (D74;
-    `soldierDoesNotHopOffAStairAtADrop`, `workingBuilderIsNotHurtByAPlannedDrop`). Still open (not confirmed why): keep L2 builders also die at one spot in the
+    `soldierDoesNotHopOffAStairAtADrop`, `workingBuilderIsNotHurtByAPlannedDrop`). Keep builders went back and forth under the
+    benches' top slabs (the owner's game, 2026-10-17): a tiny soldier fits under a top slab, and vanilla hopped it toward
+    the slab's top from right underneath, into the slab. Under a ceiling a soldier never hops, and to climb it first steps
+    out to a free cell with room to hop (`ClaySoldierMoveControl`, PATHING "stepping out"; `soldierClimbsOutFromUnderASlab`). Still open (not confirmed why): keep L2 builders also die at one spot in the
     forecourt, 2.0 per fall, after placing on the upper floor, with no trapdoor placed yet; needs a PATHING recording.
   - A cottage builder stood inside a fence post (the lantern post) for 9,200 ticks (suite run 38128880972): a tiny
     soldier fits beside the post, so the fence was placed around it, and vanilla then starts every path in a cell the
@@ -191,6 +197,13 @@ Confirmed = a GameTest asserting the correct behavior fails. Not fixed yet.
   straight to the nearest free block of that item in the same layer it can reach (`ServerBlueprintPlan.getFollowUpRequest`:
   no doors, nothing over a spot still to fill); only when there is none does it walk back and put the rest in the chest
   (`followUpIsNearestInTheSameLayer`, `builderPlacesARowWithOneTripToTheChest`).
+- Fixed (kingdom builders far from the easel, 2026-10-16 in-game recording): a builder looks for its easel only within 8
+  blocks of where it stands, so a kingdom's builders picked farther from the keep's easel stood still forever. A builder
+  with no easel near it now walks to its chest (beside the easel) first, BUILD event "no easel within 8, walking to its
+  chest" (`builderFarFromItsEaselWalksThereAndBuilds`). Also, a builder worked for the easel nearest to ITSELF, so the
+  lumber camp's builders, picked while standing at the finished keep, kept asking the keep's easel: a builder now looks
+  for its easel around its chest first, then around itself, and again when its chest changes
+  (`builderWorksForTheEaselBesideItsChest`).
 - Fixed (door race): doors-last only ordered the list, so a door could be handed out while other blocks were
   still being carried (a glass pane got locked out in the 08:03 recording). Now `ServerBlueprintPlan.getRequest`
   hands out a door only when no other (non-door) block with a free spot remains; doors don't wait for each
@@ -286,6 +299,34 @@ rotation and mirror) when the last block is placed, exactly once; until then it 
 "decoration: ..."). Water flows like any water, so a structure must hold it in. `tools/buildability.py` and
 `tools/build_plan.py` leave blocks without an item out the same way (`buildability.decoration`). Test structure
 `csr:test_garden` (`tools/make_test_structures.py`); tests `DecorationGameTests`. Ruin stages that remove it don't exist yet.
+
+### The kingdom's economy (stage 5)
+
+Code: `common/.../kingdom/KingdomEconomy` (master plan v1, buildings after the keep, workers), `PlotPicker` (pure: plots
+around the keep), `WoodCost` (the carpenter: wooden blocks from logs of any kind), `entity/goal/workgoal/FellTreesGoal`
+(woodcutter), `TendFieldGoal` (farmer). Decisions D96–D101; numbers `economy.*`.
+- After the keep is BUILT, `KingdomEconomy.update` (with the keep's, every `kingdom.keep.check_ticks`) builds `PLAN` in order:
+  lumber camp, wheat field (starter buildings, materials given with `economy.free_starter_buildings`), cottage (paid: waits
+  for the logs of its wooden blocks and `economy.food_per_building` wheat; non-wooden materials given with
+  `economy.free_other_materials`). Plots: free ground around the keep facing it, away from water and other claims, outer
+  buildings up to `economy.plot.outer_reach` beyond the claim, levelled at once like the keep's site.
+- Builders of a finished building (keep included) are let go once its scaffolding is down. While nothing is being built, idle
+  soldiers become woodcutters (`economy.woodcutters`) and farmers (`economy.farmers`): job = the goal, POI = their building's
+  chest. They deliver there; the chests of finished buildings are the storehouse (swept into the stockpile).
+- Builders of a paid building (the cottage) eat its wheat and are well fed while they build: Speed and Health Boost for
+  `economy.meal.ticks` (`Meals`, D102; `mealMakesABuilderFasterAndTougher`).
+- The carpenter uses the stockpile's spare planks before cutting logs (a log cut for planks leaves some over; without this a
+  cottage's door waited forever, found by the story test; `sparePlanksAreUsedBeforeLogs`). A paid building's logs count spare
+  planks as logs (4 to a log). It never touches planks or logs the build still needs as they are (its remaining blocks of
+  that item less what its chest holds): it once cut the keep's own spruce planks into dark oak logs and stairs, and the keep
+  stopped 13 planks short in the owner's game (`carpenterLeavesTheBuildsOwnPlanks`).
+- New jobs are appended to the soldier's job list (saved job numbers of older jobs stay the same).
+- Dev book "Economy": look after it now, finish the current building (pastes it, keep included), supply the next building,
+  ripen the fields.
+- `KingdomStoryGameTests.kingdomGrowsFromOneGoldIngot` plays the whole story like a player, no dev shortcuts: scattered
+  plain soldiers, a dropped gold ingot, then founding, keep, camp, field, woodcutters, farmer and a paid cottage, with small
+  stand-in structures (`KingdomKeep.useKeepForTests`, `KingdomEconomy.usePlanForTests`; `test_camp`, `test_field`,
+  `test_cottage`) on the 48x48 grass template; the server sprints through it. A change to any step's hand-over must keep it green.
 
 ### Terrain (stage 2 spike: site checks; soldiers don't grade yet)
 
@@ -438,6 +479,14 @@ How it is built (`common/.../dev/`):
 - `DevScenarios` — scenario setup helpers, also used by GameTests.
 Registered only when `PLATFORM.isDevEnv()` (NeoForge: `!FMLLoader.isProduction()`), so never in a
 normal install. To add a dev command: add a `DevTool` in `DevTools` (new category: add a `DevCategory`).
+
+### Session log (always on, the owner's call 2026-10-17)
+
+Every development game is logged in full with nothing to press: from world open to close, every recorder category is on
+and every event goes straight to `neoforge/run/debuglogs/csr-session-<time>.txt` (`debug/SessionLog`, started by
+`neoforge/.../event/SessionLogEvents`; never in a GameTest server). Every 30 s of real time it adds a snapshot of every
+kingdom (keep, economy, buildings, stockpile) and every loaded clay soldier. Flushed every second, so it can be read while
+the game runs. When the owner reports something from a game, read the newest session file first; don't ask him to record.
 
 ### Debug recorder (`/csr dev log`, book pages "Recorder" and "Recorder (advanced)")
 

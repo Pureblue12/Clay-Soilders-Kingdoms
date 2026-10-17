@@ -147,6 +147,8 @@ public final class KingdomBook {
 
         List<Component> keep = KingdomKeep.describe(server, kingdom).stream().map(line -> (Component) Component.literal(line)).toList();
         pages.addAll(listPages("Keep", keep, MAX_LIST_PAGES));
+        List<Component> economy = KingdomEconomy.describe(server, kingdom).stream().map(line -> (Component) Component.literal(line)).toList();
+        pages.addAll(listPages("Economy", economy, MAX_LIST_PAGES));
 
         pages.addAll(chroniclePages(kingdom, BookFormat.MAX_PAGES - pages.size()));
         return pages;

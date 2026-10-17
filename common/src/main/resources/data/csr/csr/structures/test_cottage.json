@@ -1,0 +1,17 @@
+{
+  "id": "csr:test_cottage",
+  "name": "Test cottage (the test hut)",
+  "design": "ready",
+  "tier": 1,
+  "zone": "inner",
+  "role": "house",
+  "footprint": [
+    5,
+    3,
+    5
+  ],
+  "cost": "auto",
+  "variant_group": "test_cottage",
+  "palette": "oak",
+  "structure": "csr:kingdom/test_hut"
+}

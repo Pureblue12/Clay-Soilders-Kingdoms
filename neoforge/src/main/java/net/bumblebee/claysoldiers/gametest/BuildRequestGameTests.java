@@ -111,6 +111,45 @@ public class BuildRequestGameTests {
         });
     }
 
+    /**
+     * BUG TEST (2026-10-16, Carlton's game, recording csr-debug-2026-10-16_16-13-02): a builder looks for its easel only
+     * within its search range (8) of where it stands, so a kingdom's builders picked farther away from the keep's easel
+     * never started. A builder with no easel near it walks to its chest (beside the easel) first.
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 600)
+    public static void builderFarFromItsEaselWalksThereAndBuilds(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "far", 1, 1, 1, new BlockPos(0, 0, 0));
+        BlockPos chestPos = helper.absolutePos(ClaySoldierGameTests.CHEST);
+        DevScenarios.placeChest(level, chestPos, List.of(new ItemStack(Items.COBBLESTONE, 1)));
+        EaselBlockEntity easel = DevScenarios.placeEasel(level, helper.absolutePos(EASEL), Direction.NORTH, blueprint);
+        // 9 blocks east of the easel and 5 north: outside the builder's easel search around itself.
+        DevScenarios.spawnWorker(level, helper.absolutePos(new BlockPos(14, GROUND_Y, 0)), DevScenarios.RED_TEAM,
+                ClaySoldierGameTests.owner(level), BuildBlueprintGoal.class, chestPos);
+        helper.succeedWhen(() -> helper.assertTrue(easel.isFinished(), "The builder far from the easel never built its block"));
+    }
+
+    /**
+     * BUG TEST (2026-10-16, Carlton's game, recording csr-debug-2026-10-16_16-27-25): a builder worked for the easel
+     * nearest to where it stood, not the one beside its chest, so the kingdom's builders picked for the lumber camp
+     * while standing at the finished keep kept asking the keep's easel ("no reachable block available") forever.
+     * Here the builder stands by another easel whose blueprint its chest can't supply; it must build its own.
+     */
+    @GameTest(template = PLATFORM, timeoutTicks = 600)
+    public static void builderWorksForTheEaselBesideItsChest(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        BlockPos chestPos = helper.absolutePos(ClaySoldierGameTests.CHEST);
+        DevScenarios.placeChest(level, chestPos, List.of(new ItemStack(Items.COBBLESTONE, 1)));
+        EaselBlockEntity own = DevScenarios.placeEasel(level, helper.absolutePos(EASEL), Direction.NORTH,
+                ClaySoldierGameTests.tinyBlueprint(helper, "own", 1, 1, 1, new BlockPos(0, 0, 0)));
+        DevScenarios.placeEasel(level, helper.absolutePos(new BlockPos(12, GROUND_Y, 11)), Direction.NORTH,
+                ClaySoldierGameTests.tinyBlueprint(helper, "other", 1, 1, 1, Blocks.STONE, new BlockPos(0, 0, 0)));
+        // Next to the other easel, 8 blocks from its own: its own is outside the search around itself.
+        DevScenarios.spawnWorker(level, helper.absolutePos(new BlockPos(13, GROUND_Y, 11)), DevScenarios.RED_TEAM,
+                ClaySoldierGameTests.owner(level), BuildBlueprintGoal.class, chestPos);
+        helper.succeedWhen(() -> helper.assertTrue(own.isFinished(), "The builder never built the blueprint of the easel beside its chest"));
+    }
+
     @GameTest(template = PLATFORM)
     public static void placedAtRequestedSpot(GameTestHelper helper) {
         BlueprintData blueprint = ClaySoldierGameTests.tinyBlueprint(helper, "two_spots", 1, 1, 3,

@@ -271,6 +271,9 @@ public class AbstractClaySoldierEntity extends ClayMobTeamOwnerEntity implements
         if (ClaySoldiersCommon.COMMON_HOOKS.isBlueprintEnabled(level().enabledFeatures())) {
             goals.add(new BuildBlueprintGoal(this, () -> workSelector, 8));
         }
+        // Stage 5: kingdom jobs, last so saved job numbers of the older jobs stay the same.
+        goals.add(new FellTreesGoal(this, () -> workSelector));
+        goals.add(new TendFieldGoal(this, () -> workSelector));
         workSelector = new WorkSelectorGoal(this, goals);
         return workSelector;
     }

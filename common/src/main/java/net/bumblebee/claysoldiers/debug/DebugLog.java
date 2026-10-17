@@ -63,6 +63,9 @@ public final class DebugLog {
     private static MinecraftServer server;
     /** Wall-clock time recording was last turned on, or -1 while off. */
     private static long recordingSince = -1;
+    /** Gets every new event as it is recorded (the session log, {@link SessionLog}), or null. */
+    @Nullable
+    private static java.util.function.Consumer<DebugEvent> sink;
 
     private DebugLog() {
     }
@@ -119,15 +122,29 @@ public final class DebugLog {
         DebugEvent last = LAST_BY_SOLDIER.get(key);
         if (last != null && isInBuffer(last) && last.sameAs(category, message)) {
             last.repeat(tick);
+            if (sink != null && isPowerOfTen(last.count())) {
+                // A message repeating forever shows in the session log at 10, 100, 1000... repeats.
+                sink.accept(last);
+            }
             return;
         }
         DebugEvent event = new DebugEvent(sequence++, tick, category, uuid, shortName(soldier),
                 soldier == null ? "-" : soldier.blockPosition().toShortString(), message);
         BUFFER.addLast(event);
         LAST_BY_SOLDIER.put(key, event);
+        if (sink != null) {
+            sink.accept(event);
+        }
         while (BUFFER.size() > capacity) {
             BUFFER.removeFirst();
         }
+    }
+
+    private static boolean isPowerOfTen(long count) {
+        while (count >= 10 && count % 10 == 0) {
+            count /= 10;
+        }
+        return count == 1;
     }
 
     private static boolean isInBuffer(DebugEvent event) {
@@ -283,6 +300,11 @@ public final class DebugLog {
         LAST_BY_SOLDIER.clear();
         RECORDED.clear();
         RECORDED.addAll(enabledCategories());
+    }
+
+    /** Sends every new event to {@code newSink} as well (null: none). */
+    public static synchronized void setSink(@Nullable java.util.function.Consumer<DebugEvent> newSink) {
+        sink = newSink;
     }
 
     public static synchronized void setCapacity(int newCapacity) {

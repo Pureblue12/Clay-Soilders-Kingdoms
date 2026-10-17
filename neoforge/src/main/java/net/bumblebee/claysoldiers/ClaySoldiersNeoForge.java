@@ -15,6 +15,7 @@ import net.bumblebee.claysoldiers.commands.KingdomCommand;
 import net.neoforged.bus.api.EventPriority;
 import net.bumblebee.claysoldiers.structure.StructureReloadListener;
 import net.bumblebee.claysoldiers.event.RecorderIndicator;
+import net.bumblebee.claysoldiers.event.SessionLogEvents;
 import net.bumblebee.claysoldiers.commands.ColorHelperArgumentType;
 import net.bumblebee.claysoldiers.commands.DefaultedResourceLocationArgument;
 import net.bumblebee.claysoldiers.datagen.DataGenerators;
@@ -157,6 +158,10 @@ public class ClaySoldiersNeoForge {
         NeoForge.EVENT_BUS.addListener(KingdomEvents::onRightClickBlock);
         if (ClaySoldiersCommon.PLATFORM.isDevEnv()) {
             NeoForge.EVENT_BUS.addListener(RecorderIndicator::onServerTick);
+            // Every game is logged in full (debuglogs/csr-session-*.txt), no recorder to start.
+            NeoForge.EVENT_BUS.addListener(SessionLogEvents::onServerStarted);
+            NeoForge.EVENT_BUS.addListener(SessionLogEvents::onServerTick);
+            NeoForge.EVENT_BUS.addListener(SessionLogEvents::onServerStopping);
             // Keeps the chests of "/csr dev structure build" stocked.
             NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.tick.ServerTickEvent.Post event) ->
                     net.bumblebee.claysoldiers.dev.MaterialSupply.tickAll(event.getServer()));
