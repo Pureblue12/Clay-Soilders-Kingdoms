@@ -93,7 +93,11 @@ public class FishingDockGameTests {
         DockSite.Rules rules = rules();
         DockSite.Result result = DockSite.search(KingdomDock.land(helper.getLevel()), center.getX(), center.getZ(),
                 KingdomDock.footprints(DOCK, plan, DIRECTIONS), cell -> false, rules);
-        helper.assertTrue(result.best().isPresent(), "No dock site by the lake: " + result.summary(rules));
+        DockSite.Land seen = KingdomDock.land(helper.getLevel());
+        int lakeX = center.getX() + 5;
+        helper.assertTrue(result.best().isPresent(), "No dock site by the lake: " + result.summary(rules) + "; the lake at "
+                + lakeX + ", " + center.getZ() + " reads as surface " + seen.surface(lakeX, center.getZ()) + ", depth " + seen.depth(lakeX, center.getZ())
+                + ", still " + seen.still(lakeX, center.getZ()) + ", ground " + seen.ground(lakeX, center.getZ()) + " (water placed at " + surface + ")");
         DockSite.Choice choice = result.best().get();
         helper.assertTrue(DIRECTIONS.get(choice.index()) == Direction.EAST, "The dock should go east, out over the lake: " + result.summary(rules));
         helper.assertTrue(choice.surface() == surface, "Water surface " + choice.surface() + ", expected " + surface);

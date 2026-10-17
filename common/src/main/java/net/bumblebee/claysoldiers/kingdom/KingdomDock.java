@@ -228,9 +228,9 @@ public final class KingdomDock {
         }
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(x, level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z) - 1, z);
         BlockState state = level.getBlockState(pos);
-        // Lily pads, logs and plants over the top don't count.
+        // Lily pads, logs and plants over the top don't count; nor does a barrier (a GameTest area's roof).
         while (pos.getY() > level.getMinBuildHeight() && state.getFluidState().isEmpty()
-                && (state.is(Blocks.LILY_PAD) || state.is(BlockTags.LOGS) || !state.blocksMotion())) {
+                && (state.is(Blocks.LILY_PAD) || state.is(BlockTags.LOGS) || state.is(Blocks.BARRIER) || !state.blocksMotion())) {
             pos.move(Direction.DOWN);
             state = level.getBlockState(pos);
         }
