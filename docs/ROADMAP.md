@@ -200,6 +200,16 @@ Stages are ordered by dependency and risk. Every stage ends playable.
   Economy, "Show the town plan". After the owner's first look: the plan keeps a plot for every building still to come, so the
   wall fits the whole town (D111), and players nearby see the plan when it is drawn up and each new plot when it starts (D112); where the wall line runs over water the sea guards the town and no wall goes there (D113); roads bridge streams and ponds with planks (D114). Still to do: visitors joining, a palisade built by soldiers, tier 2, soldiers laying roads.
 
+### 6c Fishing dock (pulled forward from tier 2, the owner's ask 2026-10-17)
+- **Goal:** a fisher's house on the bank with a jetty out over a real lake (not a puddle), built by the kingdom after the
+  cottage; fishers fish from the jetty and fish count as food.
+- **Acceptance test:** by a lake the dock goes with its house on the bank and its jetty over the water, pilings down to the
+  bed; a pond or puddle gets no dock and says why; a fisher brings fish to the stockpile (`FishingDockGameTests`).
+- **Depends on:** 5, 6 · **Size:** M
+- **Decisions:** D115 · **Status:** draft · **Results:** dock v1–v3 in the Studio (house and jetty, T-head, side landing);
+  lake check, dock site search, site prep with pilings, particle preview, fisher job, fish as food; dev book: Economy,
+  "Find the dock's lake". Waits for the owner's Studio approval of the dock v2 before it can go into the real mod.
+
 ### 7 Performance checkpoint
 - **Goal:** many soldiers, loaded chunks, a tick budget, caps per tier in the tuning file.
 - **Acceptance test:** a measured report of soldier count, tick cost and the loaded-chunk limit.

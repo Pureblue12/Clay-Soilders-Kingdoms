@@ -12,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -61,6 +62,15 @@ public final class BuildSitePlanner {
      */
     public static SiteCheck check(ServerLevel level, BlueprintData blueprint, @Nullable ResourceLocation blueprintId,
                                   BlockPos easelPos, Direction buildDirection) {
+        return check(level, blueprint, blueprintId, easelPos, buildDirection, false);
+    }
+
+    /**
+     * Like {@link #check(ServerLevel, BlueprintData, ResourceLocation, BlockPos, Direction)}; with {@code overWater} a
+     * column with water where the ground would be counts as ground (a fishing dock's jetty stands over a lake).
+     */
+    public static SiteCheck check(ServerLevel level, BlueprintData blueprint, @Nullable ResourceLocation blueprintId,
+                                  BlockPos easelPos, Direction buildDirection, boolean overWater) {
         if (!buildDirection.getAxis().isHorizontal()) {
             throw new IllegalArgumentException("Build direction must be horizontal, got " + buildDirection);
         }
@@ -114,7 +124,7 @@ public final class BuildSitePlanner {
         for (int x = bounds.minX(); x <= bounds.maxX(); x++) {
             for (int z = bounds.minZ(); z <= bounds.maxZ(); z++) {
                 BlockPos ground = new BlockPos(x, groundY, z);
-                if (!isSolidGround(level, ground)) {
+                if (!isSolidGround(level, ground) && !(overWater && level.getFluidState(ground).is(FluidTags.WATER))) {
                     return SiteCheck.refused(SiteCheck.Reason.NO_GROUND, "No solid ground under the building at " + ground.toShortString(), ground);
                 }
             }

@@ -114,6 +114,7 @@ public final class KingdomKeep {
      */
     public static void tick(MinecraftServer server) {
         KingdomLayout.tick(server);
+        KingdomDock.tick(server);
         if (server instanceof GameTestServer || server.getTickCount() % Tuning.KINGDOM_KEEP_CHECK_TICKS.get() != 0) {
             return;
         }
@@ -275,6 +276,11 @@ public final class KingdomKeep {
         BlockPos middle = base.offset(StructureTemplate.calculateRelativePosition(settings.convertTo(),
                 new BlockPos(plan.getSize().getX() / 2, 0, plan.getSize().getZ() / 2)));
         return new KeepSite.Area(facing, minX, maxX, minZ, maxZ, middle.getX(), middle.getZ());
+    }
+
+    /** GameTests only: {@link #area}. */
+    public static KeepSite.Area areaForTests(ServerBlueprintPlan plan, Direction facing) {
+        return area(plan, facing);
     }
 
     /**

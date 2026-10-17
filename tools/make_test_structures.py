@@ -4,6 +4,8 @@
   common/src/main/resources/data/csr/structure/kingdom/test_wall.nbt  5x3x1 stone brick wall segment
   common/src/main/resources/data/csr/structure/kingdom/test_camp.nbt  3x1x3 cobblestone pad (stand-in lumber camp)
   common/src/main/resources/data/csr/structure/kingdom/test_field.nbt 5x1x5 cobblestone border, 3x3 dirt (stand-in field)
+  common/src/main/resources/data/csr/structure/kingdom/test_dock.nbt  5x3x12 fishing dock stand-in: a 5x4 cobblestone hut
+    (rows 0..3, door gap at the front, doorway at the back) and a 3-wide plank jetty (rows 4..11) with oak log pilings
   common/src/main/resources/data/csr/structure/kingdom/test_garden.nbt  5x3x5 garden with decoration (stage 5a): water basin,
     potted poppy, sign with text, banner with a pattern, item frame with an apple, armor stand
 Local z = 0 is the side facing the easel (the front). Air inside a structure is stored, so pasting clears it.
@@ -112,6 +114,21 @@ def camp(x, y, z):
 
 def field(x, y, z):
     return ('minecraft:dirt', None) if 0 < x < 4 and 0 < z < 4 else ('minecraft:cobblestone', None)
+def dock(x, y, z):
+    if z <= 3:                                   # the hut on the bank
+        if y == 2:
+            return ('minecraft:oak_planks', None)
+        wall = x in (0, 4) or z in (0, 3)
+        if not wall or x == 2:                   # earth floor; door gap at the front, doorway at the back
+            return AIR
+        return ('minecraft:cobblestone', None)
+    if y > 0 or x in (0, 4):                     # the jetty, 3 wide, one layer
+        return AIR
+    if x in (1, 3) and z in (6, 9, 11):
+        return ('minecraft:oak_log', {'axis': 'y'})
+    return ('minecraft:oak_planks', None)
+
+
 def garden(x, y, z):
     """Floor with a 1x1 water basin, a back wall (z = 4) with a sign, an item frame and a banner, a potted poppy."""
     if y == 0:
@@ -159,4 +176,5 @@ write(os.path.join(out, 'test_well.nbt'), (3, 2, 3), well)
 write(os.path.join(out, 'test_wall.nbt'), (5, 3, 1), wall)
 write(os.path.join(out, 'test_camp.nbt'), (3, 1, 3), camp)
 write(os.path.join(out, 'test_field.nbt'), (5, 1, 5), field)
+write(os.path.join(out, 'test_dock.nbt'), (5, 3, 12), dock)
 write(os.path.join(out, 'test_garden.nbt'), (5, 3, 5), garden, GARDEN_NBT, GARDEN_ENTITIES)
