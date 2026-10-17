@@ -28,6 +28,11 @@ on:
         required: false
         default: false
         type: boolean
+      jfr:
+        description: "Experiment: record the test server with Java Flight Recorder and print where its main thread spends its time"
+        required: false
+        default: false
+        type: boolean
   pull_request:
     paths:
       - common/src/main/resources/data/csr/structure/kingdom/studio/**
@@ -50,7 +55,8 @@ on:
 
 # A newer push to the same branch cancels the older run.
 concurrency:
-  group: structure-builds-${{ github.ref }}
+  # Experiments with different inputs on one branch run side by side.
+  group: structure-builds-${{ github.ref }}-${{ inputs.tuning }}-${{ inputs.jfr }}
   cancel-in-progress: true
 
 env:
@@ -61,6 +67,7 @@ env:
   # Experiments only (StructureBuildGameTests): tuning values for every build, and a profile line per finished build.
   CSR_STRUCTURE_BUILD_TUNING: ${{ github.event_name == 'workflow_dispatch' && inputs.tuning || '' }}
   CSR_STRUCTURE_BUILD_PROFILE: ${{ github.event_name == 'workflow_dispatch' && inputs.profile && '1' || '' }}
+  CSR_JFR: ${{ github.event_name == 'workflow_dispatch' && inputs.jfr && '1' || '' }}
 
 jobs:
   # How many machines: one per build, at most 20 (GitHub runs up to 20 jobs at once on a free account).
@@ -144,8 +151,36 @@ jobs:
         run: ./gradlew :neoforge:runData
 
       # Fails only if the server didn't start or planned no structure test; failed builds go red in the table job.
+      # Experiments only: every JVM started from here (Gradle and the test server) records itself; csr-<pid>.jfr is written
+      # when it exits, and the chunk repository is kept in case a JVM ends without writing its file.
+      - name: Turn on Java Flight Recorder
+        if: env.CSR_JFR == '1'
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/build/jfr/repo"
+          echo "JAVA_TOOL_OPTIONS=-XX:StartFlightRecording=settings=default,dumponexit=true,filename=$GITHUB_WORKSPACE/build/jfr/csr-%p.jfr -XX:FlightRecorderOptions=repository=$GITHUB_WORKSPACE/build/jfr/repo" >> "$GITHUB_ENV"
+
       - name: Structure builds (shard ${{ matrix.shard }} of ${{ needs.plan.outputs.count }})
         run: tools/structure_builds.sh
+
+      - name: Flight recorder summary
+        if: always() && env.CSR_JFR == '1'
+        env:
+          JAVA_TOOL_OPTIONS: ""
+        run: |
+          ls -la build/jfr build/jfr/repo/* || true
+          for f in build/jfr/csr-*.jfr; do
+            [ -s "$f" ] || continue
+            echo "=== $f"
+            "$JAVA_HOME/bin/jfr" summary "$f" | head -20
+            "$JAVA_HOME/bin/jfr" print --events jdk.ExecutionSample --stack-depth 64 "$f" | python3 tools/jfr_hot.py "Server thread" 60 | tee -a build/jfr/hot.txt
+          done
+          if ! grep -q "Server thread" build/jfr/hot.txt 2>/dev/null; then
+            for d in build/jfr/repo/*/; do
+              "$JAVA_HOME/bin/jfr" assemble "$d" build/jfr/assembled.jfr && \
+                "$JAVA_HOME/bin/jfr" print --events jdk.ExecutionSample --stack-depth 64 build/jfr/assembled.jfr | python3 tools/jfr_hot.py "Server thread" 60 | tee -a build/jfr/hot.txt
+            done
+          fi
+          for f in build/jfr/csr-*.jfr; do "$JAVA_HOME/bin/jfr" view gc-pauses "$f" 2>/dev/null | head -30; done || true
 
       # Builds that end a few blocks short write "CSR stall report" lines (BuildStallReport): show them here, so they can
       # be read without downloading the logs; at most 300 lines per build, so one build's report never hides another's
@@ -168,6 +203,7 @@ jobs:
           path: |
             build/structure-results.tsv
             build/structure-builds.log
+            build/jfr/hot.txt
           if-no-files-found: ignore
 
   # Merges the shards into one table (run summary). Red if any structure level didn't build.

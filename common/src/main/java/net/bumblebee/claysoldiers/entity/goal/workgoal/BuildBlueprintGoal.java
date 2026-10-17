@@ -547,7 +547,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         }
         if (best != null) {
             DebugLog.event(DebugCategory.BUILD, soldier, "stepping aside to %s to place at %s", best, target);
-            soldier.getNavigation().moveTo(best.getX() + 0.5, best.getY(), best.getZ() + 0.5, 1.0);
+            soldier.getNavigation().moveTo(best.getX() + 0.5, best.getY(), best.getZ() + 0.5, buildSpeed());
         }
     }
 
@@ -644,7 +644,7 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             this.soldier.getNavigation().stop();
             return true;
         }
-        this.soldier.getNavigation().moveTo(this.easelPos.pos().getX() + 0.5, (this.easelPos.pos().getY() + 1), this.easelPos.pos().getZ() + 0.5, 1);
+        this.soldier.getNavigation().moveTo(this.easelPos.pos().getX() + 0.5, (this.easelPos.pos().getY() + 1), this.easelPos.pos().getZ() + 0.5, buildSpeed());
         return false;
     }
 
@@ -688,11 +688,21 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
     private double walkSpeed() {
         int spread = Tuning.BUILD_WALK_SPEED_SPREAD_PERCENT.get();
         if (spread <= 0 || request == null || request.standingSpots().isEmpty()) {
-            return 1.0;
+            return buildSpeed();
         }
         long bits = soldier.getUUID().getLeastSignificantBits();
         double unit = ((bits >>> 11) & 0xFFFF) / (double) 0xFFFF * 2.0 - 1.0; // -1 .. 1
-        return 1.0 + unit * spread / 100.0;
+        return buildSpeed() * (1.0 + unit * spread / 100.0);
+    }
+
+    /** How fast a builder walks while it works for a build: {@code build.walk_speed_percent} of its normal pace. */
+    private static double buildSpeed() {
+        return Tuning.BUILD_WALK_SPEED_PERCENT.get() / 100.0;
+    }
+
+    @Override
+    protected double poiSpeed() {
+        return super.poiSpeed() * buildSpeed();
     }
 
     protected boolean isValidTarget(LevelReader pLevel, @Nullable BlockPos pPos) {

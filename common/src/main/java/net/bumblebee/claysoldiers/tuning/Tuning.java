@@ -221,6 +221,8 @@ public final class Tuning {
             "After placing a block of a build that follows a plan, a builder waits a random 0 to this many ticks before asking for the next one, so a crew doesn't move in lockstep (D82); 0 = no pause.", 6, 0, 200));
     public static final TuningKey.IntKey BUILD_WALK_SPEED_SPREAD_PERCENT = register(new TuningKey.IntKey("build.walk_speed_spread_percent",
             "In builds that follow a plan, each builder walks to its blocks at its own pace: the normal speed give or take up to this many percent, fixed per soldier (D82); 0 = all the same.", 10, 0, 30));
+    public static final TuningKey.IntKey BUILD_WALK_SPEED_PERCENT = register(new TuningKey.IntKey("build.walk_speed_percent",
+            "How fast builders walk while they work for a build (to their blocks, the easel and their chest), in percent of their normal pace; 100 = normal.", 100, 50, 300));
     public static final TuningKey.IntKey WORK_FALL_DAMAGE_PERCENT = register(new TuningKey.IntKey("work.fall_damage_percent",
             "Fall damage to a soldier that is working (building, digging, farming), in percent of vanilla's (a fall of 4 blocks costs half a heart). Upstream multiplies every environmental damage by 100, so a 4-block drop kills; builders working on upper floors fell off and died on every tall build. 10000 restores that.", 100, 0, 10000));
     public static final TuningKey.IntKey WORK_PLANT_DAMAGE_PERCENT = register(new TuningKey.IntKey("work.plant_damage_percent",
