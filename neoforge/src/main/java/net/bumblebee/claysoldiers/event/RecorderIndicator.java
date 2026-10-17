@@ -1,6 +1,7 @@
 package net.bumblebee.claysoldiers.event;
 
 import net.bumblebee.claysoldiers.debug.DebugLog;
+import net.bumblebee.claysoldiers.debug.SessionLog;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -22,7 +23,8 @@ public final class RecorderIndicator {
     }
 
     public static void onServerTick(ServerTickEvent.Post event) {
-        if (event.getServer().getTickCount() % INTERVAL != 0) {
+        // The always-on session log keeps every category on: no indicator to remind anyone to stop it.
+        if (event.getServer().getTickCount() % INTERVAL != 0 || SessionLog.isOn()) {
             return;
         }
         Component message = message();

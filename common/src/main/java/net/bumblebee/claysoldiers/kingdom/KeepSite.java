@@ -158,16 +158,16 @@ public final class KeepSite {
         return new Result(Optional.ofNullable(best), judged, unknown, uneven, wet);
     }
 
-    private enum Verdict { USABLE, UNKNOWN, UNEVEN, WET }
+    enum Verdict { USABLE, UNKNOWN, UNEVEN, WET }
 
-    private record Judgement(Verdict verdict, int groundY, int range, int earth, int trees) {
+    record Judgement(Verdict verdict, int groundY, int range, int earth, int trees) {
         static Judgement of(Verdict verdict) {
             return new Judgement(verdict, 0, 0, 0, 0);
         }
     }
 
     /** Judges one candidate: the area plus the margin around the easel at ({@code easelX}, {@code easelZ}). */
-    private static Judgement judge(TerrainScan scan, Area area, int easelX, int easelZ, Rules rules) {
+    static Judgement judge(TerrainScan scan, Area area, int easelX, int easelZ, Rules rules) {
         int minX = easelX + area.minX() - rules.margin();
         int maxX = easelX + area.maxX() + rules.margin();
         int minZ = easelZ + area.minZ() - rules.margin();

@@ -222,6 +222,7 @@ public final class Kingdoms {
         }
         DebugLog.event(DebugCategory.KINGDOM, null, "disbanded the kingdom of %s%s", team, by == null ? "" : " (by " + by.getName().getString() + ")");
         KingdomKeep.uncrown(server, removed.get());
+        KingdomEconomy.forget(removed.get());
         return new Result(removed.get(), null);
     }
 
@@ -259,6 +260,16 @@ public final class Kingdoms {
                     .formatted(kingdom.team(), withdrawal.shortfall(), resource, amount, kingdom.resource(resource)));
         }
         return withdrawal;
+    }
+
+    /** Adds renown (stage 5: every finished building after the keep, {@code economy.renown_per_building}). */
+    public static void addRenown(MinecraftServer server, Kingdom kingdom, int amount) {
+        if (amount == 0) {
+            return;
+        }
+        kingdom.addRenown(amount);
+        KingdomSavedData.get(server).setDirty();
+        DebugLog.event(DebugCategory.KINGDOM, null, () -> "renown of %s: +%d (now %d)".formatted(kingdom.team(), amount, kingdom.renown()));
     }
 
     /** Adds a chronicle line (game time now), keeping at most {@code kingdom.chronicle_max} lines. */

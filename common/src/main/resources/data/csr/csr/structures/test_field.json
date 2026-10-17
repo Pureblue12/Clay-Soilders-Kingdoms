@@ -1,0 +1,17 @@
+{
+  "id": "csr:test_field",
+  "name": "Test field (5x5, 3x3 dirt)",
+  "design": "ready",
+  "tier": 1,
+  "zone": "outer",
+  "role": "farm",
+  "footprint": [
+    5,
+    1,
+    5
+  ],
+  "cost": "auto",
+  "variant_group": "test_field",
+  "palette": "cobblestone",
+  "structure": "csr:kingdom/test_field"
+}

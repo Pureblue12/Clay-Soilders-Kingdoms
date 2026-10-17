@@ -86,6 +86,42 @@ public final class Tuning {
             "How long a new king rests after kingdom.found_tries spots didn't work out before he looks again, in ticks.", 1200, 20, 72_000));
     public static final TuningKey.IntKey KINGDOM_KEEP_FREE_MATERIALS = register(new TuningKey.IntKey("kingdom.keep.free_materials",
             "1 = when a kingdom starts its keep, everything the keep needs is added to its stockpile (until soldiers gather materials, stage 5); 0 = the materials must be supplied.", 1, 0, 1));
+    public static final TuningKey.IntKey ECONOMY_PLOT_OUTER_REACH = register(new TuningKey.IntKey("economy.plot.outer_reach",
+            "How far beyond its claim a kingdom may put its outer buildings (lumber camp, fields), in blocks: they stand in a ring just outside where the wall will be; houses stay inside the claim.", 16, 0, 64));
+    public static final TuningKey.IntKey ECONOMY_PLOT_GAP = register(new TuningKey.IntKey("economy.plot.gap",
+            "Free blocks between a new building's plot (with its easel and chest) and every building already there (room for a path).", 3, 0, 16));
+    public static final TuningKey.IntKey ECONOMY_PLOT_MAX_HEIGHT_RANGE = register(new TuningKey.IntKey("economy.plot.max_height_range",
+            "The most the ground under a plot after the keep may rise and fall, in blocks; the kingdom levels it when it starts the building.", 3, 0, 16));
+    public static final TuningKey.IntKey ECONOMY_WOODCUTTERS = register(new TuningKey.IntKey("economy.woodcutters",
+            "How many idle soldiers become woodcutters at a finished lumber camp (picked while nothing is being built, so builders come first).", 2, 0, 16));
+    public static final TuningKey.IntKey ECONOMY_FARMERS = register(new TuningKey.IntKey("economy.farmers",
+            "How many idle soldiers become farmers at a finished field (picked while nothing is being built).", 1, 0, 16));
+    public static final TuningKey.IntKey ECONOMY_LUMBER_RADIUS = register(new TuningKey.IntKey("economy.lumber.radius",
+            "How far from its lumber camp's easel a woodcutter looks for trees, in blocks.", 24, 4, 64));
+    public static final TuningKey.IntKey ECONOMY_LUMBER_MAX_TRUNK = register(new TuningKey.IntKey("economy.lumber.max_trunk",
+            "The tallest trunk a woodcutter fells, in logs (its top must be within a builder's reach of the ground); taller trees are left alone.", 9, 1, 16));
+    public static final TuningKey.IntKey ECONOMY_LUMBER_CHOP_TICKS = register(new TuningKey.IntKey("economy.lumber.chop_ticks",
+            "How long a woodcutter chops each log, in ticks.", 20, 1, 400));
+    public static final TuningKey.IntKey ECONOMY_LUMBER_WALK_TICKS = register(new TuningKey.IntKey("economy.lumber.walk_ticks",
+            "How long a woodcutter or farmer walks toward a tree or field cell before leaving it alone for a while, in ticks.", 600, 40, 12000));
+    public static final TuningKey.IntKey ECONOMY_FARM_TEND_TICKS = register(new TuningKey.IntKey("economy.farm.tend_ticks",
+            "How long a farmer tends a growing crop to make it grow one stage, in ticks (0 = never tends: crops grow at vanilla speed only).", 40, 0, 2400));
+    public static final TuningKey.IntKey ECONOMY_FARM_CARRY = register(new TuningKey.IntKey("economy.farm.carry",
+            "How much of its harvest a farmer carries before it brings it to the field's chest.", 8, 1, 64));
+    public static final TuningKey.IntKey ECONOMY_FOOD_PER_BUILDING = register(new TuningKey.IntKey("economy.food_per_building",
+            "Wheat a building the kingdom pays for (the cottage) costs: the builders' meals, taken when it starts; it waits until the stockpile has it.", 9, 0, 640));
+    public static final TuningKey.IntKey ECONOMY_MEAL_TICKS = register(new TuningKey.IntKey("economy.meal.ticks",
+            "How long a meal keeps the builders of a building the kingdom paid food for well fed, in ticks; eaten again when it wears off while they still build it (0 = no meals).", 6000, 0, 72000));
+    public static final TuningKey.IntKey ECONOMY_MEAL_SPEED_LEVEL = register(new TuningKey.IntKey("economy.meal.speed_level",
+            "Speed level a meal gives (1 = Speed I, 20% faster walking; 0 = none).", 1, 0, 3));
+    public static final TuningKey.IntKey ECONOMY_MEAL_HEALTH_LEVEL = register(new TuningKey.IntKey("economy.meal.health_level",
+            "Health Boost level a meal gives (each level adds 4 health, 2 hearts; 0 = none).", 1, 0, 5));
+    public static final TuningKey.IntKey ECONOMY_FREE_STARTER_BUILDINGS = register(new TuningKey.IntKey("economy.free_starter_buildings",
+            "1 = the kingdom's starter buildings after the keep (lumber camp, field) get all their materials, like the keep; 0 = they must be supplied.", 1, 0, 1));
+    public static final TuningKey.IntKey ECONOMY_FREE_OTHER_MATERIALS = register(new TuningKey.IntKey("economy.free_other_materials",
+            "1 = a building the kingdom pays for with its wood and food gets its other materials (stone, bricks, glass) for free, as no job makes them before stage 9; 0 = a player supplies them through the chest.", 1, 0, 1));
+    public static final TuningKey.IntKey ECONOMY_RENOWN_PER_BUILDING = register(new TuningKey.IntKey("economy.renown_per_building",
+            "Renown a kingdom earns for every building it finishes after the keep.", 25, 0, 1000));
     public static final TuningKey.IntListKey PERFORMANCE_SOLDIER_CAP = register(new TuningKey.IntListKey("performance.soldier_cap_per_tier",
             "Most clay soldiers a kingdom may have per tier (placeholder until the stage 7 performance checkpoint).",
             List.of(8, 12, 16, 20, 26, 32, 40, 48, 56, 64), 1, 1000));

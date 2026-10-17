@@ -9,6 +9,7 @@ import net.bumblebee.claysoldiers.kingdom.ChronicleEntry;
 import net.bumblebee.claysoldiers.kingdom.Kingdom;
 import net.bumblebee.claysoldiers.kingdom.KingdomBook;
 import net.bumblebee.claysoldiers.kingdom.KingdomStatus;
+import net.bumblebee.claysoldiers.kingdom.KingdomEconomy;
 import net.bumblebee.claysoldiers.kingdom.KingdomKeep;
 import net.bumblebee.claysoldiers.kingdom.Kingdoms;
 import net.minecraft.ChatFormatting;
@@ -146,6 +147,7 @@ public final class KingdomCommand {
                 "Buildings: " + kingdom.buildings().size() + ", chronicle lines: " + kingdom.chronicle().size());
         lines.forEach(line -> context.getSource().sendSuccess(() -> Component.literal(line), false));
         KingdomKeep.describe(server, kingdom).forEach(line -> context.getSource().sendSuccess(() -> Component.literal("Keep: " + line), false));
+        KingdomEconomy.describe(server, kingdom).forEach(line -> context.getSource().sendSuccess(() -> Component.literal("Economy: " + line), false));
         return 1;
     }
 

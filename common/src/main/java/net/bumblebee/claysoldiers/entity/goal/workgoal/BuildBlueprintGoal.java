@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -38,6 +39,9 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
 
     @Nullable
     private IBlockCache<BlueprintRequestHandler> easelPos = null;
+    /** The chest (POI) {@link #easelPos} was found for. */
+    @Nullable
+    private BlockPos easelFor;
     private final int searchRange;
     private final int verticalSearchRange;
     protected int verticalSearchStart;
@@ -189,9 +193,22 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
             climber.tick(); // come down a scaffolding column first
             return;
         }
+        if (easelPos != null && !Objects.equals(easelFor, getPoiPos())) {
+            // Its chest changed (a new job): find the easel by the new chest.
+            DebugLog.event(DebugCategory.BUILD, soldier, "chest changed to %s, looking for its easel again", getPoiPos());
+            easelPos = null;
+        }
         if (easelPos == null) {
             setStatus(REQUIRES_POI_ID);
             easelPos = findNearestBlock().map(this::getBlueprintCache).orElse(null);
+            easelFor = getPoiPos();
+            if (easelPos == null && getPoiPos() != null && soldier.getNavigation().isDone()
+                    && !getPoiPos().closerToCenterThan(soldier.position(), 2f)) {
+                // The easel is only searched for around the builder: one picked far from it (a kingdom's builders) first
+                // walks to its chest, which stands by the easel.
+                DebugLog.event(DebugCategory.BUILD, soldier, "no easel within %s, walking to its chest at %s", searchRange, getPoiPos());
+                moveToPoi();
+            }
             return;
         }
 
@@ -584,8 +601,23 @@ public class BuildBlueprintGoal extends AbstractWorkGoal {
         }
     }
 
+    /**
+     * The easel this builder works for: the nearest one to its chest (its POI, which stands beside the easel), else the
+     * nearest one to itself. Searching only around itself, a builder standing by another easel (a kingdom's builders at
+     * the finished keep, picked for the next building) worked for that one instead of its own.
+     */
     protected Optional<BlockPos> findNearestBlock() {
-        BlockPos center = this.soldier.blockPosition();
+        BlockPos poi = getPoiPos();
+        if (poi != null) {
+            Optional<BlockPos> nearChest = findNearestBlock(poi);
+            if (nearChest.isPresent()) {
+                return nearChest;
+            }
+        }
+        return findNearestBlock(this.soldier.blockPosition());
+    }
+
+    private Optional<BlockPos> findNearestBlock(BlockPos center) {
         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
 
         for (int searchIndex = this.verticalSearchStart; searchIndex <= this.verticalSearchRange; searchIndex = searchIndex > 0 ? -searchIndex : 1 - searchIndex) {

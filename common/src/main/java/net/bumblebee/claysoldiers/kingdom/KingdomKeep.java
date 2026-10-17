@@ -95,7 +95,23 @@ public final class KingdomKeep {
     private KingdomKeep() {
     }
 
-    /** Called every server tick: every {@code kingdom.keep.check_ticks}, each active kingdom looks after its keep. */
+    @Nullable
+    private static ResourceLocation keepForTests;
+
+    /** The structure a kingdom builds as its keep: the keep, or a small stand-in a GameTest set. */
+    public static ResourceLocation keepStructure() {
+        return keepForTests != null ? keepForTests : KEEP;
+    }
+
+    /** GameTests only: kingdoms build {@code structure} as their keep ({@code null}: the real keep again). */
+    public static void useKeepForTests(@Nullable ResourceLocation structure) {
+        keepForTests = structure;
+    }
+
+    /**
+     * Called every server tick: every {@code kingdom.keep.check_ticks}, each active kingdom looks after its keep, then its
+     * economy (stage 5, {@link KingdomEconomy}).
+     */
     public static void tick(MinecraftServer server) {
         if (server instanceof GameTestServer || server.getTickCount() % Tuning.KINGDOM_KEEP_CHECK_TICKS.get() != 0) {
             return;
@@ -109,6 +125,7 @@ public final class KingdomKeep {
                 ServerLevel level = server.getLevel(kingdom.dimension());
                 if (level != null) {
                     update(level, kingdom);
+                    KingdomEconomy.update(level, kingdom);
                 }
             }
         }
@@ -141,9 +158,9 @@ public final class KingdomKeep {
 
     /** Plans the keep with the tuning's level: picks and levels the site, places the easel and chest. */
     public static boolean plan(ServerLevel level, Kingdom kingdom) {
-        Optional<StructureMeta> meta = StructureRegistry.get(level.getServer()).byId(KEEP).filter(StructureMeta::isReady);
+        Optional<StructureMeta> meta = StructureRegistry.get(level.getServer()).byId(keepStructure()).filter(StructureMeta::isReady);
         if (meta.isEmpty()) {
-            return problem(kingdom, "the keep structure " + KEEP + " isn't loaded");
+            return problem(kingdom, "the keep structure " + keepStructure() + " isn't loaded");
         }
         if (!ClaySoldiersCommon.COMMON_HOOKS.isBlueprintEnabled(level.enabledFeatures())) {
             return problem(kingdom, "blueprints are off in this world (the blueprint experiment), so soldiers can't build");
@@ -176,7 +193,7 @@ public final class KingdomKeep {
         DebugLog.event(DebugCategory.TERRAIN, null, () -> "levelled the keep site of %s: %s; filled %d, cleared %d, logs to the stockpile %s"
                 .formatted(kingdom.team(), choice.describe(), levelled.filled(), levelled.cleared(), levelled.logs()));
         BlockPos easel = new BlockPos(choice.easelX(), choice.groundY() + 1, choice.easelZ());
-        if (!start(level, kingdom, KEEP, detail, blueprint, easel, choice.area().facing())) {
+        if (!start(level, kingdom, keepStructure(), detail, blueprint, easel, choice.area().facing())) {
             return false;
         }
         grantMaterials(level, kingdom, detail);
@@ -349,7 +366,7 @@ public final class KingdomKeep {
         MaterialSupply supply = SUPPLIES.get(kingdom.id());
         if (supply == null || supply.isFinished() || !supply.chestPos().equals(chest)) {
             Item scaffold = BuiltInRegistries.BLOCK.get(Tuning.SCAFFOLD_MATERIAL.get()).asItem();
-            supply = new MaterialSupply(level, chest, new KingdomStore(server, kingdom, scaffold == Items.AIR ? null : scaffold),
+            supply = new MaterialSupply(level, chest, KingdomStore.of(level, kingdom, scaffold == Items.AIR ? null : scaffold, plan::remainingItems, chest),
                     plan::remainingItems, () -> easel.isRemoved() || easel.isFinished());
             SUPPLIES.put(kingdom.id(), supply);
         }
@@ -411,7 +428,7 @@ public final class KingdomKeep {
      * Puts the throne, a gold block, in its spot in the finished keep (replacing what the structure has there: a carpet,
      * the wooden throne). The kingdom adds it; it doesn't come from the stockpile.
      */
-    private static void placeThrone(ServerLevel level, Kingdom kingdom, KingdomBuilding keep) {
+    static void placeThrone(ServerLevel level, Kingdom kingdom, KingdomBuilding keep) {
         throne(level, keep).ifPresent(pos -> {
             if (!level.getBlockState(pos).is(Blocks.GOLD_BLOCK)) {
                 level.setBlock(pos, Blocks.GOLD_BLOCK.defaultBlockState(), Block.UPDATE_ALL);
@@ -421,7 +438,7 @@ public final class KingdomKeep {
     }
 
     /** Gives the king of a kingdom with a finished keep his extra health (once; it is saved with him). */
-    private static void crown(ServerLevel level, Kingdom kingdom) {
+    static void crown(ServerLevel level, Kingdom kingdom) {
         if (level.getEntity(kingdom.king().id()) instanceof AbstractClaySoldierEntity king && king.isAlive()) {
             AttributeInstance health = king.getAttribute(Attributes.MAX_HEALTH);
             int bonus = Tuning.KINGDOM_KING_BONUS_HEALTH.get();
@@ -524,7 +541,7 @@ public final class KingdomKeep {
 
     /** Everything the keep needs at its detail level, with the scaffold stock when it is taller than builders reach. */
     public static List<ItemStack> materials(ServerLevel level, int detail) {
-        Optional<StructureMeta> meta = StructureRegistry.get(level.getServer()).byId(KEEP).filter(StructureMeta::isReady);
+        Optional<StructureMeta> meta = StructureRegistry.get(level.getServer()).byId(keepStructure()).filter(StructureMeta::isReady);
         if (meta.isEmpty()) {
             return List.of();
         }

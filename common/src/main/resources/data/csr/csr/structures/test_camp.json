@@ -1,0 +1,17 @@
+{
+  "id": "csr:test_camp",
+  "name": "Test camp (3x3 pad)",
+  "design": "ready",
+  "tier": 1,
+  "zone": "outer",
+  "role": "resource",
+  "footprint": [
+    3,
+    1,
+    3
+  ],
+  "cost": "auto",
+  "variant_group": "test_camp",
+  "palette": "cobblestone",
+  "structure": "csr:kingdom/test_camp"
+}

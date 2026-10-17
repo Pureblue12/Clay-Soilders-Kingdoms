@@ -1,14 +1,24 @@
 package net.bumblebee.claysoldiers.kingdom;
 
+import net.bumblebee.claysoldiers.debug.DebugCategory;
+import net.bumblebee.claysoldiers.debug.DebugLog;
 import net.bumblebee.claysoldiers.dev.MaterialSupply;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.OptionalDouble;
+import java.util.function.Supplier;
+import java.util.function.ToIntFunction;
 
 /**
  * A kingdom's stockpile as the store of its builders' chest (stage 4): the chest is stocked from the stockpile with what
@@ -16,18 +26,55 @@ import java.util.List;
  * the owner supplies the keep by filling its chest; the book shows what is still missing. Nothing comes from nothing: an
  * item lost with a builder has to be supplied again. Items are kept by id (stockpile resources are item ids), so a stack
  * with components (a named or enchanted item) stays in the chest.
+ * <p>
+ * Stage 5: a wooden block the stockpile doesn't hold is made from its logs ({@link WoodCost}, D98), never from the
+ * planks and logs the build still needs as they are (its remaining blocks of that item, less what its chest holds).
  */
-final class KingdomStore implements MaterialSupply.Store {
+public final class KingdomStore implements MaterialSupply.Store {
     private final MinecraftServer server;
     private final Kingdom kingdom;
     /** The scaffold material: not in the plan, but it goes in the chest while the stockpile has some. */
     @Nullable
     private final Item scaffold;
+    /** The build's blocks still to place, by item. */
+    private final Supplier<List<Item>> remaining;
+    /** How many of an item the build's chest holds. */
+    private final ToIntFunction<Item> inChest;
 
-    KingdomStore(MinecraftServer server, Kingdom kingdom, @Nullable Item scaffold) {
+    public KingdomStore(MinecraftServer server, Kingdom kingdom, @Nullable Item scaffold, Supplier<List<Item>> remaining, ToIntFunction<Item> inChest) {
         this.server = server;
         this.kingdom = kingdom;
         this.scaffold = scaffold;
+        this.remaining = remaining;
+        this.inChest = inChest;
+    }
+
+    /** A store for the build whose chest is at {@code chestPos}. */
+    static KingdomStore of(ServerLevel level, Kingdom kingdom, @Nullable Item scaffold, Supplier<List<Item>> remaining, BlockPos chestPos) {
+        return new KingdomStore(level.getServer(), kingdom, scaffold, remaining,
+                item -> level.isLoaded(chestPos) && level.getBlockEntity(chestPos) instanceof ChestBlockEntity chest ? chest.countItem(item) : 0);
+    }
+
+    /**
+     * The planks and logs in the stockpile the build still needs as they are: for each, its remaining blocks less what the
+     * chest holds. The carpenter leaves these alone.
+     */
+    public Map<ResourceLocation, Integer> reserved() {
+        Map<Item, Integer> needed = new HashMap<>();
+        for (Item item : remaining.get()) {
+            ResourceLocation id = id(item);
+            if (WoodCost.isPlanks(id) || WoodCost.isLog(id)) {
+                needed.merge(item, 1, Integer::sum);
+            }
+        }
+        Map<ResourceLocation, Integer> reserved = new HashMap<>();
+        needed.forEach((item, count) -> {
+            int left = count - inChest.applyAsInt(item);
+            if (left > 0) {
+                reserved.put(id(item), left);
+            }
+        });
+        return reserved;
     }
 
     static ResourceLocation id(Item item) {
@@ -36,7 +83,11 @@ final class KingdomStore implements MaterialSupply.Store {
 
     @Override
     public boolean has(Item item) {
-        return kingdom.resource(id(item)) > 0;
+        if (kingdom.resource(id(item)) > 0) {
+            return true;
+        }
+        OptionalDouble planks = WoodCost.planks(server, item);
+        return planks.isPresent() && WoodCost.wood(kingdom, reserved()) >= planks.getAsDouble() - 1e-9;
     }
 
     @Override
@@ -44,7 +95,15 @@ final class KingdomStore implements MaterialSupply.Store {
     public ItemStack take(Item item) {
         ItemStack stack = new ItemStack(item);
         int count = Math.min(stack.getMaxStackSize(), kingdom.resource(id(item)));
-        if (count <= 0 || !Kingdoms.removeResource(server, kingdom, id(item), count).done()) {
+        if (count <= 0) {
+            int made = WoodCost.make(server, kingdom, item, stack.getMaxStackSize(), reserved());
+            if (made > 0) {
+                DebugLog.event(DebugCategory.ECONOMY, null, () -> "%s made %d %s from its wood".formatted(kingdom.team(), made, id(item)));
+                return stack.copyWithCount(made);
+            }
+            return null;
+        }
+        if (!Kingdoms.removeResource(server, kingdom, id(item), count).done()) {
             return null;
         }
         return stack.copyWithCount(count);

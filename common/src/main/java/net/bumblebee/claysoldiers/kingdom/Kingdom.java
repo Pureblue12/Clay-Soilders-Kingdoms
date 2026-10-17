@@ -232,6 +232,10 @@ public final class Kingdom {
         return renown;
     }
 
+    void addRenown(int amount) {
+        this.renown = Math.max(0, this.renown + amount);
+    }
+
     public long foundedTick() {
         return foundedTick;
     }
