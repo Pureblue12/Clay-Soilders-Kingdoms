@@ -417,6 +417,55 @@ final class KingdomPlannerCases {
         return wrong.isEmpty() ? null : String.join(" | ", wrong);
     }
 
+    /**
+     * The owner's call (2026-10-17, "the keep in the middle of the town", D116): with the whole town planned, on flat land and
+     * every front, the keep stands near the middle of the wall (within a fifth of its size each way), a ring road runs round
+     * it, the town has a gate on every side, and houses stand on every side of the keep.
+     */
+    static String keepIsInTheMiddle() {
+        Land land = new Land();
+        List<String> wrong = new ArrayList<>();
+        for (Side front : Side.values()) {
+            KingdomPlanner.Result result = plan(land, front, roster());
+            if (result.plan().isEmpty()) {
+                wrong.add("facing " + front + ": no plan " + result.notes());
+                continue;
+            }
+            MasterPlan plan = result.plan().get();
+            Rect wall = plan.wallRect();
+            Rect keep = plan.keep();
+            if (Math.abs(keep.centerX() - wall.centerX()) > wall.sizeX() / 5 || Math.abs(keep.centerZ() - wall.centerZ()) > wall.sizeZ() / 5) {
+                wrong.add("facing " + front + ": the keep " + keep + " is off the middle of the wall " + wall);
+            }
+            if (plan.gates().size() != 4 || plan.gates().stream().map(MasterPlan.Gate::side).distinct().count() != 4) {
+                wrong.add("facing " + front + ": expected a gate on every side, got " + plan.gates());
+            }
+            java.util.Set<Cell> roads = plan.roadCells();
+            Rect around = keep.grow(1);
+            boolean ring = true;
+            for (int x = around.minX(); x <= around.maxX(); x++) {
+                for (int z = around.minZ(); z <= around.maxZ(); z++) {
+                    ring &= keep.contains(x, z) || roads.contains(new Cell(x, z));
+                }
+            }
+            if (!ring) {
+                wrong.add("facing " + front + ": no ring road all round the keep " + keep);
+            }
+            for (Side side : Side.values()) {
+                boolean house = plan.plots().stream().filter(plot -> !plot.outer()).anyMatch(plot -> switch (side) {
+                    case NORTH -> plot.rect().maxZ() < keep.minZ();
+                    case SOUTH -> plot.rect().minZ() > keep.maxZ();
+                    case WEST -> plot.rect().maxX() < keep.minX();
+                    case EAST -> plot.rect().minX() > keep.maxX();
+                });
+                if (!house) {
+                    wrong.add("facing " + front + ": no house " + side.lowerName() + " of the keep");
+                }
+            }
+        }
+        return wrong.isEmpty() ? null : String.join(" | ", wrong);
+    }
+
     /** Every case by name, for a quick run outside the game. */
     static List<String> all() {
         List<String> results = new ArrayList<>();
@@ -428,6 +477,7 @@ final class KingdomPlannerCases {
         results.add("unknownLandIsLeftAlone: " + unknownLandIsLeftAlone());
         results.add("crampedLandLeavesOutWhatDoesntFit: " + crampedLandLeavesOutWhatDoesntFit());
         results.add("fullTownFitsEveryBuilding: " + fullTownFitsEveryBuilding());
+        results.add("keepIsInTheMiddle: " + keepIsInTheMiddle());
         return results;
     }
 }

@@ -97,7 +97,7 @@ public final class Tuning {
     public static final TuningKey.IntKey LAYOUT_SCAN_RADIUS = register(new TuningKey.IntKey("layout.scan_radius",
             "How far around its keep a kingdom looks at the land when it draws up its master plan, in blocks (only loaded ground counts).", 192, 32, 256));
     public static final TuningKey.IntKey LAYOUT_ROAD_WIDTH = register(new TuningKey.IntKey("layout.road_width",
-            "How wide the main street and the cross street are, in blocks (an even number is rounded up to the next odd one).", 3, 1, 7));
+            "How wide the streets and the ring road round the keep are, in blocks (an even number is rounded up to the next odd one).", 3, 1, 7));
     public static final TuningKey.IntKey LAYOUT_SQUARE_DEPTH = register(new TuningKey.IntKey("layout.square_depth",
             "How deep the open square in front of the keep's door is, in blocks.", 5, 1, 16));
     public static final TuningKey.IntKey LAYOUT_SQUARE_WIDTH = register(new TuningKey.IntKey("layout.square_width",
@@ -120,6 +120,8 @@ public final class Tuning {
             "1 = the kingdom lays its planned roads at once as dirt paths when it draws up its plan (soldiers don't lay roads yet); 0 = the roads are only planned.", 1, 0, 1));
     public static final TuningKey.IntKey LAYOUT_BRIDGE_MAX_LENGTH = register(new TuningKey.IntKey("layout.bridge_max_length",
             "The longest stretch of water (blocks) a laid road bridges with planks, with land at both ends (a stream, a pond); 0 = no bridges.", 8, 0, 32));
+    public static final TuningKey.IntKey ECONOMY_BUILD_TOWN = register(new TuningKey.IntKey("economy.build_town",
+            "1 = after its own buildings the kingdom builds every other plot of its town plan, one at a time, paid like the cottage (D115); 0 = it stops after them.", 1, 0, 1));
     public static final TuningKey.IntKey ECONOMY_WOODCUTTERS = register(new TuningKey.IntKey("economy.woodcutters",
             "How many idle soldiers become woodcutters at a finished lumber camp (picked while nothing is being built, so builders come first).", 2, 0, 16));
     public static final TuningKey.IntKey ECONOMY_FARMERS = register(new TuningKey.IntKey("economy.farmers",

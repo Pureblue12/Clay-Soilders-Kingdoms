@@ -181,18 +181,64 @@ public final class KingdomEconomy {
             }
         }
         NEXT_PLAN.put(kingdom.id(), level.getGameTime() + Tuning.KINGDOM_KEEP_PLAN_RETRY_TICKS.get());
-        plan(level, kingdom, next.get());
+        boolean started = plan(level, kingdom, next.get());
+        if (!plan().contains(next.get())) {
+            Map<ResourceLocation, Integer> refused = TOWN_REFUSED.computeIfAbsent(kingdom.id(), id -> new HashMap<>());
+            if (started) {
+                refused.remove(next.get().structure());
+            } else if (refused.merge(next.get().structure(), 1, Integer::sum) >= TOWN_GIVE_UPS) {
+                DebugLog.event(DebugCategory.ECONOMY, null, () -> "%s left out of the town of %s: its plot was refused %d times in a row"
+                        .formatted(next.get().structure(), kingdom.team(), TOWN_GIVE_UPS));
+            }
+        }
     }
 
-    /** The master plan's next building the kingdom hasn't started, if any. */
+    /**
+     * The master plan's next building the kingdom hasn't started, if any: first {@link #plan()}'s buildings, then every other
+     * plot of the town plan in its order ({@link #townSlot}).
+     */
     public static Optional<Slot> next(Kingdom kingdom) {
         for (Slot slot : plan()) {
             if (kingdom.buildings().stream().noneMatch(building -> building.structure().equals(slot.structure()))) {
                 return Optional.of(slot);
             }
         }
+        return townSlot(kingdom);
+    }
+
+    /**
+     * The next plot of the town plan without a building (D115, the owner's ask 2026-10-17: "I'd like all the structures to be
+     * built"): every plot the plan has for a structure, the ones kept for later included, in the plan's order, built at level 1
+     * and paid for like the cottage. A structure whose plot was refused {@link #TOWN_GIVE_UPS} times in a row is left out until
+     * the server restarts, so one bad plot doesn't hold up the rest of the town.
+     */
+    static Optional<Slot> townSlot(Kingdom kingdom) {
+        if (Tuning.ECONOMY_BUILD_TOWN.get() == 0 || kingdom.plan().isEmpty()) {
+            return Optional.empty();
+        }
+        Map<ResourceLocation, Integer> refused = TOWN_REFUSED.getOrDefault(kingdom.id(), Map.of());
+        Map<String, Integer> plots = new HashMap<>();
+        for (MasterPlan.Plot plot : kingdom.plan().get().plots()) {
+            if (plot.kind() != MasterPlan.Kind.BUILDING && plot.kind() != MasterPlan.Kind.LATER) {
+                continue;
+            }
+            int wanted = plots.merge(plot.key(), 1, Integer::sum);
+            ResourceLocation structure = ResourceLocation.tryParse(plot.key());
+            if (structure == null || refused.getOrDefault(structure, 0) >= TOWN_GIVE_UPS) {
+                continue;
+            }
+            long built = kingdom.buildings().stream().filter(building -> building.structure().equals(structure)).count();
+            if (built < wanted) {
+                return Optional.of(new Slot(structure, 1, plot.outer(), false, null));
+            }
+        }
         return Optional.empty();
     }
+
+    /** Times in a row a town plot may be refused before the kingdom leaves its structure out. */
+    static final int TOWN_GIVE_UPS = 3;
+    /** Refused town plots per kingdom and structure, in a row (memory only). */
+    private static final Map<UUID, Map<ResourceLocation, Integer>> TOWN_REFUSED = new HashMap<>();
 
     // What a paid building costs
 
@@ -731,6 +777,11 @@ public final class KingdomEconomy {
             }
             lines.add(name(server, slot.structure()) + ": " + state + ".");
         }
+        kingdom.plan().ifPresent(masterPlan -> {
+            long plots = masterPlan.plots().stream().filter(plot -> plot.kind() == MasterPlan.Kind.BUILDING || plot.kind() == MasterPlan.Kind.LATER).count();
+            long built = kingdom.buildings().stream().skip(1).filter(building -> building.state() == KingdomBuilding.State.BUILT).count();
+            lines.add("Town: " + built + " of " + plots + " planned buildings finished.");
+        });
         Map<Job, Integer> workers = WORKERS.getOrDefault(kingdom.id(), Map.of());
         lines.add("Woodcutters: " + workers.getOrDefault(Job.WOODCUTTER, 0) + ", farmers: " + workers.getOrDefault(Job.FARMER, 0) + ".");
         lines.addAll(KingdomLayout.describe(kingdom));
@@ -758,6 +809,7 @@ public final class KingdomEconomy {
     public static void forget(Kingdom kingdom) {
         SUPPLIES.remove(kingdom.id());
         NEXT_PLAN.remove(kingdom.id());
+        TOWN_REFUSED.remove(kingdom.id());
         PROBLEMS.remove(kingdom.id());
         WORKERS.remove(kingdom.id());
         KingdomLayout.forget(kingdom);

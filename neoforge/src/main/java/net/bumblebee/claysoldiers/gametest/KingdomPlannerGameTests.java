@@ -79,6 +79,11 @@ public class KingdomPlannerGameTests {
         check(helper, KingdomPlannerCases.fullTownFitsEveryBuilding());
     }
 
+    @GameTest(template = PLATFORM)
+    public static void keepIsInTheMiddle(GameTestHelper helper) {
+        check(helper, KingdomPlannerCases.keepIsInTheMiddle());
+    }
+
     private static void check(GameTestHelper helper, @Nullable String problem) {
         helper.assertTrue(problem == null, String.valueOf(problem));
         helper.succeed();

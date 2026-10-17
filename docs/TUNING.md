@@ -65,7 +65,7 @@ All balancing numbers (costs, radii, rates, caps, unlock thresholds) live in ONE
 | `economy.plot.max_height_range` | 3 | 0–16 | The most the ground under a plot after the keep may rise and fall, in blocks; the kingdom levels it when it starts the building. |
 | `layout.enabled` | 1 | 0–1 | 1 = when its keep is finished a kingdom draws up its master plan (stage 6: streets, house plots, a straight wall with gates, outer plots) and builds on it; 0 = buildings go on the nearest free ground (stage 5). |
 | `layout.scan_radius` | 192 | 32–256 | How far around its keep a kingdom looks at the land for its master plan, in blocks (only loaded ground counts). |
-| `layout.road_width` | 3 | 1–7 | Width of the main street and the cross street (odd; an even number is rounded up). |
+| `layout.road_width` | 3 | 1–7 | Width of the streets and the ring road round the keep (odd; an even number is rounded up). |
 | `layout.square_depth` | 5 | 1–16 | Depth of the open square in front of the keep's door. |
 | `layout.square_width` | 7 | 1–31 | Width of that square. |
 | `layout.plot_gap` | 2 | 0–16 | Free blocks between two plots of the master plan (and between a plot and the keep). |
@@ -77,6 +77,7 @@ All balancing numbers (costs, radii, rates, caps, unlock thresholds) live in ONE
 | `layout.show_seconds` | 30 | 0–300 | How long players within 128 blocks see a kingdom's plan in particles when it is drawn up (white sparks: wall, flames: gates, green: building plots, orange: kept for later), and a building's plot (green) when the kingdom starts it; 0 = only through the dev book. |
 | `layout.lay_roads` | 1 | 0–1 | 1 = the planned roads are laid at once as dirt paths when the plan is drawn up (soldiers don't lay roads yet); 0 = only planned. |
 | `layout.bridge_max_length` | 8 | 0–32 | The longest stretch of water a laid road bridges with spruce planks, with land at both ends (a stream, a pond, not the sea); 0 = no bridges (D114). |
+| `economy.build_town` | 1 | 0–1 | 1 = after its own buildings (camp, field, cottage) the kingdom builds every other plot of its town plan, one at a time, in the plan's order, at level 1, paid like the cottage (logs and wheat; other materials given); 0 = it stops after them (D115). |
 | `economy.woodcutters` | 2 | 0–16 | How many idle soldiers become woodcutters at a finished lumber camp (picked while nothing is being built, so builders come first). |
 | `economy.farmers` | 1 | 0–16 | How many idle soldiers become farmers at a finished field (picked while nothing is being built). |
 | `economy.lumber.radius` | 24 | 4–64 | How far from its lumber camp's easel a woodcutter looks for trees, in blocks. |

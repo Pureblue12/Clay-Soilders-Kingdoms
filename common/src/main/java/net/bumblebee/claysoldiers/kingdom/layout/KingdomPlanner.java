@@ -13,16 +13,17 @@ import java.util.Set;
  * The kingdom planner (stage 6, plain data, no world access): reads the land around a finished keep and lays out the whole
  * town in advance, for function and looks (docs/ROADMAP.md stage 6, the owner's planner page and notes, D105–D110).
  * <ol>
- *     <li><b>Square and streets:</b> an open square in front of the keep's door, a main street from the square straight
- *     out, and a cross street through the far side of the square.</li>
+ *     <li><b>Keep in the middle (D116):</b> a ring road all round the keep, an open square in front of its door, and four
+ *     streets out of the ring, one each way: the main street from the square, one from the back and one from each side
+ *     through the keep's middle.</li>
  *     <li><b>Houses:</b> inner buildings (and the plots kept free for the buildings a kingdom adds later) line the streets
- *     with their fronts on the road, nearest the square first; the two sides of a street fill in turn, so they face each
- *     other. A plot needs known, dry ground that rises and falls at most {@link Rules#maxRange}; levelling, trees and caves
+ *     with their fronts on the road, nearest the keep first; the two sides of a street fill in turn, so they face each
+ *     other, and the streets fill evenly, so the town grows round the keep. A plot needs known, dry ground that rises and falls at most {@link Rules#maxRange}; levelling, trees and caves
  *     under it cost points.</li>
  *     <li><b>The wall</b> is sized from what it holds (the keep and every house plot, {@link Rules#wallSetback} away), so
  *     it fits the real buildings; it runs in four straight lines (the wall pieces are straight) and each side moves out
  *     up to {@link Rules#wallShift} blocks where that keeps it off water, cliffs and caves. A gate stands wherever a street
- *     crosses it; the streets run on out of the gates.</li>
+ *     crosses it (one on each side); the streets run on out of the gates.</li>
  *     <li><b>Outer buildings</b> (fields, the lumber camp) go in a band just outside the wall, fronts toward the town, each
  *     with a path to the nearest gate road (outer buildings for later get theirs too); they keep away from water and a
  *     lumber camp likes trees around it. One plot by
@@ -197,8 +198,14 @@ public final class KingdomPlanner {
         private final int originZ;
         private final int half;
         private final int squareHalf;
-        /** Local v of the cross street's near edge. */
+        /** Local depth of the square in front of the keep (v 0 .. crossV - 1). */
         private final int crossV;
+        /** The keep in the local frame {u0, u1, v0, v1}. */
+        private final int[] keepBox;
+        /** The middle line of the ring road around the keep {u0, u1, v0, v1}: a road all round it, half its width away. */
+        private final int[] ring;
+        /** Local v of the side streets' middle line (through the keep's middle). */
+        private final int sideV;
         private final List<MasterPlan.Plot> plots = new ArrayList<>();
         private final List<MasterPlan.Road> roads = new ArrayList<>();
         private final List<String> notes = new ArrayList<>();
@@ -219,6 +226,10 @@ public final class KingdomPlanner {
             this.half = Math.max(0, rules.roadWidth() / 2);
             this.squareHalf = Math.max(half, rules.squareWidth() / 2);
             this.crossV = Math.max(1, rules.squareDepth());
+            this.keepBox = local(keep);
+            int o = half + 1;
+            this.ring = new int[]{keepBox[0] - o, keepBox[1] + o, keepBox[2] - o, half};
+            this.sideV = Math.floorDiv(keepBox[2] + keepBox[3], 2);
         }
 
         // Frame
@@ -262,10 +273,14 @@ public final class KingdomPlanner {
 
         Result run(Cell claimCenter, List<Item> items, List<Item> later, @Nullable Item waterside) {
             int far = 1000;
-            // The square and the streets (the cross street's ends and the main street's length come with the wall).
+            // The keep stands in the middle (the owner, 2026-10-17: "the keep in the middle of the town", D116): a ring road
+            // round it, the square in front, and four streets out of it, one each way (their lengths come with the wall).
+            blocked.addAll(ringRoads().stream().map(this::strip).toList());
             blocked.add(world(-squareHalf, 0, squareHalf, crossV - 1));
             blocked.add(world(-half, 0, half, far));
-            blocked.add(world(-far, crossV, far, crossV + 2 * half));
+            blocked.add(world(-half, -far, half, ring[2]));
+            blocked.add(world(-far, sideV - half, ring[0], sideV + half));
+            blocked.add(world(ring[1], sideV - half, far, sideV + half));
             List<Street> streets = streets();
             for (Item item : items) {
                 if (!item.outer()) {
@@ -282,28 +297,28 @@ public final class KingdomPlanner {
             int wallU1 = wall[1];
             int wallV0 = wall[2];
             int wallV1 = wall[3];
-            int crossMid = crossV + half;
-            Cell mainGate = world(0, wallV1);
-            Cell leftGate = world(wallU0, crossMid);
-            Cell rightGate = world(wallU1, crossMid);
             blocked.clear();
             int past = clearance() + ROAD_PAST_GATE;
+            roads.addAll(ringRoads());
             roads.add(new MasterPlan.Road(world(0, 0), world(0, crossV - 1), 2 * squareHalf + 1));
             roads.add(new MasterPlan.Road(world(0, crossV), world(0, wallV1 + past), 2 * half + 1));
-            roads.add(new MasterPlan.Road(world(wallU0 - past, crossMid), world(wallU1 + past, crossMid), 2 * half + 1));
+            roads.add(new MasterPlan.Road(world(0, ring[2]), world(0, wallV0 - past), 2 * half + 1));
+            roads.add(new MasterPlan.Road(world(ring[0], sideV), world(wallU0 - past, sideV), 2 * half + 1));
+            roads.add(new MasterPlan.Road(world(ring[1], sideV), world(wallU1 + past, sideV), 2 * half + 1));
             Rect wallRect = world(wallU0, wallV0, wallU1, wallV1);
             List<Cell> corners = List.of(new Cell(wallRect.minX(), wallRect.minZ()), new Cell(wallRect.maxX(), wallRect.minZ()),
                     new Cell(wallRect.maxX(), wallRect.maxZ()), new Cell(wallRect.minX(), wallRect.maxZ()));
-            List<MasterPlan.Gate> gates = List.of(new MasterPlan.Gate(mainGate, side(2)), new MasterPlan.Gate(leftGate, side(1)),
-                    new MasterPlan.Gate(rightGate, side(0)));
-            List<Cell> roadEnds = List.of(world(0, wallV1 + past), world(wallU0 - past, crossMid),
-                    world(wallU1 + past, crossMid));
+            List<MasterPlan.Gate> gates = List.of(new MasterPlan.Gate(world(0, wallV1), side(2)), new MasterPlan.Gate(world(0, wallV0), side(3)),
+                    new MasterPlan.Gate(world(wallU0, sideV), side(1)), new MasterPlan.Gate(world(wallU1, sideV), side(0)));
+            List<Cell> roadEnds = List.of(world(0, wallV1 + past), world(0, wallV0 - past), world(wallU0 - past, sideV),
+                    world(wallU1 + past, sideV));
             // Nothing outside stands in front of a gate: the streets look out of the town and can go on later.
             int lane = half + rules.gap();
-            int out = past + rules.outerBand() + 64;
+            int out = past + 2 * rules.outerBand() + 64;
             blocked.add(world(-lane, wallV1, lane, wallV1 + out));
-            blocked.add(world(wallU0 - out, crossMid - lane, wallU0, crossMid + lane));
-            blocked.add(world(wallU1, crossMid - lane, wallU1 + out, crossMid + lane));
+            blocked.add(world(-lane, wallV0 - out, lane, wallV0));
+            blocked.add(world(wallU0 - out, sideV - lane, wallU0, sideV + lane));
+            blocked.add(world(wallU1, sideV - lane, wallU1 + out, sideV + lane));
             for (Item item : items) {
                 if (item.outer()) {
                     placeOuter(item, MasterPlan.Kind.BUILDING, wallRect, roadEnds);
@@ -331,6 +346,21 @@ public final class KingdomPlanner {
             return new Result(Optional.of(plan), List.copyOf(notes));
         }
 
+        /** The ring road round the keep: four straight pieces along {@link #ring}. */
+        private List<MasterPlan.Road> ringRoads() {
+            int width = 2 * half + 1;
+            return List.of(new MasterPlan.Road(world(ring[0], ring[3]), world(ring[1], ring[3]), width),
+                    new MasterPlan.Road(world(ring[0], ring[2]), world(ring[1], ring[2]), width),
+                    new MasterPlan.Road(world(ring[0], ring[2]), world(ring[0], ring[3]), width),
+                    new MasterPlan.Road(world(ring[1], ring[2]), world(ring[1], ring[3]), width));
+        }
+
+        /** The columns a road covers, as a rectangle. */
+        private Rect strip(MasterPlan.Road road) {
+            int h = road.width() / 2;
+            return Rect.of(road.from().x(), road.from().z(), road.to().x(), road.to().z()).grow(h);
+        }
+
         // Houses along the streets
 
         /**
@@ -354,15 +384,20 @@ public final class KingdomPlanner {
         }
 
         private List<Street> streets() {
-            int beyondCross = crossV + 2 * half + 1;
             int gap = rules.gap();
+            int frontStart = Math.max(crossV, 2 * half + 1) + gap;
+            int backStart = -(ring[2] - half) + 1 + gap;
+            int leftStart = -(ring[0] - half) + 1 + gap;
+            int rightStart = ring[1] + half + 1 + gap;
             return List.of(
-                    new Street(2, 0, half + 1, beyondCross + gap),
-                    new Street(2, 1, -(half + 1), beyondCross + gap),
-                    new Street(0, 3, crossV - 1, squareHalf + 1 + gap),
-                    new Street(1, 3, crossV - 1, squareHalf + 1 + gap),
-                    new Street(0, 2, beyondCross, half + 1 + gap),
-                    new Street(1, 2, beyondCross, half + 1 + gap));
+                    new Street(2, 0, half + 1, frontStart),
+                    new Street(2, 1, -(half + 1), frontStart),
+                    new Street(3, 0, half + 1, backStart),
+                    new Street(3, 1, -(half + 1), backStart),
+                    new Street(1, 2, sideV + half + 1, leftStart),
+                    new Street(1, 3, sideV - half - 1, leftStart),
+                    new Street(0, 2, sideV + half + 1, rightStart),
+                    new Street(0, 3, sideV - half - 1, rightStart));
         }
 
         /** A candidate plot along a street. */
@@ -421,6 +456,10 @@ public final class KingdomPlanner {
                         eu = -p - a1;
                         alongEnd = -(eu + a0);
                     }
+                    case 3 -> {
+                        ev = -p - b1;
+                        alongEnd = -(ev + b0);
+                    }
                     default -> {
                         ev = p - b0;
                         alongEnd = ev + b1;
@@ -436,8 +475,8 @@ public final class KingdomPlanner {
                     continue;
                 }
                 int[] local = local(rect);
-                int du = (local[0] + local[1]) / 2;
-                int dv = (local[2] + local[3]) / 2;
+                int du = (local[0] + local[1]) / 2 - (keepBox[0] + keepBox[1]) / 2;
+                int dv = (local[2] + local[3]) / 2 - sideV;
                 int distance = (int) Math.round(Math.sqrt((double) du * du + (double) dv * dv));
                 return new Candidate(street, facing, easel.x(), easel.z(), rect, alongEnd + 1 + rules.gap(),
                         judgement.cost() + DISTANCE_COST * distance);
@@ -489,11 +528,10 @@ public final class KingdomPlanner {
 
         /** The wall's local rectangle {u0, u1, v0, v1}: around the keep, the square and every house, moved onto good ground. */
         private int[] wall() {
-            int[] box = local(keep);
-            int u0 = Math.min(box[0], -squareHalf);
-            int u1 = Math.max(box[1], squareHalf);
-            int v0 = box[2];
-            int v1 = Math.max(box[3], crossV + 2 * half);
+            int u0 = Math.min(ring[0] - half, -squareHalf);
+            int u1 = Math.max(ring[1] + half, squareHalf);
+            int v0 = ring[2] - half;
+            int v1 = Math.max(ring[3] + half, crossV - 1);
             for (MasterPlan.Plot plot : plots) {
                 int[] p = local(plot.rect());
                 u0 = Math.min(u0, p[0]);
