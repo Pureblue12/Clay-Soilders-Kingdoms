@@ -344,6 +344,14 @@ public class EaselBlockEntity extends BlockEntity {
         if (!level.isClientSide()) {
             ClaySoldiersCommon.NETWORK_MANGER.sendToPlayersTrackingBlockEntity(this, new BlueprintPlacePayload(worldPosition, item.getItem()));
         }
+        // The last block: the structure's decoration (stage 5a), exactly once.
+        if (level instanceof ServerLevel serverLevel && template instanceof ServerBlueprintPlan plan) {
+            var decoration = plan.takeDecoration();
+            if (decoration != null) {
+                var settings = getTemplateSettings();
+                decoration.apply(serverLevel, getTemplateBase(settings), settings);
+            }
+        }
         setChanged();
     }
 
