@@ -15,14 +15,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SmeltingRecipe;
-import net.minecraft.world.item.crafting.StonecutterRecipe;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -81,13 +77,10 @@ public final class KingdomWorkshop {
     public record Made(Item item, int count) {
     }
 
-    private record Key(Item item, int level) {
-    }
-
     private static final Map<UUID, List<Order>> ORDERS = new HashMap<>();
     private static final Set<UUID> DRY = new HashSet<>();
-    private static final Map<Key, Optional<Map<Item, Double>>> COSTS = new HashMap<>();
-    private static final Map<Item, List<Recipe<?>>> RECIPES = new HashMap<>();
+    /** Per workshop level: the cheapest raw-material cost of every item it can make. */
+    private static final Map<Integer, Map<Item, Map<Item, Double>>> COSTS = new HashMap<>();
     @Nullable
     private static MinecraftServer cachedFor;
 
@@ -156,65 +149,72 @@ public final class KingdomWorkshop {
     public static Optional<Map<Item, Double>> rawCost(MinecraftServer server, Item item, int level) {
         if (cachedFor != server) {
             COSTS.clear();
-            RECIPES.clear();
             cachedFor = server;
         }
-        Key key = new Key(item, level);
-        Optional<Map<Item, Double>> known = COSTS.get(key);
-        if (known != null) {
-            return known;
-        }
-        Optional<Map<Item, Double>> found = cost(server, item, raw(level), 0, new HashSet<>());
-        COSTS.put(key, found);
-        return found;
+        return Optional.ofNullable(COSTS.computeIfAbsent(level, key -> costs(server, raw(key))).get(item));
     }
 
-    private static Optional<Map<Item, Double>> cost(MinecraftServer server, Item item, Set<Item> raw, int depth, Set<Item> visiting) {
-        if (raw.contains(item)) {
-            return Optional.of(Map.of(item, 1.0));
-        }
-        if (depth >= MAX_DEPTH || WoodCost.isWooden(server, item) || !visiting.add(item)) {
-            return Optional.empty();
-        }
-        Map<Item, Double> best = null;
-        double bestTotal = Double.MAX_VALUE;
-        for (Recipe<?> recipe : recipesFor(server, item)) {
-            ItemStack result = recipe.getResultItem(server.registryAccess());
-            Map<Item, Double> sum = new HashMap<>();
-            boolean makeable = true;
-            boolean any = false;
-            for (Ingredient ingredient : recipe.getIngredients()) {
-                if (ingredient.isEmpty()) {
+    /**
+     * The cheapest cost of everything makeable from {@code raw}, worked out from the bottom up: raw materials cost
+     * themselves, and each round every recipe whose ingredients all have a cost gives its result a cost (kept when it is
+     * cheaper), so after {@code MAX_DEPTH} rounds every chain up to that many steps is known. Wooden items get no cost, so
+     * no chain goes through them. Once per level and server, in one pass over the recipes per round (a search from each
+     * item down took the suite three times as long).
+     */
+    private static Map<Item, Map<Item, Double>> costs(MinecraftServer server, Set<Item> raw) {
+        Map<Item, Map<Item, Double>> best = new HashMap<>();
+        raw.forEach(item -> best.put(item, Map.of(item, 1.0)));
+        List<Recipe<?>> recipes = new ArrayList<>();
+        RecipeManager manager = server.getRecipeManager();
+        manager.getAllRecipesFor(RecipeType.CRAFTING).forEach(holder -> recipes.add(holder.value()));
+        manager.getAllRecipesFor(RecipeType.STONECUTTING).forEach(holder -> recipes.add(holder.value()));
+        manager.getAllRecipesFor(RecipeType.SMELTING).forEach(holder -> recipes.add(holder.value()));
+        Map<Item, Boolean> wooden = new HashMap<>();
+        for (int round = 0; round < MAX_DEPTH; round++) {
+            boolean changed = false;
+            for (Recipe<?> recipe : recipes) {
+                ItemStack result = recipe.getResultItem(server.registryAccess());
+                if (result.isEmpty() || raw.contains(result.getItem())
+                        || wooden.computeIfAbsent(result.getItem(), item -> WoodCost.isWooden(server, item))) {
                     continue;
                 }
-                any = true;
-                Map<Item, Double> cheapest = null;
-                double cheapestTotal = Double.MAX_VALUE;
-                for (ItemStack option : ingredient.getItems()) {
-                    Optional<Map<Item, Double>> optionCost = cost(server, option.getItem(), raw, depth + 1, visiting);
-                    if (optionCost.isPresent() && total(optionCost.get()) < cheapestTotal) {
-                        cheapest = optionCost.get();
-                        cheapestTotal = total(cheapest);
+                Map<Item, Double> sum = new HashMap<>();
+                boolean makeable = true;
+                boolean any = false;
+                for (Ingredient ingredient : recipe.getIngredients()) {
+                    if (ingredient.isEmpty()) {
+                        continue;
                     }
+                    any = true;
+                    Map<Item, Double> cheapest = null;
+                    for (ItemStack option : ingredient.getItems()) {
+                        Map<Item, Double> cost = best.get(option.getItem());
+                        if (cost != null && (cheapest == null || total(cost) < total(cheapest))) {
+                            cheapest = cost;
+                        }
+                    }
+                    if (cheapest == null) {
+                        makeable = false;
+                        break;
+                    }
+                    cheapest.forEach((rawItem, count) -> sum.merge(rawItem, count, Double::sum));
                 }
-                if (cheapest == null) {
-                    makeable = false;
-                    break;
+                if (!makeable || !any) {
+                    continue;
                 }
-                cheapest.forEach((rawItem, count) -> sum.merge(rawItem, count, Double::sum));
+                Map<Item, Double> each = new HashMap<>();
+                sum.forEach((rawItem, count) -> each.put(rawItem, count / result.getCount()));
+                Map<Item, Double> old = best.get(result.getItem());
+                if (old == null || total(each) < total(old) - 1e-9) {
+                    best.put(result.getItem(), Map.copyOf(each));
+                    changed = true;
+                }
             }
-            if (!makeable || !any) {
-                continue;
-            }
-            Map<Item, Double> each = new HashMap<>();
-            sum.forEach((rawItem, count) -> each.put(rawItem, count / result.getCount()));
-            if (total(each) < bestTotal) {
-                best = each;
-                bestTotal = total(each);
+            if (!changed) {
+                break;
             }
         }
-        visiting.remove(item);
-        return Optional.ofNullable(best);
+        return best;
     }
 
     private static double total(Map<Item, Double> cost) {
@@ -223,30 +223,6 @@ public final class KingdomWorkshop {
             total += count;
         }
         return total;
-    }
-
-    /** The crafting, stonecutting and smelting recipes that make {@code item}. */
-    private static List<Recipe<?>> recipesFor(MinecraftServer server, Item item) {
-        if (RECIPES.isEmpty()) {
-            RecipeManager manager = server.getRecipeManager();
-            for (RecipeHolder<CraftingRecipe> holder : manager.getAllRecipesFor(RecipeType.CRAFTING)) {
-                index(server, holder.value());
-            }
-            for (RecipeHolder<StonecutterRecipe> holder : manager.getAllRecipesFor(RecipeType.STONECUTTING)) {
-                index(server, holder.value());
-            }
-            for (RecipeHolder<SmeltingRecipe> holder : manager.getAllRecipesFor(RecipeType.SMELTING)) {
-                index(server, holder.value());
-            }
-        }
-        return RECIPES.getOrDefault(item, List.of());
-    }
-
-    private static void index(MinecraftServer server, Recipe<?> recipe) {
-        ItemStack result = recipe.getResultItem(server.registryAccess());
-        if (!result.isEmpty()) {
-            RECIPES.computeIfAbsent(result.getItem(), item -> new ArrayList<>()).add(recipe);
-        }
     }
 
     /** The whole raw materials {@code count} of an item costing {@code each} take (rounded up). */
