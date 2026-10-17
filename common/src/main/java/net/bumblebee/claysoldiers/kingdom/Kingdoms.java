@@ -262,6 +262,21 @@ public final class Kingdoms {
         return withdrawal;
     }
 
+    /**
+     * Saves the kingdom's master plan (stage 6) and grows its claim to hold it, unless that would reach into another
+     * kingdom's claim (then the claim stays and the plan still holds; recorded).
+     */
+    public static void setPlan(MinecraftServer server, Kingdom kingdom, net.bumblebee.claysoldiers.kingdom.layout.MasterPlan plan) {
+        int wanted = plan.claimRadius();
+        boolean clash = all(server).stream().anyMatch(other -> !other.id().equals(kingdom.id()) && other.dimension().equals(kingdom.dimension())
+                && overlaps(kingdom.center(), wanted, other));
+        int before = kingdom.claimRadius();
+        kingdom.setPlan(plan, clash ? before : wanted);
+        KingdomSavedData.get(server).setDirty();
+        DebugLog.event(DebugCategory.KINGDOM, null, () -> "master plan of %s: %s; claim %d -> %d%s".formatted(kingdom.team(), plan.summary(),
+                before, kingdom.claimRadius(), clash ? " (not grown: it would reach into another kingdom)" : ""));
+    }
+
     /** Adds renown (stage 5: every finished building after the keep, {@code economy.renown_per_building}). */
     public static void addRenown(MinecraftServer server, Kingdom kingdom, int amount) {
         if (amount == 0) {

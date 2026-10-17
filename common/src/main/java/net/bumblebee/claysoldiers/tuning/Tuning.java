@@ -92,6 +92,36 @@ public final class Tuning {
             "Free blocks between a new building's plot (with its easel and chest) and every building already there (room for a path).", 3, 0, 16));
     public static final TuningKey.IntKey ECONOMY_PLOT_MAX_HEIGHT_RANGE = register(new TuningKey.IntKey("economy.plot.max_height_range",
             "The most the ground under a plot after the keep may rise and fall, in blocks; the kingdom levels it when it starts the building.", 3, 0, 16));
+    public static final TuningKey.IntKey LAYOUT_ENABLED = register(new TuningKey.IntKey("layout.enabled",
+            "1 = when its keep is finished a kingdom draws up its master plan (streets, house plots, a straight wall with gates, outer plots) and builds on it; 0 = buildings go on the nearest free ground (stage 5).", 1, 0, 1));
+    public static final TuningKey.IntKey LAYOUT_SCAN_RADIUS = register(new TuningKey.IntKey("layout.scan_radius",
+            "How far around its keep a kingdom looks at the land when it draws up its master plan, in blocks (only loaded ground counts).", 192, 32, 256));
+    public static final TuningKey.IntKey LAYOUT_ROAD_WIDTH = register(new TuningKey.IntKey("layout.road_width",
+            "How wide the streets and the ring road round the keep are, in blocks (an even number is rounded up to the next odd one).", 3, 1, 7));
+    public static final TuningKey.IntKey LAYOUT_SQUARE_DEPTH = register(new TuningKey.IntKey("layout.square_depth",
+            "How deep the open square in front of the keep's door is, in blocks.", 5, 1, 16));
+    public static final TuningKey.IntKey LAYOUT_SQUARE_WIDTH = register(new TuningKey.IntKey("layout.square_width",
+            "How wide the square in front of the keep's door is, in blocks.", 7, 1, 31));
+    public static final TuningKey.IntKey LAYOUT_PLOT_GAP = register(new TuningKey.IntKey("layout.plot_gap",
+            "Free blocks between two plots of the master plan (and between a plot and the keep).", 2, 0, 16));
+    public static final TuningKey.IntKey LAYOUT_WALL_SETBACK = register(new TuningKey.IntKey("layout.wall_setback",
+            "Free blocks between the wall and the plots inside it.", 3, 1, 16));
+    public static final TuningKey.IntKey LAYOUT_WALL_SHIFT = register(new TuningKey.IntKey("layout.wall_shift",
+            "The most a side of the wall moves out from the town to stay off water, cliffs and caves, in blocks.", 6, 0, 16));
+    public static final TuningKey.IntKey LAYOUT_OUTER_BAND = register(new TuningKey.IntKey("layout.outer_band",
+            "How far outside the wall the outer buildings (lumber camp, fields, the fishing plot) may stand, in blocks.", 24, 4, 64));
+    public static final TuningKey.IntKey LAYOUT_LATER_PLOTS = register(new TuningKey.IntKey("layout.later_plots",
+            "Extra house plots (the kingdom's first house again) along the streets the master plan keeps free for houses built later.", 4, 0, 16));
+    public static final TuningKey.IntKey LAYOUT_ROSTER = register(new TuningKey.IntKey("layout.roster",
+            "1 = the master plan keeps a plot for every Studio building the kingdom will add later (the wall is sized for the whole town); 0 = only for its own list and the extra house plots.", 1, 0, 1));
+    public static final TuningKey.IntKey LAYOUT_SHOW_SECONDS = register(new TuningKey.IntKey("layout.show_seconds",
+            "How long players near a kingdom see its plan in particles when it draws the plan up, and a building's plot when it starts the building, in seconds; 0 = never shown by itself.", 30, 0, 300));
+    public static final TuningKey.IntKey LAYOUT_LAY_ROADS = register(new TuningKey.IntKey("layout.lay_roads",
+            "1 = the kingdom lays its planned roads at once as dirt paths when it draws up its plan (soldiers don't lay roads yet); 0 = the roads are only planned.", 1, 0, 1));
+    public static final TuningKey.IntKey LAYOUT_BRIDGE_MAX_LENGTH = register(new TuningKey.IntKey("layout.bridge_max_length",
+            "The longest stretch of water (blocks) a laid road bridges with planks, with land at both ends (a stream, a pond); 0 = no bridges.", 8, 0, 32));
+    public static final TuningKey.IntKey ECONOMY_BUILD_TOWN = register(new TuningKey.IntKey("economy.build_town",
+            "1 = after its own buildings the kingdom builds every other plot of its town plan, one at a time, paid like the cottage (D115); 0 = it stops after them.", 1, 0, 1));
     public static final TuningKey.IntKey ECONOMY_WOODCUTTERS = register(new TuningKey.IntKey("economy.woodcutters",
             "How many idle soldiers become woodcutters at a finished lumber camp (picked while nothing is being built, so builders come first).", 2, 0, 16));
     public static final TuningKey.IntKey ECONOMY_FARMERS = register(new TuningKey.IntKey("economy.farmers",
@@ -159,6 +189,8 @@ public final class Tuning {
             "How far the site search looks around the wanted point for a better keep site, in blocks.", 16, 0, 64));
     public static final TuningKey.IntKey TERRAIN_SEARCH_STEP = register(new TuningKey.IntKey("terrain.search.step",
             "Distance between candidate sites in the search, in blocks.", 4, 1, 16));
+    public static final TuningKey.IntKey TERRAIN_CAVE_PROBE_DEPTH = register(new TuningKey.IntKey("terrain.cave_probe_depth",
+            "How far under the ground the land scan looks for caves and holes, in blocks (0 = not at all). The kingdom planner keeps plots off them, and the kingdom fills any under a plot it levels.", 4, 0, 32));
     public static final TuningKey.IntKey TERRAIN_SEARCH_MAX_CANDIDATES = register(new TuningKey.IntKey("terrain.search.max_candidates",
             "Most candidate sites one search judges (nearest first).", 81, 1, 1000));
     public static final TuningKey.IntKey TERRAIN_GRADE_CUT_FILL_BUDGET = register(new TuningKey.IntKey("terrain.grade.cut_fill_budget",

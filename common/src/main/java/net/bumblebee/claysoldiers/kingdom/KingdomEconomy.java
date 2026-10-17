@@ -14,6 +14,8 @@ import net.bumblebee.claysoldiers.entity.goal.workgoal.BuildBlueprintGoal;
 import net.bumblebee.claysoldiers.entity.goal.workgoal.FellTreesGoal;
 import net.bumblebee.claysoldiers.entity.goal.workgoal.TendFieldGoal;
 import net.bumblebee.claysoldiers.entity.soldier.AbstractClaySoldierEntity;
+import net.bumblebee.claysoldiers.kingdom.layout.MasterPlan;
+import net.bumblebee.claysoldiers.kingdom.layout.Rect;
 import net.bumblebee.claysoldiers.scaffold.Scaffolds;
 import net.bumblebee.claysoldiers.structure.StructureBlueprints;
 import net.bumblebee.claysoldiers.structure.StructureMeta;
@@ -154,6 +156,7 @@ public final class KingdomEconomy {
         }
         releaseCrews(level, kingdom);
         sweepChests(level, kingdom);
+        KingdomLayout.update(level, kingdom);
         Optional<KingdomBuilding> running = kingdom.buildings().stream().skip(1)
                 .filter(building -> building.state() != KingdomBuilding.State.BUILT).findFirst();
         if (running.isPresent()) {
@@ -178,18 +181,64 @@ public final class KingdomEconomy {
             }
         }
         NEXT_PLAN.put(kingdom.id(), level.getGameTime() + Tuning.KINGDOM_KEEP_PLAN_RETRY_TICKS.get());
-        plan(level, kingdom, next.get());
+        boolean started = plan(level, kingdom, next.get());
+        if (!plan().contains(next.get())) {
+            Map<ResourceLocation, Integer> refused = TOWN_REFUSED.computeIfAbsent(kingdom.id(), id -> new HashMap<>());
+            if (started) {
+                refused.remove(next.get().structure());
+            } else if (refused.merge(next.get().structure(), 1, Integer::sum) >= TOWN_GIVE_UPS) {
+                DebugLog.event(DebugCategory.ECONOMY, null, () -> "%s left out of the town of %s: its plot was refused %d times in a row"
+                        .formatted(next.get().structure(), kingdom.team(), TOWN_GIVE_UPS));
+            }
+        }
     }
 
-    /** The master plan's next building the kingdom hasn't started, if any. */
+    /**
+     * The master plan's next building the kingdom hasn't started, if any: first {@link #plan()}'s buildings, then every other
+     * plot of the town plan in its order ({@link #townSlot}).
+     */
     public static Optional<Slot> next(Kingdom kingdom) {
         for (Slot slot : plan()) {
             if (kingdom.buildings().stream().noneMatch(building -> building.structure().equals(slot.structure()))) {
                 return Optional.of(slot);
             }
         }
+        return townSlot(kingdom);
+    }
+
+    /**
+     * The next plot of the town plan without a building (D115, the owner's ask 2026-10-17: "I'd like all the structures to be
+     * built"): every plot the plan has for a structure, the ones kept for later included, in the plan's order, built at level 1
+     * and paid for like the cottage. A structure whose plot was refused {@link #TOWN_GIVE_UPS} times in a row is left out until
+     * the server restarts, so one bad plot doesn't hold up the rest of the town.
+     */
+    static Optional<Slot> townSlot(Kingdom kingdom) {
+        if (Tuning.ECONOMY_BUILD_TOWN.get() == 0 || kingdom.plan().isEmpty()) {
+            return Optional.empty();
+        }
+        Map<ResourceLocation, Integer> refused = TOWN_REFUSED.getOrDefault(kingdom.id(), Map.of());
+        Map<String, Integer> plots = new HashMap<>();
+        for (MasterPlan.Plot plot : kingdom.plan().get().plots()) {
+            if (plot.kind() != MasterPlan.Kind.BUILDING && plot.kind() != MasterPlan.Kind.LATER) {
+                continue;
+            }
+            int wanted = plots.merge(plot.key(), 1, Integer::sum);
+            ResourceLocation structure = ResourceLocation.tryParse(plot.key());
+            if (structure == null || refused.getOrDefault(structure, 0) >= TOWN_GIVE_UPS) {
+                continue;
+            }
+            long built = kingdom.buildings().stream().filter(building -> building.structure().equals(structure)).count();
+            if (built < wanted) {
+                return Optional.of(new Slot(structure, 1, plot.outer(), false, null));
+            }
+        }
         return Optional.empty();
     }
+
+    /** Times in a row a town plot may be refused before the kingdom leaves its structure out. */
+    static final int TOWN_GIVE_UPS = 3;
+    /** Refused town plots per kingdom and structure, in a row (memory only). */
+    private static final Map<UUID, Map<ResourceLocation, Integer>> TOWN_REFUSED = new HashMap<>();
 
     // What a paid building costs
 
@@ -261,32 +310,27 @@ public final class KingdomEconomy {
         for (Direction facing : new Direction[]{Direction.SOUTH, Direction.WEST, Direction.NORTH, Direction.EAST}) {
             areas.add(KingdomKeep.area(plan.get(), facing));
         }
-        int maxRadius = kingdom.claimRadius() + (slot.outer() ? Tuning.ECONOMY_PLOT_OUTER_REACH.get() : 0);
-        PlotPicker.Rules rules = new PlotPicker.Rules(0, maxRadius, Tuning.TERRAIN_SEARCH_STEP.get(), Tuning.ECONOMY_PLOT_MAX_HEIGHT_RANGE.get(),
-                KingdomKeep.MARGIN, Tuning.ECONOMY_PLOT_GAP.get(), slot.job() == Job.WOODCUTTER);
-        List<PlotPicker.Taken> taken = new ArrayList<>();
-        for (KingdomBuilding building : kingdom.buildings()) {
-            taken.add(taken(level, building));
-        }
-        List<Kingdom> others = Kingdoms.all(server).stream().filter(other -> !other.id().equals(kingdom.id())).toList();
-        PlotPicker.Forbidden forbidden = (x, z) -> others.stream().anyMatch(other -> other.claims(level.dimension(), new BlockPos(x, 0, z)));
-        BlockPos center = kingdom.center();
-        TerrainScan scan = TerrainScanner.scan(level, center, PlotPicker.scanRadius(areas, rules));
-        PlotPicker.Result result = PlotPicker.search(scan, center.getX(), center.getZ(), areas, taken, forbidden, rules);
         String what = name(server, slot.structure());
-        DebugLog.event(DebugCategory.ECONOMY, null, () -> "%s of %s: %s".formatted(what, kingdom.team(), result.summary()));
-        if (result.best().isEmpty()) {
-            return problem(kingdom, "no plot for the " + what.toLowerCase() + " within " + maxRadius + " blocks of the center ("
-                    + result.summary().substring("no plot: ".length()) + "); trying again later");
+        Optional<MasterPlan.Plot> planned = KingdomLayout.plotFor(kingdom, slot.structure());
+        Optional<KeepSite.Choice> site = planned.flatMap(plot -> KingdomLayout.site(level, kingdom, plot, areas));
+        if (site.isEmpty()) {
+            site = pick(level, kingdom, slot, areas, what);
+            if (site.isEmpty()) {
+                return false;
+            }
         }
-        KeepSite.Choice choice = result.best().get().site();
+        KeepSite.Choice choice = site.get();
+        boolean onPlan = planned.isPresent() && planned.get().easelX() == choice.easelX() && planned.get().easelZ() == choice.easelZ();
         BlockPos easel = new BlockPos(choice.easelX(), choice.groundY() + 1, choice.easelZ());
         int height = plan.get().getSize().getY();
         KingdomKeep.Levelled levelled = KingdomKeep.levelGround(level, choice.minX(KingdomKeep.MARGIN), choice.maxX(KingdomKeep.MARGIN),
                 choice.minZ(KingdomKeep.MARGIN), choice.maxZ(KingdomKeep.MARGIN), choice.groundY(), choice.groundY() + height + KingdomKeep.CLEAR_ABOVE);
         levelled.logs().forEach((item, count) -> Kingdoms.addResource(server, kingdom, KingdomStore.id(item), count));
-        DebugLog.event(DebugCategory.TERRAIN, null, () -> "levelled the %s plot of %s: %s; filled %d, cleared %d, logs to the stockpile %s"
-                .formatted(what, kingdom.team(), choice.describe(), levelled.filled(), levelled.cleared(), levelled.logs()));
+        Rect plotRect = new Rect(choice.minX(KingdomKeep.MARGIN), choice.maxX(KingdomKeep.MARGIN), choice.minZ(KingdomKeep.MARGIN), choice.maxZ(KingdomKeep.MARGIN));
+        int sealed = KingdomLayout.sealHollows(level, plotRect, choice.groundY(), Tuning.TERRAIN_CAVE_PROBE_DEPTH.get());
+        DebugLog.event(DebugCategory.TERRAIN, null, () -> "levelled the %s plot of %s (%s): %s; filled %d, cleared %d, sealed %d cave blocks, logs to the stockpile %s"
+                .formatted(what, kingdom.team(), onPlan ? "the master plan's plot" : "picked the stage 5 way", choice.describe(),
+                        levelled.filled(), levelled.cleared(), sealed, levelled.logs()));
         SiteCheck check = BuildSitePlanner.check(level, blueprint.get(), slot.structure(), easel, choice.area().facing());
         if (!check.isValid()) {
             String why = check.message();
@@ -297,6 +341,7 @@ public final class KingdomEconomy {
             return problem(kingdom, "not enough wheat for the builders' meals");
         }
         BuildSitePlanner.placeEasel(level, easel, choice.area().facing().getOpposite(), blueprint.get());
+        kingdom.plan().ifPresent(masterPlan -> KingdomLayout.showNearby(level, kingdom, masterPlan, plotRect, easel));
         BlockPos chest = KingdomKeep.chestPos(easel, choice.area().facing());
         level.setBlockAndUpdate(chest, Blocks.CHEST.defaultBlockState());
         int detail = Math.min(slot.level(), StructureRegistry.get(server).byId(slot.structure()).map(StructureMeta::levelCount).orElse(1));
@@ -309,6 +354,31 @@ public final class KingdomEconomy {
         DebugLog.event(DebugCategory.ECONOMY, null, () -> "%s of %s started: easel at %s going %s, chest at %s"
                 .formatted(what, kingdom.team(), easel.toShortString(), choice.area().facing().getName(), chest.toShortString()));
         return true;
+    }
+
+    /** Picks a plot the stage 5 way (no master plan, or its plot can't be used): free ground around the keep. */
+    private static Optional<KeepSite.Choice> pick(ServerLevel level, Kingdom kingdom, Slot slot, List<KeepSite.Area> areas, String what) {
+        MinecraftServer server = level.getServer();
+        int maxRadius = kingdom.claimRadius() + (slot.outer() ? Tuning.ECONOMY_PLOT_OUTER_REACH.get() : 0);
+        PlotPicker.Rules rules = new PlotPicker.Rules(0, maxRadius, Tuning.TERRAIN_SEARCH_STEP.get(), Tuning.ECONOMY_PLOT_MAX_HEIGHT_RANGE.get(),
+                KingdomKeep.MARGIN, Tuning.ECONOMY_PLOT_GAP.get(), slot.job() == Job.WOODCUTTER);
+        List<PlotPicker.Taken> taken = new ArrayList<>();
+        for (KingdomBuilding building : kingdom.buildings()) {
+            taken.add(taken(level, building));
+        }
+        taken.addAll(KingdomLayout.reserved(kingdom));
+        List<Kingdom> others = Kingdoms.all(server).stream().filter(other -> !other.id().equals(kingdom.id())).toList();
+        PlotPicker.Forbidden forbidden = (x, z) -> others.stream().anyMatch(other -> other.claims(level.dimension(), new BlockPos(x, 0, z)));
+        BlockPos center = kingdom.center();
+        TerrainScan scan = TerrainScanner.scan(level, center, PlotPicker.scanRadius(areas, rules));
+        PlotPicker.Result result = PlotPicker.search(scan, center.getX(), center.getZ(), areas, taken, forbidden, rules);
+        DebugLog.event(DebugCategory.ECONOMY, null, () -> "%s of %s: %s".formatted(what, kingdom.team(), result.summary()));
+        if (result.best().isEmpty()) {
+            problem(kingdom, "no plot for the " + what.toLowerCase() + " within " + maxRadius + " blocks of the center ("
+                    + result.summary().substring("no plot: ".length()) + "); trying again later");
+            return Optional.empty();
+        }
+        return Optional.of(result.best().get().site());
     }
 
     private static boolean payFood(MinecraftServer server, Kingdom kingdom) {
@@ -707,8 +777,14 @@ public final class KingdomEconomy {
             }
             lines.add(name(server, slot.structure()) + ": " + state + ".");
         }
+        kingdom.plan().ifPresent(masterPlan -> {
+            long plots = masterPlan.plots().stream().filter(plot -> plot.kind() == MasterPlan.Kind.BUILDING || plot.kind() == MasterPlan.Kind.LATER).count();
+            long built = kingdom.buildings().stream().skip(1).filter(building -> building.state() == KingdomBuilding.State.BUILT).count();
+            lines.add("Town: " + built + " of " + plots + " planned buildings finished.");
+        });
         Map<Job, Integer> workers = WORKERS.getOrDefault(kingdom.id(), Map.of());
         lines.add("Woodcutters: " + workers.getOrDefault(Job.WOODCUTTER, 0) + ", farmers: " + workers.getOrDefault(Job.FARMER, 0) + ".");
+        lines.addAll(KingdomLayout.describe(kingdom));
         lines.add("Logs: " + WoodCost.logs(kingdom) + ", spare planks: " + WoodCost.sparePlanks(kingdom) + ", wheat: " + kingdom.resource(KingdomStore.id(FOOD)) + ".");
         Optional<Slot> next = next(kingdom);
         String problem = PROBLEMS.get(kingdom.id());
@@ -733,7 +809,9 @@ public final class KingdomEconomy {
     public static void forget(Kingdom kingdom) {
         SUPPLIES.remove(kingdom.id());
         NEXT_PLAN.remove(kingdom.id());
+        TOWN_REFUSED.remove(kingdom.id());
         PROBLEMS.remove(kingdom.id());
         WORKERS.remove(kingdom.id());
+        KingdomLayout.forget(kingdom);
     }
 }

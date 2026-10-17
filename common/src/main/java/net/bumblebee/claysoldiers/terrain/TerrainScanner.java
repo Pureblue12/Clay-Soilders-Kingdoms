@@ -2,6 +2,7 @@ package net.bumblebee.claysoldiers.terrain;
 
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
+import net.bumblebee.claysoldiers.tuning.Tuning;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.QuartPos;
@@ -37,6 +38,7 @@ public final class TerrainScanner {
         long start = System.nanoTime();
         TerrainScan scan = TerrainScan.around(center.getX(), center.getZ(), radius);
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        int probe = Tuning.TERRAIN_CAVE_PROBE_DEPTH.get();
         for (int chunkX = scan.minX() >> 4; chunkX <= scan.maxX() >> 4; chunkX++) {
             for (int chunkZ = scan.minZ() >> 4; chunkZ <= scan.maxZ() >> 4; chunkZ++) {
                 LevelChunk chunk = level.getChunkSource().getChunkNow(chunkX, chunkZ);
@@ -49,7 +51,7 @@ public final class TerrainScanner {
                 int toZ = Math.min(scan.maxZ(), (chunkZ << 4) + 15);
                 for (int x = fromX; x <= toX; x++) {
                     for (int z = fromZ; z <= toZ; z++) {
-                        scanColumn(level, chunk, scan, x, z, pos);
+                        scanColumn(level, chunk, scan, x, z, pos, probe);
                     }
                 }
             }
@@ -65,7 +67,7 @@ public final class TerrainScanner {
         return scan;
     }
 
-    private static void scanColumn(ServerLevel level, LevelChunk chunk, TerrainScan scan, int x, int z, BlockPos.MutableBlockPos pos) {
+    private static void scanColumn(ServerLevel level, LevelChunk chunk, TerrainScan scan, int x, int z, BlockPos.MutableBlockPos pos, int probe) {
         int top = chunk.getHeight(Heightmap.Types.WORLD_SURFACE, x & 15, z & 15);
         int minY = level.getMinBuildHeight();
         int water = 0;
@@ -98,6 +100,15 @@ public final class TerrainScanner {
         }
         scan.setColumn(x, z, y, water, lava, treeBlocks, vegetation, top,
                 ground == null ? null : BuiltInRegistries.BLOCK.getKey(ground.getBlock()));
+        if (ground != null) {
+            // A shallow look under the ground for a cave or hole (anything a soldier could fall into).
+            for (int depth = 1; depth <= probe && y - depth >= minY; depth++) {
+                if (!chunk.getBlockState(pos.set(x, y - depth, z)).blocksMotion()) {
+                    scan.setHollow(x, z, depth);
+                    break;
+                }
+            }
+        }
     }
 
     static BiomeKind kind(Holder<Biome> biome) {

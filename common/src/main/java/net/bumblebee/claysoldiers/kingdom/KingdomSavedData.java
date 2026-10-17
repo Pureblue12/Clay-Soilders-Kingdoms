@@ -34,7 +34,7 @@ import java.util.Optional;
 public class KingdomSavedData extends SavedData {
     public static final String NAME = "csr_kingdoms";
     /** Version of the saved format. Raise it (and write a migration note) whenever the format changes. */
-    public static final int DATA_VERSION = 2;
+    public static final int DATA_VERSION = 3;
     static final String VERSION_TAG = "csr_data_version";
     static final String KINGDOMS_TAG = "kingdoms";
 
@@ -70,7 +70,8 @@ public class KingdomSavedData extends SavedData {
             CENSUS_CODEC.fieldOf("census").forGetter(Kingdom::census),
             ExtraCodecs.NON_NEGATIVE_INT.fieldOf("renown").forGetter(Kingdom::renown),
             Codec.LONG.fieldOf("founded_tick").forGetter(Kingdom::foundedTick),
-            ChronicleEntry.CODEC.listOf().fieldOf("chronicle").forGetter(Kingdom::chronicle)
+            ChronicleEntry.CODEC.listOf().fieldOf("chronicle").forGetter(Kingdom::chronicle),
+            MasterPlanCodec.CODEC.optionalFieldOf("plan").forGetter(Kingdom::plan)
     ).apply(in, Kingdom::new));
 
     public static KingdomSavedData get(MinecraftServer server) {

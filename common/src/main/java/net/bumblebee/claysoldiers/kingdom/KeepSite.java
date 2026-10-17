@@ -59,8 +59,9 @@ public final class KeepSite {
      * @param trees    columns with trees
      * @param distance blocks from the founding point to the keep's middle
      */
-    public record Choice(Area area, int easelX, int easelZ, int groundY, int range, int earth, int trees, int distance) {
+    public record Choice(Area area, int easelX, int easelZ, int groundY, int range, int earth, int trees, int distance, int hollow) {
         public int score() {
+            // Caves (hollow) are reported, not weighed: only the stage 6 planner avoids them (D106).
             return earth + TREE_COLUMN_COST * trees + DISTANCE_COST * distance;
         }
 
@@ -82,8 +83,8 @@ public final class KeepSite {
         }
 
         public String describe() {
-            return "easel at %d, %d going %s, ground %d (rises and falls %d, %d blocks of earth to move, %d columns with trees, %d from the founding point)"
-                    .formatted(easelX, easelZ, area.facing().getName(), groundY, range, earth, trees, distance);
+            return "easel at %d, %d going %s, ground %d (rises and falls %d, %d blocks of earth to move, %d columns with trees, %d over a cave, %d from the founding point)"
+                    .formatted(easelX, easelZ, area.facing().getName(), groundY, range, earth, trees, hollow, distance);
         }
     }
 
@@ -147,7 +148,7 @@ public final class KeepSite {
                     case UNEVEN -> uneven++;
                     case WET -> wet++;
                     case USABLE -> {
-                        Choice choice = new Choice(area, easelX, easelZ, judgement.groundY, judgement.range, judgement.earth, judgement.trees, distance);
+                        Choice choice = new Choice(area, easelX, easelZ, judgement.groundY, judgement.range, judgement.earth, judgement.trees, distance, judgement.hollow);
                         if (best == null || choice.score() < best.score()) {
                             best = choice;
                         }
@@ -160,9 +161,9 @@ public final class KeepSite {
 
     enum Verdict { USABLE, UNKNOWN, UNEVEN, WET }
 
-    record Judgement(Verdict verdict, int groundY, int range, int earth, int trees) {
+    record Judgement(Verdict verdict, int groundY, int range, int earth, int trees, int hollow) {
         static Judgement of(Verdict verdict) {
-            return new Judgement(verdict, 0, 0, 0, 0);
+            return new Judgement(verdict, 0, 0, 0, 0, 0);
         }
     }
 
@@ -175,6 +176,7 @@ public final class KeepSite {
         int[] heights = new int[(maxX - minX + 1) * (maxZ - minZ + 1)];
         int n = 0;
         int trees = 0;
+        int hollow = 0;
         boolean wet = false;
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
@@ -186,6 +188,9 @@ public final class KeepSite {
                 }
                 if (scan.trees(x, z)) {
                     trees++;
+                }
+                if (scan.hollow(x, z) > 0) {
+                    hollow++;
                 }
                 heights[n++] = scan.ground(x, z);
             }
@@ -203,6 +208,6 @@ public final class KeepSite {
         for (int height : heights) {
             earth += Math.abs(height - groundY);
         }
-        return new Judgement(Verdict.USABLE, groundY, range, earth, trees);
+        return new Judgement(Verdict.USABLE, groundY, range, earth, trees, hollow);
     }
 }
