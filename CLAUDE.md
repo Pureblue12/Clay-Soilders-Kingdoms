@@ -326,7 +326,7 @@ dev view), saved by `MasterPlanCodec`. Decisions D105–D110; numbers `layout.*`
   `layout.scan_radius` around the keep and plans, from the blueprints' real footprints in all 4 directions: a square in front
   of the keep, a main street out of its front, a cross street, house plots along them (fronts on the road), a straight-sided
   wall rectangle with 3 gates, the outer buildings in a band outside it (paths to the street ends, never in front of a gate),
-  a plot by water for a fishing village when there is water. `LayoutChecker` must find no problem (now also: nothing on a road
+  a plot by water for a fishing village when there is water. Every plot's easel stands more than `BuildSitePlanner.EASEL_SPACING` (8) from the keep's and every other plot's easel (the easel check refuses closer ones). `LayoutChecker` must find no problem (now also: nothing on a road
   or the wall), or there is no plan (retried every `kingdom.keep.plan_retry_ticks`). The claim grows to hold the plan.
 - Saved in the kingdom (data version 3, optional `plan`). Roads are laid at once as dirt paths on earth (`layout.lay_roads`).
 - `KingdomEconomy.plan` puts the n-th building of a structure on the plan's n-th plot of it, re-judged as it is now; when it

@@ -110,9 +110,11 @@ public final class KingdomPlanner {
      * @param outerBand    how far outside the wall outer buildings may stand
      * @param outerStep    distance between candidate outer plots
      * @param laterPlots   house plots kept free for later
+     * @param easelSpacing how far apart easels must be (an easel isn't placed with another within this many blocks either
+     *                     way, {@code BuildSitePlanner.EASEL_SPACING})
      */
     public record Rules(int margin, int gap, int roadWidth, int squareDepth, int squareWidth, int maxRange, int wallSetback,
-                        int wallShift, int outerBand, int outerStep, int laterPlots) {
+                        int wallShift, int outerBand, int outerStep, int laterPlots, int easelSpacing) {
     }
 
     /**
@@ -130,14 +132,15 @@ public final class KingdomPlanner {
      * @param ground      the land
      * @param claimCenter the kingdom's center (the claim is measured from it)
      * @param keep        the keep's ground (with margin)
+     * @param keepEasel   the keep's easel (no plot's easel may stand near it)
      * @param front       the side the keep's front faces
      * @param items       the buildings to plan, in the kingdom's order
      * @param later       the house kept-free plots are sized for (none when null)
      * @param waterside   the plot kept free by the water (none when null)
      */
-    public static Result plan(Ground ground, Cell claimCenter, Rect keep, Side front, List<Item> items, @Nullable Item later,
+    public static Result plan(Ground ground, Cell claimCenter, Rect keep, Cell keepEasel, Side front, List<Item> items, @Nullable Item later,
                               @Nullable Item waterside, Rules rules) {
-        return new Planner(ground, keep, front, rules).run(claimCenter, items, later, waterside);
+        return new Planner(ground, keep, keepEasel, front, rules).run(claimCenter, items, later, waterside);
     }
 
     /** Ground under a rectangle: whether it can be built on, and what it costs. */
@@ -185,6 +188,7 @@ public final class KingdomPlanner {
     private static final class Planner {
         private final Ground ground;
         private final Rect keep;
+        private final Cell keepEasel;
         private final Side front;
         private final Side right;
         private final Rules rules;
@@ -200,9 +204,10 @@ public final class KingdomPlanner {
         /** Columns no plot may cover: streets and the square (local strips run far out until the wall is known). */
         private final List<Rect> blocked = new ArrayList<>();
 
-        Planner(Ground ground, Rect keep, Side front, Rules rules) {
+        Planner(Ground ground, Rect keep, Cell keepEasel, Side front, Rules rules) {
             this.ground = ground;
             this.keep = keep;
+            this.keepEasel = keepEasel;
             this.front = front;
             this.right = front.clockwise();
             this.rules = rules;
@@ -417,7 +422,7 @@ public final class KingdomPlanner {
                 }
                 Cell easel = world(eu, ev);
                 Rect rect = new Rect(easel.x() + relative.minX(), easel.x() + relative.maxX(), easel.z() + relative.minZ(), easel.z() + relative.maxZ());
-                if (taken(rect)) {
+                if (taken(rect) || easelTooClose(easel.x(), easel.z())) {
                     continue;
                 }
                 Judgement judgement = judge(ground, rect, rules.maxRange());
@@ -454,6 +459,20 @@ public final class KingdomPlanner {
             }
             for (MasterPlan.Plot plot : plots) {
                 if (rect.overlaps(plot.rect(), rules.gap())) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /** Whether an easel at x, z would stand too near the keep's easel or another plot's (it couldn't be placed). */
+        private boolean easelTooClose(int x, int z) {
+            int spacing = rules.easelSpacing();
+            if (Math.max(Math.abs(x - keepEasel.x()), Math.abs(z - keepEasel.z())) <= spacing) {
+                return true;
+            }
+            for (MasterPlan.Plot plot : plots) {
+                if (Math.max(Math.abs(x - plot.easelX()), Math.abs(z - plot.easelZ())) <= spacing) {
                     return true;
                 }
             }
@@ -594,7 +613,8 @@ public final class KingdomPlanner {
             int easelX = x - shape.midX();
             int easelZ = z - shape.midZ();
             Rect rect = new Rect(easelX + shape.minX() - m, easelX + shape.maxX() + m, easelZ + shape.minZ() - m, easelZ + shape.maxZ() + m);
-            if (rect.overlaps(inner, 0) || !band.contains(rect.minX(), rect.minZ()) || !band.contains(rect.maxX(), rect.maxZ())) {
+            if (rect.overlaps(inner, 0) || !band.contains(rect.minX(), rect.minZ()) || !band.contains(rect.maxX(), rect.maxZ())
+                    || easelTooClose(easelX, easelZ)) {
                 return null;
             }
             for (MasterPlan.Plot plot : plots) {

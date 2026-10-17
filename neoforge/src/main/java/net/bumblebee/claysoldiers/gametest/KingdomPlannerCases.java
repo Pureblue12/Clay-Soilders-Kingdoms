@@ -23,7 +23,7 @@ final class KingdomPlannerCases {
     static final int OFFSET = 120;
     /** Where the river starts (7 wide), east of town. */
     static final int RIVER = 50;
-    static final KingdomPlanner.Rules RULES = new KingdomPlanner.Rules(1, 2, 3, 5, 7, 3, 3, 6, 24, 4, 4);
+    static final KingdomPlanner.Rules RULES = new KingdomPlanner.Rules(1, 2, 3, 5, 7, 3, 3, 6, 24, 4, 4, 8);
 
     private KingdomPlannerCases() {
     }
@@ -121,7 +121,7 @@ final class KingdomPlannerCases {
     }
 
     static KingdomPlanner.Result plan(Land land, Side front) {
-        return KingdomPlanner.plan(land, new Cell(0, 0), keep(front), front, List.of(CAMP, FIELD, COTTAGE), COTTAGE, DOCK, RULES);
+        return KingdomPlanner.plan(land, new Cell(0, 0), keep(front), new Cell(0, 0), front, List.of(CAMP, FIELD, COTTAGE), COTTAGE, DOCK, RULES);
     }
 
     /** What every plan must be: valid, every building planned, a straight wall, houses inside, outer buildings outside, on known dry even ground. */
@@ -151,7 +151,14 @@ final class KingdomPlannerCases {
         if (!wall.grow(-1).contains(new Cell(plan.keep().centerX(), plan.keep().centerZ())) || !inside(wall, plan.keep())) {
             wrong.add("the keep " + plan.keep() + " isn't inside the wall " + wall);
         }
+        List<Cell> easels = new ArrayList<>(List.of(new Cell(0, 0)));
         for (MasterPlan.Plot plot : plan.plots()) {
+            for (Cell other : easels) {
+                if (Math.max(Math.abs(plot.easelX() - other.x()), Math.abs(plot.easelZ() - other.z())) <= RULES.easelSpacing()) {
+                    wrong.add(plot.key() + "'s easel at " + plot.easelX() + ", " + plot.easelZ() + " is within " + RULES.easelSpacing() + " of the easel at " + other);
+                }
+            }
+            easels.add(new Cell(plot.easelX(), plot.easelZ()));
             if (plot.outer() ? plot.rect().overlaps(wall, 0) : !inside(wall, plot.rect())) {
                 wrong.add(plot.key() + " " + plot.kind().lowerName() + " at " + plot.rect() + (plot.outer() ? " is not outside" : " is not inside") + " the wall " + wall);
             }

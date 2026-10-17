@@ -2,6 +2,7 @@ package net.bumblebee.claysoldiers.kingdom;
 
 import net.bumblebee.claysoldiers.ClaySoldiersCommon;
 import net.bumblebee.claysoldiers.blueprint.BlueprintData;
+import net.bumblebee.claysoldiers.blueprint.site.BuildSitePlanner;
 import net.bumblebee.claysoldiers.blueprint.templates.ServerBlueprintPlan;
 import net.bumblebee.claysoldiers.debug.DebugCategory;
 import net.bumblebee.claysoldiers.debug.DebugLog;
@@ -102,7 +103,7 @@ public final class KingdomLayout {
         return new KingdomPlanner.Rules(KingdomKeep.MARGIN, Tuning.LAYOUT_PLOT_GAP.get(), Tuning.LAYOUT_ROAD_WIDTH.get() | 1,
                 Tuning.LAYOUT_SQUARE_DEPTH.get(), Tuning.LAYOUT_SQUARE_WIDTH.get() | 1, Tuning.ECONOMY_PLOT_MAX_HEIGHT_RANGE.get(),
                 Tuning.LAYOUT_WALL_SETBACK.get(), Tuning.LAYOUT_WALL_SHIFT.get(), Tuning.LAYOUT_OUTER_BAND.get(),
-                Tuning.TERRAIN_SEARCH_STEP.get(), Tuning.LAYOUT_LATER_PLOTS.get());
+                Tuning.TERRAIN_SEARCH_STEP.get(), Tuning.LAYOUT_LATER_PLOTS.get(), BuildSitePlanner.EASEL_SPACING);
     }
 
     public static Side side(Direction direction) {
@@ -207,7 +208,7 @@ public final class KingdomLayout {
         TerrainScan scan = TerrainScanner.scan(level, middle, Tuning.LAYOUT_SCAN_RADIUS.get());
         long start = System.nanoTime();
         KingdomPlanner.Result result = KingdomPlanner.plan(ground(scan), new Cell(kingdom.center().getX(), kingdom.center().getZ()), keepRect,
-                keepFacing.opposite(), items, later, waterside, rules());
+                new Cell(easel.getX(), easel.getZ()), keepFacing.opposite(), items, later, waterside, rules());
         double millis = (System.nanoTime() - start) / 1_000_000.0;
         result.notes().forEach(note -> DebugLog.event(DebugCategory.KINGDOM, null, () -> "planner of %s: %s".formatted(kingdom.team(), note)));
         DebugLog.event(DebugCategory.KINGDOM, null, () -> "planner of %s took %.1f ms (scan %.1f ms, %d of %d columns loaded)".formatted(kingdom.team(),
@@ -269,7 +270,8 @@ public final class KingdomLayout {
             BlockPos above = pos.above();
             BlockState over = level.getBlockState(above);
             if (!over.isAir()) {
-                if (!over.canBeReplaced() || !over.getFluidState().isEmpty()) {
+                boolean plant = over.canBeReplaced() || over.is(BlockTags.FLOWERS) || over.is(BlockTags.SAPLINGS);
+                if (!plant || !over.getFluidState().isEmpty()) {
                     skipped++;
                     continue;
                 }
