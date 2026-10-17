@@ -332,14 +332,17 @@ around the keep), `WoodCost` (the carpenter: wooden blocks from logs of any kind
 
 Code: `common/.../kingdom/layout/KingdomPlanner` (pure: the master plan), `MasterPlan` (plain data: plots, roads, wall
 corners, gates), `Rect`, `Side`, `Ground`; world side `kingdom/KingdomLayout` (draws the plan, lays roads, fills caves, the
-dev view), saved by `MasterPlanCodec`. Decisions D105–D114; numbers `layout.*` and `terrain.cave_probe_depth`.
+dev view), saved by `MasterPlanCodec`. Decisions D105–D116; numbers `layout.*` and `terrain.cave_probe_depth`.
 - Once the keep is BUILT and the kingdom has no other building, `KingdomEconomy.update` calls `KingdomLayout.update`: it scans
-  `layout.scan_radius` around the keep and plans, from the blueprints' real footprints in all 4 directions: a square in front
-  of the keep, a main street out of its front, a cross street, house plots along them (fronts on the road), a straight-sided
-  wall rectangle with 3 gates, the outer buildings in a band outside it (paths to the street ends, never in front of a gate),
+  `layout.scan_radius` around the keep and plans, from the blueprints' real footprints in all 4 directions, with the keep in the
+  middle (D116): a ring road round the keep, a square in front of it, four streets out of the ring (one each way), house plots along
+  them (fronts on the road, nearest the keep first), a straight-sided wall rectangle with 4 gates, the outer buildings in a band outside it (paths to the street ends, never in front of a gate),
   a plot by water for a fishing village when there is water. It also keeps a plot for every ready Studio building the kingdom adds later (`KingdomLayout.roster`, `layout.roster`, D111: inner and outer, not street decoration, at the top level's size; outer ones try a band twice as wide when the first is full), so the wall fits the whole town (about 190 by 140); the n-th building of a structure takes its plan plots first, then those kept for later. Every plot's easel stands more than `BuildSitePlanner.EASEL_SPACING` (8) from the keep's and every other plot's easel (the easel check refuses closer ones). `LayoutChecker` must find no problem (now also: nothing on a road
   or the wall), or there is no plan (retried every `kingdom.keep.plan_retry_ticks`). The claim grows to hold the plan.
 - Saved in the kingdom (data version 3, optional `plan`). Roads are laid at once as dirt paths on earth (`layout.lay_roads`), with a spruce plank bridge over water up to `layout.bridge_max_length` long with land at both ends (D114).
+- After its own buildings (`KingdomEconomy.PLAN`) the kingdom builds every other plot of the plan, the ones kept for later
+  included, one at a time in the plan's order, at level 1, paid like the cottage (`KingdomEconomy.townSlot`, `economy.build_town`,
+  D115); a structure whose plot is refused 3 times in a row is left out until restart.
 - `KingdomEconomy.plan` puts the n-th building of a structure on the plan's n-th plot of it, re-judged as it is now; when it
   can't be used, the stage 5 `PlotPicker` picks a plot off every planned one. Every levelled plot gets its caves filled
   (`KingdomLayout.sealHollows`).
@@ -357,9 +360,9 @@ dev view), saved by `MasterPlanCodec`. Decisions D105–D114; numbers `layout.*`
 ### The workshop and the quarry (stage 6b, part 1)
 
 Code: `common/.../kingdom/KingdomWorkshop` (levels, recipe costs, order board, crafting), `QuarryPit` (pure: the stepped pit),
-`entity/goal/workgoal/QuarryGoal` (quarryman), `CraftGoal` (crafter). Decisions D115-D119; numbers `economy.quarry*`, `economy.workshop.*`.
+`entity/goal/workgoal/QuarryGoal` (quarryman), `CraftGoal` (crafter). Decisions D117-D121; numbers `economy.quarry*`, `economy.workshop.*`.
 - After the cottage the plan builds a quarry, the workshop (the Stonemason building stands in until the Workshop structure is
-  approved in the Studio, D116) and a smithy. All three are paid (logs, wheat).
+  approved in the Studio, D118) and a smithy. All three are paid (logs, wheat).
 - The carpenter (`WoodCost`) keeps making wooden blocks. The workshop makes the other blocks a building needs from raw materials
   at vanilla's crafting, stonecutting and smelting ratios, through the cheapest chain whose raw materials are all its level's
   (`KingdomWorkshop.RAW_BY_LEVEL`): L1 cobblestone, L2 sand and clay, L3 iron, gold, copper, coal (nothing wooden in the chain).
@@ -368,11 +371,11 @@ Code: `common/.../kingdom/KingdomWorkshop` (levels, recipe costs, order board, c
   chest hold, in build order (memory only, rewritten every check). A crafter (`economy.workshop.crafters_per_level` per level)
   walks to the workshop's chest, works `economy.workshop.craft_ticks` / level, makes up to `economy.workshop.batch` of the first
   order the stockpile has the raw materials for. Crafters and quarrymen are picked like woodcutters (only while nothing is built).
-- Quarry (D117): the pit is a square of `economy.quarry.pit_size` behind the quarry (away from its easel), 2 blocks from it, dug
+- Quarry (D119): the pit is a square of `economy.quarry.pit_size` behind the quarry (away from its easel), 2 blocks from it, dug
   in steps (each layer one block lower and one smaller per side), so no wall is higher than 1. Quarrymen dig the nearest block of
   the highest layer left, never next to water or lava, never a block entity, never in or beside a building, on a planned plot,
   road, the wall line or another claim; dirt is left behind, the rest goes to the quarry's chest.
-- Paid buildings (D118): once the quarry is finished, cobblestone is gathered, not given: a paid building waits for the
+- Paid buildings (D120): once the quarry is finished, cobblestone is gathered, not given: a paid building waits for the
   cobblestone it needs (directly and for what the workshop makes) like it waits for logs; once the workshop is finished, what it
   can make isn't given. A pit with no stone left (superflat without stone layers) makes cobblestone free again (book: Quarry line).
 - Book (Economy page): quarrymen and crafters, the workshop's orders and what it waits for, the quarry line; "supply the next

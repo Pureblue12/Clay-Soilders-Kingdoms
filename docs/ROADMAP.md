@@ -192,27 +192,27 @@ Stages are ordered by dependency and risk. Every stage ends playable.
 - **Acceptance test:** a small village forms with no overlaps and a closed wall.
 - **Depends on:** 5 · **Size:** XL
 - **Risks:** layout on real terrain.
-- **Decisions:** [D3](DECISIONS.md), [D7](DECISIONS.md), D105–D114 · **Status:** in progress · **Results:** part 1, the kingdom
+- **Decisions:** [D3](DECISIONS.md), [D7](DECISIONS.md), D105–D116 · **Status:** in progress · **Results:** part 1, the kingdom
   planner: once its keep is finished, a kingdom reads the land around it (slope, water, trees, caves under the ground) and
   draws up one master plan, saved with it: a square, a main street and a cross street, house plots along them, a straight
   wall with 3 gates, the camp and field just outside the wall (away from water), a plot by water kept for a fishing village.
   Its roads are laid at once as dirt paths; every building goes on its planned plot, and caves under a plot are filled.
   The layout checker checks every plan (overlaps, road access, nothing on a road or the wall, a closed wall). Dev book:
   Economy, "Show the town plan". After the owner's first look: the plan keeps a plot for every building still to come, so the
-  wall fits the whole town (D111), and players nearby see the plan when it is drawn up and each new plot when it starts (D112); where the wall line runs over water the sea guards the town and no wall goes there (D113); roads bridge streams and ponds with planks (D114). Still to do: visitors joining, a palisade built by soldiers, tier 2, soldiers laying roads.
+  wall fits the whole town (D111), and players nearby see the plan when it is drawn up and each new plot when it starts (D112); where the wall line runs over water the sea guards the town and no wall goes there (D113); roads bridge streams and ponds with planks (D114). Part 2: the kingdom builds every plot of its plan, one at a time, paid like the cottage (D115), and the keep stands in the middle of the town with a ring road and four streets and gates (D116). Still to do: visitors joining, a palisade built by soldiers, tier 2, soldiers laying roads.
 
 ### 6b Workshop, quarry and mining
 - **Goal:** the kingdom makes its own non-wooden blocks. A quarry and miners gather stone, sand, clay, coal and iron; a
   new workshop building (levels 1–3) crafts them into what queued buildings need. When a building is queued, its
   non-wooden pieces are queued at the workshop. L1 stone bench (stone bricks, stairs, slabs, walls), L2 furnace and kiln
   (glass, bricks, smooth stone, charcoal), L3 forge (lanterns, chains, iron bars). Wooden pieces stay with the carpenter
-  (D98). Includes the quarry of stage 8 and the mining of stage 9 ([D115](DECISIONS.md)).
+  (D98). Includes the quarry of stage 8 and the mining of stage 9 ([D117](DECISIONS.md)).
 - **Acceptance test:** a kingdom with a quarry, miners and a workshop builds a building with stone, glass and iron
   pieces it crafted itself, with nothing given free.
 - **Depends on:** 6 · **Size:** XL
 - **Risks:** soldiers dying in mining hazards; terrain damage; a new Workshop structure to design and approve.
 - **Plan page:** https://claude.ai/artifact/3eAUuqT2jYDbK5dhoNkyw5
-- **Decisions:** [D115](DECISIONS.md), D116–D119 · **Status:** in progress · **Results:** part 1: after the cottage the kingdom
+- **Decisions:** [D117](DECISIONS.md), D118–D121 · **Status:** in progress · **Results:** part 1: after the cottage the kingdom
   builds a quarry (quarrymen dig a stepped pit behind it and bring cobblestone), the workshop (Stonemason stand-in, level 1:
   crafters make stone blocks from cobblestone for the building being built, from an order board) and a smithy, the first
   building it supplies. Once the quarry stands, paid buildings wait for their cobblestone instead of getting it.
@@ -248,7 +248,7 @@ Stages are ordered by dependency and risk. Every stage ends playable.
 ### 9 Mining, staged
 - **Goal:** (a) scanned shaft and strip mine, (b) hazard rules for lava and water, (c) caves, (d) mobs.
 - **Acceptance test:** each sub-stage passes its own lava, water and cave tests.
-- **Moved:** into stage 6b, with the workshop and quarry (the owner, 2026-10-17, D115).
+- **Moved:** into stage 6b, with the workshop and quarry (the owner, 2026-10-17, D117).
 - **Depends on:** 5; may run in parallel with 8 · **Size:** XL
 - **Risks:** soldiers dying in hazards; terrain damage.
 - **Decisions:** [D6](DECISIONS.md) · **Status:** not started · **Results:** —

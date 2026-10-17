@@ -15,6 +15,10 @@ import net.bumblebee.claysoldiers.kingdom.Meals;
 import net.bumblebee.claysoldiers.kingdom.Kingdoms;
 import net.bumblebee.claysoldiers.kingdom.PlotPicker;
 import net.bumblebee.claysoldiers.kingdom.WoodCost;
+import net.bumblebee.claysoldiers.kingdom.layout.Cell;
+import net.bumblebee.claysoldiers.kingdom.layout.MasterPlan;
+import net.bumblebee.claysoldiers.kingdom.layout.Rect;
+import net.bumblebee.claysoldiers.kingdom.layout.Side;
 import net.bumblebee.claysoldiers.terrain.TerrainScan;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -340,6 +344,51 @@ public class KingdomEconomyGameTests {
         helper.assertTrue(kingdom.buildings().get(1).state() == KingdomBuilding.State.BUILT, "Not built after '" + result + "'");
         helper.assertTrue(kingdom.renown() > before, "No renown for the finished building: " + kingdom.renown());
         helper.assertTrue(kingdom.chronicle().stream().anyMatch(entry -> entry.text().contains("is finished")), "No chronicle line");
+        KingdomGameTests.clear(helper);
+        helper.succeed();
+    }
+
+    /**
+     * After the master plan's own buildings the kingdom goes on with every other plot of its town plan, in the plan's order,
+     * the plots kept for later included (D115): a church kept for later, then a second cottage.
+     */
+    @GameTest(template = PLATFORM, batch = "economy_town")
+    public static void kingdomBuildsEveryPlotOfItsTownPlan(GameTestHelper helper) {
+        Kingdom kingdom = found(helper);
+        MinecraftServer server = helper.getLevel().getServer();
+        KingdomEconomy.usePlanForTests(List.of(new KingdomEconomy.Slot(KingdomEconomy.LUMBER_CAMP, 1, true, true, KingdomEconomy.Job.WOODCUTTER)));
+        try {
+            ResourceLocation church = ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, "church");
+            BlockPos at = helper.absolutePos(KING_AT);
+            Rect somewhere = new Rect(at.getX() - 60, at.getX() - 50, at.getZ() - 60, at.getZ() - 50);
+            List<MasterPlan.Plot> plots = List.of(
+                    new MasterPlan.Plot(KingdomEconomy.LUMBER_CAMP.toString(), MasterPlan.Kind.BUILDING, true, Side.SOUTH, 0, 0, somewhere),
+                    new MasterPlan.Plot(church.toString(), MasterPlan.Kind.LATER, false, Side.SOUTH, 0, 0, somewhere),
+                    new MasterPlan.Plot(KingdomEconomy.COTTAGE.toString(), MasterPlan.Kind.LATER, false, Side.SOUTH, 0, 0, somewhere),
+                    new MasterPlan.Plot(KingdomEconomy.COTTAGE.toString(), MasterPlan.Kind.LATER, false, Side.SOUTH, 0, 0, somewhere),
+                    new MasterPlan.Plot("csr:fishing_dock", MasterPlan.Kind.WATERSIDE, true, Side.SOUTH, 0, 0, somewhere));
+            Rect wall = new Rect(at.getX() - 20, at.getX() + 20, at.getZ() - 20, at.getZ() + 20);
+            Kingdoms.setPlan(server, kingdom, new MasterPlan(new Cell(at.getX(), at.getZ()), somewhere, Side.SOUTH, plots, List.of(),
+                    List.of(new Cell(wall.minX(), wall.minZ()), new Cell(wall.maxX(), wall.minZ()), new Cell(wall.maxX(), wall.maxZ()),
+                            new Cell(wall.minX(), wall.maxZ())), List.of(), 30));
+            kingdom.addBuilding(new KingdomBuilding(HUT, helper.absolutePos(EASEL), Direction.SOUTH, KingdomBuilding.State.BUILT));
+            kingdom.addBuilding(new KingdomBuilding(KingdomEconomy.LUMBER_CAMP, at, Direction.SOUTH, KingdomBuilding.State.BUILT));
+
+            KingdomEconomy.Slot first = KingdomEconomy.next(kingdom).orElseThrow();
+            helper.assertTrue(first.structure().equals(church) && !first.starter() && !first.outer() && first.level() == 1,
+                    "After the plan's own buildings the church kept for later should come next (level 1, paid, inside): " + first);
+            kingdom.addBuilding(new KingdomBuilding(church, at.east(20), Direction.SOUTH, KingdomBuilding.State.BUILT));
+            helper.assertTrue(KingdomEconomy.next(kingdom).map(slot -> slot.structure().equals(KingdomEconomy.COTTAGE)).orElse(false),
+                    "Then the first cottage plot: " + KingdomEconomy.next(kingdom));
+            kingdom.addBuilding(new KingdomBuilding(KingdomEconomy.COTTAGE, at.east(40), Direction.SOUTH, KingdomBuilding.State.BUILT));
+            helper.assertTrue(KingdomEconomy.next(kingdom).map(slot -> slot.structure().equals(KingdomEconomy.COTTAGE)).orElse(false),
+                    "The plan keeps two cottage plots, so a second cottage: " + KingdomEconomy.next(kingdom));
+            kingdom.addBuilding(new KingdomBuilding(KingdomEconomy.COTTAGE, at.east(60), Direction.SOUTH, KingdomBuilding.State.BUILT));
+            helper.assertTrue(KingdomEconomy.next(kingdom).isEmpty(), "Every plot has its building (the waterside plot is the dock's): "
+                    + KingdomEconomy.next(kingdom));
+        } finally {
+            KingdomEconomy.usePlanForTests(null);
+        }
         KingdomGameTests.clear(helper);
         helper.succeed();
     }

@@ -37,7 +37,7 @@ import java.util.UUID;
 import java.util.function.ToIntFunction;
 
 /**
- * Stage 6b, the kingdom's workshop and quarry (D115-D118). The carpenter keeps making wooden blocks ({@link WoodCost});
+ * Stage 6b, the kingdom's workshop and quarry (D117-D121). The carpenter keeps making wooden blocks ({@link WoodCost});
  * the workshop makes everything else a building needs from raw materials, at vanilla's crafting, stonecutting and smelting
  * ratios.
  * <ul>
@@ -56,7 +56,7 @@ import java.util.function.ToIntFunction;
  * ({@code economy.free_other_materials}, D101). Memory only: orders, costs and the quarry's dry flag are worked out again.
  */
 public final class KingdomWorkshop {
-    /** The workshop's building. A stand-in until the Workshop structure is designed and approved in the Studio (D116). */
+    /** The workshop's building. A stand-in until the Workshop structure is designed and approved in the Studio (D118). */
     public static final ResourceLocation WORKSHOP = ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, "stonemason");
     public static final ResourceLocation QUARRY = ResourceLocation.fromNamespaceAndPath(ClaySoldiersCommon.MOD_ID, "quarry");
     /** The first building the workshop supplies: stone bricks and cobblestone stairs. */

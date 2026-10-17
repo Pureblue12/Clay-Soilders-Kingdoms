@@ -4,7 +4,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
 /**
- * Stage 6b (D117): where a quarry digs, worked out from the quarry building alone (pure). The pit is a square of
+ * Stage 6b (D119): where a quarry digs, worked out from the quarry building alone (pure). The pit is a square of
  * {@code size} behind the building (on the side away from its easel, so away from the town), {@code gap} blocks from it,
  * dug as stepped terraces: layer 1 is the whole square at ground level, every deeper layer one block lower and one block
  * smaller on every side. So no wall in the pit is more than one block high and a soldier walks out from anywhere; a pit of

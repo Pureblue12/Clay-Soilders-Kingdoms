@@ -40,6 +40,7 @@
   "layout.show_seconds": 30,
   "layout.lay_roads": 1,
   "layout.bridge_max_length": 8,
+  "economy.build_town": 1,
   "economy.woodcutters": 2,
   "economy.farmers": 1,
   "economy.lumber.radius": 24,

@@ -1,4 +1,4 @@
-"""Workshop (tier 2, look A): the kingdom's workshop for everything that isn't wood (stage 6b, D115). Each level is a
+"""Workshop (tier 2, look A): the kingdom's workshop for everything that isn't wood (stage 6b, D117). Each level is a
 trade the workshop learns: L1 the stone bench (stone bricks, stairs and slabs from cobblestone), L2 the kiln (glass
 and bricks from sand and clay), L3 the forge (iron pieces from raw iron and coal).
 
