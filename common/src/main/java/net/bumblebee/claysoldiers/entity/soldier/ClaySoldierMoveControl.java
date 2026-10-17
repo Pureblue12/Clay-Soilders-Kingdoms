@@ -91,7 +91,9 @@ public class ClaySoldierMoveControl extends MoveControl {
      * ({@code soldierClimbsOutFromUnderASlab}).
      */
     private boolean underACeiling() {
-        return !this.mob.level().noCollision(this.mob, this.mob.getBoundingBox().expandTowards(0, CEILING_GAP, 0));
+        // A soldier inside a block (the king standing where his gold block throne was placed) hops out of it as before.
+        return this.mob.level().noCollision(this.mob, this.mob.getBoundingBox())
+                && !this.mob.level().noCollision(this.mob, this.mob.getBoundingBox().expandTowards(0, CEILING_GAP, 0));
     }
 
     /** How close above a soldier's head a block counts as a ceiling. */
