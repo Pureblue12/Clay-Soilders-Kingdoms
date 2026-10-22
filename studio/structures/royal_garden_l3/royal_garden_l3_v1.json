@@ -4,14 +4,14 @@
   "version": 1,
   "size": [21,9,21],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T09:43:16.939Z",
     "description": "Royal garden, level 3 of 3: L2 plus flourish 3. Over budget: 982 blocks vs 130 for a garden (most of it is the paving and soil set into the lawn in layer 0). A 21 x 21 formal garden beside the keep, set into the lawn: a stone kerb with box hedges and piers, a gate, broad walks, a fountain and four knot parterres. L2 adds clipped topiary (balls and cones), the fountain's upper bowl and the beds planted in the king's colours; L3 a domed pavilion, four statues of the king's guard, urns, banners and lanterns. Not yet builder-tested: allium, andesite_wall, azalea_leaves, chiseled_stone_bricks, cornflower, dark_oak_slab, decorated_pot, grass_block, polished_andesite, red_wall_banner, spruce_leaves, stone_brick_slab, stone_brick_wall, stone_button. Decoration step adds: water.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-22T03:14:04.764Z",
     "tags": [
       "batch6a",
       "tier7",
