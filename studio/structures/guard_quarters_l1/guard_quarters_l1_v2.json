@@ -4,14 +4,14 @@
   "version": 2,
   "size": [14,9,13],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T09:13:20.247Z",
     "description": "King's guard quarters, level 1 of 3: shell and fittings (what soldiers build first). Over budget: 548 blocks vs 350 (first build 443 vs 290). Compact stone barracks house for 8 guards (the brief's 7 x 9): mess room with long table, hearth and weapon rack below, 8 beds in two rows under the roof by a stair, a porch under the jettied plaster gable; L2 a covered guard post with its own roof, banners, rugs; L3 a drill corner with a straw dummy and target.",
     "changes": "Quality-check notes: L1 outside is no longer plain: open trapdoor shutters on every window, stair sills under the side windows, flower boxes with poppies under the front windows, a lantern over the door and torches on new dark oak posts in the middle of both side walls (the side walls are no longer flat), a back window with shutters and a sill; the chimney moved to x 2 and now rises 2 blocks above the roof (hearth moved with it). L2 gets a visible feature: a covered guard post at the front corner (dark oak posts, its own small gable roof, lantern on a chain, the sentry's stool, rails). L3: the drill dummy's pumpkin faces east; the chimney campfire is gone (the chimney now fills the height).",
     "parent": 1,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-22T03:13:49.458Z",
     "tags": [
       "batch5",
       "tier6",

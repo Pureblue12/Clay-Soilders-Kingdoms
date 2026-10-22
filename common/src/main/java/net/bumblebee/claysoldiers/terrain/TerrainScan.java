@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * A scanned square of terrain columns (pure data, no world access): for each column its ground height, water depth,
- * lava, tree blocks, other vegetation, the highest block and the surface block. Made by {@link TerrainScanner} from
+ * lava, tree blocks, other vegetation, the highest block, the surface block and how far down a cave starts under it. Made by {@link TerrainScanner} from
  * the world, or by hand in tests. Coordinates are world x and z. Columns in unloaded chunks are unknown.
  * <p>
  * Ground = the top block that blocks movement and isn't part of a tree (logs and leaves) or a fluid; plants, snow
@@ -23,6 +23,7 @@ public final class TerrainScan {
     private final int[] vegetation;
     private final int[] top;
     private final ResourceLocation[] surfaceBlock;
+    private final int[] hollow;
     private BiomeKind biome = BiomeKind.NORMAL;
     private long costNanos;
 
@@ -45,6 +46,7 @@ public final class TerrainScan {
         vegetation = new int[n];
         top = new int[n];
         surfaceBlock = new ResourceLocation[n];
+        hollow = new int[n];
     }
 
     /**
@@ -146,6 +148,18 @@ public final class TerrainScan {
     @Nullable
     public ResourceLocation surfaceBlock(int x, int z) {
         return surfaceBlock[index(x, z)];
+    }
+
+    /**
+     * How far below the ground the first open space starts (a cave, a hole, water under the ground), or 0 when the
+     * ground is solid as far down as {@code terrain.cave_probe_depth} (stage 6: the scan used to read only the surface).
+     */
+    public int hollow(int x, int z) {
+        return hollow[index(x, z)];
+    }
+
+    public void setHollow(int x, int z, int depth) {
+        hollow[index(x, z)] = Math.max(0, depth);
     }
 
     public BiomeKind biome() {

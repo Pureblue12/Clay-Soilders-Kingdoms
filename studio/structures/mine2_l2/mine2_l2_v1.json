@@ -4,14 +4,14 @@
   "version": 1,
   "size": [19,9,11],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T09:43:14.114Z",
     "description": "Mine (stage 2, gold), level 2 of 3: L1 plus flourish 2. Over budget: 542 blocks vs 170 (stage 1 alone is 280, mostly its spoil mound). Stage 2 of the mine (gold, tier 5): the approved stage-1 adit and spoil mound, with a 9-tall headframe over a new shaft beside it (stone collar, dark oak legs, deck, sheave and hoist chain). L2 adds an ore-sorting shed, a ladder and a rail spur; L3 a stone gold lockup with an iron door, banners and a sign. The stage-1 flowers that stood on cobblestone now have dirt under them. Builders never dig: miners dig the shaft down from the open cell in the collar. Not yet builder-tested: cauldron, coal_block, ladder, rail, raw_iron_block. Decoration step adds: item, item_frame, minecart.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-22T03:13:56.083Z",
     "tags": [
       "batch6a",
       "tier5",

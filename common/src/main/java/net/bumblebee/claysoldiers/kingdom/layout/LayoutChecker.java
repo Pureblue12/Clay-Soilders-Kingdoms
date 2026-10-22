@@ -29,13 +29,14 @@ public final class LayoutChecker {
     }
 
     public enum Kind {
-        OVERLAP, NO_ROAD_ACCESS, WALL_GAP
+        OVERLAP, NO_ROAD_ACCESS, WALL_GAP, ON_ROAD, ON_WALL
     }
 
     public static List<Problem> check(LayoutPlan plan) {
         List<Problem> problems = new ArrayList<>();
         checkOverlaps(plan, problems);
         checkRoadAccess(plan, problems);
+        checkCrossings(plan, problems);
         if (plan.wall() != null) {
             checkWall(plan, plan.wall(), problems);
         }
@@ -54,6 +55,18 @@ public final class LayoutChecker {
                     problems.add(new Problem(Kind.OVERLAP, a.id() + " and " + b.id() + " overlap from " + from + " to " + to, List.of(from, to)));
                 }
             }
+        }
+    }
+
+    /** No building stands on a road or on the wall (stage 6: the master plan lays roads and a wall around buildings). */
+    private static void checkCrossings(LayoutPlan plan, List<Problem> problems) {
+        Set<Cell> roads = plan.roads().cells();
+        Set<Cell> wall = plan.wall() == null ? Set.of() : plan.wall().cells();
+        for (Footprint building : plan.buildings()) {
+            Optional<Cell> road = roads.stream().filter(building::contains).findFirst();
+            road.ifPresent(cell -> problems.add(new Problem(Kind.ON_ROAD, building.id() + " stands on the road at " + cell, List.of(cell))));
+            Optional<Cell> onWall = wall.stream().filter(building::contains).findFirst();
+            onWall.ifPresent(cell -> problems.add(new Problem(Kind.ON_WALL, building.id() + " stands on the wall at " + cell, List.of(cell))));
         }
     }
 

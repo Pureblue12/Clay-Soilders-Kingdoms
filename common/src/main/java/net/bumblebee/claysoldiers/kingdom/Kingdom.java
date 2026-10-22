@@ -1,5 +1,6 @@
 package net.bumblebee.claysoldiers.kingdom;
 
+import net.bumblebee.claysoldiers.kingdom.layout.MasterPlan;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -25,7 +26,7 @@ public final class Kingdom {
     private final ResourceLocation team;
     private final ResourceKey<Level> dimension;
     private final BlockPos center;
-    private final int claimRadius;
+    private int claimRadius;
     private King king;
     private KingdomStatus status;
     private int tier;
@@ -35,6 +36,8 @@ public final class Kingdom {
     private int renown;
     private final long foundedTick;
     private final List<ChronicleEntry> chronicle;
+    @Nullable
+    private MasterPlan plan;
 
     /**
      * The king.
@@ -61,6 +64,15 @@ public final class Kingdom {
     public Kingdom(UUID id, ResourceLocation team, ResourceKey<Level> dimension, BlockPos center, int claimRadius,
                    King king, KingdomStatus status, int tier, Map<ResourceLocation, Integer> stockpile,
                    List<KingdomBuilding> buildings, Census census, int renown, long foundedTick, List<ChronicleEntry> chronicle) {
+        this(id, team, dimension, center, claimRadius, king, status, tier, stockpile, buildings, census, renown, foundedTick, chronicle,
+                Optional.empty());
+    }
+
+    /** A kingdom with its master plan (stage 6), if it has drawn one up. */
+    public Kingdom(UUID id, ResourceLocation team, ResourceKey<Level> dimension, BlockPos center, int claimRadius,
+                   King king, KingdomStatus status, int tier, Map<ResourceLocation, Integer> stockpile,
+                   List<KingdomBuilding> buildings, Census census, int renown, long foundedTick, List<ChronicleEntry> chronicle,
+                   Optional<MasterPlan> plan) {
         this.id = id;
         this.team = team;
         this.dimension = dimension;
@@ -75,6 +87,7 @@ public final class Kingdom {
         this.renown = renown;
         this.foundedTick = foundedTick;
         this.chronicle = new ArrayList<>(chronicle);
+        this.plan = plan.orElse(null);
     }
 
     /**
@@ -178,6 +191,20 @@ public final class Kingdom {
         return claimRadius;
     }
 
+    /** The kingdom's master plan (stage 6), drawn up once its keep is finished. */
+    public Optional<MasterPlan> plan() {
+        return Optional.ofNullable(plan);
+    }
+
+    /**
+     * Sets the master plan; the claim grows to {@code claimRadius} when that is bigger (the plan is sized from the real
+     * buildings, the founding claim from the tuning file).
+     */
+    void setPlan(MasterPlan plan, int claimRadius) {
+        this.plan = plan;
+        this.claimRadius = Math.max(this.claimRadius, claimRadius);
+    }
+
     public King king() {
         return king;
     }
@@ -263,13 +290,14 @@ public final class Kingdom {
         return claimRadius == other.claimRadius && tier == other.tier && renown == other.renown && foundedTick == other.foundedTick
                 && id.equals(other.id) && team.equals(other.team) && dimension.equals(other.dimension) && center.equals(other.center)
                 && king.equals(other.king) && status == other.status && stockpile.equals(other.stockpile)
-                && buildings.equals(other.buildings) && census.equals(other.census) && chronicle.equals(other.chronicle);
+                && buildings.equals(other.buildings) && census.equals(other.census) && chronicle.equals(other.chronicle)
+                && Objects.equals(plan, other.plan);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, team, dimension, center, claimRadius, king, status, tier, stockpile, buildings, census, renown,
-                foundedTick, chronicle);
+                foundedTick, chronicle, plan);
     }
 
     @Override
