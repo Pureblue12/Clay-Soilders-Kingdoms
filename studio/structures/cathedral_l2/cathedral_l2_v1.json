@@ -4,14 +4,14 @@
   "version": 1,
   "size": [25,28,48],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T09:55:08.737Z",
     "description": "Cathedral, level 2 of 3: L1 plus flourish 2. The town showpiece. Needs scaffolding: 28 tall (crossing spire; west towers 27 with their spirelets, nave ridge 21). Over budget on purpose (landmark; Carlton: grand, no trimming). Gothic cross plan: twin west towers (a square lower stage, an inset belfry) and three portals, a rose window over the great portal, a tall nave with an open arcade and lower aisles, a transept with a rose in each stone gable, a lantern and steep spire over the crossing, a choir with an apse and two side chapels. L1 uses only builder-tested blocks (grey stone, dark oak roofs; the roses are open stone tracery until L2). L2 (consecrated): pale flying buttresses with pinnacles, pinnacles on the towers and round the spire, stained glass in the roses and the apse, bells, a runner, pulpit, fonts, lanterns on long chains, chapel altars, banners. L3 (the pilgrimage cathedral): deepslate spirelets on both towers, gold-look tips and orbs, statues of saints across the front, lamp posts, yews, gargoyles, banners in the nave, vines. Not yet builder-tested: bell, blue_stained_glass_pane, calcite, candle, cauldron, chiseled_quartz_block, end_rod, lectern, purple_stained_glass_pane, quartz_bricks, quartz_slab, quartz_stairs, red_stained_glass_pane, red_wall_banner, yellow_stained_glass_pane. Decoration step adds: banner_pattern, item.",
     "changes": "",
     "parent": null,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-22T03:13:43.414Z",
     "tags": [
       "cathedral",
       "tier8",
