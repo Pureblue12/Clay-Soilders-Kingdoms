@@ -4,14 +4,14 @@
   "version": 2,
   "size": [3,8,3],
   "meta": {
-    "status": "pending",
+    "status": "approved",
     "notes": "",
     "author": "claude",
     "created": "2026-10-10T05:35:53.557Z",
     "description": "Stone wall, corner, level 2 of 3: L1 plus flourish 2. Outside corner joining two straight modules, with a corner pier. Going clockwise round a town its side arm (x 0) follows a module and its front arm (z 0) leads into the next. Not yet builder-tested: iron_bars, red_banner. Decoration step adds: banner_pattern.",
     "changes": "Quality check round 1: the merlon pattern changed across the whole set so modules tile end to end (a cobblestone-slab half merlon at x 0, merlons at x 2 and 4: neighbours now alternate high / low instead of two merlons side by side). Corner merlons follow it (front arm: pier, crenel, merlon; side arm: pier, merlon, crenel). The L2 torch moved from the banner onto the merlon at (2, 6, 1); the lamp post that narrowed the corner turn to 1 block is gone. Arrow-slit niches on both faces (bars from L2).",
     "parent": 1,
-    "reviewedAt": null,
+    "reviewedAt": "2026-10-22T03:14:09.647Z",
     "tags": [
       "batch3",
       "tier3",
