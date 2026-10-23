@@ -101,11 +101,13 @@ public class KingdomPlannerGameTests {
         for (String id : List.of("csr:church", "csr:town_hall", "csr:market", "csr:inn")) {
             helper.assertTrue(roster.containsKey(id) && !roster.get(id).outer(), id + " should be kept a plot inside the wall: " + roster.keySet());
         }
-        for (String id : List.of("csr:quarry", "csr:mine", "csr:farm_field_carrots")) {
+        for (String id : List.of("csr:stables", "csr:mine", "csr:farm_field_carrots")) {
             helper.assertTrue(roster.containsKey(id) && roster.get(id).outer(), id + " should be kept a plot outside the wall: " + roster.keySet());
         }
         for (String id : List.of("csr:keep", "csr:cottage", "csr:lumber_camp", "csr:farm_field_wheat", "csr:fishing_dock", "csr:bench",
-                "csr:lamp_post", "csr:road", "csr:stone_wall", "csr:batch1_cottage", "csr:test_hut")) {
+                "csr:lamp_post", "csr:road", "csr:stone_wall", "csr:batch1_cottage", "csr:test_hut",
+                // stage 6b: the economy's own plan places these (quarry outside the wall)
+                "csr:quarry", "csr:stonemason", "csr:smithy")) {
             helper.assertFalse(roster.containsKey(id), id + " shouldn't be in the roster: " + roster.keySet());
         }
         // The church at its top level: 17 wide and 24 deep (its easel rows add 4 more along its depth).

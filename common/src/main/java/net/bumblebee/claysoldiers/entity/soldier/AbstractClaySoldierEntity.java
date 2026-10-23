@@ -274,6 +274,9 @@ public class AbstractClaySoldierEntity extends ClayMobTeamOwnerEntity implements
         // Stage 5: kingdom jobs, last so saved job numbers of the older jobs stay the same.
         goals.add(new FellTreesGoal(this, () -> workSelector));
         goals.add(new TendFieldGoal(this, () -> workSelector));
+        // Stage 6b: quarry and workshop jobs, appended for the same reason.
+        goals.add(new QuarryGoal(this, () -> workSelector));
+        goals.add(new CraftGoal(this, () -> workSelector));
         workSelector = new WorkSelectorGoal(this, goals);
         return workSelector;
     }
